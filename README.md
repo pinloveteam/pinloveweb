@@ -1,4 +1,1 @@
-pinloveweb
-==========
-
-Code for pinlove web
+Welcome to PinLove Development Team!  
