@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, include, url
-
+from django.conf import settings
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
+#user
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'pinlove.views.home', name='home'),
@@ -16,12 +17,33 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # Main Pages 
+    
+    # Login and logout  
     url(r'^$', 'pinloveweb.views.login'),
     url(r'^account/login/', 'pinloveweb.views.login'), 
     url(r'^account/auth/', 'pinloveweb.views.auth_view'),
     url(r'^account/loggedin/', 'pinloveweb.views.loggedin'),
     url(r'^account/invalid/', 'pinloveweb.views.invalid_login'),
     url(r'^account/logout/', 'pinloveweb.views.logout'), 
-    url(r'^account/register/', 'pinloveweb.views.register'), 
-    url(r'^account/loggedout/', 'pinloveweb.views.loggedout')
+    url(r'^account/loggedout/', 'pinloveweb.views.loggedout'),
+    # Registration 
+    url(r'^account/register/$', 'pinloveweb.views.register_user'), 
+    url(r'^account/register_success/$', 'pinloveweb.views.register_success'),
+    url(r'^account/register_verify/$', 'pinloveweb.views.register_verify'), 
+    
+    # User Profile 
+    (r'^user/', include('apps.user_app.urls')), 
+    # search models 
+    (r'^search/', include('apps.user_app.urls')), 
+    
+)
+
+
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+            url(r"^media/(?P<path>.*)$", \
+                "django.views.static.serve", \
+                {"document_root": settings.MEDIA_ROOT,}),
+                 url(r'^site_media/(?P<path>.*)','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
 )

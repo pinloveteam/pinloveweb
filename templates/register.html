@@ -1,14 +1,21 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<h2> Register </h2>
-<form action="/accounts/register/" method="post">{% csrf_token %}
+<h2> 请填写以下注册信息： </h2>
 
-{{ form }}
+{% if user_form.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
 
-<input type="submit" value="Register" />
-
+<form action="/account/register/" method="post">
+	
+<table> 
+{{ user_form}}
+</table>
+{% csrf_token %}
+<input type="submit" value="提交" />
 </form> 
 
 {% endblock %} 

@@ -4,14 +4,10 @@
 <html>
 
 <head>
-	 
 	<title> {% block title %} 拼爱网 {% endblock %} </title>
 	<link rel="stylesheet" type="text/css" href="{% static "assets/css/default.css" %}"> 
-	<SCRIPT src="{% static "assets/js/jquery-1.8.2.js" %}" type=text/javascript></SCRIPT>
-	{% block javascript %}{% endblock %}
 	
 </head> 
-
 {% block runload %}
 <body>
 {% endblock %}
@@ -23,8 +19,6 @@
 		<ul>
 			<li><a href="/account/login/">登陆</a></li>
 			<li><a href="/account/register/">注册</a></li>
-			<li><a href="/user/update_profile/">用户详细信息</a></li>
-			<li><a href="/search/simple_search/">搜索</a></li>
 		</ul>
 		{% endblock %}
 	
