@@ -51,7 +51,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = 'update'
+MEDIA_ROOT = 'D:\eclipse\code\pinloveweb\update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -70,7 +70,8 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ("assets", "pinloveweb/static"),  
+    ("assets", "pinloveweb/static"), 
+    ("update", "pinloveweb/update"),  
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -114,6 +115,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     "pinloveweb/templates", 
+    "pinloveweb/apps/user_app/templates", 
 )
 
 INSTALLED_APPS = (
@@ -158,3 +160,17 @@ LOGGING = {
         },
     }
 }
+
+# Host for sending e-mail.
+# EMAIL_HOST = 'smtp.gmail.com'
+
+# Port for sending e-mail.
+# EMAIL_PORT = 465
+
+# Optional SMTP authentication information for EMAIL_HOST.
+# EMAIL_HOST_USER = 'lospadres663@gmail.com'
+# EMAIL_HOST_PASSWORD = 'jackandjie'
+# EMAIL_USE_TLS = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
