@@ -1,5 +1,4 @@
 # Django settings for pinlove project.
-import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -172,6 +171,8 @@ LOGGING = {
 # EMAIL_HOST_USER = 'lospadres663@gmail.com'
 # EMAIL_HOST_PASSWORD = 'jackandjie'
 # EMAIL_USE_TLS = True
-
+  
+  
+  
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
