@@ -51,7 +51,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT ='/update'
+MEDIA_ROOT ='pinlove/update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -70,8 +70,8 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ("assets", "/static"), 
-    ("update", "/update"),  
+    ("assets", "/home/pinloveteam/webapps/pinlove/pinloveweb/static"), 
+    ("update", "/home/pinloveteam/webapps/pinlove/pinloveweb/update"),  
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -114,8 +114,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-   "/templates", 
-   "/apps/user_app/templates", 
+   "/home/pinloveteam/webapps/pinlove/pinloveweb/templates", 
+   "/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates", 
 )
 
 INSTALLED_APPS = (
