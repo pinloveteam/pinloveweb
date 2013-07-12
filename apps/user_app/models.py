@@ -45,7 +45,7 @@ class User_Profile(models.Model):
     MARRIED = 'M'
     DIVORCED = 'D'
     WIDOWED = 'W'
-    SEPARATED = 'S'
+    SEPARATED = 'SE'
     MARITAL_STATUS_CHOICES = ( (SINGLE, r'单身'), (MARRIED, r'已婚'), (DIVORCED, r'离婚'), (SEPARATED, r'分居'), (WIDOWED, r'丧偶'))
     maritalStatus = models.CharField(verbose_name=r"婚姻状态", max_length=1, choices=MARITAL_STATUS_CHOICES, default=SINGLE)  # single - 0, married - 1, separated - 2, divorced - 3, widowed - 4 # marriageState=models.CharField(max_length=1)
     
@@ -105,10 +105,11 @@ class User_Profile(models.Model):
     # checkState=models.CharField(max_length=1)
     # stauts=models.CharField(max_length=1)    
     
-# class Friend(models.Model):
-#     myId=models.ForeignKey(User,related_name='user_myId')
-#     friendId=models.ForeignKey(User,related_name='user_friendId')
-#     type=models.CharField(max_length=1)
+class Friend(models.Model):
+    myId=models.ForeignKey(User,related_name='user_myId')
+    friendId=models.ForeignKey(User,related_name='user_friendId')
+    # friend type
+    type=models.CharField(max_length=1)
 #     
 # class Message(models.Model):
 #     messageId=models.AutoField(primary_key=True,max_length=8)

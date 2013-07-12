@@ -7,29 +7,44 @@
 {% endblock %}
 
 {% block content %}
-	<h2>搜索</h2>
-	<form action="/search/search_result/" method="post">
-		{% csrf_token %} <label for="sex"> 我要找: </label> <select name='sex'>
-			<option value='F'>女朋友</option>
-			<option value='M'>男朋友</option>
-		</select> <label for="minAge">年龄: </label> <select name='minAge' id="minAge">
-		</select> <label for="maxAge">到: </label> <select name='maxAge' id="maxAge">
-		</select> <input type="submit" value="搜索">
-	</form>
-{% endblock %}
-{% block search_result %}
+     <h2> 搜索 </h2> 
+    <form action="/search/search_result/" method="post" onSubmit="return init1();">{% csrf_token %}
+    <label for="sex"> 我要找: </label> 
+    <select name='sex'>
+       <option value='F'>女朋友</option>
+       <option value='M'>男朋友</option>
+    </select>
+   <label for="minAge">年龄: </label>
+    <select name='minAge' id="minAge" >
+	</select>
+	 <label for="maxAge">到: </label>
+    <select name='maxAge' id="maxAge">
+    </select>
+     <input type="submit" value="搜索" >
+    </form> 
+
+{% endblock %} 
+{% block second_content %}
 	<table border=1 > 
 	<tr align="center">
-			<th>图片</th><th>真实姓名</td><td>年龄</td>
+			<th>图片</th><th>用户名</th><th>真实姓名</th><th>年龄</th><th>详细信息</th><th>打招呼</th><th>加好友</th>
 		</tr>
 		{% if not userList %}
 		<tr><td colspan="3">没有搜索信息！</td></tr>
 		
 		{% endif %}
-		{% for user in userList %}
+		{% for user_i in userList %}
 		
 		<tr align="center">
-		    <td><img src="{% static "update/" %}{{user.myPhoto}}" width="200" /></td><td>{{user.trueName}}</td><td>{{user.age}}</td>
+		    <td><img src="{% static "update/" %}{{user_i.myPhoto}}" width="200" /></td>
+		    <td>{{user_i.user.username}}</td>
+		    <td>{{user_i.trueName}}</td>
+		    <td>{{user_i.age}}</td>
+		    <td><a href="/user/userInfor/{{user_i.user_id}}/">详细信息</a></td>
+			<td><a href="/user/userInfor/">打招呼</a></td>
+			<td>
+			     <input type="hidden" id="userId" value="{{user_i.user_id}}"/>
+			    <input type="button" id="addFriend" value="加好友" onClick="add_friend()"/><div id="divmessage"></td>
 		</tr>
 		
 		{% endfor %}

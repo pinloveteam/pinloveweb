@@ -9,15 +9,18 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
-from apps.user_app.models import User_Profile 
+from apps.user_app.models import User_Profile,Friend
 from apps.user_app.forms import UserProfileForm
 from django.core.context_processors import csrf 
 from django.http.response import HttpResponseRedirect
 import time
 import string
 from PIL import ImageFile
+from django.contrib.auth.models import User
+from django.utils import simplejson
 
 #######    user models       ############# 
+# update user information
 def update_profile(request): 
     
     if request.user.is_authenticated() :
@@ -75,6 +78,19 @@ def update_profile(request):
     
 def update_profile_success(request): 
     return render(request, 'member/update_profile_success.html')
+
+#get userinfor
+def userInfor(request,offset):
+    if request.method== 'GET':
+         try:
+             offset = int(offset)
+         except ValueError:
+             raise Http404()
+         userInfor=User_Profile.objects.get(user_id=offset)
+         return render(request, 'member/userInfor.html',{'userInfor':userInfor})
+    else:
+         return render(request, 'search/search.html')
+
 #######    user models       ############# 
 
 
@@ -90,11 +106,32 @@ def search_result(request):
        minAge = int(request.POST['minAge'])
        maxAge = int(request.POST['maxAge'])
        if maxAge == 0:
-           userList = User_Profile.objects.filter(age__gte=minAge).filter(gender=a_sex)
+           userList = User_Profile.objects.filter(age__gte=minAge).filter(gender=a_sex).exclude(user_id=request.user.id)
        else:
-           userList = User_Profile.objects.filter(age__gte=minAge).filter(age__lte=maxAge).filter(gender=a_sex)
-       if userList:
-             flag=True
-    return render_to_response('search/search_Result.html',{'userList':userList,'flag':flag},context_instance=RequestContext(request))
+           userList = User_Profile.objects.filter(age__gte=minAge).filter(age__lte=maxAge).filter(gender=a_sex).exclude(user_id=request.user.id)
+    return render(request,'search/search_Result.html',{'userList':userList})
 
 #######     search models       ############# 
+
+def addFriend(request):
+     if request.user.is_authenticated() :
+         offset=request.GET.get('userId')
+         count=Friend.objects.filter(id=offset).count();
+         if count!=0:
+             Myfriend=User.objects.get(id=offset)
+             friend=Friend()
+             friend.myId=request.user
+             friend.friendId=Myfriend
+             friend.type='0'
+             friend.save()
+             result ='添加成功'
+         else:
+             result="已添加好友"
+        
+         json=simplejson.dumps(result)
+         return HttpResponse( json )
+     else:
+           args = {}
+           args.update(csrf(request))
+           return render(request, 'login.html', args) 
+     

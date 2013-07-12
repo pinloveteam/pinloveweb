@@ -44,4 +44,15 @@
 	   return true;
 	}
    
+   
+   function add_friend() {
+	   var userId=$('#userId').val();
+	   $.getJSON("/user/addFriend/",{userId:userId},
+			   function(data) {
+	       $("#divmessage").text(data);
+	       $("#addFriend").attr('disabled',true); 
+	       
+	    }   
+	   );
+   }
       

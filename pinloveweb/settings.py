@@ -1,4 +1,5 @@
 # Django settings for pinlove project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -13,10 +14,10 @@ DATABASES = {
     'default': {
 
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
+        'NAME': 'django',                      # Or path to database file if using sqlite3.
                                                 # The following settings are not used with sqlite3:
-        'USER': 'pinloveteam',
-        'PASSWORD': 'redyellowblue#123',
+        'USER': 'root',
+        'PASSWORD': 'jin521436',
         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                             # Set to empty string for default.
     }
@@ -51,7 +52,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = '/home/pinloveteam/webapps/pinlove/pinloveweb/update'
+MEDIA_ROOT = 'D:\eclipse\code\pinloveweb\update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -66,12 +67,12 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/home/pinloveteam/webapps/pinlove/pinloveweb/static/'
+STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ("assets", "/home/pinloveteam/webapps/pinlove/pinloveweb/static"), 
-    ("update", "/home/pinloveteam/webapps/pinlove/pinloveweb/update"),  
+    ("assets", os.path.realpath(os.path.dirname(__file__))[:-11]+"\\static"), 
+    ("update", os.path.realpath(os.path.dirname(__file__))[:-11]+"\\update"),  
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -114,8 +115,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/home/pinloveteam/webapps/pinlove/pinloveweb/templates", 
-    "/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates", 
+    os.path.realpath(os.path.dirname(__file__))[:-11]+"\\templates", 
+    os.path.realpath(os.path.dirname(__file__))[:-11]+"\\apps\\user_app\\templates", 
 )
 
 INSTALLED_APPS = (
@@ -173,4 +174,4 @@ LOGGING = {
 # EMAIL_USE_TLS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '/home/pinloveteam/webapps/pinlove/email_message/' # change this to a proper location
+EMAIL_FILE_PATH = 'email_message/' # change this to a proper location

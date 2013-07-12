@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+<SCRIPT src="{% static "assets/js/register.js" %}" type=text/javascript></SCRIPT>
+<SCRIPT src="{% static "assets/js/area.js" %}" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+
+<h2> 请填写以下的信息： </h2>
+
+{% if user_profile_form.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+{% endblock %} 
+{% block second_content %}
+<table> 
+   <tr><td>用户名：</td><td>{{userInfor.user.username}}</td></tr>
+   <tr><td>邮  箱：</td><td>{{userInfor.user.email}}</td></tr>
+   <tr><td>真实姓名：</td><td>{{userInfor.trueName}}</td></tr>
+   <tr><td>性别：</td><td>{%ifequal userInfor.gender "M"%}帅哥{%else%}美女{% endifequal %}</td></tr>
+    <tr><td>婚姻状态：</td><td>{%ifequal userInfor.maritalStatus "S"%}单身 {% endifequal %}
+                                {%ifequal userInfor.maritalStatus "M"%}已婚 {% endifequal %}
+                                {%ifequal userInfor.maritalStatus "D"%}离婚{% endifequal %}
+                                {%ifequal userInfor.maritalStatus "W"%}分居{% endifequal %}
+                                {%ifequal userInfor.maritalStatus "SE"%}丧偶{% endifequal %}
+                                </td></tr>
+   <tr><td>出生年月：</td><td>{{userInfor.year_of_birth}}年{{userInfor.month_of_birth}}月{{userInfor.day_of_birth}}</td></tr>
+   <tr><td>身高：</td><td>{{userInfor.height}}cm</td></tr>
+   <tr><td>所在省市：</td><td> {%ifequal userInfor.country "CN"%}中国{% endifequal %}
+                               {%ifequal userInfor.country "US"%}美国{% endifequal %}
+                               {{userInfor.stateProvince}}
+                               {%ifequal userInfor.city "县"%}{%else%}{{userInfor.city}}{% endifequal %}
+                               {%ifequal userInfor.city "市辖区"%}{{userInfor.city}}{% endifequal %}
+                               {%ifequal userInfor.streetAddress "县"%}{{userInfor.streetAddress}}{% endifequal %}
+                               {%ifequal userInfor.streetAddress "市辖区"%}{{userInfor.streetAddress}}{% endifequal %}
+   <tr><td>手机：</td><td>{{userInfor.mobilePhone}}</td></tr>
+   <tr><td>职业：</td><td>{{userInfor.jobTitle}}万元</td></tr>
+   <tr><td>薪水：</td><td>{{userInfor.income}}</td></tr>
+   <tr><td>最高学位：</td><td>{{userInfor.educationDegree}}</td></tr>
+   <tr><td>最高学位毕业学校：</td><td>{{userInfor.educationDegree}}</td></tr>
+                               </td></tr>
+  
+</table>
+{% endblock %}
