@@ -14,10 +14,10 @@ DATABASES = {
     'default': {
 
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'django',                      # Or path to database file if using sqlite3.
+        'NAME': 'pinlove',                      # Or path to database file if using sqlite3.
                                                 # The following settings are not used with sqlite3:
         'USER': 'root',
-        'PASSWORD': 'jin521436',
+        'PASSWORD': 'sa',
         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                             # Set to empty string for default.
     }
@@ -52,7 +52,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = 'D:\eclipse\code\pinloveweb\update'
+MEDIA_ROOT = '/home/brad/workspace/pinloveweb/update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -71,8 +71,8 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ("assets", os.path.realpath(os.path.dirname(__file__))[:-11]+"\\static"), 
-    ("update", os.path.realpath(os.path.dirname(__file__))[:-11]+"\\update"),  
+    ("assets", os.path.realpath(os.path.dirname(__file__))[:-11]+"/static"), 
+    ("update", os.path.realpath(os.path.dirname(__file__))[:-11]+"/update"),  
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -115,8 +115,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.realpath(os.path.dirname(__file__))[:-11]+"\\templates", 
-    os.path.realpath(os.path.dirname(__file__))[:-11]+"\\apps\\user_app\\templates", 
+    os.path.realpath(os.path.dirname(__file__))[:-11]+"/templates", 
+    os.path.realpath(os.path.dirname(__file__))[:-11]+"/apps/user_app/templates", 
 )
 
 INSTALLED_APPS = (
