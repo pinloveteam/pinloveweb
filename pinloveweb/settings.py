@@ -1,5 +1,6 @@
 # Django settings for pinlove project.
-
+import os
+PATH=os.path.dirname(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -8,6 +9,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 DATABASES = {
     'default': {
@@ -51,18 +53,18 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT ='pinlove/update'
+MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = '/update/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -70,8 +72,9 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ("assets", "/home/pinloveteam/webapps/pinlove/pinloveweb/static"), 
-    ("update", "/home/pinloveteam/webapps/pinlove/pinloveweb/update"),  
+    ('css',os.path.join(STATIC_ROOT,'css').replace('\\','/') ),  
+    ('js',os.path.join(STATIC_ROOT,'js').replace('\\','/') ), 
+    ('img',os.path.join(STATIC_ROOT,'img').replace('\\','/') ), 
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -114,8 +117,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-   "/home/pinloveteam/webapps/pinlove/pinloveweb/templates", 
-   "/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates", 
+    os.path.join(PATH,'templates').replace('\\','/'), 
+      os.path.join(PATH,'apps/user_app/templates').replace('\\','/'), 
 )
 
 INSTALLED_APPS = (
@@ -171,8 +174,6 @@ LOGGING = {
 # EMAIL_HOST_USER = 'lospadres663@gmail.com'
 # EMAIL_HOST_PASSWORD = 'jackandjie'
 # EMAIL_USE_TLS = True
-  
-  
-  
+
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
