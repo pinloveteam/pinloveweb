@@ -1,7 +1,7 @@
 # Django settings for pinlove project.
 import os
 PATH=os.path.dirname(os.path.dirname(__file__))
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -53,7 +53,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT ='pinloveweb/update'
+MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -64,7 +64,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = 'pinloveweb/static'
+STATIC_ROOT = '/home/pinloveteam/webapps/pinlove/pinloveweb/static'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -72,9 +72,9 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ('css','pinloveweb/static/css' ),  
-    ('js','pinloveweb/static/js' ), 
-    ('img','pinloveweb/static/img' ), 
+    ('css','/home/pinloveteam/webapps/pinlove/pinloveweb/static/css' ),  
+    ('js','/home/pinloveteam/webapps/pinlove/pinloveweb/static/js' ), 
+    ('img','/home/pinloveteam/webapps/pinlove/pinloveweb/static/img' ), 
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -117,8 +117,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'pinloveweb/templates', 
-      'pinloveweb/apps/user_app/templates', 
+    '/home/pinloveteam/webapps/pinlove/pinloveweb/templates', 
+      '/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates', 
 )
 
 INSTALLED_APPS = (
