@@ -14,4 +14,4 @@ import django.core.handlers.wsgi
 
 application = django.core.handlers.wsgi.WSGIHandler()
 
-print >> sys.stderr, sys.path
+print  sys.stderr, sys.path
