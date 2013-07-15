@@ -11,7 +11,7 @@ workspace = os.path.dirname(project)
 
 sys.path.append(workspace)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'pinloveweb.settings'
 
 os.environ['PYTHON_EGG_CACHE'] = '/tmp'
 
