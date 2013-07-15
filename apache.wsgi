@@ -1,4 +1,4 @@
-import os, sys
+mport os, sys
 
 
 #Calculate the path based on the location of the WSGI script.
@@ -15,6 +15,9 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'pinloveweb.settings'
 
 os.environ['PYTHON_EGG_CACHE'] = '/tmp'
 
+
 import django.core.handlers.wsgi
+
 application = django.core.handlers.wsgi.WSGIHandler()
+
 print >> sys.stderr, sys.path
