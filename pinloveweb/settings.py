@@ -1,7 +1,7 @@
 # Django settings for pinlove project.
 import os
 PATH=os.path.dirname(os.path.dirname(__file__))
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
