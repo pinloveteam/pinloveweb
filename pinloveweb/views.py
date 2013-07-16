@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 
 from forms import RegistrationForm 
+from pinloveweb import settings
 
 def login(request) :
        
@@ -41,7 +42,7 @@ def auth_view(request) :
         
 def loggedin(request) : 
     
-    return render(request, 'loggedin.html', {'full_name': request.user.username})
+    return render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
     
 def invalid_login(request) : 
     
