@@ -72,9 +72,9 @@ STATIC_URL = 'http://www.pinpinlove.com/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ('css','/home/pinloveteam/webapps/pinlove/pinloveweb/css' ),  
-    ('js','/home/pinloveteam/webapps/pinlove/pinloveweb/js' ), 
-    ('img','/home/pinloveteam/webapps/pinlove/pinloveweb/img' ), 
+    ('css','/home/pinloveteam/webapps/pinlove/pinloveweb/static/css' ),  
+    ('js','/home/pinloveteam/webapps/pinlove/pinloveweb/static/js' ), 
+    ('img','/home/pinloveteam/webapps/pinlove/pinloveweb/static/img' ), 
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
