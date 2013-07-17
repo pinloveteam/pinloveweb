@@ -31,7 +31,7 @@
 	   var str1 = document.getElementById("minAge");   
 	   var maxAge=str.options[str.selectedIndex].value;  
 	   var minAge=str1.options[str1.selectedIndex].value;  
-	   if(maxAge=='不限')
+	   if(maxAge=='0')
 		   return true;
 	   else{
 		   if(maxAge<minAge)
