@@ -109,7 +109,7 @@ def search_result(request):
            userList = User_Profile.objects.filter(age__gte=minAge).filter(gender=a_sex).exclude(user_id=request.user.id)
        else:
            userList = User_Profile.objects.filter(age__gte=minAge).filter(age__lte=maxAge).filter(gender=a_sex).exclude(user_id=request.user.id)
-    return render(request,'search/search_Result.html',{'userList':userList})
+    return render(request,'search/search_result.html',{'userList':userList})
 
 #######     search models       ############# 
 
