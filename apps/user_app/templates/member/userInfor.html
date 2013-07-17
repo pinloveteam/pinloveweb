@@ -27,7 +27,7 @@
                                 {%ifequal userInfor.maritalStatus "W"%}分居{% endifequal %}
                                 {%ifequal userInfor.maritalStatus "SE"%}丧偶{% endifequal %}
                                 </td></tr>
-   <tr><td>出生年月：</td><td>{{userInfor.year_of_birth}}年{{userInfor.month_of_birth}}月{{userInfor.day_of_birth}}</td></tr>
+   <tr><td>出生年月：</td><td>{{userInfor.year_of_birth}}年{{userInfor.month_of_birth}}月{{userInfor.day_of_birth}}日</td></tr>
    <tr><td>身高：</td><td>{{userInfor.height}}cm</td></tr>
    <tr><td>所在省市：</td><td> {%ifequal userInfor.country "CN"%}中国{% endifequal %}
                                {%ifequal userInfor.country "US"%}美国{% endifequal %}
