@@ -1,7 +1,7 @@
 # Django settings for pinlove project.
 import os
 PATH=os.path.dirname(os.path.dirname(__file__))
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -26,7 +26,7 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -53,18 +53,18 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = '/home/pinloveteam/webapps/pinlove/pinloveweb/static/'
+MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = 'http://www.pinpinlove.com/media/'
+MEDIA_URL = 'http://www.pinpinlove.com/update/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/home/pinloveteam/webapps/pinlove/pinloveweb/static/'
+STATIC_ROOT = '/home/pinloveteam/webapps/pinlove/pinloveweb/static'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -72,9 +72,9 @@ STATIC_URL = 'http://www.pinpinlove.com/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ('css','/home/pinloveteam/webapps/pinlove/pinloveweb/static/img' ),  
-    ('js','/home/pinloveteam/webapps/pinlove/pinloveweb/static/js'), 
-    ('img','/home/pinloveteam/webapps/pinlove/pinloveweb/static/css' ), 
+    ('css','/home/pinloveteam/webapps/pinlove/pinloveweb/css' ),  
+    ('js','/home/pinloveteam/webapps/pinlove/pinloveweb/js' ), 
+    ('img','/home/pinloveteam/webapps/pinlove/pinloveweb/img' ), 
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -118,7 +118,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '/home/pinloveteam/webapps/pinlove/pinloveweb/templates', 
-    '/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates', 
+      '/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates', 
 )
 
 INSTALLED_APPS = (
@@ -177,3 +177,4 @@ LOGGING = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
+
