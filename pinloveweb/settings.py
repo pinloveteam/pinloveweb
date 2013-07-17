@@ -1,7 +1,7 @@
 # Django settings for pinlove project.
 import os
 PATH=os.path.dirname(os.path.dirname(__file__))
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -58,7 +58,7 @@ MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = 'http://www.pinpinlove.com/media/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -68,13 +68,13 @@ STATIC_ROOT = '/home/pinloveteam/webapps/pinlove/pinloveweb/static'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = 'http://www.pinpinlove.com/static/'
+STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/home/pinloveteam/webapps/pinlove/pinloveweb/css' ,  
-    '/home/pinloveteam/webapps/pinlove/pinloveweb/js' , 
-    '/home/pinloveteam/webapps/pinlove/pinloveweb/img' , 
+    ('css','/home/pinloveteam/webapps/pinlove/pinloveweb/css' ),  
+    ('js','/home/pinloveteam/webapps/pinlove/pinloveweb/js' ), 
+    ('img','/home/pinloveteam/webapps/pinlove/pinloveweb/img' ), 
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
