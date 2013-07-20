@@ -12,6 +12,7 @@ os.environ['PYTHON_EGG_CACHE'] = '/tmp'
 
 import django.core.handlers.wsgi
 
+
 application = django.core.handlers.wsgi.WSGIHandler()
 
 print  sys.stderr, sys.path

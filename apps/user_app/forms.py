@@ -13,10 +13,10 @@ class UserProfileForm (ModelForm) :
     class Meta : 
         model = User_Profile  
         fields = ('trueName', 'gender', 'myPhoto','year_of_birth', 'month_of_birth', 'day_of_birth', 'height', 'maritalStatus', 
-        'country',   'link',
+           'link','streetAddress',
         'mobilePhone', 'jobIndustry', 'jobTitle', 'income', 'educationDegree', 'educationCountry', 'educationSchool', 
         'interests', 'selfEvaluation', 
         )
-        exclude = ('stateProvince','city', 'streetAddress','age') 
+        exclude = ('stateProvince','city', 'age','country',) 
     
        

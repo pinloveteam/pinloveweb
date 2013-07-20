@@ -57,8 +57,7 @@ class User_Profile(models.Model):
 #     renrenLink = models.URLField(verbose_name=r"人人网链接", default="http://www.renren.com/me") 
     
     # location
-    COUNTRY_CHOICES = (('CN', r'中国'), ('US', r'美国'))
-    country = models.CharField(verbose_name=r"所在国家", max_length=2, choices=COUNTRY_CHOICES, default='CN')
+    country = models.CharField(verbose_name=r"所在国家", max_length=50, default='CN')
     stateProvince = models.CharField(verbose_name=r"所在省", max_length=50) 
     
     city = models.CharField(verbose_name=r"所在城市", max_length=50) 

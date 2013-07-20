@@ -34,7 +34,6 @@
 		
 		{% endif %}
 		{% for user_i in userList %}
-		
 		<tr align="center">
 		    <td><img src="/update/{{user_i.myPhoto}}" width="200" /></td>
 		    <td>{{user_i.user.username}}</td>
@@ -44,7 +43,9 @@
 			<td><a href="/user/userInfor/">打招呼</a></td>
 			<td>
 			     <input type="hidden" id="userId" value="{{user_i.user_id}}"/>
-			    <input type="button" id="addFriend" value="加好友" onClick="add_friend()"/><div id="divmessage"></td>
+			    <input type="button" id="addFriend" value="加好友" onClick="add_friend()"/>
+			<div id="divmessage">
+			</td>
 		</tr>
 		
 		{% endfor %}

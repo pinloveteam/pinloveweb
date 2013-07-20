@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+<SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
+<SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+
+<h2> 朋友信息： </h2>
+
+{% ifequal count 0 %}
+<p style="color: red;">
+	您暂时没有好友！
+{% endifequal %}
+{% ifnotequal count 0 %}
+<form action="/user/update_profile/" enctype="multipart/form-data" method="POST" >
+	<table border=1 > 
+	<tr align="center">
+			<th>用户名</th><th>详细信息</th><th>移除好友</th>
+		</tr>
+		{% for friend in friendList %}
+		<tr align="center">
+		    <td>{{friend.friendId.username}}</td>
+		    <td><a href="/user/userInfor/{{friend.friendId.id}}/">详细信息</a></td>
+		    <td><a href="/user/removeFriend/{{friend.friendId.id}}/">移除好友</a></td>
+		</tr>
+		
+		{% endfor %}
+	</table>
+</form> 
+{% endifnotequal %}
+{% endblock %} 

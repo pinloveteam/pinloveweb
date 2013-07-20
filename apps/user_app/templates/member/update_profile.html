@@ -19,15 +19,28 @@
 	
 <table> 
 {{ user_profile_form }}
+
+<tr><th><label for="id_country">国家:</label></th><td>
+<select id="id_country" name="country">
+{%ifnotequal country  null%}
+<option value="{{country}}" selected="selected">{{country}}</option>
+{%else%}<option value="0" selected="selected">请选择</option>{% endifnotequal %}
+</select></td></tr>
 <tr><th><label for="id_stateProvince">所在省:</label></th>
-<td><select id="id_stateProvince" name="stateProvince">
+<td><select id="id_stateProvince" selected="selected"" name="stateProvince">
+{%ifnotequal stateProvince  null%}
+<option value="{{stateProvince}} " selected="selected">{{stateProvince}}</option>
+{%else%}<option value="0" selected="selected">请选择</option>{% endifnotequal %}
 </select></td></tr>
-<tr><th><label for="id_city">所在城市:</label></th>
+<tr><th><label for="id_city" >所在城市:</label></th>
 <td><select id="id_city" name="city">
+{%ifnotequal city null%}
+<option value="{{city}}" selected="selected">{{city}}</option>
+{%else%}<option value="0" selected="selected">请选择</option>{% endifnotequal %}
 </select></td></tr>
-<tr><th><label for="id_streetAddress">街道地址:</label></th><td>
-<select id="id_streetAddress" name="streetAddress">
-</select></td></tr>
+
+
+
 </table>
 {% csrf_token %}
 <input type="submit" value="提交" />

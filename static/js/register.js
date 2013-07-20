@@ -1,51 +1,76 @@
- $(document).ready(function(){
+var s=["id_country","id_stateProvince","id_city"];
+var opt0 = ["国家","省份、州","地级市、县"]; 
+//var country=$('#id_country').val();
+//var stateProvince=$('#id_stateProvince').val();
+//var city=$('#id_city').val();
+$(document).ready(function(){
 	
-            getProvinces();
-            $('#id_stateProvince').bind('change',function(){
-       		 getCities()
-       		 	});
-       	 $('#id_city').bind('change',function(){
-       		 getCounties()
-       	 	});
+//	     $('#id_stateProvince').bind('change',function(){
+//	    	 getProvinces()
+//   		 	});
+//            $('#id_city').bind('change',function(){
+//       		 getCities()
+//       		 	});
+//       	 $('#id_streetAddress').bind('change',function(){
+//       		 getCounties()
+//       	 	});
+	 
+	 $(window).load(function() {
+	    	 for(i=0;i<s.length-1;i++)
+	 	        document.getElementById(s[i]).onblur=new Function("change("+(i+1)+")");
+	 	        change(0);
+	 	       $('#id_country').bind('change',function(){
+	 	    	  change(1)
+	       		 	});
+	       	 $('#id_stateProvince').bind('change',function(){
+	       		change(2)
+	       	 	});
+     });
+	    	 
+	    
         });
+ 
+
         
-        function getProvinces(){
-            var pro = "";
-            for(var i = 0 ; i < provinces.length; i++){
-                pro += "<option>" + provinces[i] + "</option>";
-            }
-            $('#id_stateProvince').empty().append(pro);
-            getCities();
-        }
-        function getCities(){
-            var proIndex = $('#id_stateProvince').get(0).selectedIndex;
-            showCities(proIndex);
-            getCounties();
-        }
-        function showCities(proIndex){
-            var cit = "";
-            if(cities[proIndex] == null){
-                $('#id_city').empty();
-                return;
-            }
-            for(var i = 0 ;i < cities[proIndex].length ; i++){
-                cit += "<option>" + cities[proIndex][i] + "</option>";
-            }
-            $('#id_city').empty().append(cit);
-        }
-        function getCounties(){
-            var proIndex = $('#id_stateProvince').get(0).selectedIndex;
-            var citIndex = $('#id_city').get(0).selectedIndex;
-            showCounties(proIndex,citIndex);
-        }
-        function showCounties(proIndex,citIndex){
-            var cou = "";
-            if(counties[proIndex][citIndex] == null){
-                $('#id_streetAddress').empty();
-                return;
-            }
-            for(var i = 0 ;i < counties[proIndex][citIndex].length;i++){
-                cou += "<option>" + counties[proIndex][citIndex][i] + "</option>";
-            }
-            $('#id_streetAddress').empty().append(cou);
-        }
+ function Dsy()
+ {
+  this.Items = {};
+ }
+ Dsy.prototype.add = function(id,iArray)
+ {
+  this.Items[id] = iArray;
+ }
+ Dsy.prototype.Exists = function(id)
+ {
+  if(typeof(this.Items[id]) == "undefined") return false;
+  return true;
+ }
+
+ function change(v){
+  var country=$('#id_country').val();
+  var str="0";
+  for(i=0;i<v;i++){ str+=("_"+(document.getElementById(s[i]).selectedIndex-1));};
+  var ss=document.getElementById(s[v]);
+  with(ss){
+   length = 0;
+   options[0]=new Option(opt0[v],opt0[v]);
+   if(v && document.getElementById(s[v-1]).selectedIndex>0 || !v)
+   {
+    if(dsy.Exists(str)){
+     ar = dsy.Items[str];
+     for(i=0;i<ar.length;i++)
+     {
+    	 options[length]=new Option(ar[i],ar[i]);
+    	 if(country==ar[i])
+         {
+//    		 alert(country+' '+ar[i])
+        	 options[i+1].selected = true;
+         }
+     }
+    	
+    
+     
+    }
+   }
+  }
+ }

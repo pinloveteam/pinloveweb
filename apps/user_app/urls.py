@@ -5,6 +5,8 @@ urlpatterns = patterns('apps.user_app.views',
     url(r'^update_profile_success/$', 'update_profile_success'), 
     url(r'^userInfor/(.+)/$', 'userInfor'),
      url(r'^addFriend/$', 'addFriend'),
+     url(r'^friend/$', 'friend'),
+     url(r'^removeFriend/(.+)/$', 'removeFriend'),
 )
  #search:
 urlpatterns+=patterns('apps.user_app.views',

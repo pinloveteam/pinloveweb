@@ -29,8 +29,7 @@
                                 </td></tr>
    <tr><td>出生年月：</td><td>{{userInfor.year_of_birth}}年{{userInfor.month_of_birth}}月{{userInfor.day_of_birth}}日</td></tr>
    <tr><td>身高：</td><td>{{userInfor.height}}cm</td></tr>
-   <tr><td>所在省市：</td><td> {%ifequal userInfor.country "CN"%}中国{% endifequal %}
-                               {%ifequal userInfor.country "US"%}美国{% endifequal %}
+   <tr><td>所在省市：</td><td> {{serInfor.country }}
                                {{userInfor.stateProvince}}
                                {%ifequal userInfor.city "县"%}{%else%}{{userInfor.city}}{% endifequal %}
                                {%ifequal userInfor.city "市辖区"%}{{userInfor.city}}{% endifequal %}
