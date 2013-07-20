@@ -117,7 +117,7 @@ def search_result(request):
             friends = Friend.objects.filter(myId=request.user.id)
             frends_flag=[]
            
-    return render(request,'search/search_result.html',{'userList':userList,'frends_flag':frends_flag})
+    return render(request,'search/search_result.html',{'userList':userList})
 
 #######     search models       ############# 
 
