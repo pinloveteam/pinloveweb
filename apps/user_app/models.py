@@ -134,3 +134,7 @@ class Dictionary(models.Model):
     key=models.CharField(max_length=128)
     name=models.CharField(max_length=255,default='')
     value=models.CharField(max_length=255)
+
+class Verification(models.Model):
+    username = models.CharField(max_length=30)
+    verification_code = models.CharField(max_length=50)
