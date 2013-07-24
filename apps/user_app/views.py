@@ -192,7 +192,7 @@ def forget_password(request):
             
          email_message = u"请您点击下面这个链接修改密码："
          email_message += email_verification_link
-         send_mail(u'拼爱网，密码找回', email_message,[user.email])     
+         send_mail(u'拼爱网，密码找回', email_message,'pinloveteam@pinpinlove.com', [user.email])     
         
          return render(request, 'forget_password.html')  
 #          username = request.REQUEST.get('username','')

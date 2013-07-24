@@ -89,7 +89,7 @@ def register_user(request) :
             
             email_message = u"请您点击下面这个链接完成注册："
             email_message += email_verification_link
-            send_mail(u'拼爱网注册电子邮件地址验证', email_message,[user.email]) 
+            send_mail(u'拼爱网注册电子邮件地址验证', email_message,'pinloveteam@pinpinlove.com',[user.email]) 
             
             # login(request, user)
             return render_to_response('register_email_verification.html',{'username':username, 'email': user.email})
