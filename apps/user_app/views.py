@@ -229,10 +229,12 @@ def  isIdAuthen(request):
     username = request.REQUEST.get('username','')
     user_code = request.REQUEST.get('user_code','')
     if username != '' :
-        verification = Verification.objects.get(username=username)
-        if verification is not None and verification.verification_code == user_code:
-            return True
-        else :
+        try :
+            verification = Verification.objects.get(username=username)
+            if verification.verification_code == user_code:
+                verification.delete()
+                return True
+        except Exception:
             return False
     else :
         return False   

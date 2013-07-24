@@ -109,10 +109,10 @@ def register_verify(request) :
     username = request.REQUEST.get('username','')
 #     user_code = request.REQUEST.get('user_code','')
     user = User.objects.get(username=username)
-    verification = Verification.objects.get(username=username)
+#     verification = Verification.objects.get(username=username)
     if isIdAuthen(request):
         user.is_active = True 
-        verification.delete()
+#         verification.delete()
         return render(request, 'register_success.html')
     else :
         return render(request, 'error.html')
