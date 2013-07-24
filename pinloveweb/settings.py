@@ -15,10 +15,10 @@ DATABASES = {
     'default': {
 
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pinlove',                      # Or path to database file if using sqlite3.
+        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
                                                 # The following settings are not used with sqlite3:
-        'USER': 'root',
-        'PASSWORD': 'sa',
+        'USER': 'pinloveteam',
+        'PASSWORD': 'redyellowblue#123',
         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                             # Set to empty string for default.
     }
@@ -115,8 +115,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/brad/workspace/pinloveweb/templates', 
-      '/home/brad/workspace/pinloveweb/apps/user_app/templates', 
+    '/home/pinloveteam/webapps/pinlove/pinloveweb/templates', 
+      '/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates', 
 )
 
 INSTALLED_APPS = (
@@ -163,17 +163,19 @@ LOGGING = {
 }
 
 # Host for sending e-mail.
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.webfaction.com'
 
 # Port for sending e-mail.
-EMAIL_PORT = 465
+EMAIL_PORT = 587
 
 # Optional SMTP authentication information for EMAIL_HOST.
-EMAIL_HOST_USER = 'lospadres663@gmail.com'
-EMAIL_HOST_PASSWORD = 'jackandjie'
+EMAIL_HOST_USER = 'pinloveteam'
+EMAIL_HOST_PASSWORD = 'redyellowblue123#'
+DEFAULT_FROM_EMAIL = 'pinloveteam@pinpinlove.com'
+SERVER_EMAIL = 'pinloveteam@pinpinlove.com'
 EMAIL_USE_TLS = True
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 

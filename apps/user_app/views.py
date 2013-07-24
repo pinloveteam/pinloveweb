@@ -9,7 +9,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
-from apps.user_app.models import User_Profile,Friend
+from apps.user_app.models import User_Profile,Friend, Verification
 from apps.user_app.forms import UserProfileForm
 from django.core.context_processors import csrf 
 from django.http.response import HttpResponseRedirect
@@ -19,6 +19,8 @@ from PIL import ImageFile
 from django.contrib.auth.models import User
 from django.utils import simplejson
 from django.db import connection
+from django.core.mail import send_mail
+from django.contrib import auth
 
 #######    user models       ############# 
 # update user information
@@ -123,7 +125,7 @@ def search_result(request):
 
 def addFriend(request):
      if request.user.is_authenticated() :
-         offset=request.GET.get('userId')
+         offset=request.GET.get('username')
          count=Friend.objects.filter(friendId=offset).count();
          if count==0:
              Myfriend=User.objects.get(id=offset)
@@ -164,3 +166,80 @@ def removeFriend(request,offset):
          return HttpResponseRedirect("/user/friend/")
     else:
          return HttpResponseRedirect("/user/friend/")
+    
+#forget the password
+def forget_password(request):
+     if request.method == 'POST':
+         querystr = request.REQUEST.get('forget_account','')
+         user = User()
+         if request.REQUEST.get('forget_type','') == 'email' and User.objects.get(email=querystr) != None:
+            user = User.objects.get(email=querystr)
+         elif request.REQUEST.get('forget_type','') == 'nickname' and User.objects.get(username=querystr) != None:
+            user = User.objects.get(username=querystr)
+         else :
+            return render(request, 'error.html') 
+         #user verification
+         currenttime = str(time.time())
+         verification = Verification()
+         verification.username = user.username
+         verification.verification_code = currenttime
+         verification.save()
+            # we need to generate a random number as</font> the verification key 
+            
+            # user needs email verification 
+         domain_name = u'http://www.pinpinlove.com/user/resetPassword/'
+         email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + currenttime
+            
+         email_message = u"请您点击下面这个链接修改密码："
+         email_message += email_verification_link
+         send_mail(u'拼爱网，密码找回', email_message,[user.email])     
+        
+         return render(request, 'forget_password.html')  
+#          username = request.REQUEST.get('username','')
+#          user = User.objects.get(username=username)
+
+#reset the password
+def reset_password(request):
+#     username = request.REQUEST.get('username','')
+#     user_code = request.REQUEST.get('user_code','')
+#     verification = Verification.objects.get(username=username)
+    if isIdAuthen(request):
+        return render_to_response('reset_password.html',{'username':request.REQUEST.get('username',''), 'user_code': request.REQUEST.get('user_code','')})
+    else :
+        return render(request, 'error.html')
+
+
+#commit the password
+def commit_password(request):
+    oldpassword = request.REQUEST.get('oldpassword','')
+    newpassword = request.REQUEST.get('newpassword','')
+    repassword = request.REQUEST.get('repassword','')
+    if newpassword == repassword:
+        if isIdAuthen(request) :
+            user = User.objects.get(username=request.REQUEST.get('username',''))
+        elif auth.authenticate(username=request.user.username, password=oldpassword) is not None :
+            user = request.user
+#     username = request.REQUEST.get('username','')
+#     user_code = request.REQUEST.get('user_code','')
+#     verification = Verification.objects.get(username=username)
+        else :
+            return render(request, 'error.html') 
+        user.set_password(newpassword)
+        user.save()
+        return render(request, 'success.html') 
+    else :
+        return render(request, 'error.html') 
+    
+def  isIdAuthen(request):  
+    username = request.REQUEST.get('username','')
+    user_code = request.REQUEST.get('user_code','')
+    if username != '' :
+        verification = Verification.objects.get(username=username)
+        if verification is not None and verification.verification_code == user_code:
+            return True
+        else :
+            return False
+    else :
+        return False   
+def alter_password(request) : 
+    return render(request, 'alter_password.html',{'username': request.user.username})   

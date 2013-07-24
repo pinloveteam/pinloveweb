@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     url(r'^account/invalid/', 'pinloveweb.views.invalid_login'),
     url(r'^account/logout/', 'pinloveweb.views.logout'), 
     url(r'^account/loggedout/', 'pinloveweb.views.loggedout'),
+    url(r'^account/forgetpwdpage/', 'pinloveweb.views.forget_password'),
     # Registration 
     url(r'^account/register/$', 'pinloveweb.views.register_user'), 
     url(r'^account/register_success/$', 'pinloveweb.views.register_success'),

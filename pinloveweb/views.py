@@ -15,6 +15,7 @@ from django.core.mail import send_mail
 from forms import RegistrationForm 
 from pinloveweb import settings
 import time
+from apps.user_app.views import isIdAuthen
 
 def login(request) :
        
@@ -83,12 +84,12 @@ def register_user(request) :
             # we need to generate a random number as the verification key 
             
             # user needs email verification 
-            domain_name = u'http://127.0.0.1:8000/account/verification/'
-            email_verification_link = domain_name + '? username=' + username + '&' + 'user_code=' + currenttime + '/'
+            domain_name = u'http://www.pinpinlove.com/account/verification/'
+            email_verification_link = domain_name + '?username=' + username + '&' + 'user_code=' + currenttime
             
             email_message = u"请您点击下面这个链接完成注册："
             email_message += email_verification_link
-            send_mail(u'拼爱网注册电子邮件地址验证', email_message, 'lospadres663@gmail.com',[user.email]) 
+            send_mail(u'拼爱网注册电子邮件地址验证', email_message,[user.email]) 
             
             # login(request, user)
             return render_to_response('register_email_verification.html',{'username':username, 'email': user.email})
@@ -107,17 +108,18 @@ def register_success(request) :
     
 def register_verify(request) : 
     username = request.REQUEST.get('username','')
-    user_code = request.REQUEST.get('user_code','')
+#     user_code = request.REQUEST.get('user_code','')
     user = User.objects.get(username=username)
     verification = Verification.objects.get(username=username)
-    if user_code == verification.verification_code:
+    if isIdAuthen(request):
         user.is_active = True 
         verification.delete()
         return render(request, 'register_success.html')
     else :
-        return render(request, 'register_error.html')
+        return render(request, 'error.html')
 
-    
+def forget_password(request) : 
+    return render(request, 'forget_password.html')   
  
                           
                           
