@@ -171,10 +171,16 @@ def forget_password(request):
      if request.method == 'POST':
          querystr = request.REQUEST.get('forget_account','')
          user = User()
-         if request.REQUEST.get('forget_type','') == 'email' and User.objects.get(email=querystr) != None:
-            user = User.objects.get(email=querystr)
-         elif request.REQUEST.get('forget_type','') == 'nickname' and User.objects.get(username=querystr) != None:
-            user = User.objects.get(username=querystr)
+         if request.REQUEST.get('forget_type','') == 'email':
+            try :
+                User.objects.get(email=querystr)
+            except Exception:
+                return render(request, 'error.html')
+         elif request.REQUEST.get('forget_type','') == 'nickname':
+             try :
+                User.objects.get(username=querystr)
+             except Exception:
+                return render(request, 'error.html')
          else :
             return render(request, 'error.html') 
          #user verification
@@ -188,20 +194,13 @@ def forget_password(request):
             # user needs email verification 
          domain_name = u'http://www.pinpinlove.com/user/resetPassword/'
          email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + user_code
-            
          email_message = u"请您点击下面这个链接修改密码："
          email_message += email_verification_link
          send_mail(u'拼爱网，密码找回', email_message,'pinloveteam@pinpinlove.com', [user.email])     
-        
          return render(request, 'forget_password.html')  
-#          username = request.REQUEST.get('username','')
-#          user = User.objects.get(username=username)
 
 #reset the password
 def reset_password(request):
-#     username = request.REQUEST.get('username','')
-#     user_code = request.REQUEST.get('user_code','')
-#     verification = Verification.objects.get(username=username)
     if isIdAuthen(request):
         return render_to_response('reset_password.html',{'username':request.REQUEST.get('username',''), 'user_code': request.REQUEST.get('user_code','')})
     else :
@@ -218,9 +217,6 @@ def commit_password(request):
             user = User.objects.get(username=request.REQUEST.get('username',''))
         elif auth.authenticate(username=request.user.username, password=oldpassword) is not None :
             user = request.user
-#     username = request.REQUEST.get('username','')
-#     user_code = request.REQUEST.get('user_code','')
-#     verification = Verification.objects.get(username=username)
         else :
             return render(request, 'error.html') 
         user.set_password(newpassword)
