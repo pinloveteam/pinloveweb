@@ -14,8 +14,7 @@ from django.core.mail import send_mail
 
 from forms import RegistrationForm 
 from pinloveweb import settings
-import time
-from apps.user_app.views import isIdAuthen
+from apps.user_app.views import isIdAuthen, random_str
 
 def login(request) :
        
@@ -76,16 +75,16 @@ def register_user(request) :
             user = User.objects.get(username=username)
             user.is_active = False 
             #user verification
-            currenttime = str(time.time())
+            user_code = random_str()
             verification = Verification()
             verification.username = username
-            verification.verification_code = currenttime
+            verification.verification_code = user_code
             verification.save()
             # we need to generate a random number as the verification key 
             
             # user needs email verification 
             domain_name = u'http://www.pinpinlove.com/account/verification/'
-            email_verification_link = domain_name + '?username=' + username + '&' + 'user_code=' + currenttime
+            email_verification_link = domain_name + '?username=' + username + '&' + 'user_code=' + user_code
             
             email_message = u"请您点击下面这个链接完成注册："
             email_message += email_verification_link

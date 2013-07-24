@@ -14,14 +14,13 @@ from apps.user_app.forms import UserProfileForm
 from django.core.context_processors import csrf 
 from django.http.response import HttpResponseRedirect
 import time
-import string
 from PIL import ImageFile
 from django.contrib.auth.models import User
 from django.utils import simplejson
 from django.db import connection
 from django.core.mail import send_mail
 from django.contrib import auth
-
+import random, string
 #######    user models       ############# 
 # update user information
 def update_profile(request): 
@@ -179,16 +178,16 @@ def forget_password(request):
          else :
             return render(request, 'error.html') 
          #user verification
-         currenttime = str(time.time())
+         user_code = random_str()
          verification = Verification()
          verification.username = user.username
-         verification.verification_code = currenttime
+         verification.verification_code = user_code
          verification.save()
             # we need to generate a random number as</font> the verification key 
             
             # user needs email verification 
          domain_name = u'http://www.pinpinlove.com/user/resetPassword/'
-         email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + currenttime
+         email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + user_code
             
          email_message = u"请您点击下面这个链接修改密码："
          email_message += email_verification_link
@@ -241,5 +240,11 @@ def  isIdAuthen(request):
             return False
     else :
         return False   
+    
+def random_str(randomlength=32):
+    a = list(string.ascii_letters)
+    random.shuffle(a)
+    return ''.join(a[:randomlength])
+
 def alter_password(request) : 
     return render(request, 'alter_password.html',{'username': request.user.username})   
