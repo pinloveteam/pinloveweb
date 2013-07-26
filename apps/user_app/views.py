@@ -192,7 +192,7 @@ def forget_password(request):
             # we need to generate a random number as</font> the verification key 
             
             # user needs email verification 
-         domain_name = u'http://www.pinpinlove.com/user/resetPassword/'
+         domain_name = u'http://www.pinpinlove.com/user/reset_password/'
          email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + user_code
          email_message = u"请您点击下面这个链接修改密码："
          email_message += email_verification_link
