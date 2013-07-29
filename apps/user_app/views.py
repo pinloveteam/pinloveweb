@@ -196,7 +196,6 @@ def forget_password(request):
          email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + user_code
          email_message = u"请您点击下面这个链接修改密码："
          email_message += email_verification_link
-         print user.email
 #        send_mail(u'拼爱网，密码找回', email_message,'pinloveteam@pinpinlove.com', [user.email])     
          send_mail(u'拼爱网，密码找回', email_message,'pinloveteam@pinpinlove.com',[user.email]) 
          return render(request, 'success.html')  
@@ -249,3 +248,11 @@ def random_str(randomlength=32):
 
 def alter_password(request) : 
     return render(request, 'alter_password.html',{'username': request.user.username})   
+
+# def generate_verification(username) :
+#     if Verification.objects.get(username=username) is not None :
+#          user_code = random_str()
+#          verification = Verification()
+#          verification.username = username
+#          verification.verification_code = user_code
+#          verification.save()
