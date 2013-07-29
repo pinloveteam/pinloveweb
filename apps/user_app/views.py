@@ -203,8 +203,8 @@ def forget_password(request):
 
 #reset the password
 def reset_password(request):
-    if isIdAuthen(request):
-        return render_to_response('reset_password.html',{'username':request.REQUEST.get('username','')}, RequestContext(request) )
+    if request.REQUEST.get('username','') != '' and request.REQUEST.get('user_code','') != '':
+        return render_to_response('reset_password.html',{'username':request.REQUEST.get('username',''),'user_code':request.REQUEST.get('user_code','')}, RequestContext(request) )
     else :
         return render(request, 'error.html')
 
@@ -216,8 +216,9 @@ def commit_password(request):
     newpassword = request.REQUEST.get('newpassword','')
     repassword = request.REQUEST.get('repassword','')
     if newpassword == repassword:
-        user = User.objects.get(username=request.REQUEST.get('username',''))
-        if auth.authenticate(username=request.user.username, password=oldpassword) is not None :
+        if isIdAuthen(request): 
+            user = User.objects.get(username=request.REQUEST.get('username',''))
+        elif auth.authenticate(username=request.user.username, password=oldpassword) is not None :
             user = request.user
         else :
             return render(request, 'error.html') 
