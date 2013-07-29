@@ -204,20 +204,20 @@ def forget_password(request):
 #reset the password
 def reset_password(request):
     if isIdAuthen(request):
-        return render('reset_password.html',{'username':request.REQUEST.get('username',''), 'user_code': request.REQUEST.get('user_code','')})
+        return render_to_response('reset_password.html',{'username':request.REQUEST.get('username',''), 'user_code': request.REQUEST.get('user_code','')})
     else :
         return render(request, 'error.html')
 
 
 #commit the password
+@csrf_protect
 def commit_password(request):
     oldpassword = request.REQUEST.get('oldpassword','')
     newpassword = request.REQUEST.get('newpassword','')
     repassword = request.REQUEST.get('repassword','')
     if newpassword == repassword:
-        if isIdAuthen(request) :
-            user = User.objects.get(username=request.REQUEST.get('username',''))
-        elif auth.authenticate(username=request.user.username, password=oldpassword) is not None :
+        user = User.objects.get(username=request.REQUEST.get('username',''))
+        if auth.authenticate(username=request.user.username, password=oldpassword) is not None :
             user = request.user
         else :
             return render(request, 'error.html') 
