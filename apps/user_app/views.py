@@ -204,7 +204,7 @@ def forget_password(request):
 #reset the password
 def reset_password(request):
     if isIdAuthen(request):
-        return render_to_response('reset_password.html',{'username':request.REQUEST.get('username',''), 'user_code': request.REQUEST.get('user_code','')})
+        return render_to_response('reset_password.html',{'username':request.REQUEST.get('username','')}, RequestContext(request) )
     else :
         return render(request, 'error.html')
 
