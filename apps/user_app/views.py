@@ -202,6 +202,7 @@ def forget_password(request):
          return render(request, 'success.html')  
 
 #reset the password
+@csrf_protect
 def reset_password(request):
     if isIdAuthen(request):
         return render_to_response('reset_password.html',{'username':request.REQUEST.get('username',''), 'user_code': request.REQUEST.get('user_code','')})
