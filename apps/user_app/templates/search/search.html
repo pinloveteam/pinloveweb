@@ -11,8 +11,8 @@
     <form action="/search/search_result/" method="post" onSubmit="return init1();">{% csrf_token %}
     <label for="sex"> 我要找: </label> 
     <select name='sex'>
-       <option value='F'>女朋友</option>
-       <option value='M'>男朋友</option>
+       <option value='F'>美女</option>
+       <option value='M'>帅哥</option>
     </select>
    <label for="minAge">年龄: </label>
     <select name='minAge' id="minAge" >
@@ -20,6 +20,7 @@
 	 <label for="maxAge">到: </label>
     <select name='maxAge' id="maxAge">
     </select>
+    有照片<input type="checkbox" name="image" value="1"> 
      <input type="submit" value="搜索" >
     </form> 
 

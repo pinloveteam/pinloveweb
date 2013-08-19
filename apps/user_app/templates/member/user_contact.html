@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+<SCRIPT src="/static/js/user_contact.js" type=text/javascript></SCRIPT>
+<SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+
+<h2> 请填写以下的信息： </h2>
+
+{% if user_profile_form.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+
+<form action="/user/contact/" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="POST" >
+	
+<table> 
+{{user_contact_form}}
+<tr><td>
+<label for="home"><h4 style="font-weight:10">户口所在:</h2></label>
+</td></tr>
+<tr><th><label for="id_CountryHome">国家:</label></th><td>
+<select id="id_CountryHome" name="CountryHome">
+{%ifnotequal userContact.CountryHome  Null%}
+<option value="0" >请选择</option>
+<option value="{{userContact.CountryHome}}" selected="selected">{{userContact.CountryHome}}</option>
+{% else %} 
+<option value="0" >请选择</option>
+{%endifnotequal%}
+</select></td></tr>
+<tr><th><label for="id_stateProvinceHome">所在省:</label></th>
+<td><select id="id_stateProvinceHome" name="stateProvinceHome">
+{%ifnotequal userContact.stateProvinceHome Null%}
+<option value="-1" >请选择</option>
+<option value="{{userContact.stateProvinceHome}}" selected="selected">{{userContact.stateProvinceHome}}</option>
+{% else %} 
+<option value="-1" >请选择</option>
+{%endifnotequal%}
+</select></td></tr>
+<tr><th><label for="id_cityHome" >所在城市:</label></th>
+<td><select id="id_cityHome" name="cityHome">
+{%ifnotequal userContact.cityHome Null%}
+<option value="-1" >请选择</option>
+<option value="{{userContact.cityHome}}" selected="selected">{{userContact.cityHome}}</option>
+{% else %} 
+<option value="-1" >请选择</option>
+{%endifnotequal%}
+</select></td></tr>
+</table>
+{% csrf_token %}
+<input type="submit" value="提交" />
+</form> 
+
+{% endblock %} 

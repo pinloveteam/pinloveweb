@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+<SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
+<SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+
+<h2> 请填写以下的信息： </h2>
+
+{% if user_profile_form.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+
+<form action="/user/update_basic_profile/" enctype="multipart/form-data" method="POST" >
+	
+<table> 
+<tr><th><label for="id_photo">头像:</label></th><td><img><img src="{{userImage}}" width="100" /></td>
+<td>{{user_profile_form.photo.errors }}<br><a href="/user/upload">上传头像</a></td></tr>
+<tr><th><label for="id_gender">性别:</label></th><td>
+{{user_profile_form.gender}}
+</td>{{user_profile_form.gender.errors }}</tr>
+
+<tr><th><label for="id_year_of_birth">出生年份:</label></th><td>{{user_profile_form.year_of_birth}}</td><td>{{user_profile_form.year_of_birth.errors }}</td></tr>
+<tr><th><label for="id_month_of_birth">出生月份:</label></th><td>{{user_profile_form.month_of_birth}}</td><td>{{user_profile_form.month_of_birth.errors }}</td></tr>
+<tr><th><label for="id_day_of_birth">出生日期:</label></th><td>{{user_profile_form.day_of_birth}}</td><td>{{user_profile_form.day_of_birth.errors }}</td></tr>
+<tr><th><label for="id_age">年龄:</label></th><td>
+{%ifequal useBasicrProfile.age Null%}未填写
+{%else%}
+{{useBasicrProfile.age}}岁
+{%endifequal%}
+</td></tr>
+<tr><th><label for="id_income">年薪（万元）:</label></th><td>{{user_profile_form.income}}</td><td>{{user_profile_form.income.errors }}</td></tr>
+<tr><th><label for="id_sunSign">星座:</label></th><td>
+{%ifequal useBasicrProfile.sunSign -1%}未填写
+{%else%}
+{{useBasicrProfile.get_sunSign_display}}
+{%endifequal%}
+</td></tr>
+<tr><th><label for="id_zodiac">生肖:</label></th><td>
+{%ifequal useBasicrProfile.zodiac -1%}未填写
+{%else%}
+{{useBasicrProfile.get_zodiac_display}}
+{%endifequal%}
+</td></tr>
+<tr><th><label for="id_ethnicGroup">民族:</label></th><td>{{user_profile_form.ethnicGroup}}</td><td>{{user_profile_form.ethnicGroup.errors }}</td></tr>
+<tr><th><label for="id_bloodType">血型:</label></th><td>{{user_profile_form.bloodType}}</td><td>{{user_profile_form.bloodType.errors }}</td></tr>
+<tr><th><label for="id_height">身高（厘米）:</label></th><td>{{user_profile_form.height}}</td><td>{{user_profile_form.height.errors }}</td></tr>
+<tr><th><label for="id_maritalStatus">婚姻状态:</label></th><td>{{user_profile_form.maritalStatus}}</td><td>{{user_profile_form.maritalStatus.errors }}</td></tr>
+<tr><th><label for="id_hasChild">是否有孩子:</label></th><td>{{user_profile_form.hasChild}}</td><td>{{user_profile_form.hasChild.errors }}</td></tr>
+<tr><th><label for="id_education">学位:</label></th><td>{{user_profile_form.education}}</td><td>{{user_profile_form.education.errors }}</td></tr>
+<tr><th><label for="id_link">共享链接:</label></th><td>{{user_profile_form.link}}</td><td>{{user_profile_form.link.errors }}</td></tr>
+<tr><th><label for="id_country">国家:</label></th><td>
+<select id="id_country" name="country">
+{%ifnotequal useBasicrProfile.country  Null%}
+<option value="-1" >请选择</option>
+<option value="{{useBasicrProfile.country}}" selected="selected">{{useBasicrProfile.country}}</option>
+{% else %} 
+<option value="-1" >请选择</option>
+{%endifnotequal%}
+</select></td></tr>
+<tr><th><label for="id_stateProvince">所在省:</label></th>
+<td><select id="id_stateProvince" name="stateProvince">
+{%ifnotequal useBasicrProfile.stateProvince Null%}
+<option value="-1" >请选择</option>
+<option value="{{useBasicrProfile.stateProvince}}" selected="selected">{{useBasicrProfile.stateProvince}}</option>
+{% else %} 
+<option value="-1" >请选择</option>
+{%endifnotequal%}
+</select></td></tr>
+<tr><th><label for="id_city" >所在城市:</label></th>
+<td><select id="id_city" name="city">
+{%ifnotequal useBasicrProfile.city Null%}
+<option value="-1" >请选择</option>
+<option value="{{useBasicrProfile.city}}" selected="selected">{{useBasicrProfile.city}}</option>
+{% else %} 
+<option value="-1" >请选择</option>
+{%endifnotequal%}
+</select></td></tr>
+<tr><th><label for="id_streetAddress">街道地址:</label></th><td>{{user_profile_form.streetAddress}}</td><td>{{user_profile_form.streetAddress.errors }}</td></tr>
+<tr><th><label for="id_position">定位:</label></th><td>{{user_profile_form.position}}</td><td>{{user_profile_form.position.errors }}</td></tr>
+<tr><th><label for="id_language">语言能力:</label></th><td>{{user_profile_form.language}}<td>{{user_profile_form.language.errors }}</td></td></tr>
+
+</table>
+{% csrf_token %}
+<input type="submit" value="提交" />
+</form> 
+
+{% endblock %} 

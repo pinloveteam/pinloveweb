@@ -13,17 +13,15 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 DATABASES = {
     'default': {
-
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
+        'NAME': 'django',                      # Or path to database file if using sqlite3.
                                                 # The following settings are not used with sqlite3:
-        'USER': 'pinloveteam',
-        'PASSWORD': 'redyellowblue#123',
+        'USER': 'root',
+        'PASSWORD': 'jin521436',
         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                             # Set to empty string for default.
     }
 }
-
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
@@ -53,26 +51,33 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT ='/home/brad/workspace/pinloveweb/update'
+MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = 'http://www.pinpinlove.com/update/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = 'http://www.pinpinlove.com/static/'
+STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/home/brad/workspace/pinloveweb/static' ,  
+    ('css',os.path.join(STATIC_ROOT,'css').replace('\\','/') ),  
+    ('js',os.path.join(STATIC_ROOT,'js').replace('\\','/') ), 
+    ('img',os.path.join(STATIC_ROOT,'img').replace('\\','/') ), 
+     os.path.join(PATH,'apps/upload_avatar/static').replace('\\','/'), 
+     os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
+    'D:\\eclipse\\code\\pinloveweb\\apps\\user_app\\static',
+    'D:\\eclipse\\code\\pinloveweb\\update',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -115,8 +120,9 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/pinloveteam/webapps/pinlove/pinloveweb/templates', 
-      '/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/templates', 
+    os.path.join(PATH,'templates').replace('\\','/'), 
+      os.path.join(PATH,'apps/user_app/templates').replace('\\','/'), 
+      os.path.join(PATH,'apps/upload_avatar/templates').replace('\\','/'), 
 )
 
 INSTALLED_APPS = (
@@ -127,6 +133,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.user_app',
+    'apps.upload_avatar',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -165,6 +172,7 @@ LOGGING = {
 # Host for sending e-mail.
 EMAIL_HOST = 'smtp.webfaction.com'
 
+
 # Port for sending e-mail.
 EMAIL_PORT = 587
 
@@ -179,3 +187,12 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 
+#set the session paramter
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE=100000
+
+#test upload the head portrait
+UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/static/user_img/'
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='avatar/'

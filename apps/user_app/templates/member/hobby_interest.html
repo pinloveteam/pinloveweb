@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+<SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
+<SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+
+<h2> 请填写以下的信息： </h2>
+
+{% if user_profile_form.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+
+<form action="/user/user_contact/" enctype="multipart/form-data" method="POST" >
+	
+<table> 
+{{user_ontact_form}}
+
+</table>
+{% csrf_token %}
+<input type="submit" value="提交" />
+</form> 
+
+{% endblock %} 

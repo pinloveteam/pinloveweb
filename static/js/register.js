@@ -1,8 +1,5 @@
 var s=["id_country","id_stateProvince","id_city"];
 var opt0 = ["国家","省份、州","地级市、县"]; 
-//var country=$('#id_country').val();
-//var stateProvince=$('#id_stateProvince').val();
-//var city=$('#id_city').val();
 $(document).ready(function(){
 	
 //	     $('#id_stateProvince').bind('change',function(){
@@ -31,7 +28,7 @@ $(document).ready(function(){
         });
  
 
-        
+//create the onchange        
  function Dsy()
  {
   this.Items = {};
@@ -47,7 +44,8 @@ $(document).ready(function(){
  }
 
  function change(v){
-  var country=$('#id_country').val();
+  var country=$('#id_country').find("option:selected").text();
+//  alert(country)
   var str="0";
   for(i=0;i<v;i++){ str+=("_"+(document.getElementById(s[i]).selectedIndex-1));};
   var ss=document.getElementById(s[v]);
@@ -74,3 +72,11 @@ $(document).ready(function(){
    }
   }
  }
+ 
+//incomme
+function income_choose()
+{
+	
+	}
+
+ 

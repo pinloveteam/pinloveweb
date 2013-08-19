@@ -1,21 +1,117 @@
-{% extends "base.html" %}
+﻿{% extends "base_later.html" %}
+{% load staticfiles %}
+{% block staticfiles %}
+<script>
+    $(document).ready(function(){
+          $("#btn_reg").click(function(event){
+            event.preventDefault();
+          });
+     
+    $("#checkbox1").click(function(){
+    	   
+          $("#btn_reg").removeClass("btn-warning").addClass("disabled");
+      if(($("#checkbox1")[0]).checked){
+          $("#btn_reg").addClass("btn-warning").removeClass("disabled");
+      }
+    });
+    $("#btn_reg").click(function(event){
+        if (($("#checkbox1")[0]).checked){
+          event.submit();
+        };
+     });
+    });
+    
+    function submit()
+    {
+    document.forms[0].action="/account/register/"
+    document.forms[0].submit();
+    }
+</script>
+{% endblock %}
+
 {% block content %}
-
-<h2> 请填写以下注册信息： </h2>
-
 {% if user_form.errors %}
 <p style="color: red;">
 	填写的信息有误，请重填。
 </p>
 {% endif %}
+<div class="container-fluid">
+<div class="row-fluid common_form" > 
+<form class="form-horizontal" action="/account/register/" method="post">{% csrf_token %}
+    <fieldset>
+      <div class="common_form_head">
+        <h4 class="h4_text">用户注册</h4>
+		<p>如果您已拥有账户，则可<a class="cor_yellow" href="login.html">在此登录</a></p>
+      </div>
+    <div class="control-group common_form1">
+          <!-- Text input-->
+          <label class="control-label" for="input01">邮箱</label>
+          <div class="controls">
+            {{user_form.email}}
+            <p class="help-block"></p>
+          </div>
+    </div>
+    <div class="control-group">
+          <!-- Text input-->
+          <label class="control-label" for="input01">用户名</label>
+          <div class="controls">
+            {{user_form.username}}
+            <p class="help-block"></p>
+          </div>
+        </div>
+    <div class="control-group">
+          <label class="control-label">性别</label>
+          <div class="controls">
+      <!-- Inline Radios -->
+      {% for choice in user_form.gender.field.choices %}
+        <label for="id_{{ field.html_name }}_{{ forloop.counter0 }}" class="radio inline" name="gender">
+            <input type="radio"
+                id="id_{{ field.html_name }}_{{ forloop.counter0 }}"
+                value="{{ choice.0 }}"
+                name="gender" />
+            {{ choice.1 }}
+        </label>
+      {% endfor %}
+       </div>
+     </div>
+    <div class="control-group">
+          <!-- Text input-->
+          <label class="control-label" for="input01">密码</label>
+          <div class="controls">
+           {{user_form.password1}}
+            <p class="help-block"></p>
+          </div>
+        </div>
+    <div class="control-group">
+          <!-- Text input-->
+          <label class="control-label" for="input01">确认密码</label>
+          <div class="controls">
+           {{user_form.password2}}
+            <p class="help-block"></p>
+          </div>
+        </div>
+    <div class="control-group">
+          <label class="control-label"></label>
+          <!-- Multiple Checkboxes -->
+          <div class="controls">
+		  <!-- Inline Checkboxes -->
+			<label class="checkbox inline">
+			<input id="checkbox1" type="checkbox" value="我接受">
+				我接受
+			</label>
+		</div>
+    </div>
+    <div class="control-group">
+          <label class="control-label"></label>
+          <!-- Button -->
+          <div class="controls">
+            <input type="submit" id="btn_reg" class="btn btn-large disabled" value=立即注册 onClick="submit()"/>
+          </div>
+        </div>
+    </fieldset>
+  </form>
+</div>
+</div>
+{% endblock %}
 
-<form action="/account/register/" method="post">
-	
-<table> 
-{{ user_form}}
-</table>
-{% csrf_token %}
-<input type="submit" value="提交" />
-</form> 
-
-{% endblock %} 
+ 

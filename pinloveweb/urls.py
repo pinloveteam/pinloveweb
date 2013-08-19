@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^upload_avatar/', include('apps.upload_avatar.urls')),
 
     # Main Pages 
     
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^account/forgetpwdpage/', 'pinloveweb.views.forget_password'),
     # Registration 
     url(r'^account/register/$', 'pinloveweb.views.register_user'), 
+    url(r'^account/test/$', 'pinloveweb.views.register_us'), 
     url(r'^account/register_success/$', 'pinloveweb.views.register_success'),
     url(r'^account/verification/$', 'pinloveweb.views.register_verify'), 
     
@@ -45,5 +47,5 @@ if settings.DEBUG:
    urlpatterns += patterns('',
                           url(r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_ROOT },name="static"),
                            url(r'^site_media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT },name="site_media"),
-                          url(r'^site_media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT },name="update"),
+                          url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT },name="media"),
 )

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+{% endblock %}
+{% block content %}
+
+<h2> 请填写以下的信息： </h2>
+
+{% if user_profile_form.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+
+<form action="/user/appearance/" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="POST" >
+	
+<table> 
+{{user_appearance_form}}
+
+</table>
+{% csrf_token %}
+<input type="submit" value="提交" />
+</form> 
+
+{% endblock %} 

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+{% endblock %}
+{% block content %}
+{% include "upload_avatar/upload_avatar.html" %}
+<img src="{{MEDIA_URL}}user_img/03a98584cdc4f6d637a05ec93f0d4244-50.png" width="200" />
+<br>注：图片大小请不要超过3MB
+{% endblock %} 

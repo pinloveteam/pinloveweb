@@ -2,41 +2,65 @@
 
 # from django.http import HttpResponse 
 
-from django.shortcuts import render , render_to_response
+from django.shortcuts import render , render_to_response, redirect
 from django.http import HttpResponseRedirect 
 from django.contrib import auth , messages
 from django.core.context_processors import csrf 
 
 from django.contrib.auth.models import User 
 from apps.user_app.models import Verification
-
+from apps.user_app.models import user_basic_profile,user_contact_link,user_verification,user_appearance,user_study_work,user_hobby_interest,user_personal_habit,user_family_information,user_family_life
 from django.core.mail import send_mail
 
 from forms import RegistrationForm 
 from pinloveweb import settings
 from apps.user_app.views import isIdAuthen, random_str
+import time
+from django.http.response import HttpResponse
+import datetime
+from django.contrib.auth.forms import UserCreationForm
 
 def login(request) :
        
     unicode_s = u'欢迎来到拼爱网'
-    
+    if "userId" in request.COOKIES:
+        userId=request.COOKIES['userId']
+        login_in=True
+#         response.cookies['userId']['expires'] =datetime.datetime.now() + datetime.timedelta(days=14)
+    else:
+        login_in=False
     if request.user.is_authenticated() :
         return HttpResponseRedirect('/account/loggedin/')
+    if login_in:
+        response=render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
+        response.set_cookie("userId",userId, max_age=60 * 60 * 24 * 7 * 2 ,expires=60 * 60 * 24 * 7 * 2 )
+        return response
     else : 
         args = {}
         args.update(csrf(request))
-        return render(request, 'login.html', args) 
+        return render(request, 'login.html', args,) 
 
 def auth_view(request) : 
     
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
     user = auth.authenticate(username=username, password=password)
-    
+    if request.POST.get('check_save', '') !='':
+        check_save=True
+    else :
+        check_save=False
     if user is not None and user.is_active : 
         # Correct password, and the user is marked "active"
         auth.login(request, user)
         # Redirect to a success page 
+        if check_save:
+            response= render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
+            response.set_cookie("userId",user.id, max_age=60 * 60 * 24 * 7 * 2 ,expires=60 * 60 * 24 * 7 * 2 )
+            return response
+        elif  "userId"  in request.COOKIES:
+            response= render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
+            response.delete_cookie("userId")
+            return response
         return HttpResponseRedirect('/account/loggedin/')
     else : 
         # Show an error page 
@@ -53,6 +77,10 @@ def invalid_login(request) :
 def logout(request) : 
     
     auth.logout(request)
+    if "userId"  in request.COOKIES:
+            response= render(request, 'loggedout.html')
+            response.delete_cookie("userId")
+            return  response
     return HttpResponseRedirect("/account/loggedout/")
     
 def loggedout(request) : 
@@ -66,6 +94,9 @@ def register_user(request) :
     
     if request.method == 'POST' : 
         userForm = RegistrationForm(request.POST) 
+        gender=request.POST.get('gender', '')
+        if gender !="":
+            userForm.gender=gender
         if userForm.is_valid() :
             userForm.save()
             
@@ -80,6 +111,8 @@ def register_user(request) :
             verification.username = username
             verification.verification_code = user_code
             verification.save()
+            sex=userForm.cleaned_data['gender']
+            user_basic_profile(user_id=user.id,gender=sex).save()
             # we need to generate a random number as the verification key 
             
             # user needs email verification 
@@ -122,5 +155,3 @@ def forget_password(request) :
  
                           
                           
-        
-        
