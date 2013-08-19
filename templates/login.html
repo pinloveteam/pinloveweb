@@ -1,9 +1,9 @@
 {% extends "base_later.html" %}
-{% block title %} 登录--拼爱网 {% endblock %}
-{% load staticfiles %}
 {% block staticfiles %}
 <script type="text/javascript">   
-		$('#myCarousel').carousel('next');  
+	$(document).ready(function(){  
+		$('#myCarousel').carousel();  
+    });
 </script>
 	<style type="text/css">
       .form-signin {
@@ -43,9 +43,6 @@
     </style>
 {% endblock %}
 
-{% block navigation %}
-
-{% endblock %}
 
 {% block content %}
 

@@ -8,24 +8,18 @@
           });
      
     $("#checkbox1").click(function(){
-    	   
           $("#btn_reg").removeClass("btn-warning").addClass("disabled");
       if(($("#checkbox1")[0]).checked){
           $("#btn_reg").addClass("btn-warning").removeClass("disabled");
       }
     });
-    $("#btn_reg").click(function(event){
+    $("#btn_reg").click(function(){
         if (($("#checkbox1")[0]).checked){
-          event.submit();
+              document.forms[0].action="/account/register/";
+    		  document.forms[0].submit();
         };
      });
     });
-    
-    function submit()
-    {
-    document.forms[0].action="/account/register/"
-    document.forms[0].submit();
-    }
 </script>
 {% endblock %}
 
@@ -49,6 +43,7 @@
           <div class="controls">
             {{user_form.email}}
             <p class="help-block"></p>
+            {{user_form.email.errors}}
           </div>
     </div>
     <div class="control-group">
@@ -57,6 +52,7 @@
           <div class="controls">
             {{user_form.username}}
             <p class="help-block"></p>
+            {{user_form.username.errors}}
           </div>
         </div>
     <div class="control-group">
@@ -72,6 +68,7 @@
             {{ choice.1 }}
         </label>
       {% endfor %}
+       {{user_form.gender.errors}}
        </div>
      </div>
     <div class="control-group">
@@ -80,6 +77,7 @@
           <div class="controls">
            {{user_form.password1}}
             <p class="help-block"></p>
+            {{user_form.password1.errors}}
           </div>
         </div>
     <div class="control-group">
@@ -88,6 +86,7 @@
           <div class="controls">
            {{user_form.password2}}
             <p class="help-block"></p>
+            {{user_form.password2.errors}}
           </div>
         </div>
     <div class="control-group">
@@ -105,7 +104,7 @@
           <label class="control-label"></label>
           <!-- Button -->
           <div class="controls">
-            <input type="submit" id="btn_reg" class="btn btn-large disabled" value=立即注册 onClick="submit()"/>
+            <input type="submit" id="btn_reg" class="btn btn-large disabled" value="立即注册"/>
           </div>
         </div>
     </fieldset>

@@ -14,10 +14,10 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'django',                      # Or path to database file if using sqlite3.
+        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
                                                 # The following settings are not used with sqlite3:
-        'USER': 'root',
-        'PASSWORD': 'jin521436',
+        'USER': 'pinloveteam',
+        'PASSWORD': 'redyellowblue#123',
         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                             # Set to empty string for default.
     }
@@ -76,8 +76,8 @@ STATICFILES_DIRS = (
     ('img',os.path.join(STATIC_ROOT,'img').replace('\\','/') ), 
      os.path.join(PATH,'apps/upload_avatar/static').replace('\\','/'), 
      os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
-    'D:\\eclipse\\code\\pinloveweb\\apps\\user_app\\static',
-    'D:\\eclipse\\code\\pinloveweb\\update',
+    '/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/static',
+    '/home/pinloveteam/webapps/pinlove/pinloveweb/update',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

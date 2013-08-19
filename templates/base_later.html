@@ -1,6 +1,5 @@
 <!DOCTYPE html> 
 <html>
-
 <head>
 	<title> {% block title %} 拼爱网 {% endblock %} </title>
 	{% load staticfiles %}
@@ -9,13 +8,11 @@
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
 	{% block staticfiles %}{% endblock %}
-	
 </head> 
-
 <body>
 {% block navigation %}
 <div class="page_top">
-			<div class="logo"><a href="login.html"><img alt="140x140" src="{{STATIC_URL}}img/logo.png"/></a></div>
+			<div class="logo"><a href="/"><img alt="140x140" src="{{STATIC_URL}}img/logo.png"/></a></div>
 </div>
 <div class="language">
 		<a class="change_lang" href="#;">繁體</a>
@@ -25,5 +22,4 @@
 {% block content %}{% endblock %}
 {% block footer %}{% endblock %}
 </body> 
-
 </html> 

@@ -472,3 +472,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .label,.fR .btn,.badge,.progress {
     border-radius: 0;
 }
+
+.errorlist{
+	color:red;
+}
