@@ -18,8 +18,11 @@
 <form action="/user/contact/" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="POST" >
 	
 <table> 
-<tr>
-{{user_contact_form}}
+<tr><th><label for="id_trueName">真实姓名:</label></th><td>{{user_contact_form.trueName}}</td></tr>
+<tr><th><label for="id_mobileNumber">手机号:</label></th><td>{{user_contact_form.mobileNumber}}</td></tr>
+<tr><th><label for="id_IDCardNumber">身份证号:</label></th><td>{{user_contact_form.IDCardNumber}}</td></tr>
+<tr><th><label for="id_QQ">QQ:</label></th><td>{{user_contact_form.QQ}}</td></tr>
+<tr><th><label for="id_MSN">MSN:</label></th><td>{{user_contact_form.MSN}}</td></tr>
 <tr><td>
 <label for="home"><h4 style="font-weight:10">户口所在:</h2></label>
 </td></tr>
