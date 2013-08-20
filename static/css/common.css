@@ -476,3 +476,20 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .errorlist{
 	color:red;
 }
+
+/* footer */
+.indexFooterWrapper {
+    background: none repeat scroll 0 0 #AAAAAA;
+    height: 60px;
+}
+
+.indexFooter {
+    color: #FFFFFF;
+	margin:10px auto;	
+    width: 1000px;
+	text-align:center; 
+}
+
+.fn-left{
+    display: inline;
+}
