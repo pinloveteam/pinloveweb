@@ -77,10 +77,15 @@ def update_Basic_Profile_view(request):
         else : 
                 useBasicrProfile = user_basic_profile.objects.get(user_id=request.user.id)
                 from apps.user_app.models import User
-                userImage=User.objects.get(user_id=request.user.id)
+                count =User.objects.filter(user_id=request.user.id).count()
+                if count>0:
+                    userImage=User.objects.get(user_id=request.user.id)
+                    args['userImage']=settings.MEDIA_URL+'user_img/'+userImage.get_avatar_name(app_settings.UPLOAD_AVATAR_DEFAULT_SIZE)
+                else:
+                    args['userImage']=settings.MEDIA_URL+'user_img/image.png'
                 args['user_profile_form'] = UserBasicProfileForm(instance=useBasicrProfile) 
                 args['useBasicrProfile']=useBasicrProfile
-                args['userImage']=settings.MEDIA_URL+'user_img/'+userImage.get_avatar_name(app_settings.UPLOAD_AVATAR_DEFAULT_SIZE)
+                
         
         return render(request, 'member/update_Basic_Profile.html', args,)
     

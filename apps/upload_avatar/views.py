@@ -142,7 +142,7 @@ def crop_avatar(request):
     box = [int(x * ratio) for x in [x1, y1, x2, y2]]
     avatar = orig.crop(box)
     avatar_name, _ = os.path.splitext(upim.image)
-    user= User.objects.get(user_id=get_uid(request))
+    count = User.objects.filter(user_id=get_uid(request)).count()
     
     def _resize(size):
         res = avatar.resize((size, size), Image.ANTIALIAS)
@@ -154,8 +154,9 @@ def crop_avatar(request):
         
     for size in UPLOAD_AVATAR_RESIZE_SIZE:
         _resize(size)
-        
-    _delete_crop_avatar_on_disk(None, user,None,None)
+    if count >0:
+        user=User.objects.get(user_id=get_uid(request))
+        _delete_crop_avatar_on_disk(None, user,None,None)
     avatar_crop_done.send(sender=None, uid=get_uid(request), avatar_name=avatar_name)
     if UPLOAD_AVATAR_DELETE_ORIGINAL_AFTER_CROP:
         upim.delete()
