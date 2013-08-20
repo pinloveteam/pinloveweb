@@ -12,12 +12,22 @@ class RegistrationForm (UserCreationForm) :
         for key in self.fields:
             self.fields[key].widget.attrs['class'] = 'input-xlarge'     #添加css class 样式
         self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名'
-        self.fields['password1'].widget.attrs['placeholder'] = r'6-16个字符组成，不能为9为以下纯数字'
+        self.fields['password1'].widget.attrs['placeholder'] = r'6-20位字符，可由英文字母、数字和下划线组成'
         self.fields['password2'].widget.attrs['placeholder'] = r'再次输入密码'
          
     email = forms.EmailField(required=True, label='邮件',widget=forms.TextInput(attrs={'placeholder': r'请输入常用邮箱'})) 
     gender=forms.ChoiceField(required=True, label='性别', choices=((u'M', u'帅哥'), (u'F', u'美女'), ),
                              widget=forms.RadioSelect())
+    username=forms.RegexField(label=_("Username"), max_length=30,
+        regex=r'^[a-zA-Z\xa0-\xff_][0-9a-zA-Z\xa0-\xff_]{2,20}$',
+        help_text=r"必填。英文，或者中文，或者下划线开头,2～20个字符",
+        error_messages={
+            'invalid':r'必须英文，或者中文，或者下划线开头,2～20个字符'})
+    password1=forms.RegexField(label=_("Password"),widget=forms.PasswordInput,
+        regex=r'^[0-9a-zA-Z\xff_]{6,20}$',
+        help_text=r"必填。6-20位字符，可由英文字母、数字和下划线组成",
+        error_messages={
+            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'})
     # my_default_errors = { 'required': u'此项信息必须',
     #'invalid': u'请输入正确的数值'}
     

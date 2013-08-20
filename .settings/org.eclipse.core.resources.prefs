@@ -1,4 +1,4 @@
-#Sat Aug 17 14:32:21 CST 2013
+#Mon Aug 19 15:46:48 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
@@ -16,6 +16,7 @@ encoding//apps/user_app/test.py=utf-8
 encoding//apps/user_app/user_validators.py=utf-8
 encoding//apps/user_app/views.py=utf-8
 encoding//pinloveweb/forms.py=utf-8
+encoding//pinloveweb/settings.py=utf-8
 encoding//pinloveweb/test.py=utf-8
 encoding//pinloveweb/views.py=utf-8
 encoding//util/form_util.py=utf-8

@@ -94,10 +94,8 @@ def register_user(request) :
     
     if request.method == 'POST' : 
         userForm = RegistrationForm(request.POST) 
-        gender=request.POST.get('gender', '')
-        if gender !="":
-            userForm.gender=gender
-        if userForm.is_valid() :
+        check_box_list = request.REQUEST.getlist('check_box_list')
+        if userForm.is_valid() and len(check_box_list):
             userForm.save()
             
             username = userForm.cleaned_data['username']
@@ -130,6 +128,7 @@ def register_user(request) :
             # return HttpResponseRedirect('/account/register_success/') 
         else : 
             args['user_form'] = userForm
+
     else : 
         args['user_form']= RegistrationForm() 
     

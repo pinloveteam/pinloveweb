@@ -8,7 +8,7 @@
           });
      
     $("#checkbox1").click(function(){
-          $("#btn_reg").removeClass("btn-warning").addClass("disabled");
+       $("#btn_reg").removeClass("btn-warning").addClass("disabled");
       if(($("#checkbox1")[0]).checked){
           $("#btn_reg").addClass("btn-warning").removeClass("disabled");
       }
@@ -52,6 +52,9 @@
           <div class="controls">
             {{user_form.username}}
             <p class="help-block"></p>
+            {%if user_form.username.errors|length == 0 %}
+            {{user_form.username.help_text}}
+            {%endif %}
             {{user_form.username.errors}}
           </div>
         </div>
@@ -60,9 +63,9 @@
           <div class="controls">
       <!-- Inline Radios -->
       {% for choice in user_form.gender.field.choices %}
-        <label for="id_{{ field.html_name }}_{{ forloop.counter0 }}" class="radio inline" name="gender">
+        <label for="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}" class="radio inline" name="gender">
             <input type="radio"
-                id="id_{{ field.html_name }}_{{ forloop.counter0 }}"
+                id="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}"
                 value="{{ choice.0 }}"
                 name="gender" />
             {{ choice.1 }}
@@ -95,9 +98,10 @@
           <div class="controls">
 		  <!-- Inline Checkboxes -->
 			<label class="checkbox inline">
-			<input id="checkbox1" type="checkbox" value="我接受">
+			<input id="checkbox1" type="checkbox" value="我接受" name="check_box_list"/>
 				我接受
 			</label>
+			{{check_box_list_errors}}
 		</div>
     </div>
     <div class="control-group">

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Django settings for pinlove project.
 import os
 PATH=os.path.dirname(os.path.dirname(__file__))
@@ -10,7 +11,19 @@ ADMINS = (
 
 MANAGERS = ADMINS
 ADMIN_MEDIA_PREFIX = '/admin_media/'
-
+#-----本地环境----
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#         'NAME': 'django',                      # Or path to database file if using sqlite3.
+#                                                 # The following settings are not used with sqlite3:
+#         'USER': 'root',
+#         'PASSWORD': 'jin521436',
+#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#         'PORT': '',                             # Set to empty string for default.
+#     }
+# }
+#-----服务器环境环境----
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -51,34 +64,42 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
+# 本地环境-----
 # MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+#---服务器环境-----
 MEDIA_ROOT ='/home/brad/workspace/pinloveweb/update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
+#---本地环境-----
+# MEDIA_URL = '/media/'
+#---服务器环境-----
 MEDIA_URL = 'http://www.pinpinlove.com/update/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
+#---本地环境-----
 # STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+#---服务器环境-----
 STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/'
+#---本地环境-----
+# STATIC_URL = '/static/'
+#---服务器环境-----
+STATIC_URL = 'http://www.pinpinlove.com/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ('css',os.path.join(STATIC_ROOT,'css').replace('\\','/') ),  
-    ('js',os.path.join(STATIC_ROOT,'js').replace('\\','/') ), 
-    ('img',os.path.join(STATIC_ROOT,'img').replace('\\','/') ), 
+    ('css',os.path.join(PATH,'static/css').replace('\\','/') ),  
+    ('js',os.path.join(PATH,'static/js').replace('\\','/') ), 
+    ('img',os.path.join(PATH,'static/img').replace('\\','/') ), 
      os.path.join(PATH,'apps/upload_avatar/static').replace('\\','/'), 
      os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
-    '/home/pinloveteam/webapps/pinlove/pinloveweb/apps/user_app/static',
-    '/home/pinloveteam/webapps/pinlove/pinloveweb/update',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -122,8 +143,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PATH,'templates').replace('\\','/'), 
-      os.path.join(PATH,'apps/user_app/templates').replace('\\','/'), 
-      os.path.join(PATH,'apps/upload_avatar/templates').replace('\\','/'), 
+    os.path.join(PATH,'apps/user_app/templates').replace('\\','/'), 
+    os.path.join(PATH,'apps/upload_avatar/templates').replace('\\','/'), 
 )
 
 INSTALLED_APPS = (
@@ -192,8 +213,14 @@ EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE=100000
 
-#test upload the head portrait
-UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/static/user_img/'
-UPLOAD_AVATAR_URL_PREFIX_CROPPED='avatar/'
+# upload the head portrait
+#---本地环境-----
+# UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+# UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+#---服务器环境-----
+UPLOAD_AVATAR_UPLOAD_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'

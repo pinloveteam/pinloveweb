@@ -30,7 +30,6 @@ urlpatterns = patterns('',
     url(r'^account/forgetpwdpage/', 'pinloveweb.views.forget_password'),
     # Registration 
     url(r'^account/register/$', 'pinloveweb.views.register_user'), 
-    url(r'^account/test/$', 'pinloveweb.views.register_us'), 
     url(r'^account/register_success/$', 'pinloveweb.views.register_success'),
     url(r'^account/verification/$', 'pinloveweb.views.register_verify'), 
     
