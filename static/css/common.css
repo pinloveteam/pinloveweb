@@ -111,9 +111,7 @@
 	-webkit-box-shadow: 2px 2px 10px #909090;/*safari»òchrome*/
 	box-shadow:2px 2px 10px #909090;/*opera»òie9*/
 }
-.feed:hover .feed-relation {
-    visibility: visible;
-}
+
 .feed-main {
     background: none repeat scroll 0 0 #FFFFFF;
     padding: 0 0 10px 167px;
@@ -209,7 +207,6 @@
     float: right;
     line-height: 26px;
     margin-right: 10px;
-    visibility: hidden;
 }
 .feed-relation a {
     margin-left: 10px;
@@ -351,6 +348,11 @@
 }
 
 /*user-info*/
+.top{ 
+  	width:auto;
+	height:10px;
+	background-color:#FF9999;
+}
 .user-info{
 	width:250px;
 	height:600px;
@@ -472,15 +474,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .label,.fR .btn,.badge,.progress {
     border-radius: 0;
 }
-
-.errorlist{
-	color:red;
-}
-
 /* footer */
 .indexFooterWrapper {
     background: none repeat scroll 0 0 #AAAAAA;
     height: 60px;
+    clear: both; 
+    position: relative; 
+    z-index: 10; 
+    margin-top: 132px;
 }
 
 .indexFooter {
@@ -493,3 +494,4 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .fn-left{
     display: inline;
 }
+
