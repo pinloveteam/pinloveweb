@@ -74,6 +74,7 @@ $(function(){
 		//点击输入学校名
 		$("div[class='proSelect'] span a").live("click",function(){
 		   $("div[class='proSelect'] select").val('99');
+		   
 		   $("div[class='schoolList'] ul").html("");
 		    $("div[class='proSelect'] span").hide();
 		    $("div[class='proSelect'] input").show();
