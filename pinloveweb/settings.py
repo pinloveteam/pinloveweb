@@ -67,7 +67,7 @@ USE_TZ = True
 # 本地环境-----
 # MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
 #---服务器环境-----
-MEDIA_ROOT ='/home/brad/workspace/pinloveweb/update'
+MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -220,7 +220,7 @@ SESSION_COOKIE_AGE=100000
 # UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 # UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 #---服务器环境-----
-UPLOAD_AVATAR_UPLOAD_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
+UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
 UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
