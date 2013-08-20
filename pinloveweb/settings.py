@@ -15,10 +15,10 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'django',                      # Or path to database file if using sqlite3.
+#         'NAME': 'pinlove',                      # Or path to database file if using sqlite3.
 #                                                 # The following settings are not used with sqlite3:
 #         'USER': 'root',
-#         'PASSWORD': 'jin521436',
+#         'PASSWORD': 'sa',
 #         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
 #         'PORT': '',                             # Set to empty string for default.
 #     }
@@ -215,8 +215,8 @@ SESSION_COOKIE_AGE=100000
 
 # upload the head portrait
 #---本地环境-----
-# UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-# UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+# UPLOAD_AVATAR_UPLOAD_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_AVATAR_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
 # UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 # UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 #---服务器环境-----
