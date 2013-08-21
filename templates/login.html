@@ -30,25 +30,32 @@
         margin-bottom: 15px;
         padding: 7px 9px;
       }
-	  #login{ 
-	  position:relative; 
-	  left:20px; 
-	  top:120px; 
-	} 
 	.bs-docs-example{
-		position:relative; 
-		left:48px;
-		top: 48px;
+	width:480px;
+	float: left;
+	margin: 40px;
+	overflow: hidden;
+	position: relative;
+	height: 100%;
+	}
+	
+	#login{
+	margin: 40px;
+	float: right;
+	}
+	
+	#login:after,.bs-docs-example:after{
+	clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
 	}
     </style>
 {% endblock %}
-
-
 {% block content %}
-
 <div class="container-fluid main">
 	<div class="row-fluid">
-		<div class="span6">
 	 <div class="bs-docs-example">
               <div id="myCarousel" class="carousel slide">
                 <ol class="carousel-indicators">
@@ -58,21 +65,21 @@
                 </ol>
                 <div class="carousel-inner">
                   <div class="item">
-                    <img src="{{STATIC_URL}}img/1.jpg" alt="">
+                    <img src="./img/1.jpg" alt="">
                     <div class="carousel-caption">
                       <h4>First Thumbnail label</h4>
                       <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
                     </div>
                   </div>
                   <div class="item active">
-                    <img src="{{STATIC_URL}}img/2.jpg" alt="">
+                    <img src="./img/2.jpg" alt="">
                     <div class="carousel-caption">
                       <h4>Second Thumbnail label</h4>
                       <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
                     </div>
                   </div>
                   <div class="item">
-                    <img src="{{STATIC_URL}}img/3.jpg" alt="">
+                    <img src="./img/3.jpg" alt="">
                     <div class="carousel-caption">
                       <h4>Third Thumbnail label</h4>
                       <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
@@ -83,21 +90,18 @@
                 <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
               </div>
             </div>
-		</div>
-		<div class="span6">
 			<div id="login">
-				<form action="/account/auth/" method="post" class="form-signin"> {% csrf_token %}
+				<form action="" method="post" class="form-signin">
 					<h2 class="form-signin-heading">请登录</h2>
-					<input type="text" class="input-block-level" placeholder="请输入用户名" name="username" value="" id="username">
-					<input type="password" class="input-block-level" placeholder="请输入密码" name="password" value="" id="password">
+					<input type="text" class="input-block-level" placeholder="请输入用户名">
+					<input type="password" class="input-block-level" placeholder="请输入密码">
 					<button class="btn btn-large btn-success btn-block" type="submit">登录</button>
-					<input type="checkbox"> 记住登录状态
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href=/account/register/>注册</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
-					<a href=/account/forgetpwdpage/>忘记密码</a>
+					 <input type="checkbox"> 记住登录状态&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href=registerpage.html>注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+					<a href=forget_password.html>忘记密码</a>
 				</form>
 			</div>
-		</div>
 	</div>
+</div>
 </div>
 {% endblock %}

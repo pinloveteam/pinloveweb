@@ -1,4 +1,8 @@
-﻿html,body{
+﻿*{
+	margin: 0;
+    padding: 0;
+}
+html,body{
     background: none repeat scroll 0 0 #EDEFF5;
     font-family:微软雅黑,黑体,宋体;
 	height:100%;
@@ -8,7 +12,6 @@
 }
 
 .main {
-	overflow:auto;
 	padding-bottom: 40px;
 	}
 
