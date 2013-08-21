@@ -11,6 +11,7 @@
 </head> 
 <body>
 {% block navigation %}
+<div class="wrap">  
 <div class="page_top">
 			<div class="logo"><a href="/"><img alt="140x140" src="{{STATIC_URL}}img/logo.png"/></a></div>
 </div>
@@ -21,7 +22,7 @@
 {% endblock %}
 {% block content %}{% endblock %}
 {% block footer %}
-<div class="indexFooterWrapper">
+</div>
   <div class="indexFooter">
 	<ul class="indexFooterRight inline">
 		<li><a href="#">关于我们</a></li>
@@ -30,9 +31,8 @@
 		<li><a href="#">隐私保护</a></li>
 		<li><a href="#">帮助</a></li>
 	</ul>
-  	<p class="fn-left">Copyright  &copy;  2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;京ICP证130108号</p>
+  	<p>Copyright  &copy;  2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;京ICP证130108号</p>
   </div>
-</div>
 {% endblock %}
 </body> 
 </html> 
