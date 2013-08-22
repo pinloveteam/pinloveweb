@@ -6,58 +6,52 @@
     });
 </script>
 	<style type="text/css">
-      .form-signin {
-        max-width: 300px;
-        padding: 19px 29px 29px;
-        margin: 0 auto 20px;
-        background-color: #fff;
-        border: 1px solid #e5e5e5;
-        -webkit-border-radius: 5px;
-           -moz-border-radius: 5px;
-                border-radius: 5px;
-        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-                box-shadow: 0 1px 2px rgba(0,0,0,.05);
-      }
-      .form-signin .form-signin-heading,
-      .form-signin .checkbox {
-        margin-bottom: 10px;
-      }
-      .form-signin input[type="text"],
-      .form-signin input[type="password"] {
-        font-size: 16px;
-        height: auto;
-        margin-bottom: 15px;
-        padding: 7px 9px;
-      }
-	.bs-docs-example{
-	width:480px;
-	float: left;
-	margin: 40px;
-	overflow: hidden;
-	position: relative;
-	height: 100%;
-	}
-	
-	#login{
-	margin: 40px;
+.form-signin {
+	max-width: 300px;
+	padding: 19px 5px 29px;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+	margin-bottom: 10px;
+}
+
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+	font-size: 16px;
+	height: auto;
+	margin-bottom: 15px;
+	padding: 7px 9px;
+}
+
+#myCarousel{
+	margin-bottom:0;
+}
+.dotted {
+    color: #000;
+    margin-left:10px;
+}
+.login_bottom{
 	float: right;
-	}
-	
-	#login:after,.bs-docs-example:after{
-	clear: both;
-    content: ".";
-    display: block;
-    height: 0;
-    visibility: hidden;
-	}
+	margin-top: 130px;
+}
+.panel{
+	background-color:#fff ;
+	margin-top: 20px;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
+	-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+	-webkit-box-shadow: 2px 2px 10px #909090;/*safari?òchrome*/
+	box-shadow:2px 2px 10px #909090;/*opera?òie9*/
+｝ 
+     
     </style>
 {% endblock %}
 {% block content %}
-<div class="container-fluid main">
-	<div class="row-fluid">
-	 <div class="bs-docs-example">
-              <div id="myCarousel" class="carousel slide">
+<div class="container">
+	<div class="span12 panel">
+        	<div class="row">
+                <div class="span8">
+				<div id="myCarousel" class="carousel slide">
                 <ol class="carousel-indicators">
                   <li data-target="#myCarousel" data-slide-to="0" ></li>
                   <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
@@ -89,25 +83,27 @@
                 <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
                 <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
               </div>
-            </div>
-			<div id="login">
-				<form action="" method="post" class="form-signin">
+                </div>
+        <div class="span4">
+ 			<div id="login">
+				<form action="/account/login/" method="post" class="form-signin">{% csrf_token %}
 					<h2 class="form-signin-heading">请登录</h2>
 					<input type="text" class="input-block-level" placeholder="请输入用户名">
 					<input type="password" class="input-block-level" placeholder="请输入密码">
-					<label class="checkbox input-block-level">
-					<input type="checkbox">记住登录状态
-					</label>
 					<button class="btn btn-large btn-success" type="submit">登录</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href=forget_password.html>忘记密码?</a>
-					<p class="help-block"></p>
-					<a class="btn btn-large btn-block btn-info" href=registerpage.html>注册</a>
+					<label class="checkbox inline">
+					 <input type="checkbox">记住登录状态
+					 </label>
+					<ul class="login_bottom inline">
+						<li><a href="/account/forgetpwdpage/">忘记密码？</a><span class="dotted">|</span></li>
+						<li><a href="/account/register/">立即注册<span class="dotted">|</span></a></li>
+						<li><a href="#">问题反馈</a></li>
+					</ul>
 				</form>
 			</div>
-	</div>
-</div>
+        </div>
+			</div>
+		</div>
 </div>
 {% endblock %}
