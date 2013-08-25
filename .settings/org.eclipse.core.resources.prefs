@@ -1,8 +1,10 @@
-#Mon Aug 19 15:46:48 CST 2013
+#Thu Aug 22 14:55:38 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
 eclipse.preferences.version=1
+encoding//apps/search_app/forms.py=utf-8
+encoding//apps/search_app/views.py=utf-8
 encoding//apps/upload_avatar/__init__.py=utf-8
 encoding//apps/upload_avatar/app_settings.py=utf-8
 encoding//apps/upload_avatar/models.py=utf-8
@@ -19,4 +21,5 @@ encoding//pinloveweb/forms.py=utf-8
 encoding//pinloveweb/settings.py=utf-8
 encoding//pinloveweb/test.py=utf-8
 encoding//pinloveweb/views.py=utf-8
+encoding//util/connection_db.py=utf-8
 encoding//util/form_util.py=utf-8

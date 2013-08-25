@@ -1,6 +1,6 @@
 var dsy = new Dsy();
 
-dsy.add("0",["中国","韩国","日本","新加坡","马来西亚","菲律宾","沙特阿拉伯","朝鲜","越南","缅甸","德国","英国","法国","爱尔兰","波兰","西班牙","意大利","俄罗斯","荷兰","美国","加拿大","巴西","阿根廷","新西兰","澳大利亚","印度","埃及"]);
+dsy.add("0",["中国","美国","日本","新加坡","马来西亚","菲律宾","沙特阿拉伯","朝鲜","越南","缅甸","德国","英国","法国","爱尔兰","波兰","西班牙","意大利","俄罗斯","荷兰","韩国","加拿大","巴西","阿根廷","新西兰","澳大利亚","印度","埃及"]);
 
 dsy.add("0_0",["安徽","北京","福建","甘肃","广东","广西","贵州","海南","河北","河南","黑龙江","湖北","湖南","吉林","江苏","江西","辽宁","内蒙古","宁夏","青海","山东","山西","陕西","上海","四川","天津","西藏","新疆","云南","浙江","重庆"]);
 
@@ -37,23 +37,23 @@ dsy.add("0_0_29",["杭州","湖州","嘉兴","金华","丽水","宁波","绍兴"
 dsy.add("0_0_30",["重庆"]);
 
 
-dsy.add("0_1",["汉城特別市","釜山广域市","大邱广域市","仁川广域市","光州广域市","大田广域市","蔚山广域市","京畿道","江原道","忠清北道","忠清南道","全罗北道","全罗南道","庆尚北道","庆尚南道","济州道"]);
-dsy.add("0_1_0",["汉城"]);
-dsy.add("0_1_1",["釜山","机张郡"]);
-dsy.add("0_1_2",["大邱","达城郡"]);
-dsy.add("0_1_3",["仁川","江华郡","瓮津郡"]);
-dsy.add("0_1_4",["光州"]);
-dsy.add("0_1_5",["大田"]);
-dsy.add("0_1_6",["蔚山","蔚州郡"]);
-dsy.add("0_1_7",["水原市","城南市","安山市","高阳市","安养市","富川市"]);
-dsy.add("0_1_8",["春川市","原州市","江陵市"]);
-dsy.add("0_1_9",["清州市"]);
-dsy.add("0_1_10",["天安市"]);
-dsy.add("0_1_11",["全州市","群山市","益山市"]);
-dsy.add("0_1_12",["木浦市","丽水市","顺天市"]);
-dsy.add("0_1_13",["浦项市","龟尾市","庆州市"]);
-dsy.add("0_1_14",["昌原市","马山市","晋州市"]);
-dsy.add("0_1_15",["济州市","西归浦市","北济州郡","南济州郡"]);
+dsy.add("0_19",["汉城特別市","釜山广域市","大邱广域市","仁川广域市","光州广域市","大田广域市","蔚山广域市","京畿道","江原道","忠清北道","忠清南道","全罗北道","全罗南道","庆尚北道","庆尚南道","济州道"]);
+dsy.add("0_19_0",["汉城"]);
+dsy.add("0_19_1",["釜山","机张郡"]);
+dsy.add("0_19_2",["大邱","达城郡"]);
+dsy.add("0_19_3",["仁川","江华郡","瓮津郡"]);
+dsy.add("0_19_4",["光州"]);
+dsy.add("0_19_5",["大田"]);
+dsy.add("0_19_6",["蔚山","蔚州郡"]);
+dsy.add("0_19_7",["水原市","城南市","安山市","高阳市","安养市","富川市"]);
+dsy.add("0_19_8",["春川市","原州市","江陵市"]);
+dsy.add("0_19_9",["清州市"]);
+dsy.add("0_19_10",["天安市"]);
+dsy.add("0_19_11",["全州市","群山市","益山市"]);
+dsy.add("0_19_12",["木浦市","丽水市","顺天市"]);
+dsy.add("0_19_13",["浦项市","龟尾市","庆州市"]);
+dsy.add("0_19_14",["昌原市","马山市","晋州市"]);
+dsy.add("0_19_15",["济州市","西归浦市","北济州郡","南济州郡"]);
 
 
 dsy.add("0_2",["东京都","神奈川县","大阪府","爱知县","北海道","兵库县","京都府","福冈县","神奈川县","埼玉县","广岛县","宫城县","福冈县","千叶县"]);
@@ -308,43 +308,43 @@ dsy.add("0_18_10",["米德尔堡 Middelburg"]);
 dsy.add("0_18_11",["海牙 's-Gravenhage","鹿特丹 Rotterdam","多德雷赫特 Dordrecht","莱顿 Leiden","佐特尔梅 Zoetermeer"]);
 
 
-dsy.add("0_19",["阿拉巴马 Alabama","阿拉斯加 Alaska","亚利桑那 Arizona","阿肯色 Arkansas","加利福尼亚 California","科罗拉多 Colorado","康涅狄格 Connecticut","特拉华 Delaware","哥伦比亚特区 District of Columbia","佛罗里达 Florida","乔治亚 Georgia","夏威夷 Hawaii","爱达荷 Idaho","伊利诺斯 Illinois","印地安那 Indiana","衣阿华 Iowa","堪萨斯 Kansas","肯塔基 Kentucky","路易斯安那 Louisiana","缅因 Maine","马里兰 Maryland","马萨诸塞 Massachusetts","密歇根 Michigan","明尼苏达 Minnesota","密西西比 Mississippi","密苏里 Missouri","蒙大拿 Montana","内布拉斯加 Nebraska","内华达 Nevada","新罕布什尔 New Hampshire","新泽西 New Jersey","新墨西哥 New Mexico","纽约 New York","犹他 Utah","华盛顿 Washington","威斯康星 Wisconsin"]);
-dsy.add("0_19_0",["蒙哥马利 Montgomery"]);
-dsy.add("0_19_1",["朱诺 Juneau"]);
-dsy.add("0_19_2",["菲尼克斯 Phoenix"]);
-dsy.add("0_19_3",["小石城 Little Rock"]);
-dsy.add("0_19_4",["萨克拉门多 Sacramento"]);
-dsy.add("0_19_5",["丹佛 Denver"]);
-dsy.add("0_19_6",["哈特福德 Hartford"]);
-dsy.add("0_19_7",["多佛 Dover"]);
-dsy.add("0_19_8",["华盛顿 Washington"]);
-dsy.add("0_19_9",["塔拉哈西 Tallahassee"]);
-dsy.add("0_19_10",["亚特兰大 Atlanta"]);
-dsy.add("0_19_11",["檀香山 Honolulu"]);
-dsy.add("0_19_12",["博伊亚 Boise"]);
-dsy.add("0_19_13",["斯普林菲尔德 Springfield"]);
-dsy.add("0_19_14",["印第安纳波利斯 Indianapolis"]);
-dsy.add("0_19_15",["得梅因 Des Moines"]);
-dsy.add("0_19_16",["托皮卡 Topeka"]);
-dsy.add("0_19_17",["法兰克福 Frankfort"]);
-dsy.add("0_19_18",["巴吞鲁日 Baton Rouge"]);
-dsy.add("0_19_19",["奥古斯塔 Augusta"]);
-dsy.add("0_19_20",["安纳波利斯 Annapolis"]);
-dsy.add("0_19_21",["波土顿 Boston"]);
-dsy.add("0_19_22",["兰辛 Lansing"]);
-dsy.add("0_19_23",["圣保罗 St.Paul"]);
-dsy.add("0_19_24",["杰克逊 Jackson"]);
-dsy.add("0_19_25",["杰斐逊城 Jefferson City"]);
-dsy.add("0_19_26",["赫勒纳 Helena"]);
-dsy.add("0_19_27",["林肯 Lincoln"]);
-dsy.add("0_19_28",["卡森城 Carson City"]);
-dsy.add("0_19_29",["康科德 Concord"]);
-dsy.add("0_19_30",["特伦顿 Trenton"]);
-dsy.add("0_19_31",["圣菲 Santa Fe"]);
-dsy.add("0_19_32",["奥尔巴尼 Albany"]);
-dsy.add("0_19_33",["盐湖城 Salt Lake City"]);
-dsy.add("0_19_34",["奥林匹亚 Olympia"]);
-dsy.add("0_19_35",["麦迪逊 Madison"]);
+dsy.add("0_1",["阿拉巴马 Alabama","阿拉斯加 Alaska","亚利桑那 Arizona","阿肯色 Arkansas","加利福尼亚 California","科罗拉多 Colorado","康涅狄格 Connecticut","特拉华 Delaware","哥伦比亚特区 District of Columbia","佛罗里达 Florida","乔治亚 Georgia","夏威夷 Hawaii","爱达荷 Idaho","伊利诺斯 Illinois","印地安那 Indiana","衣阿华 Iowa","堪萨斯 Kansas","肯塔基 Kentucky","路易斯安那 Louisiana","缅因 Maine","马里兰 Maryland","马萨诸塞 Massachusetts","密歇根 Michigan","明尼苏达 Minnesota","密西西比 Mississippi","密苏里 Missouri","蒙大拿 Montana","内布拉斯加 Nebraska","内华达 Nevada","新罕布什尔 New Hampshire","新泽西 New Jersey","新墨西哥 New Mexico","纽约 New York","犹他 Utah","华盛顿 Washington","威斯康星 Wisconsin"]);
+dsy.add("0_1_0",["蒙哥马利 Montgomery"]);
+dsy.add("0_1_1",["朱诺 Juneau"]);
+dsy.add("0_1_2",["菲尼克斯 Phoenix"]);
+dsy.add("0_1_3",["小石城 Little Rock"]);
+dsy.add("0_1_4",["萨克拉门多 Sacramento"]);
+dsy.add("0_1_5",["丹佛 Denver"]);
+dsy.add("0_1_6",["哈特福德 Hartford"]);
+dsy.add("0_1_7",["多佛 Dover"]);
+dsy.add("0_1_8",["华盛顿 Washington"]);
+dsy.add("0_1_9",["塔拉哈西 Tallahassee"]);
+dsy.add("0_1_10",["亚特兰大 Atlanta"]);
+dsy.add("0_1_11",["檀香山 Honolulu"]);
+dsy.add("0_1_12",["博伊亚 Boise"]);
+dsy.add("0_1_13",["斯普林菲尔德 Springfield"]);
+dsy.add("0_1_14",["印第安纳波利斯 Indianapolis"]);
+dsy.add("0_1_15",["得梅因 Des Moines"]);
+dsy.add("0_1_16",["托皮卡 Topeka"]);
+dsy.add("0_1_17",["法兰克福 Frankfort"]);
+dsy.add("0_1_18",["巴吞鲁日 Baton Rouge"]);
+dsy.add("0_1_19",["奥古斯塔 Augusta"]);
+dsy.add("0_1_20",["安纳波利斯 Annapolis"]);
+dsy.add("0_1_21",["波土顿 Boston"]);
+dsy.add("0_1_22",["兰辛 Lansing"]);
+dsy.add("0_1_23",["圣保罗 St.Paul"]);
+dsy.add("0_1_24",["杰克逊 Jackson"]);
+dsy.add("0_1_25",["杰斐逊城 Jefferson City"]);
+dsy.add("0_1_26",["赫勒纳 Helena"]);
+dsy.add("0_1_27",["林肯 Lincoln"]);
+dsy.add("0_1_28",["卡森城 Carson City"]);
+dsy.add("0_1_29",["康科德 Concord"]);
+dsy.add("0_1_30",["特伦顿 Trenton"]);
+dsy.add("0_1_31",["圣菲 Santa Fe"]);
+dsy.add("0_1_32",["奥尔巴尼 Albany"]);
+dsy.add("0_1_33",["盐湖城 Salt Lake City"]);
+dsy.add("0_1_34",["奥林匹亚 Olympia"]);
+dsy.add("0_1_35",["麦迪逊 Madison"]);
 
 
 dsy.add("0_20",["新不伦瑞克省 New Brunswick","新斯科舍省 Nova Scotia","安大略省 Ontario","魁北克省 Québec","马尼托巴省 Manitoba","不列颠哥伦比亚省 British Columbia","爱德华王子岛省 Prince Edward Island","艾伯塔省 Alberta","萨斯喀彻温省 Saskatchewan","纽芬兰-拉布拉多省 Newfoundland-Labrador","西北地区 Northwest Territories","育空地区 Yukon Territory","努纳维特地区 Nunavut Territory"]);

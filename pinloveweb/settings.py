@@ -156,6 +156,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'apps.user_app',
     'apps.upload_avatar',
+    'apps.search_app',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -209,9 +210,9 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 
-#set the session paramter
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE=100000
+#set the session paramter session的控制
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE=1000
 
 # upload the head portrait
 #---本地环境-----

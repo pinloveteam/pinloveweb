@@ -296,45 +296,7 @@ def userInfor(request, offset):
     else:
          return render(request, 'search/search.html')
 
-#######    user models       ############# 
 
-
-#######    search models       ############# 
-def simple_search(request):
-    return render(request, 'search/search.html')
-
-@csrf_protect
-def search_result(request):
-    print request.method
-    if request.method == 'POST':
-       a_sex = request.POST['sex']
-       minAge = int(request.POST['minAge'])
-       maxAge = int(request.POST['maxAge'])
-       if request.POST.get('image')!= None:
-           image = int(request.POST.get('image'))
-       else:
-           image=0
-       frends_flag = []  # 判断是否已经添加好友
-       if image == 0:
-           userList = user_basic_profile.objects.filter(age__gte=minAge).filter(age__lte=maxAge).filter(gender=a_sex).exclude(user_id=request.user.id)
-       else:
-            userList = user_basic_profile.objects.filter(age__gte=minAge).filter(age__lte=maxAge).filter(gender=a_sex).exclude(user_id=request.user.id).filter(myPhoto__isnull=False)
-       friends = Friend.objects.filter(myId=request.user.id)
-       temp = 0    
-       for user in userList:
-           for friend in friends:
-               if user.user_id == friend.friendId.id:
-                   temp = 1;
-           if temp == 1:
-                frends_flag.append(1)
-           else:
-                 frends_flag.append(0)
-           temp = 0
-                
-           
-    return render(request, 'search/search_result.html', {'userList':userList, 'frends_flag':frends_flag, })
-
-#######     search models       ############# 
 
 def addFriend(request):
      if request.user.is_authenticated() :

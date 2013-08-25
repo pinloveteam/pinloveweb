@@ -86,14 +86,14 @@
                 </div>
         <div class="span4">
  			<div id="login">
-				<form action="/account/login/" method="post" class="form-signin">{% csrf_token %}
+				<form action="/account/auth/" method="post" class="form-signin">{% csrf_token %}
 					<h2 class="form-signin-heading">请登录</h2>
-					<input type="text" class="input-block-level" placeholder="请输入用户名">
-					<input type="password" class="input-block-level" placeholder="请输入密码">
+					<input type="text" class="input-block-level" placeholder="请输入用户名" name="username" value="" id="username">
+					<input type="password" class="input-block-level" placeholder="请输入密码"  name="password" value="" id="password">
 					<button class="btn btn-large btn-success" type="submit">登录</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label class="checkbox inline">
-					 <input type="checkbox">记住登录状态
+					 <input type="checkbox" name="remember_status">记住登录状态
 					 </label>
 					<ul class="login_bottom inline">
 						<li><a href="/account/forgetpwdpage/">忘记密码？</a><span class="dotted">|</span></li>

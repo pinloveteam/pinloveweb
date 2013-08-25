@@ -36,7 +36,7 @@ urlpatterns = patterns('',
     # User Profile 
     (r'^user/', include('apps.user_app.urls')), 
     # search models 
-    (r'^search/', include('apps.user_app.urls')), 
+    (r'^search/', include('apps.search_app.urls')), 
     
 )
 

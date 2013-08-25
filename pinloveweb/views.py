@@ -23,18 +23,18 @@ from django.contrib.auth.forms import UserCreationForm
 def login(request) :
        
     unicode_s = u'欢迎来到拼爱网'
-    if "userId" in request.COOKIES:
-        userId=request.COOKIES['userId']
-        login_in=True
-#         response.cookies['userId']['expires'] =datetime.datetime.now() + datetime.timedelta(days=14)
-    else:
-        login_in=False
+#     if "userId" in request.COOKIES:
+#         userId=request.COOKIES['userId']
+#         login_in=True
+# #         response.cookies['userId']['expires'] =datetime.datetime.now() + datetime.timedelta(days=14)
+#     else:
+#         login_in=False
     if request.user.is_authenticated() :
         return HttpResponseRedirect('/account/loggedin/')
-    if login_in:
-        response=render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
-        response.set_cookie("userId",userId, max_age=60 * 60 * 24 * 7 * 2 ,expires=60 * 60 * 24 * 7 * 2 )
-        return response
+#     if login_in:
+#         response=render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
+#         response.set_cookie("userId",userId, max_age=60 * 60 * 24 * 7 * 2 ,expires=60 * 60 * 24 * 7 * 2 )
+#         return response
     else : 
         args = {}
         args.update(csrf(request))
@@ -44,6 +44,8 @@ def auth_view(request) :
     
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
+    if request.REQUEST.getlist('remember_status')==[u'on']:
+            request.session.set_expiry(100000)
     user = auth.authenticate(username=username, password=password)
     if request.POST.get('check_save', '') !='':
         check_save=True
@@ -77,10 +79,10 @@ def invalid_login(request) :
 def logout(request) : 
     
     auth.logout(request)
-    if "userId"  in request.COOKIES:
-            response= render(request, 'loggedout.html')
-            response.delete_cookie("userId")
-            return  response
+#     if "userId"  in request.COOKIES:
+#             response= render(request, 'loggedout.html')
+#             response.delete_cookie("userId")
+#             return  response
     return HttpResponseRedirect("/account/loggedout/")
     
 def loggedout(request) : 

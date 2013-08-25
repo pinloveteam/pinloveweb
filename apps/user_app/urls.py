@@ -20,8 +20,4 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^alter_password/$', 'alter_password'),
      url(r'^upload/$', 'upload'),
 )
- #search:
-urlpatterns+=patterns('apps.user_app.views',
-    url(r'^simple_search/$', 'simple_search'),
-    url(r'^search_result/$', 'search_result'),
-)
+
