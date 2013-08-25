@@ -100,6 +100,7 @@ STATICFILES_DIRS = (
     ('img',os.path.join(PATH,'static/img').replace('\\','/') ), 
      os.path.join(PATH,'apps/upload_avatar/static').replace('\\','/'), 
      os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
+     os.path.join(PATH,'apps/search_app/static').replace('\\','/'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
