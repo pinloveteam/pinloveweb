@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url, static
 import settings
 # Uncomment the next two lines to enable the admin:
@@ -37,6 +38,8 @@ urlpatterns = patterns('',
     (r'^user/', include('apps.user_app.urls')), 
     # search models 
     (r'^search/', include('apps.search_app.urls')), 
+    #recommend app
+    (r'^recommend/', include('apps.recommend_app.urls')), 
     
 )
 

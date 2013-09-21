@@ -8,11 +8,15 @@ Created on Aug 9, 2013
 import re
 #Errors=['验证通过!','身份证号码位数不对!','身份证号码出生日期超出范围或含有非法字符!','身份证号码校验错误!','身份证地区非法!']
 def checkIdcard(idcard):
+    ereg=re.compile('^\d{18}$')
+    if(re.match(ereg,idcard)==None):
+        return "身份证位数错误！"
     Errors=['验证通过!','身份证号码位数不对!','身份证号码出生日期超出范围或含有非法字符!','身份证号码校验错误!','身份证地区非法!']
     area={"11":"北京","12":"天津","13":"河北","14":"山西","15":"内蒙古","21":"辽宁","22":"吉林","23":"黑龙江","31":"上海","32":"江苏","33":"浙江","34":"安徽","35":"福建","36":"江西","37":"山东","41":"河南","42":"湖北","43":"湖南","44":"广东","45":"广西","46":"海南","50":"重庆","51":"四川","52":"贵州","53":"云南","54":"西藏","61":"陕西","62":"甘肃","63":"青海","64":"宁夏","65":"新疆","71":"台湾","81":"香港","82":"澳门","91":"国外"}
     idcard=str(idcard)
     idcard=idcard.strip()
     idcard_list=list(idcard)
+    
 
     #地区校验
     if(not area[(idcard)[0:2]]):
@@ -52,3 +56,13 @@ def checkIdcard(idcard):
             return Errors[2]
     else:
         return Errors[1]
+    
+def checkPassport(idcard):
+     ereg=re.compile('^..\d{5,7}$')
+     if(re.match(ereg,idcard)==None):
+        return "护照位数错误！"
+     ereg=re.compile('^((P|S)\.\d{7})|((G|S)\d{8})|(1(4|5)\d{7})$ ')
+     if(re.match(ereg,idcard)):
+         return True
+     else:
+         return "护照格式错误！"

@@ -2,7 +2,7 @@
 
 {% block javascript %}
 {% load staticfiles %}
-<SCRIPT src="/static/js/education.js" type=text/javascript></SCRIPT>
+
 {% endblock %}
 {% block content %}
 
@@ -31,28 +31,7 @@
    <td>{{user_study_work_form.companyName}}</td></tr>
    <tr><th><label for="id_educationCountry">最高学位毕业国家:</label></th>
    <td>{{user_study_work_form.educationCountry}}</td></tr>
-   <tr><th><label for="id_educationSchool">最高学位毕业学校:</label></th>
-   <td>
-   {{user_study_work_form.educationSchool}}
-   <div id="proSchool" class="provinceSchool">
-      <div class="title">
-        <span>已选择:</span>
-      </div>
-      <div class="proSelect">
-		<select></select>
-		<span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
-		<input type="text" >
-	  </div>
-      <div class="schoolList">
-        <ul>
-        </ul>
-      </div>
-      <div class="button">
-      	<input type="button" flag='0' value="取消">
-        <input type="button" flag='1' value="确定">
-      </div>
-    </div>
-   </td></tr>
+   
    <tr><th><label for="id_isStudyAbroad_0">是否留学:</label></th>
    <td>{{user_study_work_form.isStudyAbroad}}</td></tr>
 

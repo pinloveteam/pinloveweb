@@ -8,12 +8,12 @@
 
 {% block content %}
      <h2> 搜索 </h2> 
-    <form action="/search/search_result/" method="post" onSubmit="return init1();">{% csrf_token %}
-    <label for="sex"> 我要找: </label> 
+    <form action="/search/search_result/" method="POST" onSubmit="return init1();">{% csrf_token %}
+  <!--   <label for="sex"> 我要找: </label> 
     <select name='sex'>
        <option value='F'>美女</option>
        <option value='M'>帅哥</option>
-    </select>
+    </select> -->
    <label for="minAge">年龄: </label>
     <select name='minAge' id="minAge" >
 	</select>

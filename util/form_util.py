@@ -4,6 +4,7 @@ Created on Aug 17, 2013
 
 @author: jin
 '''
+#radio 按键的样式
 from django import forms
 from django.utils.safestring import mark_safe
 class HorizRadioRenderer(forms.RadioSelect.renderer):

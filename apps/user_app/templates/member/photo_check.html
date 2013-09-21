@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% load recommend_filter %}
+{% block runload %}
+<body onLoad="init()">
+<SCRIPT src="/static/js/search.js" %}" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+     <h2> 权重 </h2> 
+<form action="/user/photo_check/" method="POST">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+<table>
+ <tr><th><label for="id_heightweight">头像:</label></th><td><img src='{{MEDIA_URL}}{{photo}}' width='100px'/></td></tr>
+ <tr><th><label for="id_edcationweight">头像审核状态:</label></th><td>
+ {{photo_status}}
+ </td></tr>
+ <tr><th><label for="id_incomeweight">外貌打分:</label></th><td><input type="text" name="score"></td></tr>
+</table>
+<input type="submit" value="通过审核" />
+</form> 
+</form>
+{% endblock %}

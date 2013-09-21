@@ -20,7 +20,8 @@
 <table> 
 <tr><th><label for="id_trueName">真实姓名:</label></th><td>{{user_contact_form.trueName}}{{user_contact_form.trueName.errors}}</td></tr>
 <tr><th><label for="id_mobileNumber">手机号:</label></th><td>{{user_contact_form.mobileNumber}}{{user_contact_form.mobileNumber.errors}}</td></tr>
-<tr><th><label for="id_IDCardNumber">身份证号:</label></th><td>{{user_contact_form.IDCardNumber}}{{user_contact_form.IDCardNumber.errors}}</td></tr>
+<tr><th><label for="id_IDCardNumber">证件类型：</label>
+</th><td>{{user_contact_form.IDCardChoice}}<br>{{user_contact_form.IDCardNumber}}{{user_contact_form.IDCardNumber.errors}}</td></tr>
 <tr><th><label for="id_QQ">QQ:</label></th><td>{{user_contact_form.QQ}}{{user_contact_form.QQ.errors}}</td></tr>
 <tr><th><label for="id_MSN">MSN:</label></th><td>{{user_contact_form.MSN}}{{user_contact_form.MSN.errors}}</td></tr>
 <tr><td>
@@ -28,7 +29,7 @@
 </td></tr>
 <tr><th><label for="id_CountryHome">国家:</label></th><td>
 <select id="id_CountryHome" name="CountryHome">
-{%ifnotequal userContact.CountryHome  Null%}
+{%ifnotequal userContact.CountryHome  -1%}
 <option value="0" >请选择</option>
 <option value="{{userContact.CountryHome}}" selected="selected">{{userContact.CountryHome}}</option>
 {% else %} 
@@ -37,7 +38,7 @@
 </select></td></tr>
 <tr><th><label for="id_stateProvinceHome">所在省:</label></th>
 <td><select id="id_stateProvinceHome" name="stateProvinceHome">
-{%ifnotequal userContact.stateProvinceHome Null%}
+{%ifnotequal userContact.stateProvinceHome "-1"%}
 <option value="-1" >请选择</option>
 <option value="{{userContact.stateProvinceHome}}" selected="selected">{{userContact.stateProvinceHome}}</option>
 {% else %} 
@@ -46,7 +47,7 @@
 </select></td></tr>
 <tr><th><label for="id_cityHome" >所在城市:</label></th>
 <td><select id="id_cityHome" name="cityHome">
-{%ifnotequal userContact.cityHome Null%}
+{%ifnotequal userContact.cityHome "-1"%}
 <option value="-1" >请选择</option>
 <option value="{{userContact.cityHome}}" selected="selected">{{userContact.cityHome}}</option>
 {% else %} 

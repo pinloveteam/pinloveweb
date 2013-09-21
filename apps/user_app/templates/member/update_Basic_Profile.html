@@ -4,6 +4,7 @@
 {% load staticfiles %}
 <SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
 <SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+<SCRIPT src="/static/js/education.js" type=text/javascript></SCRIPT>
 {% endblock %}
 {% block content %}
 
@@ -18,7 +19,15 @@
 <form action="/user/update_basic_profile/" enctype="multipart/form-data" method="POST" >
 	
 <table> 
-<tr><th><label for="id_photo">头像:</label></th><td><img><img src="{{userImage}}" width="100" /></td>
+
+<tr><th><label for="id_photo">头像:</label></th>
+<td>{%ifequal photo_status '2'%}
+<img src='{{MEDIA_URL}}user_img/image.png' width='100px'/>
+头像正在审核
+{%else%}
+<img src='{{MEDIA_URL}}{{photo}}' width='100px'/>
+{%endifequal%}
+</td>
 <td>{{user_profile_form.photo.errors }}<br><a href="/user/upload">上传头像</a></td></tr>
 <tr><th><label for="id_gender">性别:</label></th><td>
 {{user_profile_form.gender}}
@@ -28,22 +37,22 @@
 <tr><th><label for="id_month_of_birth">出生月份:</label></th><td>{{user_profile_form.month_of_birth}}</td><td>{{user_profile_form.month_of_birth.errors }}</td></tr>
 <tr><th><label for="id_day_of_birth">出生日期:</label></th><td>{{user_profile_form.day_of_birth}}</td><td>{{user_profile_form.day_of_birth.errors }}</td></tr>
 <tr><th><label for="id_age">年龄:</label></th><td>
-{%ifequal useBasicrProfile.age Null%}未填写
+{%ifequal age Null%}未填写
 {%else%}
-{{useBasicrProfile.age}}岁
+{{age}}岁
 {%endifequal%}
 </td></tr>
 <tr><th><label for="id_income">年薪（万元）:</label></th><td>{{user_profile_form.income}}</td><td>{{user_profile_form.income.errors }}</td></tr>
 <tr><th><label for="id_sunSign">星座:</label></th><td>
-{%ifequal useBasicrProfile.sunSign -1%}未填写
+{%ifequal sunSign -1%}未填写
 {%else%}
-{{useBasicrProfile.get_sunSign_display}}
+{{sunSign}}
 {%endifequal%}
 </td></tr>
 <tr><th><label for="id_zodiac">生肖:</label></th><td>
-{%ifequal useBasicrProfile.zodiac -1%}未填写
+{%ifequal zodiac -1%}未填写
 {%else%}
-{{useBasicrProfile.get_zodiac_display}}
+{{zodiac}}
 {%endifequal%}
 </td></tr>
 <tr><th><label for="id_ethnicGroup">民族:</label></th><td>{{user_profile_form.ethnicGroup}}</td><td>{{user_profile_form.ethnicGroup.errors }}</td></tr>
@@ -52,30 +61,52 @@
 <tr><th><label for="id_maritalStatus">婚姻状态:</label></th><td>{{user_profile_form.maritalStatus}}</td><td>{{user_profile_form.maritalStatus.errors }}</td></tr>
 <tr><th><label for="id_hasChild">是否有孩子:</label></th><td>{{user_profile_form.hasChild}}</td><td>{{user_profile_form.hasChild.errors }}</td></tr>
 <tr><th><label for="id_education">学位:</label></th><td>{{user_profile_form.education}}</td><td>{{user_profile_form.education.errors }}</td></tr>
+<tr><th><label for="id_educationSchool">最高学位毕业学校:</label></th>
+   <td>
+   {{user_profile_form.educationSchool}}
+   <div id="proSchool" class="provinceSchool">
+      <div class="title">
+        <span>已选择:</span>
+      </div>
+      <div class="proSelect">
+		<select></select>
+		<span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
+		<input type="text" >
+	  </div>
+      <div class="schoolList">
+        <ul>
+        </ul>
+      </div>
+      <div class="button">
+      	<input type="button" flag='0' value="取消">
+        <input type="button" flag='1' value="确定">
+      </div>
+    </div>
+   </td></tr>
 <tr><th><label for="id_link">共享链接:</label></th><td>{{user_profile_form.link}}</td><td>{{user_profile_form.link.errors }}</td></tr>
 <tr><th><label for="id_country">国家:</label></th><td>
 <select id="id_country" name="country">
-{%ifnotequal useBasicrProfile.country  Null%}
+{%ifnotequal country  Null%}
 <option value="-1" >请选择</option>
-<option value="{{useBasicrProfile.country}}" selected="selected">{{useBasicrProfile.country}}</option>
+<option value="{{country}}" selected="selected">{{country}}</option>
 {% else %} 
 <option value="-1" >请选择</option>
 {%endifnotequal%}
 </select></td></tr>
 <tr><th><label for="id_stateProvince">所在省:</label></th>
 <td><select id="id_stateProvince" name="stateProvince">
-{%ifnotequal useBasicrProfile.stateProvince Null%}
+{%ifnotequal stateProvince Null%}
 <option value="-1" >请选择</option>
-<option value="{{useBasicrProfile.stateProvince}}" selected="selected">{{useBasicrProfile.stateProvince}}</option>
+<option value="{{stateProvince}}" selected="selected">{{stateProvince}}</option>
 {% else %} 
 <option value="-1" >请选择</option>
 {%endifnotequal%}
 </select></td></tr>
 <tr><th><label for="id_city" >所在城市:</label></th>
 <td><select id="id_city" name="city">
-{%ifnotequal useBasicrProfile.city Null%}
+{%ifnotequal city Null%}
 <option value="-1" >请选择</option>
-<option value="{{useBasicrProfile.city}}" selected="selected">{{useBasicrProfile.city}}</option>
+<option value="{{city}}" selected="selected">{{city}}</option>
 {% else %} 
 <option value="-1" >请选择</option>
 {%endifnotequal%}
@@ -89,4 +120,18 @@
 <input type="submit" value="提交" />
 </form> 
 
+<style>
+	  .provinceSchool { display:none;position:absolute;width:580px;height:310px;border:1px solid #72B9D7; background-color:#FFFFFF }
+	  .provinceSchool .title { width:100%;height:30px;background:url({{STATIC_URL}}img/title-bg.png) repeat-x center left;}
+	  .provinceSchool .title span { margin-left:10px;font-weight:600;color:#FFF;line-height:30px;}
+	  .provinceSchool .proSelect { width:550px;height:22px;margin:10px 0 6px 15px;}
+	  .provinceSchool .proSelect select { width:136px;}
+	  .provinceSchool .proSelect input { display:none;}
+	  .provinceSchool .schoolList { width:550px;height:200px;margin-left:15px;overflow-y:auto; border:1px solid #72B9D7;}
+	  .provinceSchool .schoolList ul { width:510px;}
+	  .provinceSchool .schoolList ul li { float:left;width:158px;height:22px;margin-left:6px;padding-left:6px;line-height:22px;cursor:pointer;}
+		.provinceSchool .schoolList ul li.DoubleWidthLi { width:328px;}
+	  .provinceSchool .schoolList ul li:hover { background:#72B9D7;}
+	  .provinceSchool .button { width:100%;height:40px;margin-top:8px;}
+	  .provinceSchool .button input { float:right;height:30px;margin-right:20px;padding:4px 10px; background:url({{STATIC_URL}}img/title-bg.png);border:none;color:#FFF;font-weight:600;cursor:pointer;}</style>
 {% endblock %} 

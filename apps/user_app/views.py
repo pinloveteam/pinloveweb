@@ -11,10 +11,10 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
 from django.core.mail import send_mail
 import random, string
-from apps.user_app.models import user_basic_profile,user_contact_link,user_verification,user_appearance,user_study_work,user_hobby_interest,user_personal_habit,user_family_information,user_family_life,Friend,\
+from apps.user_app.models import UserProfile,user_contact_link,user_verification,user_hobby_interest,Friend,\
     Verification
 from apps.user_app.forms import UserBasicProfileForm, UserContactForm,UserAppearanceForm, UserStudyWorkForm, UserPersonalHabitForm,\
-    UserFamilyInformationForm
+    UserFamilyInformationForm, PhotoCheck
 from django.core.context_processors import csrf 
 from django.http.response import HttpResponseRedirect
 import time
@@ -28,6 +28,7 @@ from PIL import ImageFile
 from apps.upload_avatar import get_uploadavatar_context
 from django.contrib import auth
 from apps.upload_avatar import app_settings
+from apps.recommend_app.models import Grade
 
 
 
@@ -47,20 +48,20 @@ def update_Basic_Profile_view(request):
                 stateProvince = request.POST['stateProvince']
                 city = request.POST['city']
                 country = request.POST['country']
-            
-                if request.FILES :
-                  # uppload image
-                  f = request.FILES["photo"] 
-                  parser = ImageFile.Parser()  
-                  for chunk in f.chunks():
-                    parser.feed(chunk)  
-                  img = parser.close()
-                  path = settings.MEDIA_ROOT
-                  img.save('jin', 'jpeg') 
+                
+#                 if request.FILES :
+#                   # uppload image
+#                   f = request.FILES["photo"] 
+#                   parser = ImageFile.Parser()  
+#                   for chunk in f.chunks():
+#                     parser.feed(chunk)  
+#                   img = parser.close()
+#                   path = settings.MEDIA_ROOT
+#                   img.save('jin', 'jpeg') 
                 
                 userProfile = userProfileForm.save(commit=False)
                 #get user id
-                userProfile.id = user_basic_profile.objects.get(user_id=user.id).id
+                userProfile.id = UserProfile.objects.get(user_id=user.id).id
                 userProfile.user = request.user
                 userProfile.cal_age()
                 userProfile.cal_sunSign()
@@ -69,24 +70,28 @@ def update_Basic_Profile_view(request):
                 userProfile.city = city
                 userProfile.country = country
                 
+                from util.singal_common import cal_recommend_user
+                map=request.session['user_original_data']
+                cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),
+                                        education=map.get('education'),educationSchool=map.get('educationSchool'),income=map.get('income'))
                 userProfile.save() 
                 return HttpResponseRedirect('/user/update_profile_success/') 
             else:
                 args['user_profile_form'] = userProfileForm 
     
         else : 
-                useBasicrProfile = user_basic_profile.objects.get(user_id=request.user.id)
-                from apps.user_app.models import User
-                count =User.objects.filter(user_id=request.user.id).count()
-                if count>0:
-                    userImage=User.objects.get(user_id=request.user.id)
-                    args['userImage']=settings.MEDIA_URL+'user_img/'+userImage.get_avatar_name(app_settings.UPLOAD_AVATAR_DEFAULT_SIZE)
-                else:
-                    args['userImage']=settings.MEDIA_URL+'user_img/image.png'
+                useBasicrProfile = UserProfile.objects.get(user_id=request.user.id)
                 args['user_profile_form'] = UserBasicProfileForm(instance=useBasicrProfile) 
-                args['useBasicrProfile']=useBasicrProfile
-                
-        
+                args['photo']=useBasicrProfile.avatar_name
+                args['photo_status']=useBasicrProfile.avatar_name_status
+                args['age']=useBasicrProfile.age
+                args['sunSign']=useBasicrProfile.get_sunSign_display()
+                args['zodiac']=useBasicrProfile.get_zodiac_display()
+                args['country']=useBasicrProfile.country
+                args['city']=useBasicrProfile.city
+                args['stateProvince']=useBasicrProfile.stateProvince
+                map={'height':useBasicrProfile.height,'education':useBasicrProfile.education,'educationSchool':useBasicrProfile.educationSchool,'income':useBasicrProfile.income}
+                request.session['user_original_data']=map
         return render(request, 'member/update_Basic_Profile.html', args,)
     
     else : 
@@ -147,13 +152,13 @@ def user_appearance_view(request):
      if request.user.is_authenticated() :
          args = {}
          args.update(csrf(request))
-         count=user_appearance.objects.filter(user_id=request.user.id).count()
+         count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
               userAppearanceForm=UserAppearanceForm(request.POST)
               if userAppearanceForm.is_valid:
                   userAppearance = userAppearanceForm.save(commit=False)
                   if count !=0:
-                       userAppearance.id=user_appearance.objects.get(user_id=request.user.id).id
+                       userAppearance.id=UserProfile.objects.get(user_id=request.user.id).id
                   userAppearance.user=request.user
                   userAppearance.save()
                   return render(request,'member/update_profile_success.html',args,)
@@ -163,7 +168,7 @@ def user_appearance_view(request):
          else:
               userAppearanceForm=UserAppearanceForm()
               if count!=0:
-                  userAppearance=user_appearance.objects.get(user_id=request.user.id)
+                  userAppearance=UserProfile.objects.get(user_id=request.user.id)
                   userAppearanceForm=UserAppearanceForm(instance=userAppearance)
               args['user_appearance_form']=userAppearanceForm
          return render(request, 'member/user_appearance.html', args,)
@@ -178,13 +183,13 @@ def user_study_work_view(request):
      if request.user.is_authenticated() :
          args = {}
          args.update(csrf(request))
-         count=user_study_work.objects.filter(user_id=request.user.id).count()
+         count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
               userStudyWorkForm=UserStudyWorkForm(request.POST)
               if userStudyWorkForm.is_valid:
                   userStudyWork = userStudyWorkForm.save(commit=False)
                   if count !=0:
-                       userStudyWork.id=user_study_work.objects.get(user_id=request.user.id).id
+                       userStudyWork.id=UserProfile.objects.get(user_id=request.user.id).id
                   userStudyWork.user=request.user
                   userStudyWork.save()
                   return render(request,'member/update_profile_success.html',args,)
@@ -194,7 +199,7 @@ def user_study_work_view(request):
          else:
               userStudyWorkForm=UserStudyWorkForm()
               if count!=0:
-                  userStudyWork=user_study_work.objects.get(user_id=request.user.id)
+                  userStudyWork=UserProfile.objects.get(user_id=request.user.id)
                   userStudyWorkForm=UserStudyWorkForm(instance=userStudyWork)
               args['user_study_work_form']=userStudyWorkForm
          return render(request, 'member/study_work.html', args,)
@@ -210,13 +215,13 @@ def personal_habit_view(request):
      if request.user.is_authenticated() :
          args = {}
          args.update(csrf(request))
-         count=user_personal_habit.objects.filter(user_id=request.user.id).count()
+         count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
               userPersonalHabitForm=UserPersonalHabitForm(request.POST)
               if userPersonalHabitForm.is_valid:
                   userPersonalHabit = userPersonalHabitForm.save(commit=False)
                   if count !=0:
-                       userPersonalHabit.id=user_personal_habit.objects.get(user_id=request.user.id).id
+                       userPersonalHabit.id=UserProfile.objects.get(user_id=request.user.id).id
                   userPersonalHabit.user=request.user
                   userPersonalHabit.save()
                   return render(request,'member/update_profile_success.html',args,)
@@ -226,7 +231,7 @@ def personal_habit_view(request):
          else:
               userPersonalHabitForm=UserPersonalHabitForm()
               if count!=0:
-                  userPersonalHabit=user_personal_habit.objects.get(user_id=request.user.id)
+                  userPersonalHabit=UserProfile.objects.get(user_id=request.user.id)
                   userPersonalHabitForm=UserPersonalHabitForm(instance=userPersonalHabit)
               args['personal_habit_form']=userPersonalHabitForm
          return render(request, 'member/personal_habit.html', args,)
@@ -241,13 +246,13 @@ def family_information_view(request):
      if request.user.is_authenticated() :
          args = {}
          args.update(csrf(request))
-         count=user_family_information.objects.filter(user_id=request.user.id).count()
+         count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
               userFamilyInformationForm=UserFamilyInformationForm(request.POST)
               if userFamilyInformationForm.is_valid:
                   userFamilyInformation = userFamilyInformationForm.save(commit=False)
                   if count !=0:
-                       userFamilyInformation.id=user_family_information.objects.get(user_id=request.user.id).id
+                       userFamilyInformation.id=UserProfile.objects.get(user_id=request.user.id).id
                   userFamilyInformation.user=request.user
                   userFamilyInformation.save()
                   return render(request,'member/update_profile_success.html',args,)
@@ -257,7 +262,7 @@ def family_information_view(request):
          else:
               userFamilyInformationForm=UserFamilyInformationForm()
               if count!=0:
-                  userFamilyInformation=user_family_information.objects.get(user_id=request.user.id)
+                  userFamilyInformation=UserProfile.objects.get(user_id=request.user.id)
                   userFamilyInformationForm=UserFamilyInformationForm(instance=userFamilyInformation)
               args['user_family_information_form']=userFamilyInformationForm
          return render(request, 'member/family_information.html', args,)
@@ -291,7 +296,7 @@ def userInfor(request, offset):
              offset = int(offset)
          except ValueError:
              raise Http404()
-         userInfor = user_basic_profile.objects.get(user_id=offset)
+         userInfor = UserProfile.objects.get(user_id=offset)
          return render(request, 'member/userInfor.html', {'userInfor':userInfor})
     else:
          return render(request, 'search/search.html')
@@ -442,3 +447,22 @@ def upload(request):
         get_uploadavatar_context(),
          context_instance = RequestContext(request)
      )
+
+def photo_check(request):
+    arg={}
+    if request.user.is_authenticated():
+        if request.method=="POST":
+            score=int(request.POST['score'])
+            UserProfile.objects.filter(user_id=request.user.id).update(avatar_name_status='3')
+            if Grade.objects.filter(user_id=request.user.id).exists():
+                    Grade.objects.filter(user_id=request.user.id).update(appearancescore=score)
+            else:
+                    Grade.objects.create(user_id=request.user.id,appearancescore=score)
+            return render(request,'member/update_profile_success.html',arg,)
+        else:
+             useBasicrProfile=UserProfile.objects.get(user_id=request.user.id)
+             arg['photo']=useBasicrProfile.avatar_name
+             arg['photo_status']=useBasicrProfile.get_avatar_name_status_display()
+             return render(request,'member/photo_check.html',arg)
+    else:
+        return render(request,'login.html',arg)

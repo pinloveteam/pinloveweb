@@ -9,7 +9,7 @@ from django.core.context_processors import csrf
 
 from django.contrib.auth.models import User 
 from apps.user_app.models import Verification
-from apps.user_app.models import user_basic_profile,user_contact_link,user_verification,user_appearance,user_study_work,user_hobby_interest,user_personal_habit,user_family_information,user_family_life
+from apps.user_app.models import UserProfile,user_contact_link,user_verification,user_hobby_interest
 from django.core.mail import send_mail
 
 from forms import RegistrationForm 
@@ -112,7 +112,8 @@ def register_user(request) :
             verification.verification_code = user_code
             verification.save()
             sex=userForm.cleaned_data['gender']
-            user_basic_profile(user_id=user.id,gender=sex).save()
+            userForm.photo='user_img/image.png'
+            UserProfile(user_id=user.id,gender=sex).save()
             # we need to generate a random number as the verification key 
             
             # user needs email verification 
@@ -121,7 +122,11 @@ def register_user(request) :
             
             email_message = u"请您点击下面这个链接完成注册："
             email_message += email_verification_link
-            send_mail(u'拼爱网注册电子邮件地址验证', email_message,'pinloveteam@pinpinlove.com',[user.email]) 
+            try :
+               send_mail(u'拼爱网注册电子邮件地址验证', email_message,'pinloveteam@pinpinlove.com',[user.email]) 
+            except:
+                print u'邮件发送失败'
+                pass
             
             # login(request, user)
             return render_to_response('register_email_verification.html',{'username':username, 'email': user.email})

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% load recommend_filter %}
+{% block runload %}
+<body onLoad="init()">
+<SCRIPT src="/static/js/search.js" %}" type=text/javascript></SCRIPT>
+{% endblock %}
+
+{% block second_content %}
+	<table border=1 > 
+	<tr align="center">
+			 <th>图片</th><th>昵称</th><th>身高</th><th>年龄</th><th>学历</th><th>收入</th><th>工作</th><th>打招呼</th>
+			      <th>你对对方的打分</th><th>对方对你的打分</th><th>总分数</th>
+			<th>加好友</th><th>外貌打分</th>
+		</tr>
+		{% if not pages %}
+		<tr><td colspan="3">没有搜索信息！</td></tr>
+		
+		{% endif %}
+		{% for page in pages %}
+		<tr align="center">
+		   <td><img src="{{MEDIA_URL}}{{page.avatar_name}}" width="70" /></td>
+		    <td>{{page.username}}</td>
+		    <td>{{page.height}}</td>
+		    {%ifequal page.age None%}
+		     <td>未填</td>
+		     {%endifequal%}
+		     {%ifnotequal page.age None%}
+		     <td>{{page.age}}</td>
+		     {%endifnotequal%}
+		    <td>{{page.education}}</td>
+		    <td>{{page.income}}</td>
+		    <td>{{page.jobIndustry}}</td>
+			<td><a href="#">打招呼</a></td>
+
+			<td>{{page.scoreOther|convertInt}}</td>
+			<td>{{page.scoreMyself|convertInt}}</td>
+			<td>{{page.macthScore|convertInt}}</td>
+	
+			<td>
+			{% ifequal page.isFriend True %}
+			    <input type="button" disabled="true" id="addFriend" value="已是好友"  />
+			{%else%}
+			     <input type="button" id="addFriend{{forloop.counter}}" value="加好友" onClick="add_friend({{page.user_id}},{{forloop.counter}})"/>
+			     <div id="divmessage{{forloop.counter}}">
+			{% endifequal%}
+			</td> 
+			<td width="30">
+			 <input type="text" name="appearancescore" id='appearancescore'size="11"></br>
+			 {%ifequal isVote True%}
+			 <input type="button" id="user_vote{{forloop.counter}}" value="投票" onClick="user_vote({{page.user_id}},{{forloop.counter}})"/>
+			  {%else %}
+			   对方头像为通过审核，无法投票
+			  {%endifequal %}
+			  <div id="votemessage{{forloop.counter}}">
+			</td>
+		</tr>
+		{% endfor %}
+		<tr><td cols='12'>
+		 {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">&lt; 上一页</a>{% endif %}
+		 <span>
+		 {% for p in page_range %}
+		 {% ifequal p pages.number %}
+		   <span class="current">{{p}}</span>
+		 {% else %}
+		 <a href="?page={{p}}" title="第{{p}}页">{{p}}</a>
+		   {% endifequal %}
+		 {% endfor %}
+		 </span>
+		 {% if pages.has_next %}
+		 <a href="?page={{ pages.next_page_number }}">下一页 &gt; </a>
+		 {% endif %}
+		 <a >[第{{ pages.number }}/{{ pages.paginator.num_pages }}页]</a>
+		</td></tr>
+		
+	</table>
+{% endblock %}

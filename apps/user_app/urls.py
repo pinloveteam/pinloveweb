@@ -19,5 +19,7 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^commit_password/$', 'commit_password'),
      url(r'^alter_password/$', 'alter_password'),
      url(r'^upload/$', 'upload'),
+     url(r'^photo_check/$', 'photo_check'),
+     
 )
 

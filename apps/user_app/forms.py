@@ -5,9 +5,7 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from apps.user_app.models import user_basic_profile, user_contact_link,\
-    user_appearance, user_study_work, user_hobby_interest,\
-    user_family_information, user_personal_habit, user_family_life
+from apps.user_app.models import UserProfile, user_contact_link,user_hobby_interest
 from apps.user_app import user_validators
 
 #个人基本详细
@@ -18,21 +16,27 @@ class UserBasicProfileForm (ModelForm) :
         for key in self.fields:
             self.fields[key].required = False
     class Meta : 
-        model = user_basic_profile  
-        fields = ( 'gender', 'photo','year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
-        'height', 'maritalStatus', 'hasChild' ,'education', 'link', 'streetAddress','position','language',)
+        model = UserProfile  
+        fields = ( 'gender', 'year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
+        'height', 'maritalStatus', 'hasChild' ,'education','educationSchool', 'link', 'streetAddress','position','language',)
         
-        exclude = ('stateProvince','city', 'country', 'age','sunSign', 
-            'zodiac') 
+        exclude = ('stateProvince','avatar_name','city', 'country', 'age','sunSign', 'zodiac','avatar_name_status',
+                   'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
+                   'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
+                   'belief','isSmoke','isDrink','beddingTime','pet','character',
+                   'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
+                   'liveWithParent','likeChild',
+                   ) 
 
 #个人联系方式  
 class UserContactForm(ModelForm):
-    mobileNumber=forms.RegexField(label=_("手机号:"),regex=r'^1[3|4|5|8][0-9]\d{4,8}$'
+    IDRegex=r'^\d{18}$'
+    mobileNumber=forms.RegexField(label=_("手机号:"),regex='^[0-9]\d{6,11}$'
                                    ,help_text='',error_messages={
             'invalid':  _(u"手机号码填写不正确！")})
-    IDCardNumber=forms.RegexField(label=_("身份证号:"),regex=r'^\d{18}$'
+    IDCardNumber=forms.RegexField(label=_("身份证号:"),regex=r'^(\d{18})|(..\d{5,7})$'
                                    ,help_text='',error_messages={
-            'invalid':  _(u"身份证位数或格式不正确！")})
+            'invalid':  _(u"证件位数或格式不正确！")})
     QQ=forms.RegexField(label=_("QQ:"),regex=r'^[1-9][0-9]{4,}$'
                                    ,help_text='',error_messages={
             'invalid':  _(u"QQ格式不正确！")})
@@ -44,21 +48,31 @@ class UserContactForm(ModelForm):
         super(UserContactForm, self).__init__(*args, **kwargs)
         for key in self.fields:
             self.fields[key].required = False
+            
                 
     class Meta:
         model=user_contact_link
-        fields=('trueName','mobileNumber','IDCardNumber','QQ','MSN','stateProvinceHome','CountryHome','cityHome')
+        fields=('IDCardChoice','trueName','mobileNumber','IDCardNumber','QQ','MSN','stateProvinceHome','CountryHome','cityHome')
         exclude=('stateProvinceHome','CountryHome','cityHome')
         
-    def clean_IDCardNumber(self):   
+    def clean_IDCardNumber(self): 
+         IDCardChoice = self.cleaned_data["IDCardChoice"] 
          IDCardNumber = self.cleaned_data["IDCardNumber"]  
-         if len(IDCardNumber) <1:
+         if len(IDCardNumber.rstrip()) <1:
              return IDCardNumber 
-         result=user_validators.checkIdcard(IDCardNumber)
-         if result!='验证通过!':
-              raise forms.ValidationError(result)     
-         else:
-             return IDCardNumber
+         if IDCardChoice==0:
+             result=user_validators.checkIdcard(IDCardNumber)
+             if result!='验证通过!':
+                 raise forms.ValidationError(result)     
+             else:
+                 return IDCardNumber
+         if IDCardChoice==1:
+             result=user_validators.checkPassport(IDCardNumber)
+             if result!=True:
+                 raise forms.ValidationError(result)    
+             else :
+                 return IDCardNumber
+
 
 #个人外貌       
 class UserAppearanceForm(ModelForm):
@@ -67,10 +81,18 @@ class UserAppearanceForm(ModelForm):
         for key in self.fields:
             self.fields[key].required = False
     class Meta:
-        model=user_appearance
+        model=UserProfile
         field=('self_evaluation','weight','hairStyle','hairColor',
                'face','eyeColor','bodyShape',)
-        exclude=('user')
+        exclude=('user','avatar_name_status',
+                 'gender', 'avatar_name','year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
+        'height', 'maritalStatus', 'hasChild' ,'education','educationSchool', 'link', 'streetAddress','position','language',
+        'stateProvince','city', 'country', 'age','sunSign', 'zodiac',
+                   'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
+                   'belief','isSmoke','isDrink','beddingTime','pet','character',
+                   'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
+                   'liveWithParent','likeChild',
+        )
 #工作学习   
 class UserStudyWorkForm(ModelForm): 
     def __init__(self, *args, **kwargs):
@@ -78,10 +100,17 @@ class UserStudyWorkForm(ModelForm):
         for key in self.fields:
             self.fields[key].required = False
     class Meta:
-        model=user_study_work
-        field=('jobIndustry','jobTitle','COMPANY_TYPE_CHOICE','workStatus',
-               'companyName','educationCountry','educationSchool','isStudyAbroad',)
-        exclude=('user')
+        model=UserProfile
+        field=('jobIndustry','jobTitle','companyType','workStatus',
+               'companyName','educationCountry','isStudyAbroad',)
+        exclude=('user','avatar_name_status',
+                 'gender', 'avatar_name','year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
+        'height', 'maritalStatus', 'hasChild' ,'education','educationSchool', 'link', 'streetAddress','position','language',
+        'stateProvince','city', 'country', 'age','sunSign', 'zodiac',
+        'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
+                   'belief','isSmoke','isDrink','beddingTime','pet','character',
+                   'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
+                   'liveWithParent','likeChild',)
         widgets = {
                    'isStudyAbroad': forms.RadioSelect(attrs={'cols':20,'rows':20},choices=((True, u'是'), (False, u'否') ), )
                    }
@@ -104,10 +133,17 @@ class UserPersonalHabitForm(ModelForm):
         for key in self.fields:
             self.fields[key].required = False
     class Meta:
-        model=user_personal_habit
+        model=UserProfile
         field=('belief','isSmoke','isDrink','beddingTime',
                'pet','character',)
-        exclude=('user')
+        exclude=('user','avatar_name_status',
+                 'gender', 'avatar_name','year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
+        'height', 'maritalStatus', 'hasChild' ,'education','educationSchool', 'link', 'streetAddress','position','language',
+        'stateProvince','city', 'country', 'age','sunSign', 'zodiac',
+        'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
+                   'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
+                   'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
+                   'liveWithParent','likeChild',)
  # 家庭情况      
 class UserFamilyInformationForm(ModelForm):
      def __init__(self, *args, **kwargs):
@@ -115,20 +151,43 @@ class UserFamilyInformationForm(ModelForm):
         for key in self.fields:
             self.fields[key].required = False
      class Meta:
-        model=user_family_information
+        model=UserProfile
         field=('monthlyExpense','isOnlyChild','hasCar','hasHouse',
                'financialCondition','parentEducation',)
-        exclude=('user')
+        exclude=('user','avatar_name_status',
+                 'gender', 'avatar_name','year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
+        'height', 'maritalStatus', 'hasChild' ,'education','educationSchool', 'link', 'streetAddress','position','language',
+        'stateProvince','city', 'country', 'age','sunSign', 'zodiac',
+        'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
+                   'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
+                   'belief','isSmoke','isDrink','beddingTime','pet','character',
+                   'liveWithParent','likeChild',)
 #对未来期望        
-class UserFamilyLifeForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(UserFamilyLifeForm, self).__init__(*args, **kwargs)
+# class UserFamilyLifeForm(ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super(UserFamilyLifeForm, self).__init__(*args, **kwargs)
+#         for key in self.fields:
+#             self.fields[key].required = False
+#     class Meta:
+#         model=UserProfile
+#         field=('liveWithParent','liveWithParent',)
+#         exclude=('user')
+#         
+
+
+class PhotoCheck(ModelForm):
+      def __init__(self, *args, **kwargs):
+        super(UserFamilyInformationForm, self).__init__(*args, **kwargs)
         for key in self.fields:
             self.fields[key].required = False
-    class Meta:
-        model=user_family_life
-        field=('liveWithParent','liveWithParent',)
-        exclude=('user')
-        
-
-
+      class Meta:
+        model=UserProfile
+        field=('avatar_name_status', )
+        exclude=('user','avatar_name',
+                 'gender','year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
+        'height', 'maritalStatus', 'hasChild' ,'education','educationSchool', 'link', 'streetAddress','position','language',
+        'stateProvince','city', 'country', 'age','sunSign', 'zodiac',
+        'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
+                   'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
+                   'belief','isSmoke','isDrink','beddingTime','pet','character',
+                   'liveWithParent','likeChild',)

@@ -8,12 +8,12 @@
 
 {% block content %}
      <h2> 搜索 </h2> 
-    <form action="/search/search_result/" method="post" onSubmit="return init1();">{% csrf_token %}
-    <label for="sex"> 我要找: </label> 
-    <select name='sex'>
+  <form action="/search/search_result/" method="POST" onSubmit="return init1();">{% csrf_token %}
+    <!--   <label for="sex"> 我要找: </label> 
+     <select name='sex'>
        <option value='F'>美女</option>
        <option value='M'>帅哥</option>
-    </select>
+    </select>-->
    <label for="minAge">年龄: </label>
     <select name='minAge' id="minAge" >
 	</select>
@@ -28,33 +28,50 @@
 {% block second_content %}
 	<table border=1 > 
 	<tr align="center">
-			<th>图片</th><th>昵称</th><th>身高</th><th>年龄</th><th>学历</th><th>收入</th><th>年龄</th><th>详细信息</th><th>打招呼</th><th>加好友</th>
+			<th>图片</th><th>昵称</th><th>身高</th><th>年龄</th><th>学历</th><th>收入</th><th>工作</th><th>详细信息</th><th>打招呼</th><th>加好友</th>
 		</tr>
-		{% if not userList %}
+		{% if not pages %}
 		<tr><td colspan="3">没有搜索信息！</td></tr>
 		
 		{% endif %}
-		{% for user_i in userList %}
+		{% for user_i in pages %}
 		<tr align="center">
-		    <td><img src="/update/{{user_i.myPhoto}}" width="200" /></td>
+		    <td><img src="{{MEDIA_URL}}{{user_i.avatar_name}}" width="70" /></td>
 		    <td>{{user_i.username}}</td>
 		    <td>{{user_i.height}}</td>
 		    <td>{{user_i.age}}</td>
-		    <td>{{user_i.jobIndustry}}</td>
+		    <td>{{user_i.education}}</td>
 		    <td>{{user_i.income}}</td>
-		    <td><a href="/user/userInfor/{{user_i.user_id}}/">详细信息 </a></td>
+		    <td>{{user_i.jobIndustry}}</td>
+		    <td><a href="/user/userInfor/{{user_i.id}}/">详细信息 </a></td>
 			<td><a href="/user/userInfor/">打招呼</a></td>
 			<td>
-			     <input type="hidden" id="userId" value="{{user_i.user_id}}"/>
-			{% ifequal frends_flag|qwer '1' %}
+			     <input type="hidden" id="userId" value="{{user_i.id}}"/>
+			{% ifequal user_i.isFriend True %}
 			    <input type="button" disabled="true" id="addFriend" value="已是好友"  />
 			{%else%}
-			     <input type="button" id="addFriend" value="加好友" onClick="add_friend()"/>
+			     <input type="button" id="addFriend{{forloop.counter}}" value="加好友" onClick="add_friend({{user_i.user_id}},{{forloop.counter}})"/>
 			{% endifequal%}
 			<div id="divmessage">
 			</td>
 		</tr>
-		
 		{% endfor %}
+		<tr><td cols=10>
+		 {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">&lt; 上一页</a>{% endif %}
+		 <span>
+		 {% for p in page_range %}
+		 {% ifequal p pages.number %}
+		   <span class="current">{{p}}</span>
+		 {% else %}
+		 <a href="?page={{p}}" title="第{{p}}页">{{p}}</a>
+		   {% endifequal %}
+		 {% endfor %}
+		 </span>
+		 {% if pages.has_next %}
+		 <a href="?page={{ pages.next_page_number }}">下一页 &gt; </a>
+		 {% endif %}
+		 <a >[第{{ pages.number }}/{{ pages.paginator.num_pages }}页]</a>
+		</td></tr>
+		
 	</table>
 {% endblock %}
