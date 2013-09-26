@@ -40,6 +40,8 @@ urlpatterns = patterns('',
     (r'^search/', include('apps.search_app.urls')), 
     #recommend app
     (r'^recommend/', include('apps.recommend_app.urls')), 
+     #game app
+    (r'^game/', include('apps.game_app.urls')), 
     
 )
 

@@ -27,7 +27,10 @@ def jigsaw(request):
         obj = [{'message':'null'}]
         if otherone != None:
             otheruser = UserProfile.objects.get(user=User.objects.get(username=otherone))
-            obj = [{'message':otherone}]
+            print otheruser.height
+            print otheruser.age
+            print otheruser.avatar_name
+            obj = [{'message':otherone,'height':otheruser.height,'age':otheruser.age,'avatar_name':otheruser.avatar_name}]
         e = simplejson.dumps(obj) 
         return HttpResponse(e, mimetype='application/javascript')   
     else:
