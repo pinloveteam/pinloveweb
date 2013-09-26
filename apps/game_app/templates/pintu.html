@@ -234,7 +234,7 @@ document.addEventListener('click', function(e) {
     e.preventDefault()
     var flipper = e.target.parentNode.parentNode
     var back
-    var input = '<div class="cards"><h4>'+"name"+'</h4></div>'
+    var input 
 	var heart = document.getElementById('heart');
     if (e.target.classList.contains('card')) {
 		heart.style.animation = "0.8s ease 0s normal none infinite pound";
@@ -252,9 +252,20 @@ document.addEventListener('click', function(e) {
   		'{%url "jigsaw"%}',
   		{'selected': select},
   		function(response){
+  		 heart.style.display = "none";
   		 var obj=eval(response);
-  			input = '<div class="cards"><h4>' + obj[0].message + '</h4></div>'
-			back = flip(flipper, "<p></p>" + input)
+  		 if(obj[0].message != '1'){
+	  		 if(obj[0].message == '0'){
+	  		 	input = '<div class="cards"><h4>' + '找不到对象' + '</h4></div>'
+	  		 }
+	  		 else{
+	  		 	input = '<div class="cards"><img src={{MEDIA_URL}}'+obj[0].avatar_name'/><span>'+obj[0].message+'</span><span>' + obj[0].age + '</span><span>' + obj[0].height + '</span></div>'
+	  		 }
+	  		}
+	  	 else{
+	  		 input = '<div class="cards"><h4>' + 'error' + '</h4></div>'
+	  	 }	
+		 back = flip(flipper, "<p></p>" + input)
   		});
     } 
     back.addEventListener('click', function(e) {

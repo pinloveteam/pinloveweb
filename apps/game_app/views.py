@@ -24,17 +24,14 @@ def jigsaw(request):
             otherone = jigswgl.JIGSW_BOYS.get(str(cha1))
                 
         jigswgl.JIGSWABLE.add(username)
-        obj = [{'message':'null'}]
+        obj = [{'message':'0'}]
         if otherone != None:
             otheruser = UserProfile.objects.get(user=User.objects.get(username=otherone))
-            print otheruser.height
-            print otheruser.age
-            print otheruser.avatar_name
             obj = [{'message':otherone,'height':otheruser.height,'age':otheruser.age,'avatar_name':otheruser.avatar_name}]
         e = simplejson.dumps(obj) 
         return HttpResponse(e, mimetype='application/javascript')   
     else:
-        obj = [{'message':'error'}]
+        obj = [{'message':'1'}]
         e = simplejson.dumps(obj) 
         return HttpResponse(e, mimetype='application/javascript') 
 
