@@ -11,37 +11,37 @@ ADMINS = (
 
 MANAGERS = ADMINS
 ADMIN_MEDIA_PREFIX = '/admin_media/'
-# 本地环境----
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-         'NAME': 'django',                      # Or path to database file if using sqlite3.
-                                                 # The following settings are not used with sqlite3:
-         'USER': 'root',
-         'PASSWORD': 'jin521436',
-         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-         'PORT': '',                             # Set to empty string for default.
-     }
- }
-
-
-# 本地环境-----
-MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
-
-#---本地环境-----
-MEDIA_URL = '/media/'
-#---本地环境-----
-STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-# 本地环境-----
-STATIC_URL = '/static/'
-
-
-# upload the head portrait
-#---本地环境-----
-UPLOAD_AVATAR_UPLOAD_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
-UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+# # 本地环境----
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#          'NAME': 'django',                      # Or path to database file if using sqlite3.
+#                                                  # The following settings are not used with sqlite3:
+#          'USER': 'root',
+#          'PASSWORD': 'jin521436',
+#          'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#          'PORT': '',                             # Set to empty string for default.
+#      }
+#  }
+# 
+# 
+# # 本地环境-----
+# MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+# 
+# #---本地环境-----
+# MEDIA_URL = '/media/'
+# #---本地环境-----
+# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+# # 本地环境-----
+# STATIC_URL = '/static/'
+# 
+# 
+# # upload the head portrait
+# #---本地环境-----
+# UPLOAD_AVATAR_UPLOAD_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_AVATAR_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -87,13 +87,13 @@ MEDIA_URL = '/media/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-#---本地环境-----
-STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
-# 本地环境-----
-STATIC_URL = '/static/'
+# #---本地环境-----
+# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+# 
+# # URL prefix for static files.
+# # Example: "http://example.com/static/", "http://static.example.com/"
+# # 本地环境-----
+# STATIC_URL = '/static/'
 
 
 # Additional locations of static files
@@ -252,27 +252,27 @@ LOGGING = {
 }
 
 #---服务器环境-----
-# DATABASES = {
-#  
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
-#                                                 # The following settings are not used with sqlite3:
-#         'USER': 'pinloveteam',
-#         'PASSWORD': 'redyellowblue#123',
-#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#         'PORT': '',                             # Set to empty string for default.
-#     }
-# }
-# MEDIA_URL = 'http://www.pinpinlove.com/update/'
-# MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
-# MEDIA_URL = 'http://www.pinpinlove.com/update/'
-# STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
-# STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
-# STATIC_URL = 'http://www.pinpinlove.com/static/'
-# STATIC_URL = 'http://www.pinpinlove.com/static/'
-# UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
-# UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
-# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+DATABASES = {
+  
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
+                                                # The following settings are not used with sqlite3:
+        'USER': 'pinloveteam',
+        'PASSWORD': 'redyellowblue#123',
+        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',                             # Set to empty string for default.
+    }
+}
+MEDIA_URL = 'http://www.pinpinlove.com/update/'
+MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
+MEDIA_URL = 'http://www.pinpinlove.com/update/'
+STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+STATIC_URL = 'http://www.pinpinlove.com/static/'
+STATIC_URL = 'http://www.pinpinlove.com/static/'
+UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 
