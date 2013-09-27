@@ -98,7 +98,7 @@ class AvatarCheck(UserProfile):
         verbose_name = u'头像审核' 
         verbose_name_plural = u'头像审核'
 class AvatarCheckAdmin(admin.ModelAdmin):
-    list_display=('user','avatar_name_status','get_score')
+    list_display=('user','avatar_name_status',)
     search_fields =('user__username',)
     readonly_fields=('image_img','avatar_name',)
     list_filter=('avatar_name_status',)    
