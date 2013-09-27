@@ -190,28 +190,7 @@ function drawImage(imageObj) {
         imageObj.onload = function(){
                     drawImage(this);
         }
-        
-
      }
-	 
-function commit(){
-		     for(i=0;i<4;i++){
-                  for(j=0;j<4;j++){
-					if(piecesArray[i][j].shape.color==1){
-						selected.push(piecesArray[i][j].shape.getId());
-					}
-				}
-			}  
-			select = selected.join("-");
-			
-  $.post(
-  		'{%url "jigsaw"%}',
-  		{'selected': select},
-  		function(response){
-  		 var obj=eval(response);
-  			alert(obj[0].name);
-  		});
-}
 	 
 	Array.prototype.remove=function(dx){
 	if(isNaN(dx)||dx>this.length){return false;}
@@ -237,8 +216,6 @@ document.addEventListener('click', function(e) {
     var input 
 	var heart = document.getElementById('heart');
     if (e.target.classList.contains('card')) {
-		heart.style.animation = "0.8s ease 0s normal none infinite pound";
-		heart.style['-webkit-animation'] = "0.8s ease 0s normal none infinite pound";
     	for(i=0;i<4;i++){
         	for(j=0;j<4;j++){
 				if(piecesArray[i][j].shape.color==1){
@@ -246,27 +223,34 @@ document.addEventListener('click', function(e) {
 					}
 				}
 			}  
-			select = selected.join("-");
-			
-  	$.post(
-  		'{%url "jigsaw"%}',
-  		{'selected': select},
-  		function(response){
-  		 heart.style.display = "none";
-  		 var obj=eval(response);
-  		 if(obj[0].message != '1'){
-	  		 if(obj[0].message == '0'){
-	  		 	input = '<div class="cards"><h4>' + '找不到对象' + '</h4></div>'
-	  		 }
-	  		 else{
-	  		 	input = '<div class="cards"><img src={{MEDIA_URL}}'+obj[0].avatar_name + '/><span>姓名:' + obj[0].message + '</span><span>年龄:' + obj[0].age + '</span><span>身高:' + obj[0].height + '</span></div>'
-	  		 }
-	  		}
-	  	 else{
-	  		 input = '<div class="cards"><h4>' + 'error' + '</h4></div>'
-	  	 }	
-		 back = flip(flipper, "<p></p>" + input)
-  		});
+			select = selected.join("-")
+			if(select != ''&& select != ("0-4-8-1-5-9-13-2-6-10-14-3-7-11")){
+				heart.style.animation = "0.8s ease 0s normal none infinite pound";
+				heart.style['-webkit-animation'] = "0.8s ease 0s normal none infinite pound";
+				document.getElementById('card').style.display = "none";
+			  	$.post(
+			  		'{%url "jigsaw"%}',
+			  		{'selected': select},
+			  		function(response){
+			  		 heart.style.display = "none";
+			  		 var obj=eval(response);
+			  		 if(obj[0].message != '1'){
+				  		 if(obj[0].message == '0'){
+				  		 	input = '<div class="cards"><h4>' + '找不到对象' + '</h4></div>'
+				  		 }
+				  		 else{
+				  		 	input = '<div class="cards"><img src={{MEDIA_URL}}'+obj[0].avatar_name + '/><span>姓名:' + obj[0].message + '</span><span>年龄:' + obj[0].age + '</span><span>身高:' + obj[0].height + '</span></div>'
+				  		 }
+				  		}
+				  	 else{
+				  		 input = '<div class="cards"><h4>' + 'error' + '</h4></div>'
+				  	 }	
+					 back = flip(flipper, "<p></p>" + input)
+			  		});
+					}
+			 else{
+				alert('不能全选或者不选');
+	  			}
     } 
     back.addEventListener('click', function(e) {
       if (e.target.classList.contains('btn')) {
@@ -284,20 +268,16 @@ exports.trigger = function(elm, event_name, data) {
 },{}]},{},[1])
 ;
 
-function display(){
-	 document.getElementById('card').style.display = "none";
-}
 </script>
 </head>
 <body onload="jigsaw()">
         <div id="container"></div>
-		<button type="button" style="position: absolute; left: 400px; top: 200px; cursor: pointer; float: left; display: block;" onclick="commit();">Click Me!</button>
 		<div style="position: absolute; left: 600px; top: 0">
           <h2></h2>
 		  <div class="cards">
 			<div id="heart">&#x2665;</div>
 		  </div>
-          <p><a id="card" class="btnflip btn card" href="#" onclick="display()">Card</a></p>
+          <p><a id="card" class="btnflip btn card" href="#">Card</a></p>
         </div>
 </body>
 </html>
