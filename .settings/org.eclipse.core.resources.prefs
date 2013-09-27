@@ -1,10 +1,13 @@
-#Fri Sep 20 11:58:52 CST 2013
+#Thu Sep 26 12:42:00 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
 eclipse.preferences.version=1
+encoding//apps/common_app/admin.py=utf-8
+encoding//apps/common_app/models.py=utf-8
 encoding//apps/pojo/recommend.py=utf-8
 encoding//apps/pojo/search.py=utf-8
+encoding//apps/publish_app/models.py=utf-8
 encoding//apps/recommend_app/form.py=utf-8
 encoding//apps/recommend_app/models.py=utf-8
 encoding//apps/recommend_app/recommend_settings.py=utf-8
@@ -33,6 +36,7 @@ encoding//pinloveweb/settings.py=utf-8
 encoding//pinloveweb/test.py=utf-8
 encoding//pinloveweb/urls.py=utf-8
 encoding//pinloveweb/views.py=utf-8
+encoding//test/recommend_test.py=utf-8
 encoding//util/connection_db.py=utf-8
 encoding//util/form_util.py=utf-8
 encoding//util/page.py=utf-8

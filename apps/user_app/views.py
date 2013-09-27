@@ -43,7 +43,8 @@ def update_Basic_Profile_view(request):
         args.update(csrf(request))
         user = request.user
         if request.method == 'POST' :
-            userProfileForm = UserBasicProfileForm(request.POST, request.FILES) 
+            userProfile = UserProfile.objects.get(user_id=user.id)
+            userProfileForm = UserBasicProfileForm(request.POST,  instance=userProfile) 
             if userProfileForm.is_valid() :
                 stateProvince = request.POST['stateProvince']
                 city = request.POST['city']
@@ -58,8 +59,8 @@ def update_Basic_Profile_view(request):
 #                   img = parser.close()
 #                   path = settings.MEDIA_ROOT
 #                   img.save('jin', 'jpeg') 
-                
                 userProfile = userProfileForm.save(commit=False)
+#                 print userProfile.avatar_name
                 #get user id
                 userProfile.id = UserProfile.objects.get(user_id=user.id).id
                 userProfile.user = request.user
@@ -154,7 +155,8 @@ def user_appearance_view(request):
          args.update(csrf(request))
          count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
-              userAppearanceForm=UserAppearanceForm(request.POST)
+              userProfile = UserProfile.objects.get(user_id=request.user.id)
+              userAppearanceForm=UserAppearanceForm(request.POST,instance=userProfile)
               if userAppearanceForm.is_valid:
                   userAppearance = userAppearanceForm.save(commit=False)
                   if count !=0:
@@ -185,7 +187,8 @@ def user_study_work_view(request):
          args.update(csrf(request))
          count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
-              userStudyWorkForm=UserStudyWorkForm(request.POST)
+              userProfile = UserProfile.objects.get(user_id=request.user.id)
+              userStudyWorkForm=UserStudyWorkForm(request.POST,instance=userProfile)
               if userStudyWorkForm.is_valid:
                   userStudyWork = userStudyWorkForm.save(commit=False)
                   if count !=0:
@@ -217,7 +220,8 @@ def personal_habit_view(request):
          args.update(csrf(request))
          count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
-              userPersonalHabitForm=UserPersonalHabitForm(request.POST)
+              userProfile = UserProfile.objects.get(user_id=request.user.id)
+              userPersonalHabitForm=UserPersonalHabitForm(request.POST,instance=userProfile)
               if userPersonalHabitForm.is_valid:
                   userPersonalHabit = userPersonalHabitForm.save(commit=False)
                   if count !=0:
@@ -248,7 +252,8 @@ def family_information_view(request):
          args.update(csrf(request))
          count=UserProfile.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
-              userFamilyInformationForm=UserFamilyInformationForm(request.POST)
+              userProfile = UserProfile.objects.get(user_id=request.user.id)
+              userFamilyInformationForm=UserFamilyInformationForm(request.POST,instance=userProfile)
               if userFamilyInformationForm.is_valid:
                   userFamilyInformation = userFamilyInformationForm.save(commit=False)
                   if count !=0:
@@ -306,12 +311,12 @@ def userInfor(request, offset):
 def addFriend(request):
      if request.user.is_authenticated() :
          offset = request.GET.get('userId')
-         count = Friend.objects.filter(friendId=offset).count();
+         count = Friend.objects.filter(friend_id=offset).count();
          if count == 0:
              Myfriend = User.objects.get(id=offset)
              friend = Friend()
-             friend.myId = request.user
-             friend.friendId = Myfriend
+             friend.my = request.user
+             friend.friend = Myfriend
              friend.type = '0'
              friend.save()
              result = '添加成功'
@@ -326,11 +331,11 @@ def addFriend(request):
            return render(request, 'login.html', args) 
        
 def friend(request):
-    count = Friend.objects.filter(myId=request.user.id).count()
+    count = Friend.objects.filter(my_id=request.user.id).count()
     if count == 0:
         return render(request, 'member/friend.html', {'count':count})
     else :
-        friendList = Friend.objects.filter(myId=request.user.id)
+        friendList = Friend.objects.filter(my_id=request.user.id)
         return render(request, 'member/friend.html', {'count':count, 'friendList':friendList})
 
 
@@ -342,7 +347,7 @@ def removeFriend(request, offset):
              offset = int(offset)
          except ValueError:
              raise Http404()
-         Friend.objects.filter(friendId=offset).delete()
+         Friend.objects.filter(friend_id=offset).delete()
          return HttpResponseRedirect("/user/friend/")
     else:
          return HttpResponseRedirect("/user/friend/")

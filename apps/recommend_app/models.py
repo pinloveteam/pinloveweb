@@ -27,6 +27,9 @@ class Grade(models.Model):
     appearanceweight=models.FloatField(verbose_name=u"外貌权重",null=True)
     characterweight=models.FloatField(verbose_name=u"性格权重",null=True)
     appearancesvote=models.IntegerField(verbose_name=u'相貌投票数',default='0',null=True)
+    class Meta:
+        verbose_name = u'推荐打分表' 
+        verbose_name_plural = u'推荐打分表'
 
 '''
 用户期望数据
@@ -34,29 +37,35 @@ class Grade(models.Model):
 class UserExpect(models.Model):
     user=models.ForeignKey(User,related_name='User')
 #     heightx1=models.SmallIntegerField(verbose_name=u'身高',default='160',null=True)
-    heighty1=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty1=models.FloatField(verbose_name=u'y1分数',default='0.00',null=True)
 #     heightx2=models.SmallIntegerField(verbose_name=u'身高',default='165',null=True)
-    heighty2=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty2=models.FloatField(verbose_name=u'y2分数',default='0.00',null=True)
 #     heightx3=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty3=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty3=models.FloatField(verbose_name=u'y3分数',default='0.00',null=True)
 #     heightx4=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty4=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty4=models.FloatField(verbose_name=u'y4分数',default='0.00',null=True)
 #     heightx5=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty5=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty5=models.FloatField(verbose_name=u'y5分数',default='0.00',null=True)
 #     heightx6=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty6=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty6=models.FloatField(verbose_name=u'y6分数',default='0.00',null=True)
 #     heightx7=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty7=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty7=models.FloatField(verbose_name=u'y7分数',default='0.00',null=True)
 #     heightx8=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty8=models.FloatField(verbose_name=u'分数',default='0.00',null=True)
+    heighty8=models.FloatField(verbose_name=u'y18分数',default='0.00',null=True)
+#     class Meta:
+#         verbose_name = u'用户期望biao' 
+#         verbose_name_plural = u'推荐打分表'
 
-class matchResult(models.Model):
-    my=models.ForeignKey(User,related_name='my_User')
-    other=models.ForeignKey(User,related_name='other_User')
+class MatchResult(models.Model):
+    my=models.ForeignKey(User,related_name='my_User',verbose_name=u"自己")
+    other=models.ForeignKey(User,related_name='other_User',verbose_name=u"异性")
     scoreMyself=models.FloatField(verbose_name=u"异性给自己打分",default='0.00')
     scoreOther=models.FloatField(verbose_name=u"自己给异性打分",default='0.00')
     macthScore=models.FloatField(verbose_name=u"计算总分",default='0.00')
-    
+    class Meta:
+        verbose_name = u'推荐结果表' 
+        verbose_name_plural = u'推荐结果表'
+
 #   获取对应的用户基本信息表的信息
 #   attribute：
 #             none

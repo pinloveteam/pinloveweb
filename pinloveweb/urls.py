@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     (r'^recommend/', include('apps.recommend_app.urls')), 
      #game app
     (r'^game/', include('apps.game_app.urls')), 
+
     
 )
 

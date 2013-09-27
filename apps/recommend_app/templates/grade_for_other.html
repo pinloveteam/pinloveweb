@@ -21,16 +21,18 @@
       {%ifequal grade_for_other False%}
       s2=[['160',0],['165',0],['170',0],['175',0],['180',0],['185',0],['190',0],['195',0]];
        {%else%}
-       s2=[['160',{{grade_for_other.heighty1}}*100],['165',{{grade_for_other.heighty2}}*100],['170',{{grade_for_other.heighty3}}*100],['175',{{grade_for_other.heighty4}}*100],['180',{{grade_for_other.heighty5}}*100],['185',{{grade_for_other.heighty6}}*100],['190',{{grade_for_other.heighty7}}*100],['195',{{grade_for_other.heighty8}}*100]]
+       s2=[['160',{{grade_for_other.heighty1}}],['165',{{grade_for_other.heighty2}}],['170',{{grade_for_other.heighty3}}],['175',{{grade_for_other.heighty4}}],['180',{{grade_for_other.heighty5}}],['185',{{grade_for_other.heighty6}}],['190',{{grade_for_other.heighty7}}],['195',{{grade_for_other.heighty8}}]]
       {% endifequal %} 
         $('#chartdiv').bind('jqplotDragStop',
                 function (seriesIndex, pointIndex, pixelposition, data) {
                    // alert(plot1.series[0].data)
-                     $("#result").val(plot1.series[0].data)
+                    
+                    	  $("#result").val(plot1.series[0].data)
+                   
                    // CalculateAveragePercentage();
                 });
 
-      s1 = [['23-May-08',1],['24-May-08',4],['25-May-08',2],['26-May-08', 6]];
+        $("#result").val(s2)
       
       plot1 = $.jqplot('chartdiv',[s2],{
          title: '身高分数',

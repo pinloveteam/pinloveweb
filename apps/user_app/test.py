@@ -8,7 +8,7 @@ Created on Jul 4, 2013
 import os
 from django.db import connection
 import MySQLdb
-from apps.user_app.models import Friend, user_basic_profile, user_study_work
+from apps.user_app.models import Friend
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
 from PIL import ImageFile
 from django.conf import settings
@@ -42,12 +42,12 @@ import re
 #      print dict(user_basic_profile.INCOME_CHOICES)[r[fields['income']]]
 
 # userList = User_Profile.objects.filter(age__gte=21).filter(age__lte=28).filter(gender='M').exclude(user_id=1)
-# friends = Friend.objects.filter(myId=1)
+# friends = Friend.objects.filter(my=1)
 # frends_flag={}
 # temp=0
 # for user in userList:
 #     for friend in friends:
-#         if user.user_id == friend.friendId.id:
+#         if user.user_id == friend.friend.id:
 #             temp=1;
 #     if temp==1:
 #         user.append(1)

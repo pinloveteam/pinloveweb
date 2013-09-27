@@ -5,7 +5,7 @@ Created on Sep 3, 2013
 @author: jin
 '''
 from apps.user_app.models import UserProfile, Friend
-from apps.recommend_app.models import matchResult, Grade, UserExpect
+from apps.recommend_app.models import MatchResult, Grade, UserExpect
 from util.page import page
 from django.shortcuts import render
 from util.connection_db import connection_to_db
@@ -18,7 +18,7 @@ from django.core.context_processors import csrf
 
 def recommend(request):
     arg={}
-    count=matchResult.objects.filter(my_id=request.user.id).count()
+    count=MatchResult.objects.filter(my_id=request.user.id).count()
     if request.user.is_authenticated():
 #     if request.method=='POST':
 #        minAge = request.POST['minAge']
@@ -63,7 +63,7 @@ def recommend(request):
 #        arg['pages'] = searchRsultList    
 #     else:  
       if count>0:
-         matchResultList=matchResult.objects.filter(my_id=request.user.id)
+         matchResultList=MatchResult.objects.filter(my_id=request.user.id)
          arg=page(request,matchResultList)
          matchResultList=arg['pages']
          matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
@@ -90,11 +90,11 @@ def recommend(request):
           arg=page(request,userProfileList)   
           matchResultList=arg['pages']
           matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
-          friends = Friend.objects.filter(myId=request.user.id)
+          friends = Friend.objects.filter(my=request.user)
           i=0 
           for user in matchResultList:
            for friend in friends:
-               if user.user_id == friend.friendId.id:
+               if user.user_id == friend.id:
                    matchResultList[i].isFriend=True
            i+=1
           arg['pages']=matchResultList
@@ -209,18 +209,9 @@ def grade_for_other(request):
 #             gradeForOther=GradeForOther(request.POST)
 #             if gradeForOther.is_valid():
 #                 grade = gradeForOther.save(commit=False)
-                grade=UserExpect(user=request.user,heighty1=float(s[1])/100,heighty2=float(s[3])/100,heighty3=float(s[5])/100,heighty4=float(s[7])/100,heighty5=float(s[9])/100 ,heighty6=float(s[11])/100,heighty7=float(s[13])/100,heighty8=float(s[15])/100,)
+                grade=UserExpect(user=request.user,heighty1=float(s[1]),heighty2=float(s[3]),heighty3=float(s[5]),heighty4=float(s[7]),heighty5=float(s[9]) ,heighty6=float(s[11]),heighty7=float(s[13]),heighty8=float(s[15]),)
                 if count!=0:
                     grade.id=UserExpect.objects.get(user_id=request.user.id).id
-         
-#                     grade.heighty1=float(s[1])/100
-#                     grade.heighty2=float(s[3])/100
-#                     grade.heighty3=float(s[5])/100
-#                     grade.heighty4=float(s[7])/100
-#                     grade.heighty5=float(s[9])/100
-#                     grade.heighty6=float(s[11])/100
-#                     grade.heighty7=float(s[13])/100
-#                     grade.heighty8=float(s[15])/100
                 grade.save()
                 return render(request,'member/update_profile_success.html',arg,)
         else:
