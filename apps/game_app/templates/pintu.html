@@ -8,12 +8,12 @@ body{
     overflow:hidden;
 }
 #container{
-	background-color: #ffffff;                
+	background-color: #ffffff;
 }
 .cards{
 	width: 280px;
 	height: 400px;
-	background-color: #2ecc71;    
+	background-color: #2ecc71;
 }
 
 @keyframes pound {
@@ -184,6 +184,7 @@ function drawImage(imageObj) {
               }
                 stage.add(layer);
         }
+        
     function jigsaw(){
         var imageObj = new Image();
         imageObj.src = '/static/img/aixh.png';
@@ -204,10 +205,8 @@ function drawImage(imageObj) {
 
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 // index.js
-
 var flip = flippant.flip
 var event = require('./event')
-
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('btnflip')) {
     e.preventDefault()
@@ -215,6 +214,7 @@ document.addEventListener('click', function(e) {
     var back
     var input 
 	var heart = document.getElementById('heart');
+	var count = document.getElementById('count');
     if (e.target.classList.contains('card')) {
     	for(i=0;i<4;i++){
         	for(j=0;j<4;j++){
@@ -227,25 +227,29 @@ document.addEventListener('click', function(e) {
 			if(select != ''&& select != ("0-4-8-1-5-9-13-2-6-10-14-3-7-11")){
 				heart.style.animation = "0.8s ease 0s normal none infinite pound";
 				heart.style['-webkit-animation'] = "0.8s ease 0s normal none infinite pound";
-				document.getElementById('card').style.display = "none";
 			  	$.post(
 			  		'{%url "jigsaw"%}',
 			  		{'selected': select},
 			  		function(response){
 			  		 heart.style.display = "none";
-			  		 var obj=eval(response);
-			  		 if(obj[0].message != '1'){
-				  		 if(obj[0].message == '0'){
-				  		 	input = '<div class="cards"><h4>' + '找不到对象' + '</h4></div>'
+			  		 var message=eval(response);
+				     input = '<div class="cards"><img src={{MEDIA_URL}}' + message[0].avatar_name + '/><span>姓名:' + message[0].message + '</span><span>年龄:' + message[0].age + '</span><span>身高:' + message[0].height + '</span></div>'
+				  	 if(message[0].message == '0'){
+				  		 input = '<div class="cards"><h4>' + '没有匹配用户！' + '</h4></div>'
 				  		 }
-				  		 else{
-				  		 	input = '<div class="cards"><img src={{MEDIA_URL}}'+obj[0].avatar_name + '/><span>姓名:' + obj[0].message + '</span><span>年龄:' + obj[0].age + '</span><span>身高:' + obj[0].height + '</span></div>'
+				  	 if(message[0].message == '1'){
+				  		 input = '<div class="cards"><h4>' + '选择有误！' + '</h4></div>'
 				  		 }
-				  		}
-				  	 else{
-				  		 input = '<div class="cards"><h4>' + 'error' + '</h4></div>'
-				  	 }	
+				  	 if(message[0].message == '2'){
+				  		 input = '<div class="cards"><h4>' + '不能再玩了，明天再来！' + '</h4></div>'
+				  		 }
 					 back = flip(flipper, "<p></p>" + input)
+					 if(message[0].count != null){
+					 	count.innerHTML = '可玩次数:' + message[0].count;
+					 	if(message[0].count == '0'){
+					 	
+					 	}
+					 }
 			  		});
 					}
 			 else{
@@ -268,6 +272,9 @@ exports.trigger = function(elm, event_name, data) {
 },{}]},{},[1])
 ;
 
+function aclick(){
+	document.getElementById('card').click();
+}
 </script>
 </head>
 <body onload="jigsaw()">
@@ -277,7 +284,10 @@ exports.trigger = function(elm, event_name, data) {
 		  <div class="cards">
 			<div id="heart">&#x2665;</div>
 		  </div>
-          <p><a id="card" class="btnflip btn card" href="#">Card</a></p>
+          <p><a id="card" class="btnflip btn card" href="#"></a></p>
         </div>
+        <button id="hehe" href="#" onclick="aclick();">开始匹配</button>
+        <button id="hehe" href="#" onclick="javascript:window.top.location.reload();">再玩一次</button>
+        <span id="count">可玩次数:{{count}}</span>
 </body>
 </html>
