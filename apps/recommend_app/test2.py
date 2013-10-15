@@ -9,12 +9,13 @@ from time import clock as now
 from django.contrib import auth
 from django.contrib.auth.models import User
 from apps.recommend_app.models import Grade, run_procedure,\
-     matchResult, UserExpect
+     MatchResult, UserExpect
 import random
-from apps.user_app.models import UserProfile, School
+from apps.user_app.models import UserProfile
 from apps.recommend_app.recommend_util import cal_income, cal_education,\
     cal_recommend
 from apps.pojo.recommend import RecommendResult
+from apps.common_app.models import School
 connection = MySQLdb.connect(user='root', db='django', passwd='jin521436', host='localhost')
 cursor=connection.cursor();
 start = now()

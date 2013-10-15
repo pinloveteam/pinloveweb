@@ -38,11 +38,11 @@ def search_result(request):
        arg=page(request,searchRsultList)  
        searchRsultList=arg.get('pages')
        searchRsultList.object_list=searchRsultBeanList_to_searchRsultList(searchRsultList.object_list)
-       friends = Friend.objects.filter(myId=request.user.id)
+       friends = Friend.objects.filter(my=request.user.id)
        i=0 
        for user in searchRsultList:
             for friend in friends:
-                if user.user_id == friend.friendId.id:
+                if user.user_id == friend.friend.id:
                    searchRsultList[i].isFriend=True
             i+=1
        arg['pages']=searchRsultList
@@ -50,11 +50,11 @@ def search_result(request):
     else:
        arg=page(request,request.session['searchQuery']) 
        searchRsultList=searchRsultBeanList_to_searchRsultList(arg.get('pages'))
-       friends = Friend.objects.filter(myId=request.user.id)
+       friends = Friend.objects.filter(my=request.user.id)
        i=0 
        for user in searchRsultList:
             for friend in friends:
-                if user.user_id == friend.friendId.id:
+                if user.user_id == friend.friend.id:
                    searchRsultList[i].isFriend=True
             i+=1
        arg['pages']=searchRsultList
@@ -125,11 +125,11 @@ def advance_search_result(request):
             arg=page(request,searchRsultList)
             searchRsultList=arg.get('pages')
             searchRsultList.object_list=searchRsultBeanList_to_searchRsultList(searchRsultList.object_list)
-            friends = Friend.objects.filter(myId=request.user.id)
+            friends = Friend.objects.filter(my=request.user.id)
             i=0 
             for user in searchRsultList:
               for friend in friends:
-                if user.user_id == friend.friendId.id:
+                if user.user_id == friend.friend.id:
                    searchRsultList[i].isFriend=True
               i+=1
             arg['pages']=searchRsultList
@@ -139,11 +139,11 @@ def advance_search_result(request):
        searchRsultList=UserProfile.objects.raw(request.session['advanceSearchSql'])
        arg=page(request,searchRsultList) 
        searchRsultList=searchRsultBeanList_to_searchRsultList(arg.get('pages'))
-       friends = Friend.objects.filter(myId=request.user.id)
+       friends = Friend.objects.filter(my=request.user.id)
        i=0 
        for user in searchRsultList:
             for friend in friends:
-                if user.user_id == friend.friendId.id:
+                if user.user_id == friend.friend.id:
                    searchRsultList[i].isFriend=True
             i+=1
        arg['pages']=searchRsultList

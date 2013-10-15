@@ -21,9 +21,9 @@
 		</tr>
 		{% for friend in friendList %}
 		<tr align="center">
-		    <td>{{friend.friendId.username}}</td>
-		    <td><a href="/user/userInfor/{{friend.friendId.id}}/">详细信息</a></td>
-		    <td><a href="/user/removeFriend/{{friend.friendId.id}}/">移除好友</a></td>
+		    <td>{{friend.friend.username}}</td>
+		    <td><a href="/user/userInfor/{{friend.friend.id}}/">详细信息</a></td>
+		    <td><a href="/user/removeFriend/{{friend.friend.id}}/">移除好友</a></td>
 		</tr>
 		
 		{% endfor %}
