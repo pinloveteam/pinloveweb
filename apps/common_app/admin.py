@@ -14,6 +14,6 @@ class SchoolAdmin(admin.ModelAdmin):
 #     filter_horizontal = ('user',)  ManyToManyField
     list_filter = ('type',)
 
-admin.site.register(School,SchoolAdmin)
+# admin.site.register(School,SchoolAdmin)
 
 

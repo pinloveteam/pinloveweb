@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block javascript %}
+{% endblock %}
+{% block content %}
+     <h2>身份验证 </h2> 
+ <style type="text/css">
+.ico{
+     color:#B2B2B2;
+     font-size:12px;
+     padding:5px 0 0;
+     }
+</style>
+<form action="/verification/educationValid/" method="POST" enctype="multipart/form-data" onSubmit="return changeAble()">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+{% if educationValidForm.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+<table>
+
+  <tr><th><label for="id_education">学历:</label></th>
+ <td>{{educationValidForm.education}}</td><td>{{educationValidForm.education.errors }}</td></tr>
+  <tr><th><label for="id_educationSchool">毕业学校:</label></th>
+ <td>{{educationValidForm.educationSchool}}</td><td>{{educationValidForm.educationSchool.errors }}</td></tr>
+ <tr><th><label for="id_selectFile">学历证明:</label></th>
+ <td><!-- <input id="selectFile" class="file" type="file" name="file"> -->
+ {{educationValidForm.educationPicture}}
+ <br>{{educationValidForm.educationPicture.errors }}
+ <div class="ico">
+<span >请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span>
+</div>
+ </td></tr>
+</table>
+<input type="submit" value="提交" />
+</form>
+
+{% endblock %}

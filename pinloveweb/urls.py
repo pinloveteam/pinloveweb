@@ -14,6 +14,9 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
+     (r'^admin/doc/', include('django.contrib.admindocs.urls')),  
+     (r'^grappelli/',include('grappelli.urls')), 
+     (r'^grappelli/',include('grappelli.urls')), 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^upload_avatar/', include('apps.upload_avatar.urls')),
@@ -42,8 +45,11 @@ urlpatterns = patterns('',
     (r'^recommend/', include('apps.recommend_app.urls')), 
      #game app
     (r'^game/', include('apps.game_app.urls')), 
+     #publish_app
+    (r'^publish/', include('apps.publish_app.urls')), 
+     #verification_app
+    (r'^verification/', include('apps.verification_app.urls')), 
 
-    
 )
 
 

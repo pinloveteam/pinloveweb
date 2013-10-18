@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
 from django.core.mail import send_mail
 import random, string
-from apps.user_app.models import UserProfile,user_contact_link,user_verification,user_hobby_interest,Friend,\
+from apps.user_app.models import UserProfile,UserContactLink,UserVerification,user_hobby_interest,Friend,\
     Verification
 from apps.user_app.forms import UserBasicProfileForm, UserContactForm,UserAppearanceForm, UserStudyWorkForm, UserPersonalHabitForm,\
     UserFamilyInformationForm, PhotoCheck
@@ -109,14 +109,14 @@ def user_contact_view(request):
      if request.user.is_authenticated() :
          args = {}
          args.update(csrf(request))
-         count=user_contact_link.objects.filter(user_id=request.user.id).count()
+         count=UserContactLink.objects.filter(user_id=request.user.id).count()
          if request.method == 'POST' :
               userContactForm=UserContactForm(request.POST)
               if userContactForm.is_valid():
                   
                   userContact = userContactForm.save(commit=False)
                   if count !=0:
-                       userContact.id=user_contact_link.objects.get(user_id=request.user.id).id
+                       userContact.id=UserContactLink.objects.get(user_id=request.user.id).id
                   userContact.user=request.user
                   userContact=get_household_home(request,userContact)
                   userContact.save()
@@ -127,7 +127,7 @@ def user_contact_view(request):
          else:
               userContactForm=UserContactForm()
               if count!=0:
-                  userContact=user_contact_link.objects.get(user_id=request.user.id)
+                  userContact=UserContactLink.objects.get(user_id=request.user.id)
                   userContactForm=UserContactForm(instance=userContact)
                   args['userContact']=userContact
               args['user_contact_form']=userContactForm

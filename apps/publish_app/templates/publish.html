@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block content %}
+     <h2> {{publish.title}}</h2> 
+{% endblock %} 
+{% block second_content %}
+<table border=1>
+  <tr><th><label for="id_content">内容:</label></th></label>
+  </tr><tr>
+   <td>
+     {{publish.content|safe }} 
+   </td></tr>
+   <tr><td>发布时间：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{publish.publishDate|date:"Y-m-d"}} </td></tr>
+   <tr><td><input type="button" onclick="history.go(-1)" value="返回"/></td></tr>
+</table>
+{% endblock %}

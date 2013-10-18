@@ -5,7 +5,7 @@ Created on Aug 22, 2013
 @author: jin
 '''
 from django.db import connection
-from apps.user_app.models import UserProfile, user_contact_link, user_hobby_interest
+from apps.user_app.models import UserProfile, user_hobby_interest
 def connection_to_db(sql):
     cursor=connection.cursor();
     cursor.execute(sql)

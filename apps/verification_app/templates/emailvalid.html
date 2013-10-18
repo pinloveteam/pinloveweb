@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block content %}
+     <h2>邮箱验证 </h2> 
+<form action="/verification/emailvalid/" method="POST">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+<table>
+
+  <tr><th><label for="id_emailValid">邮箱:</label></th>
+ <td><input type="text"  name="email" value="{%ifequal error_message None%}{{user.email}}{%else%}{{email}}{%endifequal%}"/>{{error_message}}</td></tr>
+ 
+</table>
+<input type="submit" value="提交" />
+</form>
+{% endblock %}

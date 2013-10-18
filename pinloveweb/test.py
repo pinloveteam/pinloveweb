@@ -24,7 +24,7 @@ import re
 # print  match.group()
 
 # a=eval('u'+'\u4e95\u5188\u5c71\u5b66\u9662')
-s = '\u56c3\u67e4' 
-i=u'背'
-text = i.decode('GB2312')
-print text
+# s = '\u56c3\u67e4' 
+# i=u'背'
+# text = i.decode('GB2312')
+# print text

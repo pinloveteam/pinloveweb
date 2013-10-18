@@ -8,8 +8,8 @@ from django.contrib import auth , messages
 from django.core.context_processors import csrf 
 
 from django.contrib.auth.models import User 
-from apps.user_app.models import Verification
-from apps.user_app.models import UserProfile,user_contact_link,user_verification,user_hobby_interest
+from apps.user_app.models import Verification, UserVerification
+from apps.user_app.models import UserProfile,UserContactLink,UserVerification,user_hobby_interest
 from django.core.mail import send_mail
 
 from forms import RegistrationForm 
@@ -114,6 +114,10 @@ def register_user(request) :
             sex=userForm.cleaned_data['gender']
             userForm.photo='user_img/image.png'
             UserProfile(user_id=user.id,gender=sex).save()
+            #创建用户验证信息
+            userVerification=UserVerification()
+            userVerification.user=user
+            userVerification.save()
             # we need to generate a random number as the verification key 
             
             # user needs email verification 
@@ -151,6 +155,7 @@ def register_verify(request) :
 #     verification = Verification.objects.get(username=username)
     if isIdAuthen(request):
         user.is_active = True 
+        UserVerification.objects.filter(user=user).update(emailValid='2')
 #         verification.delete()
         return render(request, 'register_success.html')
     else :

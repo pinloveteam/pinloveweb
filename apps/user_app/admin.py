@@ -11,9 +11,16 @@ from django.db import models
 from apps.user_app.models import Friend
 from django.conf import settings
 from apps.recommend_app.models import Grade
+from django import forms
 '''
   基本信息
 '''
+class UserBasicProfile(UserProfile):
+    class Meta:
+        proxy = True
+        verbose_name = u'用户基本信息' 
+        verbose_name_plural = u'用户基本信息'
+        
 class UserBasicProfileAdmin(admin.ModelAdmin):
     list_display=('user','gender','get_birthday','age','height','education','educationSchool','income',)
     search_fields =('user__username','educationSchool',)
@@ -89,20 +96,60 @@ class AvatarCheck(UserProfile):
 #           STATUS_CHOICES = (('3',"审核通过"),('4',"审核未通过"),)
 #           self.STATUS_CHOICES =STATUS_CHOICES
 # #     avatar_name_status=models.CharField(verbose_name=r"头像状态",max_length=2, choices=STATUS_CHOICES,default='3')
+    
     def image_img(self):
             return u'<img src="%s" />' %(settings.MEDIA_URL+'user_img/image.png')
     image_img.short_description = '头像'
-    image_img.allow_tags = True
+    image_img.allow_tags = True 
+    
     class Meta:
         proxy = True
         verbose_name = u'头像审核' 
         verbose_name_plural = u'头像审核'
+#     appearancescore=models.FloatField(verbose_name=u"外貌分数",null=True)
+        
+# class AppearancScore(Grade): 
+#      author = models.ForeignKey(AvatarCheck)   
+#      class Meta:
+#         proxy = True
+#         verbose_name = u'相貌打分' 
+#         verbose_name_plural = u'相貌打分'
+           
+class AvatarCheckForm(forms.ModelForm):
+    appearancescore=forms.FloatField(label=u"外貌分数")
+    class Meta:
+        model=UserProfile
+    def __init__(self, *args, **kwargs):
+        super(AvatarCheckForm, self).__init__(*args, **kwargs)
+        # Here we will redefine our test field.
+        self.fields['appearancescore'] = forms.FloatField(label=u"外貌分数",)
+# class AppearancScoreForm(forms.ModelForm):
+# #     appearancescore=models.FloatField(verbose_name=u"外貌分数",null=True)
+#     class Meta:
+#         model=AppearancScore
+#         
+#     def __init__(self, *args, **kwargs):
+#         super(AvatarCheckForm, self).__init__(*args, **kwargs)
+#       
 class AvatarCheckAdmin(admin.ModelAdmin):
-    list_display=('user','avatar_name_status',)
+    list_display=('user','avatar_name_status','get_appearancescore')
     search_fields =('user__username',)
     readonly_fields=('image_img','avatar_name',)
     list_filter=('avatar_name_status',)    
     fields =('user','image_img','avatar_name','avatar_name_status',)
+#     appearancescore=models.FloatField(verbose_name=u"外貌分数",null=True)
+#     def __init__(self, *args, **kwargs):
+#         super(AvatarCheckAdmin, self).__init__(*args, **kwargs)
+#         # Here we will redefine our test field.
+#         self.fields['appearancescore'] = models.FloatField(verbose_name=u"外貌分数",)
+#     def change_view(self, request, object_id, form_url='', extra_context=None):
+#         extra_context = extra_context or {}
+#         extra_context['osm_data'] = 'asasa'
+#         return super(AvatarCheckAdmin, self).change_view(request, object_id,
+#             form_url, extra_context=extra_context)
+       
+    def get_appearancescore(self,instance):
+        return Grade.objects.get(user=instance.user).appearancescore
     #默认过滤
     def changelist_view(self, request, extra_context=None):
         if not request.GET.has_key('avatar_name_status__exact'):
@@ -122,13 +169,23 @@ class AvatarCheckAdmin(admin.ModelAdmin):
                ('3',"审核通过"),('4',"审核未通过"),
             )
         return super(AvatarCheckAdmin, self).formfield_for_choice_field(db_field, request, **kwargs)
+    """
+     重写save
+    """
+    def save_model(self, request, obj, form, change):
+        """
+        Given a model instance save it to the database.
+        """
+        obj.save(commit=False)
+        user_1=obj.user
+        Grade.objects.filter(user=user_1).update(appearancescore=obj.appearancescore)
 class FriendAdmin(admin.ModelAdmin):
     list_display=('my','friend',)
     search_fields =('my__username','friend__username',)
     fields =('my','friend','type')
 #     list_filter=('type','hasCar','hasHouse','financialCondition','parentEducation',)   
 
-admin.site.register(UserProfile,UserBasicProfileAdmin)
+admin.site.register(UserBasicProfile,UserBasicProfileAdmin)
 admin.site.register(UserAppearance,UserAppearanceAdmin)
 admin.site.register(UserStudyWork,UserStudyWorkAdmin)
 admin.site.register(UserFamilyInformation,UserFamilyInformationAdmin)

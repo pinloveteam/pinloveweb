@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block javascript %}
+
+{% endblock %}
+{% block content %}
+     <h2>身份验证 </h2> 
+ <style type="text/css">
+.ico{
+     color:#B2B2B2;
+     font-size:12px;
+     padding:5px 0 0;
+     }
+</style>
+<form action="/verification/incomeValid/" method="POST" enctype="multipart/form-data" onSubmit="return changeAble()">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+{% if incomeValidForm.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+<table>
+
+  <tr><th><label for="id_income">收入:</label></th>
+ <td>{{incomeValidForm.income}}</td><td>{{incomeValidForm.income.errors }}</td></tr>
+  <tr><th><label for="id_selectFile">收入证明:</label></th>
+ <td><!-- <input id="selectFile" class="file" type="file" name="file"> -->
+ {{incomeValidForm.incomePicture}}
+ <br>{{incomeValidForm.incomePicture.errors }}
+ <div class="ico">
+<span >请上传公司的收入证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span>
+</div>
+ </td></tr>
+</table>
+<input type="submit" value="提交" />
+</form>
+
+{% endblock %}

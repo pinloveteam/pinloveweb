@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block runload %}
+<body onLoad="init()">
+<SCRIPT src="/static/js/search.js" %}" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+     <h2>用户验证 </h2> 
+<form action="/user/photo_check/" method="POST">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+<table>
+ <tr><th><label for="id_avatarValid">头像认证:</label></th>
+ <td>{{avatarStatus}}</td>{%ifequal avatarStatus '未认证'%}<input type="button" value="上传头像" onclick="window.location.href='/user/upload'"/>{%endifequal%}</tr>
+ <tr><th><label for="id_IDCardValid">身份证（护照）认证:</label></th><td>
+ {{IDCardValid}}
+ </td><td>
+ {%ifequal IDCardValid '未认证'%}<input type="button" value="上传身份证（护照）" onclick="window.location.href='/verification/IDCardValid'"/>{%endifequal%}
+  {%ifequal IDCardValid '认证未通过'%}<input type="button" value="重新认证" onclick="window.location.href='/verification/IDCardValid'"/>{%endifequal%}
+ </td></tr>
+ <tr><th><label for="id_educationValid">学历认证:</label></th>
+ <td>{{educationValid}}</td><td>
+  {%ifequal educationValid '未认证'%}<input type="button" value="上传学历证明" onclick="window.location.href='/verification/educationValid'"/>{%endifequal%}
+  {%ifequal educationValid '认证未通过'%}<input type="button" value="重新认证" onclick="window.location.href='/verification/educationValid'"/>{%endifequal%}
+ </td></tr>
+  <tr><th><label for="id_incomeValid">收入认证:</label></th>
+ <td>{{incomeValid}}</td><td>
+ {%ifequal incomeValid '未认证'%}<input type="button" value="上传收入证明" onclick="window.location.href='/verification/incomeValid'"/>{%endifequal%}
+  {%ifequal incomeValid '认证未通过'%}<input type="button" value="重新认证" onclick="window.location.href='/verification/incomeValid'"/>{%endifequal%}
+ </td></tr>
+  <tr><th><label for="id_mobileNumberValid">手机认证:</label></th>
+ <td>{{mobileNumberValid}}</td><td></td></tr>
+  <tr><th><label for="id_emailValid">邮箱认证:</label></th>
+ <td>{{emailValid}}</td><td>{%ifequal emailValid '未认证'%}<input type="button" value="验证邮箱" onclick="window.location.href='/verification/emailvalid/'"/>{%endifequal%}</td></tr>
+ 
+</table>
+</form>
+{% endblock %}

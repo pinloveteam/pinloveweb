@@ -1,4 +1,4 @@
-#Thu Sep 26 12:42:00 CST 2013
+#Thu Oct 17 13:46:14 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
@@ -8,6 +8,8 @@ encoding//apps/common_app/models.py=utf-8
 encoding//apps/pojo/recommend.py=utf-8
 encoding//apps/pojo/search.py=utf-8
 encoding//apps/publish_app/models.py=utf-8
+encoding//apps/publish_app/urls.py=utf-8
+encoding//apps/publish_app/views.py=utf-8
 encoding//apps/recommend_app/form.py=utf-8
 encoding//apps/recommend_app/models.py=utf-8
 encoding//apps/recommend_app/recommend_settings.py=utf-8
@@ -31,6 +33,10 @@ encoding//apps/user_app/models.py=utf-8
 encoding//apps/user_app/test.py=utf-8
 encoding//apps/user_app/user_validators.py=utf-8
 encoding//apps/user_app/views.py=utf-8
+encoding//apps/verification_app/admin.py=utf-8
+encoding//apps/verification_app/forms.py=utf-8
+encoding//apps/verification_app/urls.py=utf-8
+encoding//apps/verification_app/views.py=utf-8
 encoding//pinloveweb/forms.py=utf-8
 encoding//pinloveweb/settings.py=utf-8
 encoding//pinloveweb/test.py=utf-8

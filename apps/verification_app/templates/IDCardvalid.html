@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block javascript %}
+<script>
+//判断文件类型
+
+function changeType(objFile) {
+    var objtype=objFile.substring(objFile.lastIndexOf(".")).toLowerCase();
+    var fileType=new Array(".jpeg",".bmp",".jpg","png");
+    for(var i=0; i<fileType.length; i++){
+        if(objtype==fileType[i])
+        {
+             return false;
+             break;
+        }
+    }
+    return true;
+}
+//设置上传按钮是否启用
+function changeAble()
+{
+   var objFile = document.getElementById('selectFile')
+   if(!changeType(objFile))
+   {
+       alert("您不能上传非法类型的文件！");
+       return false;
+   }
+   return true;
+}
+</script>
+{% endblock %}
+{% block content %}
+     <h2>身份验证 </h2> 
+ <style type="text/css">
+.ico{
+     color:#B2B2B2;
+     font-size:12px;
+     padding:5px 0 0;
+     }
+</style>
+<form action="/verification/IDCardValid/" method="POST" enctype="multipart/form-data" onSubmit="return changeAble()">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+{% if IDcardValidForm.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+<table>
+
+  <tr><th><label for="id_trueName">真实姓名:</label></th>
+ <td>{{IDcardValidForm.trueName}}</td><td>{{IDcardValidForm.trueName.errors }}</td></tr>
+  <tr><th><label for="id_emailValid">证件类型:</label></th>
+ <td>{{IDcardValidForm.IDCardChoice}}</td><td>{{IDcardValidForm.IDCardChoice.errors }}</td></tr>
+ <tr><th><label for="id_IDCardNumber">证件号码:</label></th>
+ <td>{{IDcardValidForm.IDCardNumber}}</td><td>{{IDcardValidForm.IDCardNumber.errors }}</td></tr>
+  <tr><th><label for="id_selectFile">证件照:</label></th>
+ <td><!-- <input id="selectFile" class="file" type="file" name="file"> -->
+ {{IDcardValidForm.IDCardPicture}}
+ <br>{{IDcardValidForm.IDCardPicture.errors }}
+ <div class="ico">
+<span >请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span>
+</div>
+ </td></tr>
+</table>
+<input type="submit" value="提交" />
+</form>
+
+{% endblock %}

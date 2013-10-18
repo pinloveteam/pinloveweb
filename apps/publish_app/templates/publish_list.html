@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block content %}
+     <h2> 消息发布 列表</h2> 
+<form action="/publish/publish/" method="POST">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+<table border=1>
+<tr><th><label for="id_title">职业领域:</label></th><th><label for="id_publishDate">发布时间:</label>
+  </tr>
+ {% for publish in pages %}
+  <tr>
+   <td>
+   <a href="/publish/{{publish.id}}">{{publish.title}}</a>
+   </td>
+   <td>{{publish.publishDate|date:"Y-m-d"}}</td></tr>
+ {% endfor %}
+ <tr><td cols=10>
+		 {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">&lt; 上一页</a>{% endif %}
+		 <span>
+		 {% for p in page_range %}
+		 {% ifequal p pages.number %}
+		   <span class="current">{{p}}</span>
+		 {% else %}
+		 <a href="?page={{p}}" title="第{{p}}页">{{p}}</a>
+		   {% endifequal %}
+		 {% endfor %}
+		 </span>
+		 {% if pages.has_next %}
+		 <a href="?page={{ pages.next_page_number }}">下一页 &gt; </a>
+		 {% endif %}
+		 <a >[第{{ pages.number }}/{{ pages.paginator.num_pages }}页]</a>
+		</td></tr>
+</table>
+</form>
+{% endblock %}

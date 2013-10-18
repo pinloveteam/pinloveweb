@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from apps.user_app.models import UserProfile, user_contact_link,user_hobby_interest
+from apps.user_app.models import UserProfile, UserContactLink,user_hobby_interest
 from apps.user_app import user_validators
 
 #个人基本详细
@@ -51,7 +51,7 @@ class UserContactForm(ModelForm):
             
                 
     class Meta:
-        model=user_contact_link
+        model=UserContactLink
         fields=('IDCardChoice','trueName','mobileNumber','IDCardNumber','QQ','MSN','stateProvinceHome','CountryHome','cityHome')
         exclude=('stateProvinceHome','CountryHome','cityHome')
         

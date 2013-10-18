@@ -132,8 +132,8 @@ class UserProfile(models.Model, UploadAvatarMixIn):
            3.审核通过
            4.审核未通过
     """
-    STATUS_CHOICES = (('1',"未上传"),('2',"正在审核"),('3',"审核通过"),('4',"审核未通过"),)
-    avatar_name_status= models.CharField(verbose_name=r"头像状态",max_length=2, choices=STATUS_CHOICES,default='1',null=True,blank=True,)
+    AVAYAR_STATUS_CHOICES = (('1',"未上传"),('2',"正在审核"),('3',"审核通过"),('4',"审核未通过"),)
+    avatar_name_status= models.CharField(verbose_name=r"头像状态",max_length=2, choices=AVAYAR_STATUS_CHOICES,default='1',null=True,blank=True,)
  
     def get_uid(self):
         return self.user.id
@@ -223,7 +223,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         verbose_name=u'用户基本信息'
         verbose_name_plural = u'用户基本信息'
 
-class user_contact_link(models.Model):
+class UserContactLink(models.Model):
     user=models.ForeignKey(User)
     
     trueName = models.CharField(verbose_name=r"真实姓名", max_length=50,null=True,blank=True,)
@@ -232,8 +232,8 @@ class user_contact_link(models.Model):
     mobileNumber = models.CharField(verbose_name=r"手机号码", max_length=20,null=True,blank=True,)
     
     ID_CARD_CHIOSE=((-1,'请选择'),(0,'身份证'),(1,'护照'))
-    IDCardChoice=models.IntegerField(verbose_name=r"护照类型",choices=ID_CARD_CHIOSE,null=True,blank=True,default=-1)
-    IDCardNumber=models.CharField(verbose_name=r"身份证号", max_length=50,null=True,blank=True,)
+    IDCardChoice=models.IntegerField(verbose_name=r"证件类型",choices=ID_CARD_CHIOSE,null=True,blank=True,default=-1)
+    IDCardNumber=models.CharField(verbose_name=r"证件号码", max_length=50,null=True,blank=True,)
     
     QQ=models.CharField(verbose_name=r"QQ", max_length=20,null=True,blank=True,)
     
@@ -244,14 +244,28 @@ class user_contact_link(models.Model):
     cityHome=models.CharField(verbose_name=r"户口所在地市", max_length=50,null=True,blank=True,)
 
     
-class user_verification(models.Model):
+class UserVerification(models.Model):
     user=models.ForeignKey(User)
-    IDCardValid=models.NullBooleanField(verbose_name=r"身份证验证",default=False)
-    mobileNumberValid=models.NullBooleanField(verbose_name=r"手机号码验证",default=False)
-    emailValid=models.NullBooleanField(verbose_name=r"邮箱验证",default=False)
-    jobValid=models.NullBooleanField(verbose_name=r"工作验证",default=False)
-    incomeValid=models.NullBooleanField(verbose_name=r"收入验证",default=False)
-    educationValid=models.NullBooleanField(verbose_name=r"教育验证",default=False)
+    """
+           1:未认证  
+           2.正在审核
+           3.认证通过
+           4.认证未通过
+    """
+    STATUS_CHOICES = (('1',"未认证"),('2',"正在审核"),('3',"已认证"),('4',"认证未通过"),)
+    IDCardValid=models.CharField(verbose_name=r"身份证（护照）验证",max_length=2,choices=STATUS_CHOICES,default='1',)
+    IDCardPicture=models.ImageField(verbose_name=r"证件照片",max_length=128,upload_to='verfication_img/IDCard',null=True)
+    MOBILE_EMAIL_STATUS_CHOICES = (('1',"未认证"),('2',"已认证"),)
+    mobileNumberValid=models.CharField(verbose_name=r"手机号码验证",max_length=2,choices=MOBILE_EMAIL_STATUS_CHOICES,default='1',)
+    emailValid=models.CharField(verbose_name=r"邮箱验证",max_length=2,choices=MOBILE_EMAIL_STATUS_CHOICES,default='1',)
+#     jobValid=models.NullBooleanField(verbose_name=r"工作验证",choices=STATUS_CHOICES,default='1',)
+    incomeValid=models.CharField(verbose_name=r"收入验证",max_length=2,choices=STATUS_CHOICES,default='1',)
+    incomePicture=models.ImageField(verbose_name=r"收入证明",max_length=128,upload_to='verfication_img/income',null=True)
+    educationValid=models.CharField(verbose_name=r"学历验证",max_length=2,choices=STATUS_CHOICES,default='1',)
+    educationPicture=models.ImageField(verbose_name=r"学历证明",max_length=128,upload_to='verfication_img/education',null=True)
+    class Meta:
+        verbose_name=u'用户信息验证'
+        verbose_name_plural = u'用户信息验证'
 '''    
 class user_appearance(models.Model):
     user=models.ForeignKey(User)
@@ -399,6 +413,9 @@ class Dictionary(models.Model):
 class Verification(models.Model):
     username = models.CharField(max_length=30)
     verification_code = models.CharField(max_length=50)
+    class Meta:
+        verbose_name=u'临时验证码'
+        verbose_name_plural = u'临时验证码'
     
 
 def save_avatar_in_db(sender, uid, avatar_name, **kwargs):
