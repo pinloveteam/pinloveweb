@@ -262,6 +262,7 @@ MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
 STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
 STATIC_URL = 'http://www.pinpinlove.com/static/'
 UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
 UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 
