@@ -8,7 +8,7 @@ from django.contrib import auth , messages
 from django.core.context_processors import csrf 
 
 from django.contrib.auth.models import User 
-from apps.user_app.models import Verification, UserVerification
+from apps.user_app.models import Verification, UserVerification, Friend
 from apps.user_app.models import UserProfile,UserContactLink,UserVerification,user_hobby_interest
 from django.core.mail import send_mail
 
@@ -19,6 +19,11 @@ import time
 from django.http.response import HttpResponse
 import datetime
 from django.contrib.auth.forms import UserCreationForm
+from util.page import page
+from django.db import connection
+
+
+
 
 def login(request) :
        
@@ -67,11 +72,78 @@ def auth_view(request) :
     else : 
         # Show an error page 
         return HttpResponseRedirect('/account/invalid/')
-        
+
 def loggedin(request) : 
+    arg={}
+    from apps.recommend_app.models import MatchResult
+    #判断推荐分数是否生成
+    count=MatchResult.objects.filter(my_id=request.user.id).count()
+    userProfile=UserProfile.objects.get(user_id=request.user.id)
+    #关注
+    myFollow=Friend.objects.filter(my=request.user).count()
+    otherFollow=Friend.objects.filter(friend=request.user).count()
+    sql="select my_id from user_app_friend where friend_id="+str(request.user.id)+" and my_id in (SELECT friend_id from user_app_friend where my_id="+str(request.user.id)+") "
+    cursor=connection.cursor();
+    cursor.execute(sql)
+    follow=cursor.fetchall()
     
-    return render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
+    if count>0:
+         matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
+         arg=page(request,matchResultList)
+         matchResultList=arg['pages']
+         from apps.recommend_app.views import matchResultList_to_RecommendResultList
+         matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
+         friends = Friend.objects.filter(my_id=request.user.id)
+         i=0 
+         for user in matchResultList:
+           for friend in friends:
+               if user.user_id == friend.friend_id:
+                   if  user.user_id in follow:
+                       matchResultList[i].isFriend=2
+                   else:
+                       matchResultList[i].isFriend=1
+           i+=1
+         arg['pages']=matchResultList
+    else:
+          userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile).order_by("?")
+          arg=page(request,userProfileList)   
+          matchResultList=arg['pages']
+          from apps.recommend_app.views import userProfileList_to_RecommendResultList
+          matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
+          friends = Friend.objects.filter(my=request.user)
+          i=0 
+          attentionEachOther=[]
+          for f in follow:  
+              attentionEachOther.append(f[0])
+          for user in matchResultList:
+           for friend in friends:
+               if user.user_id == friend.friend_id:
+                   if  user.user_id in attentionEachOther:
+                       matchResultList[i].isFriend=2
+                   else:
+                       matchResultList[i].isFriend=1
+           i+=1
+          arg['pages']=matchResultList
     
+    arg=init_card(arg,userProfile)
+    arg['myFollow']=myFollow
+    arg['otherFollow']=otherFollow
+    arg['follow']=len(follow)  
+    return render(request, 'card.html',arg )
+#用于初始化card页面所需要的信息
+def init_card(arg,userProfile):
+    if userProfile.avatar_name_status!='3':
+        arg['avatar_name']='user_img/image.png'
+    else:
+        arg['avatar_name']=userProfile.avatar_name
+    arg['age']=userProfile.age
+    arg['height']=userProfile.height
+    arg['income']=userProfile.income
+    arg['education']=userProfile.get_education_display()
+    arg['jobIndustry']=userProfile.get_jobIndustry_display()
+    return arg
+     
+     
 def invalid_login(request) : 
     
     return render(request, 'invalid_login.html')
@@ -127,7 +199,8 @@ def register_user(request) :
             email_message = u"请您点击下面这个链接完成注册："
             email_message += email_verification_link
             try :
-               send_mail(u'拼爱网注册电子邮件地址验证', email_message,'pinloveteam@pinpinlove.com',[user.email]) 
+               from pinloveweb.settings import DEFAULT_FROM_EMAIL
+               send_mail(u'拼爱网注册电子邮件地址验证', email_message,DEFAULT_FROM_EMAIL,[user.email]) 
             except:
                 print u'邮件发送失败'
                 pass

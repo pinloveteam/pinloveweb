@@ -312,18 +312,25 @@ def addFriend(request):
      if request.user.is_authenticated() :
          offset = request.GET.get('userId')
          count = Friend.objects.filter(friend_id=offset).count();
+         arg = {}
          if count == 0:
-             Myfriend = User.objects.get(id=offset)
+#              Myfriend = User.objects.get(id=offset)
              friend = Friend()
              friend.my = request.user
-             friend.friend = Myfriend
+             friend.friend_id = offset
              friend.type = '0'
              friend.save()
-             result = '添加成功'
+             count = Friend.objects.filter(my_id=offset,friend=request.user).count()
+             if count==0:
+                 arg['type']=1
+             if count==1:
+                 arg['type']=2
+             arg['content'] = '关注成功'
          else:
-             result = "已添加好友"
+             arg['content']='-1'
+             arg['content'] = "已关注"
         
-         json = simplejson.dumps(result)
+         json = simplejson.dumps(arg)
          return HttpResponse(json)
      else:
            args = {}

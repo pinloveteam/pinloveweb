@@ -135,7 +135,7 @@ def matchResultList_to_RecommendResultList(matchResultList):
        income=userBaiscProfile.income
        jobIndustry=userBaiscProfile.get_jobIndustry_display()
        avatar_name=userBaiscProfile.avatar_name
-       isFriend=False
+       isFriend=0
        if userBaiscProfile.avatar_name_status==3:
            isVote=True
        else:
@@ -157,11 +157,12 @@ def userProfileList_to_RecommendResultList(userProfileList):
        education=userProfile.get_education_display()
        income=userProfile.income
        jobIndustry=userProfile.get_jobIndustry_display()
-       avatar_name=userProfile.avatar_name
-       isFriend=False
+       isFriend=0
        if userProfile.avatar_name_status==3:
+           avatar_name=userProfile.avatar_name
            isVote=True
        else:
+           avatar_name='user_img/image.png'
            isVote=False
        recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote)
        recommendResultList.append(recommendResult)

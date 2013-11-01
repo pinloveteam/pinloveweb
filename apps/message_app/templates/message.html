@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block content %}
+     <h2> 私信详细信息</h2> 
+<style type="text/css">
+ .equal {
+  display:table;
+  border-collapse:separate;
+  
+ }
+ .row {
+  display:table-row;
+ }
+ .row div {
+  display:table-cell;
+ }
+ .row .one {
+  width:240px;
+ }
+ .row .two {
+  width:200px;
+ }
+ .row .three {
+  
+ }
+ .reply_id{
+ float:right;
+ }
+</style>
+{% endblock %} 
+{% block second_content %}
+<div class="equal">
+{%for message in messageList%}
+    <div class="row">
+        <div class="one"> {{message.sender.name}}对您说：{{message.content}}</a><br>
+           <div class="reply_id"><a href="/message/reply/?receiver_id={{message.sender.id}}&receiver_name={{message.sender.name}}">回复</a>&nbsp;&nbsp;{{message.sendTime|date:"Y-m-d H:i:s"}}</div></div>
+    </div>
+{%endfor%}   
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block javascript %}
+  <h2> 私信列表 </h2> 
+{% endblock %} 
+{% block second_content %}
+<table border=1 width='600'>
+  </tr>
+ {% ifequal pages Null%}
+   暂时没有信息
+ {%endifequal%}
+ {% for message in pages %}
+
+   <!-- 如果是未读私信 -->
+   {%ifequal type 'messageNoRead'%}
+       <tr>
+        <td>
+          {{message.sender.name}}对您说：{{message.content}}</a><br>
+           <a stye="color:red" href="/message/reply/?receiver_id={{message.sender.id}}&receiver_name={{message.sender.name}}">回复</a>&nbsp;&nbsp;&nbsp;&nbsp;{{message.sendTime|date:"Y-m-d H:i:s"}}
+        </td>
+       </tr>
+   {%endifequal%}
+  <!-- 如果是全部私信 -->
+  {%ifequal type 'message'%}
+       <tr>
+        <td>
+          {{message.sender.name}}对您说：{{message.content}}</a><br>
+          共有 <a href="/message/detail/{{message.sender.id}}">{{message.count}}</a>个对话&nbsp;&nbsp;<a href="/message/reply/?receiver_id={{message.sender.id}}&receiver_name={{message.sender.username}}">回复</a>&nbsp;&nbsp;{{message.sendTime|date:"Y-m-d H:i:s"}}
+        </td>
+       </tr>
+  {%endifequal%}
+ {% endfor %}
+ <tr><td cols=10>
+		 {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">&lt; 上一页</a>{% endif %}
+		 <span>
+		 {% for p in page_range %}
+		 {% ifequal p pages.number %}
+		   <span class="current">{{p}}</span>
+		 {% else %}
+		 <a href="?page={{p}}" title="第{{p}}页">{{p}}</a>
+		   {% endifequal %}
+		 {% endfor %}
+		 </span>
+		 {% if pages.has_next %}
+		 <a href="?page={{ pages.next_page_number }}">下一页 &gt; </a>
+		 {% endif %}
+		 <a >[第{{ pages.number }}/{{ pages.paginator.num_pages }}页]</a>
+		</td></tr>
+</table>
+{% endblock %}

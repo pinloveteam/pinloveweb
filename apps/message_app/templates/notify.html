@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block content %}
+{% endblock %} 
+{% block second_content %}
+<table border=1>
+ <tr><td><label for="id_title">标题:</label></td>
+  </tr><tr>
+   <td>
+      {{notify.title}}
+   </td></tr>
+  <tr><td><label for="id_content">内容:</label></td>
+  </tr><tr>
+   <td>
+     {{notify.content|safe }} 
+   </td></tr>
+   <tr><td>发布时间：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{notify.sendTime|date:"Y-m-d H:i:s"}} </td></tr>
+   <tr><td>发信人：{{notify.receiver.username}} </td></tr>
+   <tr><td><input type="button" onclick="history.go(-1)" value="返回"/></td></tr>
+</table>
+{% endblock %}

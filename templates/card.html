@@ -1,0 +1,380 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+ {% load util_filter %}
+	<title> {% block title %} 拼爱网 {% endblock %} </title>
+	{% load staticfiles %}
+	<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+	{% block staticfiles %}{% endblock %}
+
+<link href="{{STATIC_URL}}css/hoverbox.css" rel="stylesheet">
+<link rel="stylesheet" href="{{STATIC_URL}}css/picbox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/picbox.js"></script>
+<script type="text/javascript" >
+function sendMessage(receiver_id){
+   var reply_content_id='reply_content_'+receiver_id
+   var reply_content=$('#reply_content_'+receiver_id).val();
+   $.getJSON('/message/send/',{receiver_id:receiver_id,reply_content:reply_content},function(data){
+	  $('#reply_content_'+receiver_id).val("");
+      alert(data);
+   });
+};
+function attention(userId,isFriend) {
+	 if (isFriend==0){
+		  $.getJSON("/user/addFriend/",{userId:userId},function(data) {
+			  if(data['type']==1){
+					$("#attention_"+userId).removeClass("icon_like_0")
+					$("#attention_"+userId).addClass("icon_like_1")
+
+			  }else{
+					$("#attention_"+userId).removeClass("icon_like_0")
+					$("#attention_"+userId).addClass("icon_like_2")
+
+				  };
+		       alert(data['content']);
+		       
+		       
+		    });
+		  };
+	 
+	  
+};
+</script>
+<style type="text/css">	
+  html,body{
+    background:#cceded url("{{STATIC_URL}}img/Cityscape09.jpg");
+	background-size:101.2%;
+	margin:0px;
+  }
+  .top{ 
+  	width:auto;
+	height:12px;
+	border-radius: 10px 10px 0 0;
+	background-color:#FF9933;
+  }
+  .card{
+	width:203px;
+	height:283px;
+	float:left;
+	margin-left:18px;
+	background-color: #fff;
+	border-radius: 10px;
+}
+#card_content{
+	display:none;
+	position:absolute;
+	top:20%;
+	left:39%;
+	width:500px;
+	height:500px;
+	background-color: #fff;
+	opacity: 1;
+	z-index:999;
+}
+
+@keyframes myfirst
+{
+from {opacity: 0;}
+to {opacity: 0.8;}
+}
+
+@-moz-keyframes myfirst /* Firefox */
+{
+from {opacity: 0;}
+to {opacity: 0.8;}
+}
+
+@-webkit-keyframes myfirst /* Safari 和 Chrome */
+{
+from {opacity: 0;}
+to {opacity: 0.8;}
+}
+
+@-o-keyframes myfirst /* Opera */
+{
+from {opacity: 0;}
+to {opacity: 0.8;}
+}
+
+#card_pbOverlay {
+	display:none;
+	position:absolute;
+    left: 0;
+    top: 0;
+    background: none repeat scroll 0 0 #000000;
+    cursor: pointer;
+    opacity: 0;
+    height: 200%;
+    width: 100%;
+	opacity: 0.8;
+	z-index:999;
+}
+  .img-circle,.img-rounded{
+	margin-left:10px; 
+	margin-top:4px; 
+  }
+  .name{
+	margin-left:5px; 
+	font-weight:bold;
+	font-size:16px;
+  }
+
+  .tag{
+	margin:10px;
+  }
+  .tag span{
+	margin-top:11px;
+  }
+  .btn-toolbar{
+    position:relative; 
+	left:-30px; 
+	top:70px;
+  }
+
+  .user_info{
+	width:182px;
+	height:199px;
+	background-color: #fff;
+	border-radius: 10px;
+  }
+  
+.send_pic{
+	margin-top:15px;
+	width:182px;
+	background-color: #fff;
+	border-radius: 10px;
+	height:203px;
+}
+
+.nav{
+	position:relative; 
+	top:10px;
+}
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover, .nav-tabs > .active > a:focus {
+	 border-style: none;
+}
+.nav-tabs {
+    border-bottom: none;
+}
+.tab-content{
+	overflow :hidden;
+}
+.nav-tabs > li > a, .nav-pills > li > a {
+    margin-right: 0;
+    padding-left: 13px;
+    padding-right: 0;
+}
+.span9 .inline {
+	width:870px;
+	height:48px;
+	background-color:#ebebeb;
+	font:normal bold 15px/20px 微软雅黑;
+	letter-spacing:2px;
+}
+
+.sys_setting{
+	width:182px;
+	height:142px;
+	background-color: #ffffff;
+	border-radius: 10px;
+}
+a:hover {
+	text-decoration:none;
+	}
+
+.user_setting{
+	margin-top: 20px;
+	font-size:16px;
+}
+.user_setting li {
+	margin:5px;
+	letter-spacing:4px;
+}
+.icon_profile,.icon_like_0,.icon_like_1,.icon_like_2,.icon_photo,.icon_msg{
+	background-image: url("{{STATIC_URL}}img/profile.png");
+    background-repeat: no-repeat;
+	display: inline-block;
+    height: 27px;
+    line-height: 14px;
+    margin-top: 1px;
+    vertical-align: text-top;
+    width: 27px;
+}
+.icon_like_0{
+	background-image: url("{{STATIC_URL}}img/like.png");
+	title:"未关注"
+}
+.icon_like_1{
+	background-image: url("{{STATIC_URL}}img/slike.png");
+	title:"已关注"
+}
+.icon_like_2{
+	background-image: url("{{STATIC_URL}}img/dlike.png");
+	title:"相互关注"
+}
+
+.icon_photo{
+	background-image: url("{{STATIC_URL}}img/photo.png");
+}
+.icon_msg{
+	background-image: url("{{STATIC_URL}}img/msg.png");
+}
+.sns_info{
+	width:182px;
+	height:55px;
+	background-color: #ffffff;
+	border-radius: 10px;
+}
+
+.img {
+	margin:7px 0 7px 10px;
+	}
+	
+</style>
+</head> 
+<div class="container">
+	<div class="row">
+		<div class="span3" style="margin-left:-85px;">
+			<img alt="140x140" src="{{STATIC_URL}}img/logo.png" style="margin-top:56px;"/>
+			<div class="user_info" style="margin-top:17px;"> 
+				<div class="top"></div>
+				<img alt="140x140" height="80" width="80" src="{{MEDIA_URL}}{{avatar_name}}" class="img-rounded"/>
+				<span class="name">{{user.username}}</span>
+				<hr style="margin:15px 10px;height:1px;border:none;border-top:1px solid #777777;"/>
+				<p style="margin:20px 0 20px 20px;">
+                  <div class="tag">
+								{%ifequal age None%}{%else%}<span class="label label-info">{{age}}岁</span>{%endifequal%}
+								{%ifequal height -1%}{%else%}<span class="label label-info">{{height}}cm</span>{%endifequal%}
+								{%ifequal income -1%}{%else%}<span class="label label-info">{{income}}万</span>{%endifequal%}
+								{%ifequal education '未填'%}{%else%}<span class="label label-success">{{education}}</span>{%endifequal%}
+								{%ifequal jobIndustry '未填'%}{%else%}<span class="label label-success">{{jobIndustry}}</span>{%endifequal%}
+				 </div>
+                </p>
+			</div>
+			
+			<div class="sns_info" style="margin-top:15px;">
+				<div class="top"></div>
+				<ul class="inline" style="font-weight:bold">
+					<li>
+						<img style="margin: 12px;" src="{{STATIC_URL}}img/sys_info.png"/>
+					</li>
+					<li style="color:#fb892e" title="相互关注">{{follow}}</li>
+					<li style="color:#0072bc" title="我的关注">{{myFollow}}</li>
+					<li title="我的粉丝">{{otherFollow}}</li>
+				</ul>
+			</div>
+			<div class="sys_setting" style="margin-top:17px;">
+				<div class="top"></div>
+				<ul class=" user_setting">
+					<li><a class="S_func1" href="/user/upload"><i class="user-picture"></i><span class="config-text">上传头像</span></a></li>
+					<li><a class="S_func1" href="#"><i class="user-profile-setting"></i><span class="config-text">个人资料</span></a></li>
+					<li><a class="S_func1" href="#"><i class="sys-seting"></i><span class="config-text">系统设置</span></a></li>
+				</ul>
+			</div>
+			
+			<div class="send_pic">
+				<div class="top"></div>
+				
+			</div>
+		</div>
+		<div class="span9" style="margin-left:29px;">
+			<ul class="inline" style="margin-top:56px;">
+				<li style="background-color:#d2d2d2">
+					<a href="#"><img class="img" alt="140x140" src="{{STATIC_URL}}img/动态.png"/><span style="margin:0 13px;">动态</span></a>
+				</li>
+				<li style="background-color:#f79b5e;margin-left:212px;">
+					<a href=""><div style="margin:13px 24px 15px 23px;color:#fff">推荐用户</div></a>
+				</li>
+				<li>
+					<a href="#"><div style="margin:13px 24px 15px 23px;color:#000">附近的人</div></a>
+				</li>
+				<li>
+					<a href="/search/simple_search/"><div style="margin:13px 24px 15px 23px;color:#000">用户搜索</div></a>
+				</li>
+				<li>
+					<a href="/game/game_pintu/"><div style="margin:13px 24px 15px 23px;color:#000">缘分拼图</div></a>
+				</li>
+			</ul>
+			<div class="row" style="width:894px;">
+			{% for page  in pages %}
+			{% ifequal forloop.counter|mod:4 1%}
+			  <div class="row" style="width:894px;margin-top:20px;">
+		    {%endifequal%}
+			<div class="card span3"> 
+				<div class="top"></div>
+				<img alt="140x140" height="65" width="65"  src="{{MEDIA_URL}}{{page.avatar_name}}" class="img-circle"/>
+				<span class="name">{{page.username}}</span>
+				<img class = "sex" alt="140x140" src="{{STATIC_URL}}img/girl.png"/>
+			    <div class="tabbable">
+					<div class="tab-content">
+					<div class="tab-pane active" id="tab1{{page.user_id}}">
+							<p style="margin:20px 0 20px 20px;">已到学校  好累啊</p>
+							<hr style="margin:0 10px;height:1px;border:none;border-top:1px solid #777777;"/>
+							<div class="tag">
+								{%ifequal page.age None%}{%else%}<span class="label label-info">{{page.age}}岁</span>{%endifequal%}
+								{%ifequal page.height -1%}{%else%}<span class="label label-info">{{page.height}}cm</span>{%endifequal%}
+								{%ifequal page.income -1%}{%else%}<span class="label label-info">{{page.income}}元</span>{%endifequal%}
+								{%ifequal page.education '未填'%}{%else%}<span class="label label-success">{{page.education}}</span>{%endifequal%}
+								{%ifequal page.jobIndustry '未填'%}{%else%}<span class="label label-success">{{page.jobIndustry}}</span>{%endifequal%}
+							</div>
+						</div>
+						<div class="tab-pane " id="tab3{{page.user_id}}">
+						<div class="scroller">
+								<ul class="hoverbox">
+								<li>
+								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img1.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img1.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								</li>
+								<li>
+								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img2.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img2.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								</li>
+								<li>
+								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img3.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img3.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								</li>
+								<li>
+								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img4.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img4.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								</li>
+								</ul>
+							</div>
+						</div>
+						<div class="tab-pane" id="tab4{{page.user_id}}">
+							<textarea id="reply_content_{{page.user_id}}" rows="3" style="width:170px;margin: 17px 5px 5px 5px;" ></textarea>
+							<button type="button" class="btn" style="float:right;margin-right:13px;" onclick="sendMessage({{page.user_id}});">发送</button> 
+						</div>
+					</div>
+					<ul class="nav nav-tabs" style="margin-top:20px;margin-left:13px;">
+						<li class="active"><a href="#tab1{{page.user_id}}" data-toggle="tab"><i class="icon_profile" ></i></a></li>
+						<li>
+						   <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_{{page.isFriend}}" id="attention_{{page.user_id}}"></i></a>
+						 </li>
+						<li><a href="#tab3{{page.user_id}}" data-toggle="tab"><i class="icon_photo"></i></a></li>
+						<li><a href="#tab4{{page.user_id}}" data-toggle="tab"><i class="icon_msg"></i></a></li>
+					</ul>
+				</div>
+			</div>
+			{% ifequal forloop.counter|mod:4 0%}
+			  </div>
+			{%endifequal%}
+            {% endfor %}
+		
+			
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+  <div class="indexFooter">
+	<ul class="indexFooterRight inline">
+		<li><a href="#">关于我们</a></li>
+		<li><a href="#">媒体关注</a></li>
+		<li><a href="#">联系客服</a></li>
+		<li><a href="#">隐私保护</a></li>
+		<li><a href="#">帮助</a></li>
+	</ul>
+  	<p>Copyright  &copy;  2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;京ICP证130108号</p>
+  </div>
+</body> 
+</html> 

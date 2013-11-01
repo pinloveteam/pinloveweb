@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block javascript %}
+  <h2> 发私信</h2> 
+<style type="text/css">
+ .equal {
+  display:table;
+  border-collapse:separate;
+ }
+ .row {
+  display:table-row;
+ }
+ .row div {
+  display:table-cell;
+  border: solid 1px
+ }
+ .row .one {
+  width:100px;
+ }
+ .row .two {
+  width:100px;
+ }
+ .row .three {
+  width:150px;
+ }
+</style>
+{% endblock %} 
+{% block second_content %}
+<form action="/message/reply/"  method="POST">{% csrf_token %}
+<input type="hidden" name="receiver_id" value="{{receiver_id}}">
+<div class="equal">
+ <div class="row">
+        <div class="one">发私信给 {{receiver_name}} :</div>
+  </div>
+   <div class="row">
+        <div class="two">
+          <textarea id="reply_content" name="reply_content"></textarea>
+        </div>
+     </div>
+      <div class="row">
+        <div class="three"><input type='submit' value="发送"></div>
+      </div>
+
+</div>
+</form>
+{% endblock %}

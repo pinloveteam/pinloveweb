@@ -12,6 +12,7 @@ urlpatterns=patterns('apps.verification_app.views',
     url(r'^educationValid/$', 'education_valid'),
     #incomeValid valid
     url(r'^incomeValid/$', 'income_valid'),
+    url(r'^11/$', 'income_valid'),
     
     
 )

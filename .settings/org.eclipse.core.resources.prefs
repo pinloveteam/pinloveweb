@@ -1,10 +1,16 @@
-#Thu Oct 17 13:46:14 CST 2013
+#Sat Oct 26 14:59:48 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
 eclipse.preferences.version=1
 encoding//apps/common_app/admin.py=utf-8
 encoding//apps/common_app/models.py=utf-8
+encoding//apps/common_app/time_task.py=utf-8
+encoding//apps/message_app/admin.py=utf-8
+encoding//apps/message_app/models.py=utf-8
+encoding//apps/message_app/test.py=utf-8
+encoding//apps/message_app/urls.py=utf-8
+encoding//apps/message_app/views.py=utf-8
 encoding//apps/pojo/recommend.py=utf-8
 encoding//apps/pojo/search.py=utf-8
 encoding//apps/publish_app/models.py=utf-8

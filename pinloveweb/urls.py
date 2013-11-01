@@ -17,10 +17,11 @@ urlpatterns = patterns('',
      (r'^admin/doc/', include('django.contrib.admindocs.urls')),  
      (r'^grappelli/',include('grappelli.urls')), 
      (r'^grappelli/',include('grappelli.urls')), 
+      url(r'^upload_avatar/', include('apps.upload_avatar.urls')),
     # Uncomment the next line to enable the admin:
+    url(r'^admin/verification/$','apps.verification_app.views.income_valid'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^upload_avatar/', include('apps.upload_avatar.urls')),
-
+    
     # Main Pages 
     
     # Login and logout  
@@ -49,6 +50,8 @@ urlpatterns = patterns('',
     (r'^publish/', include('apps.publish_app.urls')), 
      #verification_app
     (r'^verification/', include('apps.verification_app.urls')), 
+    #notify_app
+    (r'^message/', include('apps.message_app.urls')), 
 
 )
 

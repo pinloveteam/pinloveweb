@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block javascript %}
+  <h2> 消息列表 </h2> 
+  <script>
+  function deleteNotify(notify_id){
+	  $.getJSON('/message/delete_notify/',{notify_id:notify_id},
+	  function(txt){
+	  if(txt){
+	  $("#notify_"+notify_id).slideUp("fast",function(){
+	  $(this).remove();
+	  });
+	  }else{
+	  alert('删除失败');
+	  }
+	  }); 
+  };
+  </script>
+  <style type="text/css">
+ .equal {
+  display:table;
+  border-collapse:separate;
+ }
+ .row {
+  display:table-row;
+ }
+ .row div {
+  display:table-cell;
+  border: solid 1px
+ }
+ .row .one {
+  width:100px;
+ }
+ .row .two {
+  width:100px;
+ }
+ .row .three {
+  width:150px;
+ }
+ .row .fourth {
+  width:100px;
+ }
+ .reply_id{
+ float:right;
+ }
+.page{
+  margin-left:200px;
+
+}
+</style>
+{% endblock %} 
+{% block second_content %}
+<div class="equal">
+ <div class="row">
+        <div class="one"> <label for="render_id">发信人</label></div>
+        <div class="two"><label for="id_title">标题:</label></div>
+        <div class="three"><label for="id_notifyDate">发布时间:</label></div>
+        <div class="fourth"><label for="id_action">操作</label></div>
+ </div>
+  {% for notify in pages %}
+  <div class="row" id="notify_{{notify.id}}">
+        <div class="one">  {{notify.sender}}</label></div>
+        <div class="two">  <a href="/message/notify_detail/{{notify.id}}">{{notify.title}}</a></div>
+        <div class="three">{{notify.sendTime|date:"Y-m-d H:i:s"}} </div>
+        <div class="fourth"><a href="javascript:deleteNotify({{notify.id}})">删除</a></div>
+ </div>
+ {% endfor %}
+</div>
+ <div class="page" >  {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">&lt; 上一页</a>{% endif %}
+		 <span>
+		 {% for p in page_range %}
+		 {% ifequal p pages.number %}
+		   <span class="current">{{p}}</span>
+		 {% else %}
+		 <a href="?page={{p}}" title="第{{p}}页">{{p}}</a>
+		   {% endifequal %}
+		 {% endfor %}
+		 </span>
+		 {% if pages.has_next %}
+		 <a href="?page={{ pages.next_page_number }}">下一页 &gt; </a>
+		 {% endif %}
+		 <a >[第{{ pages.number }}/{{ pages.paginator.num_pages }}页]</a>
+ </div>
+{% endblock %}

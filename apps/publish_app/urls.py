@@ -9,6 +9,6 @@ urlpatterns=patterns('apps.publish_app.views',
     url(r'^list/$', 'list'),
     url(r'^(\d+)/$', 'publish'),
     url(r'^upload_image/', 'upload_image'),
-     url(r'^test/', 'test'),
+    url(r'^test/', 'test'),
     
 )

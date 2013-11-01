@@ -34,7 +34,12 @@ def page(request,querySet,**kwargs):
         else:
             pages = paginator.page(page)
      except:
-        pages = paginator.page(1)
+         if type(querySet)==RawQuerySet:
+            paginator._count = len(list(querySet))
+            pages = paginator.page(1)
+         else:
+            pages = paginator.page(1)
+        
      if page >= after_range_num:
         page_range = paginator.page_range[page-after_range_num:page+bevor_range_num]
      else:

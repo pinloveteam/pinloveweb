@@ -454,19 +454,6 @@ li.W_no_border {
 
 /*search*/
 
-select {
-    background-color: auto;
-    width: 85px;
-}
-select, input[type="file"] {
-    height: 20px;
-    line-height: 30px;
-}
-select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
-    border-radius: 0;
-    height: 28px;
-}
-
 .home-filter-search {
     color: #A3A3A3;
     height: 100px;
@@ -484,7 +471,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     float: right;
 }
 
-/*none-border-radius*/
+/*no-border-radius*/
 .label,.fR .btn,.badge,.progress {
     border-radius: 0;
 }

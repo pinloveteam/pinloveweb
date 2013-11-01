@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block javascript %}
+  <h2> 消息 </h2> 
+<script language=javascript>
+  var time=1000*10;
+  interval = self.setInterval("polling()", time);
+   var polling=function(){
+	   $.getJSON('/message/has_new_message/',function(data){
+		   if(data['isLogin'])
+			   {
+			      if(data['systemNoReadCount']!=0)
+			    	  {
+			    	  //alert("你有"+data["systemNoReadCount"]+"条私信未读");
+			    	  var systemNoReadCount=$('#systemNoReadCount').text();
+			    	  if (data["systemNoReadCount"]>systemNoReadCount)
+			    		  {
+			    		    var new_notify=data["systemNoReadCount"]-systemNoReadCount;
+			    		   $("#systemNoReadCount").html(data["systemNoReadCount"]); 
+			    		   alert("您有"+new_notify+"封新邮件注意接收！");
+			    		  }
+			    	  };
+			      if(data['messageNoReadCount']!=0)
+		    	  {
+		    	 // alert(你有+data["messageNoReadCount"]+条私信未读);
+		    	  var messageNoReadCount=parseInt($('#messageNoReadCount').text());
+		    	  if (data["messageNoReadCount"]>messageNoReadCount)
+		    		  {    
+		    		       var new_message=data["messageNoReadCount"]-messageNoReadCount;
+		    		      $("#messageNoReadCount").html(data["messageNoReadCount"]); 
+		    		      alert("您有"+new_message+"封新邮件注意接收！");
+		    		  }
+		    	 
+		    	  };
+			   }
+		   else{
+			   interval=window.clearInterval(interval);
+		   };
+			   });  
+   };
+
+</script>
+{% endblock %} 
+{% block second_content %}
+<table>
+ <tr><td>您有{%ifequal systemNoReadCount 0%}0{% else %}<a href="/message/list?type=systemNoRead"  id="systemNoReadCount">{{systemNoReadCount}}</a>{%endifequal%}封系统消息未读，共<a href="/message/list?type=system">{{systemCount}}</a>封</td></tr>
+ <tr><td>您有{%ifequal messageNoReadCount 0%}0{% else %}<a href="/message/list?type=messageNoRead" id="messageNoReadCount">{{messageNoReadCount}}</a>{%endifequal%}封私信未读,共有<a href="/message/list?type=message">{{messageCount}}</a>封</td></tr>
+</table>
+{% endblock %}
