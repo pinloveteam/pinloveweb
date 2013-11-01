@@ -53,7 +53,7 @@ class NotifyAdmin(admin.ModelAdmin):
             msg = EmailMultiAlternatives(subject, content, from_email, mailList)
             msg.attach_alternative(content, "text/html")
             msg.send()
-            obj.send = request.user
+            obj.sender = request.user
             obj.sendTime=datetime.datetime.today()
             obj.save()    
   
