@@ -246,18 +246,18 @@ LOGGING = {
 
 
 #---服务器环境-----
-# DATABASES = {
-#    
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
-#                                                 # The following settings are not used with sqlite3:
-#         'USER': 'pinloveteam',
-#         'PASSWORD': 'redyellowblue#123',
-#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#         'PORT': '',                             # Set to empty string for default.
-#     }
-# }
+DATABASES = {
+    
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
+                                                # The following settings are not used with sqlite3:
+        'USER': 'pinloveteam',
+        'PASSWORD': 'redyellowblue#123',
+        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',                             # Set to empty string for default.
+    }
+}
 MEDIA_URL = 'http://www.pinpinlove.com/update/'
 MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
 STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
