@@ -243,7 +243,6 @@ LOGGING = {
     }
 }
 
-ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 
 
 #---服务器环境-----
@@ -267,4 +266,5 @@ UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/u
 UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
 UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 
