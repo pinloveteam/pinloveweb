@@ -11,7 +11,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 ADMIN_MEDIA_PREFIX = '/admin_media/'
-# # 本地环境----
+# 本地环境----
 # DATABASES = {
 #      'default': {
 #          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -23,7 +23,7 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 #          'PORT': '',                             # Set to empty string for default.
 #      }
 #  }
- 
+  
  
 
 
@@ -139,7 +139,8 @@ TEMPLATE_DIRS = (
     os.path.join(PATH,'apps/recommend_app/templates').replace('\\','/'), 
     os.path.join(PATH,'apps/game_app/templates').replace('\\','/'), 
     os.path.join(PATH,'apps/verification_app/templates').replace('\\','/'),
-    os.path.join(PATH,'apps/message_app/templates').replace('\\','/'), 
+    os.path.join(PATH,'apps/message_app/templates').replace('\\','/'),
+    os.path.join(PATH,'apps/friend_dynamic_app/templates').replace('\\','/'), 
     
 )
 
@@ -158,6 +159,7 @@ INSTALLED_APPS = (
     'apps.publish_app',
     'apps.verification_app',
     'apps.message_app',
+    'apps.friend_dynamic_app',
     'grappelli',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
@@ -247,7 +249,7 @@ LOGGING = {
 
 #---服务器环境-----
 DATABASES = {
-    
+     
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.

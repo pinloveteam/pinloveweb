@@ -17,7 +17,6 @@ class Notify(models.Model):
     content=models.TextField(verbose_name="内容")
     sendTime=models.DateTimeField(verbose_name="发出时间")
     isRead=models.NullBooleanField(verbose_name="是否阅读")
-    
     class Meta:
         verbose_name = u'系统通知表' 
         verbose_name_plural = u'系统通知表'
@@ -38,8 +37,6 @@ class Message(models.Model):
     isDeletereceiver=models.NullBooleanField(verbose_name="收信删除状态",default=False)
     #接收者是否读件
     isRead=models.NullBooleanField(verbose_name="是否阅读",default=False)
-    
-  
     class Meta:
         verbose_name = u'私信消息表' 
         verbose_name_plural = u'私信消息表'

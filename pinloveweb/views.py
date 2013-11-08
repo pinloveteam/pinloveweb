@@ -74,7 +74,8 @@ def auth_view(request) :
         return HttpResponseRedirect('/account/invalid/')
 
 def loggedin(request) : 
-    arg={}
+  arg={}
+  if request.user.is_authenticated():
     from apps.recommend_app.models import MatchResult
     #判断推荐分数是否生成
     count=MatchResult.objects.filter(my_id=request.user.id).count()
@@ -105,12 +106,12 @@ def loggedin(request) :
            i+=1
          arg['pages']=matchResultList
     else:
-          userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile).order_by("?")
+          userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender).order_by("?")
           arg=page(request,userProfileList)   
           matchResultList=arg['pages']
           from apps.recommend_app.views import userProfileList_to_RecommendResultList
           matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
-          friends = Friend.objects.filter(my=request.user)
+          friends = Friend.objects.select_related().filter(my=request.user)
           i=0 
           attentionEachOther=[]
           for f in follow:  
@@ -130,6 +131,8 @@ def loggedin(request) :
     arg['otherFollow']=otherFollow
     arg['follow']=len(follow)  
     return render(request, 'card.html',arg )
+  else:
+    return render(request,'login.html',arg)
 #用于初始化card页面所需要的信息
 def init_card(arg,userProfile):
     if userProfile.avatar_name_status!='3':

@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block javascript %}
+  <h2> 发动态</h2> 
+ <link href="{% static 'css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
+ <style>
+          .dz-max-files-reached {background-color: red};
+ </style>
+  <script src="{% static 'js/dropzone.min.js' %}"></script>
+        <script type="text/javascript">
+        Dropzone.options.myDropzone = {
+
+      		  // Prevents Dropzone from uploading dropped files immediately
+      		  autoProcessQueue: true,
+      		  maxFilesize: 10, // MB
+      		  dictFileTooBig:"图片不得大于 10MB",
+      		  //文件类型
+      		  acceptedFiles:".png,.jpg",
+      		  //文件类型错误提示
+      		  dictInvalidFileType:"照片格式不符合规范",
+      		  //uploadMultiple:true,
+      		  //最大文件数
+      		  maxFiles:4,
+      		  //删除文件
+      		 addRemoveLinks:"dictRemoveFile",
+      		 dictRemoveFile:"删除文件",
+      		  init: function() {
+      		  //  var submitButton = document.querySelector("#submit-all")
+      		      myDropzone = this; // closure
+
+      		    //submitButton.addEventListener("click", function() {
+      		  //    myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+      		    
+      		   // });
+                 
+      		  
+      		    // You might want to show the submit button only when 
+      		    // files are dropped here:
+      		    	
+      		    this.on("addedfile", function() {
+      		      // Show submit button here and/or inform user to click it.
+      		       $('#type').val('2');
+      		    });
+      		   this.on("maxfilesexceeded", function(file) { this.removeFile(file); });
+
+      		  }
+      		};
+</script>
+<script type="text/javascript"> 
+$(document).ready(function(){
+$("#publishTextArea").keydown(function(){
+   var curLength=$("#publishTextArea").val().length;
+   var limitLenght=200
+   if(curLength>=limitLenght){
+      var num=$("#publishTextArea").val().substr(0,limitLenght);
+      $("#publishTextArea").val(num);
+        alert("超过字数限制，多出的字将被截断！" );
+       }
+     else{
+      $("#reserve").text(limitLenght-$("#publishTextArea").val().length)
+      }
+})
+$('#publishInputPhoto').bind('click',function(){
+    $('#publishInputUploadPhotoArea').toggle()
+    $('#publishInputUploadVideoArea').hide()
+    
+})
+$('#publishInputVideo').bind('click',function(){
+    $('#publishInputUploadVideoArea').toggle()
+     $('#publishInputUploadPhotoArea').hide()
+            })
+}
+)
+   function public(){
+       var num= $("#publishTextArea").val();
+       var length= $.trim(num).length
+       if (length >0){
+           $('#form1').submit();
+       }
+       else{
+           alert("内容不能为空！")
+       };
+
+   };
+   function add_video(){
+	    var options = {  
+			 //  target: '#output',          //把服务器返回的内容放入id为output的元素中      
+			 //  beforeSubmit: showRequest,  //提交前的回调函数  
+			   success: function(data){alert("提交成功！欢迎下次再来！")},      //提交后的回调函数  
+			   //url: url,                 //默认是form的action， 如果申明，则会覆盖  
+			   //type: type,               //默认是form的method（get or post），如果申明，则会覆盖  
+			   //dataType: null,           //html(默认), xml, script, json...接受服务端返回的类型  
+			   //clearForm: true,          //成功提交后，清除所有表单元素的值  
+			   //resetForm: true,          //成功提交后，重置所有表单元素的值  
+			   timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求  
+			}  
+	   $('#videoform').submit(function() {  
+		   $(this).ajaxSubmit(function() {     
+		   });  
+		   return false; //阻止表单默认提交  
+		});  
+   }
+</script>
+<style type="text/css">
+ .equal {
+  display:table;
+  border-collapse:separate;
+ }
+ .row {
+  display:table-row;
+ }
+ .row div {
+  display:table-cell;
+  border: solid 1px
+ }
+ .row .one {
+  width:100px;
+ }
+ .row .two {
+  width:100px;
+ }
+ .row .three {
+  width:150px;
+ }
+.ul{
+    list-style: none outside none;
+}
+.publishInputBefore {
+    border: 0 none;
+    color: #BBBBBB;
+    font-size: 14px;
+     height: 72px;
+    line-height: 24px;
+    outline: medium none;
+    overflow: auto;
+    padding: 6px 12px;
+    resize: none;
+    width: 540px;
+}
+.publishInputArea {
+    border: 2px solid #C4DAED;
+    border-radius: 3px 3px 3px 3px;
+    position: relative;
+    width: 568px;
+}
+.publishInputBottomLeft li {
+    cursor: pointer;
+    height: 16px;
+    line-height: 16px;
+    margin-left: 8px;
+    padding-left: 21px;
+}
+.publishInputBottom {
+    background: none repeat scroll 0 0 #F9F9F9;
+    height: 34px;
+    position: relative;
+    width: 568px;
+    z-index: 14;
+}
+.f_gray_999 {
+    color: #999999;
+}
+.fn-clear {
+}
+.fn-left {
+    float: left;
+}
+.publishInputPhoto {
+    background: url("{{STATIC_URL}}img/photo_icon.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+}
+.publishInputExpression {
+    background: url("{{STATIC_URL}}img/pop_expression.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+}
+.publishInputVideo {
+     background: url("{{STATIC_URL}}img/tag_icon.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+ }
+.fn-left, .fn-right {
+    display: inline;
+}
+.fn-right {
+    float: right;
+}
+.publishBtn {
+    margin: 4px 10px 0 0;
+}
+.btn6025 {
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    width: 60px;
+}
+.wordNumber {
+    margin: -2px 16px 0 0;
+}
+.wordNumber span {
+    font-family: Constantia,Georgia;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 700;
+    padding: 0 2px;
+}
+.btn6025 a:link, .btn6025 a:visited {
+    background: -moz-linear-gradient(center top , #FF4F86, #FF5187) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 1px solid #F9F9F9;
+    color: #FFFFFF;
+    display: block;
+    height: 25px;
+    text-decoration: none;
+    width: 60px;
+}
+.publishInputUploadPhotoArea {
+    display: none;
+
+}
+.publishInputUploadVideoArea {
+    display: none;
+
+}
+ 
+ .layer_upload_video {
+    background-color: #F8FAFC;
+    padding: 20px;
+    width: 400px;
+}
+</style>
+{% endblock %} 
+{% block second_content %}
+<form action="/dynamic/send/" id="form1"   name="form1" method="POST">{% csrf_token %}
+    <input type="hidden" id="type" name="type" value="1">
+         <div class="publishInputArea">
+            <textarea id="publishTextArea" class="publishInputBefore" name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
+            <div class="publishInputBottom fn-clear f_gray_999">
+              <div class="fn-clear">
+                 <ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
+                    <li id="publishInputPhoto" class="publishInputPhoto fn-left">照片</li>
+                    <li class="publishInputExpression fn-left">表情</li>
+                    <li id="publishInputVideo" class="publishInputVideo fn-left">视频</li>
+                 </ul>
+            </div>
+            <div class="fn-right">
+               <p class="btn6025 publishBtn fn-right">
+               <a  id="submit-all" href="javascript:;" onclick="public()" >发布</a>
+               </p>
+                  <p class="wordNumber fn-right">
+                                                    还能输入
+                       <span id="reserve">199</span>
+                                                   字
+                </p>
+             </div>
+         </div>
+        </div>
+       </form>
+        <div class="publishInputUploadPhotoArea" id="publishInputUploadPhotoArea">
+         <form class="dropzone" id="my-dropzone" action="/dynamic/updatePhoto/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        </form>
+       </div>
+       <div class="publishInputUploadVideoArea" id="publishInputUploadVideoArea">
+        <form id="videoform" name="videoform" action="/dynamic/updateVideo/" enctype="multipart/form-data"></form>
+           <dl id="video_input" class="layer_upload_video">
+              <!--  <dt>请输入新浪播客、优酷网、土豆网、酷6网、搜狐的视频播放页链接： </dt>
+                 <dd>
+                 <input class="text mr5" type="text" value="" style="width: 320px" name="publish_type_data">
+                 <input class="btn_b" type="button" value="添加" onclick="weibo.plugin.video.add_video()">
+                 </dd> -->
+                <input type="file" name="video"/>
+                <input class="btn_b" type="button" value="添加" onclick="add_video()">
+            </dl>
+           
+       </div>
+       <div id='user_container'>
+            <div class="equal">
+               {%for dynamic in friendDynamicList%}
+                <div class="row">
+                    <div class="one">
+                    {{dynamic.publishUser.username}}<br>
+                        于{{dynamic.publishTime|date:"Y-m-d H:i:s"}}发表了动态：{{dynamic.content}}<br>
+                     {%ifequal dynamic.type 2 %}
+                        {%for photo in dynamic.data%}
+                           <img src="{{MEDIA_URL}}images/{{photo}}">
+                        {%endfor%}
+                      {%endifequal%}
+                </div>
+            </div>
+            {%endfor%}
+       </div>
+
+
+{% endblock %}

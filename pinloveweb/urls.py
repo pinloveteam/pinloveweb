@@ -52,6 +52,8 @@ urlpatterns = patterns('',
     (r'^verification/', include('apps.verification_app.urls')), 
     #notify_app
     (r'^message/', include('apps.message_app.urls')), 
+    #dynamic_app
+    (r'^dynamic/', include('apps.friend_dynamic_app.urls')), 
 
 )
 

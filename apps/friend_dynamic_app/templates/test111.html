@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Upload a file in Django 1.5 using Dropzone.js</title>
+        {% load staticfiles %}
+        <link href="{% static 'css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
+        <style>
+          .dz-max-files-reached {background-color: red};
+        </style>
+    </head>
+    <body>
+ 
+        <!-- IMPORTANT enctype attribute! -->
+        <form class="dropzone" id="my-dropzone" action="/dynamic/test/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        </form>
+        <button id="submit-all">
+            Submit all files
+        </button>
+ 
+        <script src="{% static 'js/dropzone.min.js' %}"></script>
+        <script type="text/javascript">
+        Dropzone.options.myDropzone = {
+
+      		  // Prevents Dropzone from uploading dropped files immediately
+      		  autoProcessQueue: false,
+      		  maxFilesize: 1, // MB
+      		  dictFileTooBig:"图片不得大于 1MB",
+      		  //文件类型
+      		  acceptedFiles:".png,.jpg",
+      		  //文件类型错误提示
+      		  dictInvalidFileType:"照片格式不符合规范",
+      		  //uploadMultiple:true,
+      		  //最大文件数
+      		  maxFiles:4,
+      		  //删除文件
+      		 addRemoveLinks:"dictRemoveFile",
+      		 dictRemoveFile:"删除文件",
+      		  init: function() {
+      		    var submitButton = document.querySelector("#submit-all")
+      		        myDropzone = this; // closure
+
+      		    submitButton.addEventListener("click", function() {
+      		      myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+      		    });
+                 
+      		  
+      		    // You might want to show the submit button only when 
+      		    // files are dropped here:
+      		    this.on("addedfile", function() {
+      		      // Show submit button here and/or inform user to click it.
+      		    });
+      		   this.on("maxfilesexceeded", function(file) { this.removeFile(file); });
+
+      		  }
+      		};
+
+        </script>
+    </body>
+</html>

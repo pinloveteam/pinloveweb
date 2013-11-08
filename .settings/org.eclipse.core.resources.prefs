@@ -1,4 +1,4 @@
-#Sat Oct 26 14:59:48 CST 2013
+#Fri Nov 08 14:11:50 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
@@ -6,6 +6,9 @@ eclipse.preferences.version=1
 encoding//apps/common_app/admin.py=utf-8
 encoding//apps/common_app/models.py=utf-8
 encoding//apps/common_app/time_task.py=utf-8
+encoding//apps/friend_dynamic_app/models.py=utf-8
+encoding//apps/friend_dynamic_app/urls.py=utf-8
+encoding//apps/friend_dynamic_app/views.py=utf-8
 encoding//apps/message_app/admin.py=utf-8
 encoding//apps/message_app/models.py=utf-8
 encoding//apps/message_app/test.py=utf-8
@@ -33,22 +36,12 @@ encoding//apps/upload_avatar/models.py=utf-8
 encoding//apps/upload_avatar/signals.py=utf-8
 encoding//apps/upload_avatar/urls.py=utf-8
 encoding//apps/upload_avatar/views.py=utf-8
-encoding//apps/user_app/admin.py=utf-8
-encoding//apps/user_app/forms.py=utf-8
 encoding//apps/user_app/models.py=utf-8
-encoding//apps/user_app/test.py=utf-8
-encoding//apps/user_app/user_validators.py=utf-8
 encoding//apps/user_app/views.py=utf-8
-encoding//apps/verification_app/admin.py=utf-8
-encoding//apps/verification_app/forms.py=utf-8
-encoding//apps/verification_app/urls.py=utf-8
-encoding//apps/verification_app/views.py=utf-8
-encoding//pinloveweb/forms.py=utf-8
 encoding//pinloveweb/settings.py=utf-8
-encoding//pinloveweb/test.py=utf-8
 encoding//pinloveweb/urls.py=utf-8
 encoding//pinloveweb/views.py=utf-8
-encoding//test/recommend_test.py=utf-8
+encoding//util/common_util.py=utf-8
 encoding//util/connection_db.py=utf-8
 encoding//util/form_util.py=utf-8
 encoding//util/page.py=utf-8

@@ -11,13 +11,14 @@ Created on Sep 1, 2013
 #      after_range_num: int类型, 默认是4
 #     bevor_range_num: int类型, 默认是4
 #     current_page: int 当前页数,must
-from util.util_settings import PAGE_NUM, BEVOR_RANGE_NUM, AFTER_RANGE_NUM
+
 from django.core.paginator import Paginator
 from django.db.models.query import RawQuerySet
+from util import util_settings
 def page(request,querySet,**kwargs):
-     after_range_num = kwargs.get('after_range_num', AFTER_RANGE_NUM)
-     bevor_range_num = kwargs.get('bevor_range_num', BEVOR_RANGE_NUM)
-     per_page_num = kwargs.get('page_num', PAGE_NUM)
+     after_range_num = kwargs.get('after_range_num', util_settings.AFTER_RANGE_NUM)
+     bevor_range_num = kwargs.get('bevor_range_num', util_settings.BEVOR_RANGE_NUM)
+     per_page_num = kwargs.get('page_num', util_settings.PAGE_NUM)
      
      try:
          page=int(request.GET.get('page', '1'))

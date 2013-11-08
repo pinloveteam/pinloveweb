@@ -311,7 +311,7 @@ def userInfor(request, offset):
 def addFriend(request):
      if request.user.is_authenticated() :
          offset = request.GET.get('userId')
-         count = Friend.objects.filter(friend_id=offset).count();
+         count = Friend.objects.filter(my=request.user,friend_id=offset).count();
          arg = {}
          if count == 0:
 #              Myfriend = User.objects.get(id=offset)
@@ -327,8 +327,13 @@ def addFriend(request):
                  arg['type']=2
              arg['content'] = '关注成功'
          else:
-             arg['content']='-1'
-             arg['content'] = "已关注"
+             Friend.objects.filter(my=request.user,friend_id=offset).delete()
+             count_1 = Friend.objects.filter(my_id=offset,friend=request.user).count()
+             if count_1==0:
+                 arg['type']=-1
+             else:
+                 arg['type']=-2
+             arg['content'] = "取消关注"
         
          json = simplejson.dumps(arg)
          return HttpResponse(json)
