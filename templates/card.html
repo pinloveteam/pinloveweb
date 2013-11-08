@@ -1,16 +1,12 @@
-﻿<!DOCTYPE html> 
-<html>
-<head>
+﻿{% extends "base_later.html" %}
  {% load util_filter %}
-	<title> {% block title %} 拼爱网 {% endblock %} </title>
-	{% load staticfiles %}
-	<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" media="screen">
+	<title> {% block title %} 拼爱网--个人主页 {% endblock %} </title>
+{% load staticfiles %}
+{% block staticfiles %}
 <link href="{{STATIC_URL}}css/hoverbox.css" rel="stylesheet">
 <link rel="stylesheet" href="{{STATIC_URL}}css/picbox.css" type="text/css" media="screen" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/picbox.js"></script>
-	{% block staticfiles %}{% endblock %}
 
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
@@ -102,6 +98,9 @@ function sendMessage(receiver_id){
 			    });
 		};
 </script>
+{% endblock %}
+{% block css %}
+
 <style type="text/css">	
 .top{ 
   	width:auto;
@@ -292,7 +291,10 @@ a:hover {
 	background-image: url("{{STATIC_URL}}img/msg.png");
 }
 </style>
-</head> 
+{% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block content %}
 <div class="container">
 	<div class="row">
 		<div class="span3" style="margin-left:-85px;">
@@ -341,7 +343,7 @@ a:hover {
 		<div class="span9" style="margin-left:29px;">
 			<ul class="inline" style="margin-top:56px;">
 				<li style="background-color:#d2d2d2">
-					<a href="#"><img class="img" alt="140x140" src="{{STATIC_URL}}img/动态.png"/><span style="margin:0 13px;">动态</span></a>
+					<a href="#"><img class="img" style="margin:7px 0 7px 10px;" alt="140x140" src="{{STATIC_URL}}img/动态.png"/><span style="margin:0 13px;">动态</span></a>
 				</li>
 				<li style="background-color:#f79b5e;margin-left:212px;">
 					<a href=""><div style="margin:13px 24px 15px 23px;color:#fff">推荐用户</div></a>
@@ -359,7 +361,9 @@ a:hover {
 			<div class="row" style="width:894px;">
 			{% for page  in pages %}
 			{% ifequal forloop.counter|mod:4 1%}
+			  {% ifnotequal forloop.counter 1%}
 			  <div class="row" style="width:894px;margin-top:20px;">
+			   {%endifnotequal%}
 		    {%endifequal%}
 		    <div id="card_pbOverlay"></div><div id="card_content"></div>
 			<div class="card"> 
@@ -423,15 +427,4 @@ a:hover {
 	</div>
 </div>
 </div>
-  <div class="indexFooter">
-	<ul class="indexFooterRight inline">
-		<li><a href="#">关于我们</a></li>
-		<li><a href="#">媒体关注</a></li>
-		<li><a href="#">联系客服</a></li>
-		<li><a href="#">隐私保护</a></li>
-		<li><a href="#">帮助</a></li>
-	</ul>
-  	<p>Copyright  &copy;  2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;京ICP证130108号</p>
-  </div>
-</body> 
-</html> 
+{% endblock %}
