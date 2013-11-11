@@ -95,11 +95,14 @@ def loggedin(request) :
          from apps.recommend_app.views import matchResultList_to_RecommendResultList
          matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
          friends = Friend.objects.filter(my_id=request.user.id)
-         i=0 
+         i=0
+         follows=[]
+         for f in follow:
+             follows.append(f[0])
          for user in matchResultList:
            for friend in friends:
                if user.user_id == friend.friend_id:
-                   if  user.user_id in follow:
+                   if  user.user_id in follows:
                        matchResultList[i].isFriend=2
                    else:
                        matchResultList[i].isFriend=1

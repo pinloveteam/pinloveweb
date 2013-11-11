@@ -379,11 +379,14 @@ def follow(request,type):
         cardList=fllowList_to_CardList(fllowList,type)
         #好友关系
         i=0 
+        follows=[]
+        for f in follow:
+            follows.append(f[0])
         friends = Friend.objects.filter(my_id=request.user.id)
         for user in cardList:
            for friend in friends:
                if user.user_id == friend.friend_id:
-                   if  user.user_id in follow:
+                   if  user.user_id in follows:
                        cardList[i].isFriend=2
                    else:
                        cardList[i].isFriend=1
