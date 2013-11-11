@@ -82,7 +82,7 @@ def loggedin(request) :
     userProfile=UserProfile.objects.get(user_id=request.user.id)
     #关注
     myFollow=Friend.objects.filter(my=request.user).count()
-    otherFollow=Friend.objects.filter(friend=request.user).count()
+    fans=Friend.objects.filter(friend=request.user).count()
     sql="select my_id from user_app_friend where friend_id="+str(request.user.id)+" and my_id in (SELECT friend_id from user_app_friend where my_id="+str(request.user.id)+") "
     cursor=connection.cursor();
     cursor.execute(sql)
@@ -128,7 +128,7 @@ def loggedin(request) :
     
     arg=init_card(arg,userProfile)
     arg['myFollow']=myFollow
-    arg['otherFollow']=otherFollow
+    arg['fans']=fans
     arg['follow']=len(follow)  
     return render(request, 'card.html',arg )
   else:
