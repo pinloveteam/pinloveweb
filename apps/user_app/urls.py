@@ -1,4 +1,5 @@
-from django.conf.urls import patterns, include, url
+# -*- coding: utf-8 -*-
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('apps.user_app.views',
     url(r'^update_basic_profile/$', 'update_Basic_Profile_view'), 
@@ -20,6 +21,10 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^alter_password/$', 'alter_password'),
      url(r'^upload/$', 'upload'),
      url(r'^photo_check/$', 'photo_check'),
+     #关注
+     url(r'^follow/(.+)/$', 'follow'),
+     
+     
      
 )
 

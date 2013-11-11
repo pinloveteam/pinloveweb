@@ -15,7 +15,7 @@
 <script type="text/javascript" >
 var myFollow={{myFollow}}
 var follow={{follow}}
-var otherFollow={{otherFollow}}
+var fans={{fans}}
 $(document).ready(function(){
 	//卡片效果
 	var card_content = $("#card_content");
@@ -321,9 +321,9 @@ a:hover {
 					<li>
 						<img style="margin: 12px;" src="{{STATIC_URL}}img/sys_info.png"/>
 					</li>
-					<li style="color:#fb892e" title="相互关注" id="follow">{{follow}}</li>
-					<li style="color:#0072bc" title="我的关注" id="myFollow">{{myFollow}}</li>
-					<li title="我的粉丝" id="otherFollow">{{otherFollow}}</li>
+					<li style="color:#fb892e" title="相互关注" id="follow"><a href="/user/follow/3">{{follow}}</a></li>
+					<li style="color:#0072bc" title="我的关注" id="myFollow"><a href="/user/follow/1">{{myFollow}}</a></li>
+					<li title="我的粉丝" id="fans"><a href="/user/follow/2">{{fans}}</a></li>
 				</ul>
 			</div>
 			<div class="sys_setting" style="margin-top:17px;">

@@ -29,11 +29,8 @@ from apps.upload_avatar import get_uploadavatar_context
 from django.contrib import auth
 from apps.upload_avatar import app_settings
 from apps.recommend_app.models import Grade
+from util.page import page
 
-
-
-
-#######    user models       ############# 
 # update user basic information
 def update_Basic_Profile_view(request): 
     
@@ -341,7 +338,103 @@ def addFriend(request):
            args = {}
            args.update(csrf(request))
            return render(request, 'login.html', args) 
-       
+'''
+查看关注
+attribute：
+    type(int) 关注类型 :
+        1  我的关注   
+        2  我的粉丝
+        3  相互关注
+return：
+   page 
+'''       
+def follow(request,type):
+    arg={}
+    if request.user.is_authenticated() :
+        try:
+            type=int(type)
+        except ValueError:
+            raise Http404()
+        if type==1:
+            #获得我的关注列表
+            fllowList=Friend.objects.filter(my=request.user)
+        elif type==2:
+            #获得我的粉丝列表
+            fllowList=Friend.objects.filter(friend=request.user)   
+        elif  type==3:
+            #获得相互关注列表
+            sql= "%s%d%s%d%s" %("select * from user_app_friend where friend_id=",request.user.id," and my_id in (SELECT friend_id from user_app_friend where my_id=",request.user.id,")")
+            fllowList=Friend.objects.raw(sql)
+        #关注
+        myFollow=Friend.objects.filter(my=request.user).count()
+        fans=Friend.objects.filter(friend=request.user).count()
+        sql="select my_id from user_app_friend where friend_id="+str(request.user.id)+" and my_id in (SELECT friend_id from user_app_friend where my_id="+str(request.user.id)+") "
+        cursor=connection.cursor();
+        cursor.execute(sql)
+        follow=cursor.fetchall()
+        userProfile=UserProfile.objects.get(user_id=request.user.id)
+        #分页
+        arg=page(request,fllowList)
+        fllowList=arg.get('pages')
+        cardList=fllowList_to_CardList(fllowList,type)
+        #好友关系
+        i=0 
+        friends = Friend.objects.filter(my_id=request.user.id)
+        for user in cardList:
+           for friend in friends:
+               if user.user_id == friend.friend_id:
+                   if  user.user_id in follow:
+                       cardList[i].isFriend=2
+                   else:
+                       cardList[i].isFriend=1
+           i+=1
+        arg['pages']=cardList
+        
+        from pinloveweb.views import init_card
+        arg=init_card(arg,userProfile)
+        arg['myFollow']=myFollow
+        arg['fans']=fans
+        arg['follow']=len(follow)
+        return render(request, 'card.html',arg )
+    else:
+        arg = {}
+        arg.update(csrf(request))
+        return render(request, 'login.html', arg) 
+
+def fllowList_to_CardList(fllowList,type):
+    recommendResultList=[]
+    userList=[]
+    if type ==1:
+        for myFollow in fllowList:
+            userList.append(myFollow.friend)
+    else:
+        for myFollow in fllowList:
+            userList.append(myFollow.my)
+   
+    userProfileList=UserProfile.objects.select_related().filter(user_id__in=userList)
+    for userProfile in userProfileList:
+        scoreOther=u'需完善个人信息'
+        scoreMyself=u'需完善个人信息'
+        macthScore=u'需完善个人信息'
+        userId=userProfile.user_id
+        username=userProfile.user.username
+        height=userProfile.height
+        age=userProfile.age
+        education=userProfile.get_education_display()
+        income=userProfile.income
+        jobIndustry=userProfile.get_jobIndustry_display()
+        isFriend=0
+        if userProfile.avatar_name_status==3:
+           avatar_name=userProfile.avatar_name
+           isVote=True
+        else:
+           avatar_name='user_img/image.png'
+           isVote=False
+        from apps.pojo.recommend import RecommendResult
+        recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote)
+        recommendResultList.append(recommendResult)
+    return recommendResultList
+     
 def friend(request):
     count = Friend.objects.filter(my_id=request.user.id).count()
     if count == 0:
