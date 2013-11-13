@@ -236,8 +236,8 @@ def comment(request):
             json=simplejson.dumps(arg)
             return json
         comment=FriendDynamicComment()
-        if content.startswith("回复@"):
-            end = content.find(':')
+        if content.startswith(u'回复@'):
+            end = content.find(u':')
             username=content[3:end]
             from django.contrib.auth.models import User
             user=User.objects.get(username=username)
@@ -254,7 +254,7 @@ def comment(request):
         comentHtml=''' <div id="comment_content_'''+str(comment.id)+'''" class="msgCnt" style="padding-bottom:0; font-size:16px">
         <a class="fn" target="_self" uid="2"  href="">'''+str(comment.reviewer.username)+'''</a>
         回复<a class="null" target="_blank" uid="2" rel="face" href="">'''+str(comment.receiver.username)+''''</a>
-         : '''+(comment.content).encode("utf-8")+'''<em>('''+comment.commentTime.strftime("%Y-%m-%d:%H")+''')</em>
+         : '''+comment.content.encode("utf-8")+'''<em>('''+comment.commentTime.strftime("%Y-%m-%d:%H")+''')</em>
         <p class="info"><span class="right">'''
         if comment.reviewer==request.user:
             comentHtml=comentHtml+'''<a id="de_comment_'''+str(comment.id)+'''" onclick="del_comment('''+str(comment.id)+''')" href="javascript:void(0)">删除</a>'''
