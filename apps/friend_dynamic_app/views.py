@@ -236,8 +236,7 @@ def comment(request):
             json=simplejson.dumps(arg)
             return json
         comment=FriendDynamicComment()
-        s="回复@"
-        if content.startswith(s):
+        if content.startswith("回复@"):
             end = content.find(':')
             username=content[3:end]
             from django.contrib.auth.models import User
