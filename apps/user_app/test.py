@@ -57,4 +57,11 @@ import re
 # print frends_flag ((P|S)\.\d{7})|((G|S)\d{8})|(1(4|5)\d{7})
 # ereg=re.compile('^..\d{5,7}$')
 # print re.match(ereg,'P.1111111')
-print abs(-1) 
+# sql= "%s%d%s%d%s" %("select * from user_app_friend where friend_id=",1," and my_id in (SELECT friend_id from user_app_friend where my_id=",1,")")
+# fllowList=Friend.objects.raw(sql)
+# for follow in fllowList:
+#     print follow.my.id
+s='回复@2:撒地方是冯绍峰'
+print s.startswith('回复@')
+print s.find(':')
+print s[7:8]

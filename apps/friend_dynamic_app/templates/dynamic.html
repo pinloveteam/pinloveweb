@@ -290,6 +290,12 @@ a:hover {
 .icon_msg{
 	background-image: url("{{STATIC_URL}}img/msg.png");
 }
+.hoverbox img {
+    height: 70px;
+    max-width: 150px;
+    vertical-align: top;
+    width: 70px;
+}
 </style>
 {% endblock %}
 {% block navigation %}
@@ -359,7 +365,7 @@ a:hover {
 				</li>
 			</ul>
 			<div class="row" style="width:894px;">
-			{% for page  in pages %}
+			{% for dynamic  in friendDynamicList %}
 			{% ifequal forloop.counter|mod:4 1%}
 			  {% ifnotequal forloop.counter 1%}
 			  <div class="row" style="width:894px;margin-top:20px;">
@@ -368,19 +374,25 @@ a:hover {
 		    <div id="card_pbOverlay"></div><div id="card_content"></div>
 			<div class="card"> 
 				<div class="top"></div>
-				<img alt="140x140" height="65" width="65"  src="{{MEDIA_URL}}{{page.avatar_name}}" class="img-circle"/>
-				<span class="name">{{page.username}}<canvas height="400px" width="400px"></canvas></span>
+				<img alt="140x140" height="65" width="65"  src="{{MEDIA_URL}}{{dynamic.get_profile}}" class="img-circle"/>
+				<span class="name">{{dynamic.publishUser.username}}<canvas height="400px" width="400px"></canvas></span>
 			    <div class="tabbable">
 					<div class="tab-content">
-					<div class="tab-pane active" id="tab1{{page.user_id}}">
-							<p style="margin:20px 0 20px 20px;">已到学校  好累啊</p>
+					<div class="tab-pane active" id="tab1{{dynamic.publishUser.user_id}}">
 							<hr style="margin:0 10px;height:1px;border:none;border-top:1px solid #777777;"/>
 							<div class="tag">
-								{%ifequal page.age None%}{%else%}<span class="label label-info">{{page.age}}岁</span>{%endifequal%}
-								{%ifequal page.height -1%}{%else%}<span class="label label-info">{{page.height}}cm</span>{%endifequal%}
-								{%ifequal page.income -1%}{%else%}<span class="label label-info">{{page.income}}元</span>{%endifequal%}
-								{%ifequal page.education '未填'%}{%else%}<span class="label label-success">{{page.education}}</span>{%endifequal%}
-								{%ifequal page.jobIndustry '未填'%}{%else%}<span class="label label-success">{{page.jobIndustry}}</span>{%endifequal%}
+								{{dynamic.content}}
+								{%ifequal dynamic.type 2 %}
+                           <div class="scroller">
+							<ul class="hoverbox" style="margin-top: 5px;">
+                              {%for photo in dynamic.data%}
+								<li>
+								<a rel="lightbox-demo" href="{{MEDIA_URL}}images/{{photo}}" title="ss"><img alt="demo1" src="{{MEDIA_URL}}images/{{photo}}" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+							    </li>
+                              {%endfor%}
+                            </ul>
+                          </div>
+                         {%endifequal%}
 							</div>
 						</div>
 						<div class="tab-pane " id="tab3{{page.user_id}}">
@@ -409,7 +421,7 @@ a:hover {
 					<ul class="nav nav-tabs" style="margin-top:20px;margin-left:13px;">
 						<li class="active"><a href="#tab1{{page.user_id}}" data-toggle="tab"><i class="icon_profile" ></i></a></li>
 						<li>
-						   <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_{{page.isFriend}}" id="attention_{{page.user_id}}"></i></a>
+						   <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_1" id="attention_{{page.user_id}}"></i></a>
 						 </li>
 						<li><a href="#tab3{{page.user_id}}" data-toggle="tab"><i class="icon_photo"></i></a></li>
 						<li><a href="#tab4{{page.user_id}}" data-toggle="tab"><i class="icon_msg"></i></a></li>

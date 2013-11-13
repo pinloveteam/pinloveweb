@@ -7,6 +7,7 @@ Created on Nov 4, 2013
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
+from apps.user_app.models import UserProfile
 class FriendDynamic(models.Model):
     publishUser=models.ForeignKey(User,verbose_name='发布用户',)
     type=models.SmallIntegerField(verbose_name=r"类型",)
@@ -19,6 +20,8 @@ class FriendDynamic(models.Model):
         today=datetime.datetime.today()
         self.publishTime=today
         super(FriendDynamic, self).save()
+    def get_profile(self):
+        return UserProfile.objects.get(user=self.publishUser).avatar_name
     class Meta:
         verbose_name = u'好友动态信息表' 
         verbose_name_plural = u'好友动态信息表'
@@ -35,10 +38,15 @@ class FriendDynamicArgee(models.Model):
 
 class FriendDynamicComment(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)
-    user=models.ForeignKey(User,verbose_name="用户",)
+    reviewer=models.ForeignKey(User,verbose_name="评论者",related_name="reviewer")
+    receiver=models.ForeignKey(User,verbose_name="被评论者",related_name="receiver")
     content=models.CharField(verbose_name="评论内容",max_length=255)
     isDelete=models.NullBooleanField(verbose_name="是否删除",default=False)
     commentTime=models.DateTimeField(verbose_name="评论时间")
+    def save(self):
+        today=datetime.datetime.today()
+        self.commentTime=today
+        super(FriendDynamicComment, self).save()
     class Meta:
         verbose_name = u'评论表' 
         verbose_name_plural = u'评论表'

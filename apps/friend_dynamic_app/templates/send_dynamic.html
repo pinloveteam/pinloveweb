@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}  
-
+{% load dynamic_filter %}
 {% block javascript %}
   <h2> 发动态</h2> 
  <link href="{% static 'css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
@@ -49,6 +49,7 @@
 </script>
 <script type="text/javascript"> 
 $(document).ready(function(){
+//字数限制
 $("#publishTextArea").keydown(function(){
    var curLength=$("#publishTextArea").val().length;
    var limitLenght=200
@@ -71,6 +72,7 @@ $('#publishInputVideo').bind('click',function(){
      $('#publishInputUploadPhotoArea').hide()
             })
 }
+
 )
    function public(){
        var num= $("#publishTextArea").val();
@@ -83,24 +85,83 @@ $('#publishInputVideo').bind('click',function(){
        };
 
    };
-   function add_video(){
-	    var options = {  
-			 //  target: '#output',          //把服务器返回的内容放入id为output的元素中      
-			 //  beforeSubmit: showRequest,  //提交前的回调函数  
-			   success: function(data){alert("提交成功！欢迎下次再来！")},      //提交后的回调函数  
-			   //url: url,                 //默认是form的action， 如果申明，则会覆盖  
-			   //type: type,               //默认是form的method（get or post），如果申明，则会覆盖  
-			   //dataType: null,           //html(默认), xml, script, json...接受服务端返回的类型  
-			   //clearForm: true,          //成功提交后，清除所有表单元素的值  
-			   //resetForm: true,          //成功提交后，重置所有表单元素的值  
-			   timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求  
-			}  
-	   $('#videoform').submit(function() {  
-		   $(this).ajaxSubmit(function() {     
-		   });  
-		   return false; //阻止表单默认提交  
-		});  
-   }
+       //删除动态
+       function del_dynamic(id,type){
+           $.getJSON('/dynamic/delDynamic/',{id:id,type:type},function(data){
+               if (data['type']=='success'){
+                   $('#feed_list li').remove('li[id=dynamic_'+id+']')
+               }else if(data['type']=='error'){
+                   alert("删除失败")
+               }else{
+              window.location.href='http://127.0.0.1:8000/';
+}
+});
+};
+//添加移除赞
+function add_agree(id){
+    agreeStatus=$('#agree_'+id).val();
+   // argeeNum=parseInt($('#argeeNum_'+id).text());
+    agreeString= $('#argeeName_'+id).html()
+    agreeNum=agreeString.substring(agreeString.indexOf('(')+1,agreeString.indexOf(')'))
+    agreeNum=parseInt(agreeNum)
+    $.getJSON('/dynamic/agree/',{id:id,agreeStatus:agreeStatus},function(data){
+        if (data['type']=='delSuccess'){
+            $('#argeeName_'+id).html("赞("+(agreeNum-1)+")")
+            $('#agree_'+id).val("False");
+           // $('#argeeNum_'+id).text(argeeNum-1);
+        }else if (data['type']=='addSuccess'){
+            $('#argeeName_'+id).html("已赞("+(agreeNum+1)+")")
+            $('#agree_'+id).val("True");
+           // $('#argeeNum_'+id).text(argeeNum+1);
+        }else if(arg['type']=='error'){
+            alert("删除失败")
+        }else{
+            window.location.href='http://127.0.0.1:8000/';
+        }
+    });
+}
+
+//显示评论
+function show_comment(id,publishUserId){
+	var  content=$('#comment_list_'+id).children().val()
+	if(typeof(content)!='undefined'){
+		$('#comment_list_'+id).children().remove();
+	}else{
+		$.getJSON('/dynamic/show_comment',{id:id,publishUserId:publishUserId},function(data){
+	        $('#comment_list_'+id).append(data)
+		 })
+	}
+}
+
+//发表评论
+function send_coment(dynamicId,publishUserId){
+    var content=$('#comment_'+dynamicId).val()
+      $.getJSON('/dynamic/comment/',{dynamicId:dynamicId,publishUserId:publishUserId,content:content},function(data){
+        if (data['type']=='success'){
+            $('#comment_list_c_'+dynamicId).append(data['conent'])
+            $('#comment_'+dynamicId).val('');
+        }else if(data['type']=='error'){
+            alert("删除失败")
+        }else{
+            window.location.href='http://127.0.0.1:8000/';
+        }
+    })
+}
+//删除
+function del_comment(commentId){
+	
+    $.getJSON('/dynamic/del_comment/',{commentId:commentId},function(data){
+        if(data['type']=='success'){
+        	$('#comment_content_'+commentId).remove()
+            alert('删除成功！')
+        }
+    })
+}
+
+//回复
+function reply(username,dynamicId) {
+   $('#comment_'+dynamicId).val('回复@'+username+':')
+}
 </script>
 <style type="text/css">
  .equal {
@@ -223,6 +284,59 @@ $('#publishInputVideo').bind('click',function(){
     padding: 20px;
     width: 400px;
 }
+ .user_container{
+     overflow: hidden;
+     }
+ . user_container .feed_list{
+     margin: 0;
+ }
+ .lineD_btm {
+     border-bottom: 1px solid #EEEEEE;
+ }
+ .userPic {
+     float: left;
+     width:40px;
+     height:40px;"
+ }
+ .feed_list li .feed_c {
+     margin-left: 70px;
+ }
+ .feed_list li .feed_c .msgCnt {
+     font-size: 14px;
+     line-height: 23px;
+     padding-bottom: 6px;
+     word-wrap: break-word;
+ }
+ .feed_showPic_small {
+     overflow: hidden;
+ }
+ .feed_showPic_small li {
+     float: left;
+     height: 92px;
+     margin: 0 5px 5px 0;
+     width: 125px;
+ }
+.feed_c_btm {
+     padding-top: 10px;
+     position: relative;
+ }
+ .feed_c_btm .right {
+     color: #999999;
+ }
+ .right {
+     float: right;
+ }
+ .q_con {
+     background-color: #FBFBFB;
+     border: 1px solid #E4E4E4;
+     border-radius: 3px;
+     line-height: 1.7em;
+     overflow: hidden;
+     padding: 12px;
+ }
+ .new_position {
+     padding: 6px 0 10px;
+ }
 </style>
 {% endblock %} 
 {% block second_content %}
@@ -269,22 +383,51 @@ $('#publishInputVideo').bind('click',function(){
             </dl>
            
        </div>
-       <div id='user_container'>
-            <div class="equal">
-               {%for dynamic in friendDynamicList%}
-                <div class="row">
-                    <div class="one">
-                    {{dynamic.publishUser.username}}<br>
-                        于{{dynamic.publishTime|date:"Y-m-d H:i:s"}}发表了动态：{{dynamic.content}}<br>
-                     {%ifequal dynamic.type 2 %}
+       <div id='user_container' class="user_container">
+          <ul id="feed_list" class="feed_list">
+          {%for dynamic in friendDynamicList%}
+            <li id="dynamic_{{dynamic.id}}" class="lineD_btm">
+              <div class="userPic">
+              <img src="{{MEDIA_URL}}user_img/image.png">
+              </div>
+              <div class="feed_c">
+                <div class="msgCnt">
+                 {{dynamic.publishUser.username}}<br>
+                                          发表了动态：{{dynamic.content}}<br>
+                       {%ifequal dynamic.type 2 %}
+                       <ul id="pic_mini_more_show_13840873242" class="feed_showPic_small">
                         {%for photo in dynamic.data%}
+                          <li class="feed_big_img">
                            <img src="{{MEDIA_URL}}images/{{photo}}">
+                          </li>
                         {%endfor%}
-                      {%endifequal%}
+                       </ul>
+                       {%endifequal%}
                 </div>
-            </div>
+                <div class="feed_c_btm">
+                  <span class="right">
+                  <input type="hidden" id="agree_{{dynamic.id}}" value="{{argeeList|get_list_number:forloop.counter0}}" >
+                      {%ifequal dynamic.publishUser user %} 
+                        <a href="javascript:void(0)" onclick="del_dynamic({{dynamic.id}},{{dynamic.type}})">删除</a>
+                      {%endifequal%}|
+                      {%ifequal argeeList|get_list_number:forloop.counter0 True%} 
+                        <a id="argeeName_{{dynamic.id}}" href="javascript:void(0)" onclick="add_agree({{dynamic.id}})">已赞({{dynamic.argeeNum}})</a>
+                      {%else%}
+                        <a id="argeeName_{{dynamic.id}}" href="javascript:void(0)" onclick="add_agree({{dynamic.id}})">赞({{dynamic.argeeNum}})</a>
+                      {%endifequal%}         
+                      |<a id="show_comment_{{dynamic.id}}" href="javascript:void(0)" onclick="show_comment({{dynamic.id}},{{dynamic.publishUser.id}})">评论({{dynamic.commentNum}})</a>
+                  </span>
+                  <cite>
+                   {{dynamic.publishTime|date:"Y-m-d H:i:s"}}
+                  </cite>
+                </div>
+                <div id="comment_list_{{dynamic.id}}" style="">
+                     
+                </div>
+              </div>
+            </li>
             {%endfor%}
+          </ul>
        </div>
-
 
 {% endblock %}

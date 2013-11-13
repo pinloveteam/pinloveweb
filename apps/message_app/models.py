@@ -27,12 +27,12 @@ class Message(models.Model):
     receiver=models.ForeignKey(User,verbose_name=u'收信人',related_name="message_to")
     content=models.TextField(verbose_name="内容")
     sendTime=models.DateTimeField(verbose_name="发出时间")
-    """
+    '''
     isDeleteSender,idDeleteSender:
                  接收者，发送者删除
       false-----默认,未删
         true---删除
-    """
+    '''
     isDeleteSender=models.NullBooleanField(verbose_name="发信人删除",default=False)
     isDeletereceiver=models.NullBooleanField(verbose_name="收信删除状态",default=False)
     #接收者是否读件
@@ -40,4 +40,4 @@ class Message(models.Model):
     class Meta:
         verbose_name = u'私信消息表' 
         verbose_name_plural = u'私信消息表'
-        db_table = "Message" 
+        db_table = "message" 
