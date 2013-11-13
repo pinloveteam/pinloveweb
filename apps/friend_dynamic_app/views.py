@@ -236,7 +236,7 @@ def comment(request):
             json=simplejson.dumps(arg)
             return json
         comment=FriendDynamicComment()
-        s='回复@'.decode('UTF-8')
+        s="回复@"
         if content.startswith(s):
             end = content.find(':')
             username=content[3:end]
