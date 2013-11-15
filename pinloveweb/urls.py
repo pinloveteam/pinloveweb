@@ -15,8 +15,8 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
      (r'^admin/doc/', include('django.contrib.admindocs.urls')),  
-     (r'^grappelli/',include('grappelli.urls')), 
-     (r'^grappelli/',include('grappelli.urls')), 
+#      (r'^grappelli/',include('grappelli.urls')), 
+#      (r'^grappelli/',include('grappelli.urls')), 
       url(r'^upload_avatar/', include('apps.upload_avatar.urls')),
     # Uncomment the next line to enable the admin:
     url(r'^admin/verification/$','apps.verification_app.views.income_valid'),
@@ -54,6 +54,8 @@ urlpatterns = patterns('',
     (r'^message/', include('apps.message_app.urls')), 
     #dynamic_app
     (r'^dynamic/', include('apps.friend_dynamic_app.urls')), 
+    #the_people_nearby
+    (r'^the_people_nearby/', include('apps.the_people_nearby.urls')), 
 
 )
 

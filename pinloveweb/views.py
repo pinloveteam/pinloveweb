@@ -21,6 +21,7 @@ import datetime
 from django.contrib.auth.forms import UserCreationForm
 from util.page import page
 from django.db import connection
+from apps.the_people_nearby.views import GetLocation
 
 
 
@@ -35,6 +36,7 @@ def login(request) :
 #     else:
 #         login_in=False
     if request.user.is_authenticated() :
+        UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
         return HttpResponseRedirect('/account/loggedin/')
 #     if login_in:
 #         response=render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})

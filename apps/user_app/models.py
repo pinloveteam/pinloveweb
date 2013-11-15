@@ -15,7 +15,7 @@ from django.db.models.signals import post_delete
 from django.db.models import signals
 from django.dispatch.dispatcher import Signal
 from django.contrib.sessions.backends.base import SessionBase
-import MySQLdb
+# import MySQLdb
 from pinloveweb import settings
 
 from asyncore import dispatcher

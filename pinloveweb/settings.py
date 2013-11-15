@@ -11,20 +11,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 ADMIN_MEDIA_PREFIX = '/admin_media/'
-# 本地环境----
-# DATABASES = {
-#      'default': {
-#          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#          'NAME': 'django',                      # Or path to database file if using sqlite3.
-#                                                  # The following settings are not used with sqlite3:
-#          'USER': 'root',
-#          'PASSWORD': 'jin521436',
-#          'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#          'PORT': '',                             # Set to empty string for default.
-#      }
-#  }
-#   
- 
 
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -53,34 +39,6 @@ USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
-
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/var/www/example.com/media/"
- 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://example.com/media/", "http://media.example.com/"
-#---本地环境-----
-# MEDIA_URL = '/media/'
-
-
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/var/www/example.com/static/"
-# # 本地环境-----
-# MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
-
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
-# #---本地环境-----
-# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-# 
-# # URL prefix for static files.
-# # Example: "http://example.com/static/", "http://static.example.com/"
-# # 本地环境-----
-# STATIC_URL = '/static/'
-
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -160,7 +118,8 @@ INSTALLED_APPS = (
     'apps.verification_app',
     'apps.message_app',
     'apps.friend_dynamic_app',
-    'grappelli',
+    'apps.the_people_nearby',
+#     'grappelli',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -218,14 +177,6 @@ EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE=1000
 
-
-# upload the head portrait
-#---本地环境-----
-UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
-
 #logging 日志
 LOGGING = {
     'version': 1,
@@ -244,9 +195,6 @@ LOGGING = {
         },
     }
 }
-
-
-
 #---服务器环境-----
 DATABASES = {
      
@@ -254,19 +202,31 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
                                                 # The following settings are not used with sqlite3:
-        'USER': 'pinloveteam',
-        'PASSWORD': 'redyellowblue#123',
+        'USER': 'root',                         #pinloveteam
+        'PASSWORD': 'sa',                       #redyellowblue123#
         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                             # Set to empty string for default.
+        'PORT': '',      
+                                                # Set to empty string for default.
     }
 }
-MEDIA_URL = 'http://www.pinpinlove.com/update/'
-MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
-STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
-STATIC_URL = 'http://www.pinpinlove.com/static/'
-UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+# 本地环境
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+UPLOAD_AVATAR_UPLOAD_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='/home/brad/workspace/pinloveweb/update/user_img'
 UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+
+# 服务器环境
+# MEDIA_URL = 'http://www.pinpinlove.com/update/'
+# MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
+# STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+# STATIC_URL = 'http://www.pinpinlove.com/static/'
+# UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinlovewebinit_command": 'set storage_engine=INNODB/update/user_img'
+# UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 # ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 
