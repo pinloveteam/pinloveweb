@@ -13,8 +13,8 @@ from apps.upload_avatar import app_settings
 from apps.pojo.recommend import RecommendResult
 from apps.recommend_app.form import WeightForm, GradeForOther
 from django.utils import simplejson
-from django.http.response import HttpResponse
 from django.core.context_processors import csrf
+from django.http import HttpResponse
 
 def recommend(request):
     arg={}

@@ -5,7 +5,7 @@ Created on Jul 4, 2013
 @author: jin
 '''
 from pinloveweb import  settings
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
@@ -16,7 +16,6 @@ from apps.user_app.models import UserProfile,UserContactLink,UserVerification,us
 from apps.user_app.forms import UserBasicProfileForm, UserContactForm,UserAppearanceForm, UserStudyWorkForm, UserPersonalHabitForm,\
     UserFamilyInformationForm, PhotoCheck
 from django.core.context_processors import csrf 
-from django.http.response import HttpResponseRedirect
 import time
 
 import string

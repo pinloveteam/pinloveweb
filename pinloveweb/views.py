@@ -16,7 +16,6 @@ from forms import RegistrationForm
 from pinloveweb import settings
 from apps.user_app.views import isIdAuthen, random_str
 import time
-from django.http.response import HttpResponse
 import datetime
 from django.contrib.auth.forms import UserCreationForm
 from util.page import page

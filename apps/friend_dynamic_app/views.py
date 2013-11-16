@@ -9,11 +9,11 @@ from apps.friend_dynamic_app.models import FriendDynamic, Picture,\
     FriendDynamicArgee, FriendDynamicComment
 from pinloveweb import settings
 from PIL import ImageFile 
-from django.http.response import HttpResponseRedirect, HttpResponse
 import time
-import simplejson
 from apps.user_app.models import UserProfile, Friend
 from django.db import connection
+from django.utils import simplejson
+from django.http import HttpResponse, HttpResponseRedirect
 '''
  发布消息
 '''
