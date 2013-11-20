@@ -1,0 +1,2 @@
+[19/Nov/2013 14:24:05] DEBUG [django.db.backends:51] (0.001) SELECT `user_app_friend`.`id`, `user_app_friend`.`my_id`, `user_app_friend`.`friend_id`, `user_app_friend`.`type` FROM `user_app_friend` WHERE `user_app_friend`.`friend_id` = 1 ; args=(1,)
+[19/Nov/2013 14:24:05] WARNING [django.db.backends:41] test error

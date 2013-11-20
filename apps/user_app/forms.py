@@ -25,7 +25,7 @@ class UserBasicProfileForm (ModelForm) :
                    'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
                    'belief','isSmoke','isDrink','beddingTime','pet','character',
                    'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
-                   'liveWithParent','likeChild',
+                   'liveWithParent','likeChild','lastLoginAddress',
                    ) 
 
 #个人联系方式  
@@ -91,7 +91,7 @@ class UserAppearanceForm(ModelForm):
                    'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
                    'belief','isSmoke','isDrink','beddingTime','pet','character',
                    'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
-                   'liveWithParent','likeChild',
+                   'liveWithParent','likeChild','lastLoginAddress',
         )
 #工作学习   
 class UserStudyWorkForm(ModelForm): 
@@ -110,7 +110,7 @@ class UserStudyWorkForm(ModelForm):
         'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
                    'belief','isSmoke','isDrink','beddingTime','pet','character',
                    'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
-                   'liveWithParent','likeChild',)
+                   'liveWithParent','likeChild','lastLoginAddress',)
         widgets = {
                    'isStudyAbroad': forms.RadioSelect(attrs={'cols':20,'rows':20},choices=((True, u'是'), (False, u'否') ), )
                    }
@@ -143,7 +143,7 @@ class UserPersonalHabitForm(ModelForm):
         'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
                    'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
                    'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
-                   'liveWithParent','likeChild',)
+                   'liveWithParent','likeChild','lastLoginAddress',)
  # 家庭情况      
 class UserFamilyInformationForm(ModelForm):
      def __init__(self, *args, **kwargs):
@@ -161,7 +161,7 @@ class UserFamilyInformationForm(ModelForm):
         'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
                    'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
                    'belief','isSmoke','isDrink','beddingTime','pet','character',
-                   'liveWithParent','likeChild',)
+                   'liveWithParent','likeChild','lastLoginAddress',)
 #对未来期望        
 # class UserFamilyLifeForm(ModelForm):
 #     def __init__(self, *args, **kwargs):
@@ -190,4 +190,4 @@ class PhotoCheck(ModelForm):
         'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',
                    'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
                    'belief','isSmoke','isDrink','beddingTime','pet','character',
-                   'liveWithParent','likeChild',)
+                   'liveWithParent','likeChild','lastLoginAddress',)

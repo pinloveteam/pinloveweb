@@ -21,6 +21,7 @@ from django.contrib.auth.forms import UserCreationForm
 from util.page import page
 from django.db import connection
 from apps.the_people_nearby.views import GetLocation
+import logging
 
 
 
@@ -75,8 +76,6 @@ def auth_view(request) :
         return HttpResponseRedirect('/account/invalid/')
 
 def loggedin(request) : 
-  arg={}
-  if request.user.is_authenticated():
     from apps.recommend_app.models import MatchResult
     #判断推荐分数是否生成
     count=MatchResult.objects.filter(my_id=request.user.id).count()
@@ -88,7 +87,7 @@ def loggedin(request) :
     cursor=connection.cursor();
     cursor.execute(sql)
     follow=cursor.fetchall()
-    
+   
     if count>0:
          matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
          arg=page(request,matchResultList)
@@ -135,8 +134,6 @@ def loggedin(request) :
     arg['fans']=fans
     arg['follow']=len(follow)  
     return render(request, 'card.html',arg )
-  else:
-    return render(request,'login.html',arg)
 #用于初始化card页面所需要的信息
 def init_card(arg,userProfile):
     if userProfile.avatar_name_status!='3':

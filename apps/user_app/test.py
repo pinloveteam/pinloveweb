@@ -8,7 +8,7 @@ Created on Jul 4, 2013
 import os
 from django.db import connection
 import MySQLdb
-from apps.user_app.models import Friend
+from apps.user_app.models import Friend, UserProfile
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
 from PIL import ImageFile
 from django.conf import settings
@@ -61,7 +61,6 @@ import re
 # fllowList=Friend.objects.raw(sql)
 # for follow in fllowList:
 #     print follow.my.id
-s='回复@2:撒地方是冯绍峰'
-print s.startswith('回复@')
-print s.find(':')
-print s[7:8]
+UserProfile.objects.filter(user_id=2).update(lastLoginAddress='本机地址')
+u=UserProfile.objects.get(user_id=2)
+print u.lastLoginAddress
