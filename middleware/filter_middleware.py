@@ -10,6 +10,6 @@ class AuthenticationMiddleware(object):
             if request.user.is_authenticated():
                 return None  
             else:
-                return HttpResponseRedirect('/account/login/')
+                return HttpResponseRedirect('/')
         else:
             return None
