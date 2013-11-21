@@ -32,5 +32,5 @@ def GetLocation(request):
         
 def the_people_nearby(request):
     arg = {}
-    arg['the_people_nearby'] =  UserProfile.objects.filter(lastLoginAddress=GetLocation(request))
+    arg['the_people_nearby'] =  UserProfile.objects.filter(lastLoginAddress=GetLocation(request)).exclude(user=request.user)
     return render(request, 'the_people_nearby.html',arg)    
