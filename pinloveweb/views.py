@@ -36,7 +36,6 @@ def login(request) :
 #     else:
 #         login_in=False
     if request.user.is_authenticated() :
-        UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
         return HttpResponseRedirect('/account/loggedin/')
 #     if login_in:
 #         response=render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
@@ -76,6 +75,8 @@ def auth_view(request) :
         return HttpResponseRedirect('/account/invalid/')
 
 def loggedin(request) : 
+    #获取ip 地址
+    UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
     from apps.recommend_app.models import MatchResult
     #判断推荐分数是否生成
     count=MatchResult.objects.filter(my_id=request.user.id).count()
