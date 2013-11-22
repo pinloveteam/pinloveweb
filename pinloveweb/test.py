@@ -2,6 +2,8 @@
 import os, sys
 import datetime
 import re
+import logging
+from pinloveweb.settings import PATH
 
 
 
@@ -29,3 +31,12 @@ import re
 # i=u'背'
 # text = i.decode('GB2312')
 # print text
+logger = logging.getLogger('django.db.backends')
+try:
+        from apps.user_app.models import Friend
+        Friend.objects.filter(friend=1)
+    
+except:
+        print '========================='
+        logger.warn("test error")
+        logging.exception('Got exception on main handler')
