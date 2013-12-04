@@ -25,6 +25,7 @@
       		  //删除文件
       		 addRemoveLinks:"dictRemoveFile",
       		 dictRemoveFile:"删除文件",
+      		 dictResponseError:"服务器无响应",
       		  init: function() {
       		  //  var submitButton = document.querySelector("#submit-all")
       		      myDropzone = this; // closure
@@ -43,6 +44,21 @@
       		       $('#type').val('2');
       		    });
       		   this.on("maxfilesexceeded", function(file) { this.removeFile(file); });
+      		   
+      		    this.on("success", function(file, response) {
+      		    	file.pictureName = response; // If you just return the ID when storing the file
+      		      // You can also return a JSON object then the line would
+      		      // look something like this:
+      		      //
+      		      // file.serverId = response.id;
+      		      //
+      		      // In that case make sure that you respond with the mime type
+      		      // application/json
+      		    });
+      		    this.on("removedfile", function(file) {
+      		      if (!file.pictureName) { return; } // The file hasn't been uploaded
+      		      $.getJSON("/dynamic/deletePhoto/",{pictureName:file.pictureName}); // Send the file id along
+      		    });
 
       		  }
       		};
@@ -250,6 +266,7 @@ function reply(username,dynamicId) {
     line-height: 25px;
     text-align: center;
     width: 60px;
+    background: #FF4F86;
 }
 .wordNumber {
     margin: -2px 16px 0 0;

@@ -12,7 +12,12 @@ BEVOR_RANGE_NUM=getattr(recommend_settings, 'BEVOR_RANGE_NUM', 4)
 AFTER_RANGE_NUM=getattr(recommend_settings, 'AFTER_RANGE_NUM,', 4)
 
 
-'''图片上传路径'''
+'''相册图片上传路径'''
 IMAGE_UPLOAD_PATH_M='%s%s'%(settings.MEDIA_ROOT,'/images/')
-'''图片上传路径相对路径'''
+'''相册图片上传路径相对路径'''
 RELATRVE_IMAGE_UPLOAD_PATH_M='images/'
+
+'''发布消息图片上传路径'''
+PUBLIC_IMAGE_UPLOAD_PATH='%s%s'%(settings.MEDIA_ROOT,'/publish_img/')
+'''相册图片上传路径相对路径'''
+RELATRVE_PUBLIC_IMAGE_UPLOAD_PATH='publish_img/'

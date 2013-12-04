@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.http.response import Http404, HttpResponse
 from PIL import ImageFile
 from pinloveweb import settings
+
 def list(request):
      arg={}
      if request.user.is_authenticated():
@@ -36,6 +37,8 @@ def publish(request,offset):
       
       
 """#############admin#################"""
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 def upload_image(request, encoding='utf-8'): 
     if request.method == 'POST': 
         if "upload_file" in request.FILES: 
@@ -45,8 +48,10 @@ def upload_image(request, encoding='utf-8'):
                   parser.feed(chunk)  
             img = parser.close()
             path = settings.MEDIA_ROOT
-            img.save('jin', 'jpeg')    
-            return HttpResponse('%s/%s/%s.jpg' % ("/publish_img/uploads", path))
+            from util import util_settings
+            name = '%s%s' % (util_settings.PUBLIC_IMAGE_UPLOAD_PATH,f.name)
+            img.save(name)    
+            return HttpResponse('%s/%s' % ("/media/publish_img/",f.name))
     return HttpResponse(u"Some error!Upload faild!格式：jpeg") 
     
     

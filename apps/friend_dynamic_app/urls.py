@@ -8,6 +8,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('apps.friend_dynamic_app.views',
      url(r'^send/$', 'send_dynamic'),
      url(r'^updatePhoto/$', 'update_photo'),
+     url(r'^deletePhoto/$','delete_photo'),
      url(r'^updateVideo/$', 'update_video'),
      url(r'^delDynamic/$', 'del_dynamic'),
      url(r'^agree/$', 'agree'),

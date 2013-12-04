@@ -15,8 +15,8 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
      (r'^admin/doc/', include('django.contrib.admindocs.urls')),  
-#      (r'^grappelli/',include('grappelli.urls')), 
-#      (r'^grappelli/',include('grappelli.urls')), 
+#     (r'^grappelli/',include('grappelli.urls')), 
+#     (r'^grappelli/',include('grappelli.urls')), 
       url(r'^upload_avatar/', include('apps.upload_avatar.urls')),
     # Uncomment the next line to enable the admin:
     url(r'^admin/verification/$','apps.verification_app.views.income_valid'),
@@ -56,7 +56,8 @@ urlpatterns = patterns('',
     (r'^dynamic/', include('apps.friend_dynamic_app.urls')), 
     #the_people_nearby
     (r'^the_people_nearby/', include('apps.the_people_nearby.urls')), 
-
+    
+     url(r'^celery_test/', 'apps.task_app.views.test_celery'),
 )
 
 
@@ -67,3 +68,5 @@ if settings.DEBUG:
                            url(r'^site_media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT },name="site_media"),
                           url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT },name="media"),
 )
+   
+   

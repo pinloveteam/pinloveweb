@@ -3,15 +3,14 @@
 	<title> {% block title %} 拼爱网--个人主页 {% endblock %} </title>
 {% load staticfiles %}
 {% block staticfiles %}
+<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/hoverbox.css" rel="stylesheet">
-<link rel="stylesheet" href="{{STATIC_URL}}css/picbox.css" type="text/css" media="screen" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/picbox.js"></script>
-
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}js/picbox.js"></script>
+<link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 <script type="text/javascript" >
 var myFollow={{myFollow}}
 var follow={{follow}}
@@ -25,35 +24,32 @@ $(document).ready(function(){
 		$(this).find("canvas").css("display","inline");
 		var ctx = $(this).find("canvas").get(0).getContext("2d");
 		var data = {
-			labels : ["学历","收入","性格","身高","外貌",],
+			labels : ["教育程度","性格","收入情况","样貌","年龄"],
 			datasets : [
 				{
-					fillColor : "rgba(220,220,220,0.5)",
-					strokeColor : "rgba(220,220,220,1)",
-					pointColor : "rgba(220,220,220,1)",
-					pointStrokeColor : "#fff",
-					data : [65,59,90,81,56,]
+					fillColor : "rgba(220,0,220,0.5)",
+					strokeColor : "rgba(220,0,220,0.1)",
+					pointColor : "rgba(220,0,220,1)",
+					pointStrokeColor : "rgba(220,0,220,0.1)",
+					data : [60,20,40,20,20]
 				}
-
+				,
+				{
+					fillColor : "rgba(151,187,205,0.5)",
+					strokeColor : "rgba(151,187,205,0.1)",
+					pointColor : "rgba(151,187,205,1)",
+					pointStrokeColor : "#fff",
+					data : [20,20,90,20,20]
+				}
 			]
 };
-		var myNewChart = new Chart(ctx).Radar(data);
+		var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:1});
 	});
 	$(".name").mouseleave(function(){
 		$(this).find("canvas").css("display","none");
-	});
-	
-	$(".name").click(function(){
-		card_content.addClass("card_content");
-		card_pbOverlay.addClass("card_pbOverlay");
-		card_content.html($(this).html());
-	})
-	$(card_pbOverlay).click(function(){
-		card_content.removeClass("card_content");
-		card_pbOverlay.removeClass("card_pbOverlay");
-	})
-	
-});
+	});});
+
+//发送信息
 function sendMessage(receiver_id){
 	   var reply_content_id='reply_content_'+receiver_id
 	   var reply_content=$('#reply_content_'+receiver_id).val();
@@ -102,166 +98,66 @@ function sendMessage(receiver_id){
 {% block css %}
 
 <style type="text/css">	
-.top{ 
-  	width:auto;
-	height:12px;
-	border-radius: 10px 10px 0 0;
-	background-color:#FF9933;
-  }
+.name:hover svg {
+	cursor:pointer;
+    transform: scale(1.5);
+    transition: all 0.3s linear 0s;
+}
+
+.name svg {
+    transform: scale(1);
+    transition: all 0.3s linear 0s;
+}
+
+.sub-nav {
+	margin-top:80px;
+}
+
+.sub-nav > li {
+	margin:20px;
+}
+
+.sub-nav > li > a {
+	color:#fff;
+	font-weight:bold;
+}
+
+.sub-nav-active {
+	border:1px solid white;
+	text-align:center;
+	width: 80px;
+}
+
 /*The left side*/
 .user_info{
-	margin-top:17px;
-	width:182px;
 	height:199px;
-	background-color: #fff;
-	border-radius: 10px;
   }
   
 .sns_info{
-	width:182px;
-	height:55px;
-	background-color: #ffffff;
-	border-radius: 10px;
+	height:110px;
 }
 
 .send_pic{
-	margin-top:17px;
-	width:182px;
-	background-color: #fff;
-	border-radius: 10px;
-	height:203px;
+	height:194px;
 }
 
-.sys_setting{
-	width:182px;
-	height:142px;
-	background-color: #ffffff;
-	border-radius: 10px;
+.icon_like,.icon_fans,.icon_mutual_like{
+	background:url("{{STATIC_URL}}img/关注.png") no-repeat;
+	margin-left:8px;
+	display:block;
+    height: 27px;
+    width: 32px;
 }
 
-.user_setting{
-	margin-top: 20px;
-	font-size:16px;
-}
-.user_setting li {
-	margin:5px;
-	letter-spacing:4px;
+.icon_fans{
+	background-image: url("{{STATIC_URL}}img/粉丝.png");
 }
 
-.card{
-	position:relative; 
-	width:203px;
-	height:283px;
-	float:left;
-	margin-left:18px;
-	background-color: #fff;
-	border-radius: 10px;
+.icon_mutual_like{
+	background-image: url("{{STATIC_URL}}img/相互关注.png");
 }
 
-@keyframes myfirst
-{
-from {opacity: 0;}
-to {opacity: 0.8;}
-}
-
-@-webkit-keyframes myfirst /* Safari 和 Chrome */
-{
-from {opacity: 0;}
-to {opacity: 0.8;}
-}
-
-@-o-keyframes myfirst /* Opera */
-{
-from {opacity: 0;}
-to {opacity: 0.8;}
-}
-
-#card_pbOverlay,#card_content {
-	display:none;
-}
-.card_content,.card_pbOverlay{
-	-webkit-animation:myfirst 1s;
-	animation:myfirst 1s;
-	display:inline !important;
-	position:absolute;
-	z-index:999;
-}
-.card_content{
-	top:20%;
-	left:39%;
-	width:500px;
-	height:500px;
-	background-color: #fff;
-	opacity: 1;
-}
-.card_pbOverlay{
-    left: 0;
-    top: 0;
-    background: none repeat scroll 0 0 #000000;
-    cursor: pointer;
-    height: 200%;
-    width: 100%;
-	opacity: 0.8;
-}
-
-canvas{
-	display:none;
-	position:absolute;
-	left:120px;
-	top:0;
-	background-color: #fff;
-	Z-index:999;
-}
-
-.img-circle,.img-rounded{
-	margin-left:10px; 
-	margin-top:4px; 
-  }
-
-.name{
-	margin-left:5px; 
-	font-weight:bold;
-	font-size:16px;
-  }
-
-.tag{
-	margin:10px;
-  }
-.tag span{
-	margin-top:11px;
-  }
-
-.nav{
-	position:absolute; 
-	top:210px;
-}
-.nav-tabs > .active > a, .nav-tabs > .active > a:hover, .nav-tabs > .active > a:focus {
-	 border-style: none;
-}
-.nav-tabs {
-    border-bottom: none;
-}
-.nav-tabs > li > a, .nav-pills > li > a {
-    margin-right: 0;
-    padding-left: 13px;
-    padding-right: 0;
-}
-.tab-content{
-	overflow :hidden;
-}
-.span9 .inline {
-	width:870px;
-	height:48px;
-	background-color:#ebebeb;
-	font:normal bold 15px/20px 微软雅黑;
-	letter-spacing:2px;
-}
-
-a:hover {
-	text-decoration:none;
-	}
-
-.icon_profile,.icon_like_0,.icon_like_1,.icon_like_2,.icon_photo,.icon_msg{
+.icon_like_0,.icon_like_1,.icon_like_2{
 	background-image: url("{{STATIC_URL}}img/profile.png");
     background-repeat: no-repeat;
 	display: inline-block;
@@ -284,86 +180,264 @@ a:hover {
 	title:"相互关注"
 }
 
+
+/* card */
+.card{
+	margin-right:20px;
+	height:260px;
+}
+
+canvas{
+	display:none;
+	position:absolute;
+	left:120px;
+	top:0;
+	background-color: rgba(255, 255, 255, 0.9);
+	Z-index:999;
+}
+
+.head,.card-introBox{
+	border-radius: 50%;
+}
+.head{
+	width: 103px;
+    height: 103px;
+}
+.head_girl{
+	border:2px solid rgba(255, 102, 51, 0.6);
+}
+
+.head_boy{
+	border:2px solid rgba(60, 117, 186, 0.6);
+}
+
+.introBox{
+	position: relative;
+	width: 100px;
+    height: 100px;
+	left:30px;
+	top:4px;
+}
+
+.detail_info{
+	position:absolute; 
+	top:15px;
+	left:10px;
+	margin:10px;
+	color:#fff;
+	text-align:center;
+}
+
+.card-introBox{
+	cursor:pointer;
+	background: none repeat scroll 0 0 #000;
+	transition: opacity 1s;
+	opacity:0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+}
+
+.card-introBox:hover{
+	opacity:0.7;
+}
+
+.tag,.other_name{
+	text-align:center;
+}
+
+.card-nav{
+	margin-left:20px;
+	position:absolute; 
+	top:220px;
+	border-bottom: none;
+}
+
+.icon_profile,.icon_photo,.icon_msg{
+	background: url("{{STATIC_URL}}img/profile.png") no-repeat;
+	margin-right:3px;
+	display: inline-block;
+    height: 24px;
+    width: 32px;
+}
+
 .icon_photo{
 	background-image: url("{{STATIC_URL}}img/photo.png");
 }
 .icon_msg{
 	background-image: url("{{STATIC_URL}}img/msg.png");
 }
-.hoverbox img {
-    height: 70px;
-    max-width: 150px;
-    vertical-align: top;
-    width: 70px;
+
+/*common*/
+.img-circle,.img-rounded{
+	margin-left:30px; 
+	margin-top:4px; 
+  }
+
+.name{
+	margin:10px; 
+	font-weight:bold;
+	font-size:16px;
+  }
+
+a:hover {
+	text-decoration:none;
+	}
+	
+td{
+	padding:4px !important;
+}
+
+hr{
+	margin:7px;
+	border:none;
+	border-top:1px solid rgba(255, 255, 255, 0.4);
+}
+
+.card_panel{
+	transition: background 0.5s;
+	margin-top:17px;
+	width:203px;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.3);
+}
+
+.card_panel:hover{
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.label,.fR,.btn,.badge,.progress {
+    border-radius: 0;
+}
+
+.controlArrow {
+	transition: border-color 0.5s;
+    border-style: solid;
+    cursor: pointer;
+    height: 0;
+    margin-top: -40px;
+    position: absolute;
+    top: 50%;
+    width: 0;
+}
+
+.controlArrow.prev {
+    border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-width: 50px 40px 50px 0;
+    left: -50px;
+    width: 0;
+}
+
+.controlArrow.next {
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.3);
+    border-width: 50px 0 50px 40px;
+    right: -45px;
+}
+
+.controlArrow.next:hover{
+	border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.7);
+}
+
+.controlArrow.prev:hover{
+	border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.7) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 }
 </style>
 {% endblock %}
 {% block navigation %}
 {% endblock %}
 {% block content %}
+<header class="navbar">
+  <div class="container">
+    <div class="navbar-header">
+    <a href='/'>
+      <img alt="140x140" src="{{STATIC_URL}}img/logo.png"/>
+    </a>  
+    <span class="site_name">拼爱网</span>
+    
+    </div>
+    <nav class="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#">推荐</a>
+        </li>
+        <li>
+          <a href="/dynamic/">动态</a>
+        </li>
+        <li class="active">
+          <a href="/the_people_nearby/the_people_nearby">附近的人</a>
+        </li>
+        <li>
+          <a href="/search/simple_search/">用户搜索</a>
+        </li>
+        <li>
+          <a href="/game/game_pintu/">缘分拼图</a>
+        </li>
+		<li>
+          <a href="#">+</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <!-- <a href="../about">关于</a> -->
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
 <div class="container">
-	<div class="row">
-		<div class="span3" style="margin-left:-85px;">
-			<img alt="140x140" src="{{STATIC_URL}}img/logo.png" style="margin-top:56px;"/>
-			<div class="user_info" style="margin-top:17px;"> 
-				<div class="top"></div>
-				<img alt="140x140" height="80" width="80" src="{{MEDIA_URL}}{{avatar_name}}" class="img-rounded"/>
-				<span class="name">{{user.username}}</span>
-				<hr style="margin:15px 10px;height:1px;border:none;border-top:1px solid #777777;"/>
-				<p style="margin:20px 0 20px 20px;">
-                  <div class="tag">
-								{%ifequal age None%}{%else%}<span class="label label-info">{{age}}岁</span>{%endifequal%}
-								{%ifequal height -1%}{%else%}<span class="label label-info">{{height}}cm</span>{%endifequal%}
-								{%ifequal income -1%}{%else%}<span class="label label-info">{{income}}万</span>{%endifequal%}
-								{%ifequal education '未填'%}{%else%}<span class="label label-success">{{education}}</span>{%endifequal%}
-								{%ifequal jobIndustry '未填'%}{%else%}<span class="label label-success">{{jobIndustry}}</span>{%endifequal%}
-				 </div>
-                </p>
+	<div class="row" style="margin-top:63px;">
+		<div class="col-md-3">
+			<div class="user_info card_panel"> 
+				<img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}" class="head head_boy" style="margin:4px;height:70px;width:70px;"/>
+				<div class="name">{{user.username}}</div>
+				<hr/>
+				<p style="margin:20px 0 20px 20px;">搬砖砌墙敲代码，只为买瓶哇哈哈。</p>
+			</div>
+			<div class="sns_info card_panel">
+				<table class="table">
+					<tbody>
+					  <tr>
+						<td><i class="icon_like"></i></td>
+						<td><a id="myFollow" href="/user/follow/1">关注</td>
+						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
+					  </tr>
+					  <tr>
+						<td><i class="icon_fans"></i></td>
+						<td><a href="/user/follow/2">粉丝</a></td>
+						<td><a id="fans" href="/user/follow/2">{{fans}}</a></td>
+					  </tr>
+					  <tr>
+						<td><i class="icon_mutual_like"></i></td>
+						<td><a href="/user/follow/3">相互关注</a></td>
+						<td><a id="follow" href="/user/follow/3">{{follow}}</a></td>
+					  </tr>
+					</tbody>
+				</table>
 			</div>
 			
-			<div class="sns_info" style="margin-top:15px;">
-				<div class="top"></div>
-				<ul class="inline" style="font-weight:bold">
-					<li>
-						<img style="margin: 12px;" src="{{STATIC_URL}}img/sys_info.png"/>
-					</li>
-					<li style="color:#fb892e" title="相互关注" ><a id="follow" href="/user/follow/3">{{follow}}</a></li>
-					<li style="color:#0072bc" title="我的关注" ><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></li>
-					<li title="我的粉丝" ><a id="fans" href="/user/follow/2">{{fans}}</a></li>
-				</ul>
-			</div>
-			<div class="sys_setting" style="margin-top:17px;">
-				<div class="top"></div>
-				<ul class=" user_setting">
-					<li><a class="S_func1" href="/user/upload"><i class="user-picture"></i><span class="config-text">上传头像</span></a></li>
-					<li><a class="S_func1" href="#"><i class="user-profile-setting"></i><span class="config-text">个人资料</span></a></li>
-					<li><a class="S_func1" href="#"><i class="sys-seting"></i><span class="config-text">系统设置</span></a></li>
-				</ul>
-			</div>
-			
-			<div class="send_pic">
-				<div class="top"></div>
-				
+			<div class="send_pic card_panel">
 			</div>
 		</div>
-		<div class="span9" style="margin-left:29px;">
-			<ul class="inline" style="margin-top:56px;">
-				<li style="background-color:#d2d2d2">
-					<a href="/dynamic/"><img class="img" style="margin:7px 0 7px 10px;" alt="140x140" src="{{STATIC_URL}}img/动态.png"/><span style="margin:0 13px;">动态</span></a>
-				</li>
-				<li style="background-color:#f79b5e;margin-left:212px;">
-					<a href=""><div style="margin:13px 24px 15px 23px;color:#fff">推荐用户</div></a>
+		<div class="col-md-9">
+<!-- 			<ul class="list-inline sub-nav">
+				<li>
+					<a href="#"><img alt="140x140" src="./img/动态.png"/><span>动态</span></a>
 				</li>
 				<li>
-					<a href="#"><div style="margin:13px 24px 15px 23px;color:#000">附近的人</div></a>
+					<a href="#"><div class="sub-nav-active">推荐用户</div></a>
 				</li>
 				<li>
-					<a href="/search/simple_search/"><div style="margin:13px 24px 15px 23px;color:#000">用户搜索</div></a>
+					<a href="#"><div>附近的人</div></a>
 				</li>
 				<li>
-					<a href="/game/game_pintu/"><div style="margin:13px 24px 15px 23px;color:#000">缘分拼图</div></a>
+					<a href="#"><div>用户搜索</div></a>
 				</li>
-			</ul>
+				<li>
+					<a href="#"><div>缘分拼图</div></a>
+				</li>
+			</ul> -->
 			<div class="row" style="width:894px;">
 			{% for dynamic  in friendDynamicList %}
 			{% ifequal forloop.counter|mod:4 1%}
@@ -371,17 +445,21 @@ a:hover {
 			  <div class="row" style="width:894px;margin-top:20px;">
 			   {%endifnotequal%}
 		    {%endifequal%}
-		    <div id="card_pbOverlay"></div><div id="card_content"></div>
-			<div class="card"> 
-				<div class="top"></div>
-				<img alt="140x140" height="65" width="65"  src="{{MEDIA_URL}}{{dynamic.get_profile}}" class="img-circle"/>
-				<span class="name">{{dynamic.publishUser.username}}<canvas height="400px" width="400px"></canvas></span>
+			
+			<div class="card card_panel col-sm-6">
 			    <div class="tabbable">
 					<div class="tab-content">
-					<div class="tab-pane active" id="tab1{{dynamic.publishUser.user_id}}">
-							<hr style="margin:0 10px;height:1px;border:none;border-top:1px solid #777777;"/>
-							<div class="tag">
-								{{dynamic.content}}
+						<div class="tab-pane active" id="tab4{{dynamic.id}}"">
+							<div class="introBox venoboxajax" data-gall="gall3" data-type="ajax" href="ajax.php">
+								<img alt="140x140" src="{{MEDIA_URL}}{{dynamic.get_profile}}" class="head head_girl"/>
+								<div class="card-introBox"><span class="detail_info">查看<br/>详细信息</span></div>
+							</div>
+							<div id="1" class="name other_name">{{dynamic.publishUser.username}}
+							 <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_{{page.isFriend}}" id="attention_{{page.user_id}}"></i></a>
+							</div>
+							<hr />
+						<div class="tag">
+							{{dynamic.content|center:"20"}}
 								{%ifequal dynamic.type 2 %}
                            <div class="scroller">
 							<ul class="hoverbox" style="margin-top: 5px;">
@@ -393,38 +471,35 @@ a:hover {
                             </ul>
                           </div>
                          {%endifequal%}
-							</div>
 						</div>
-						<div class="tab-pane " id="tab3{{page.user_id}}">
-						<div class="scroller">
+						</div>
+						<div class="tab-pane" id="tab5{{dynamic.id}}">
+							<div class="scroller">
 								<ul class="hoverbox">
 								<li>
-								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img1.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img1.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								<a id="firstlink" class="venobox" data-gall="gall1" href="{{STATIC_URL}}img/img1.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img1.jpg" title="demo1"></a>
 								</li>
 								<li>
-								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img2.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img2.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								<a class="venobox" data-gall="gall1" href="{{STATIC_URL}}img/img2.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img2.jpg" title="demo1"></a>
 								</li>
 								<li>
-								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img3.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img3.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								<a class="venobox" data-gall="gall1" href="{{STATIC_URL}}img/img3.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img3.jpg"></a>
 								</li>
 								<li>
-								<a rel="lightbox-demo" href="{{STATIC_URL}}img/img4.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img4.jpg" title="demo1" class="alignnone size-thumbnail wp-image-48"></a>
+								<a class="venobox" data-gall="gall1" href="{{STATIC_URL}}img/img4.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img4.jpg"></a>
 								</li>
 								</ul>
 							</div>
 						</div>
-						<div class="tab-pane" id="tab4{{page.user_id}}">
-							<textarea id="reply_content_{{page.user_id}}" rows="3" style="width:170px;margin: 17px 5px 5px 5px;" ></textarea>
-							<button type="button" class="btn" style="float:right;margin-right:13px;" onclick="sendMessage({{page.user_id}});">发送</button> 
+						<div class="tab-pane" id="tab6{{dynamic.id}}">
+							<textarea id="reply_content_{{dynamic.id}}" rows="3"></textarea>
+							<button class="btn btn-success" style="float:right;margin-right:13px;" onclick="sendMessage({{page.user_id}});">发送</button> 
 						</div>
 					</div>
-					<ul class="nav nav-tabs" style="margin-top:20px;margin-left:13px;">
-						<li class="active"><a href="#tab1{{page.user_id}}" data-toggle="tab"><i class="icon_profile" ></i></a></li>
-						<li>
-						   <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_1" id="attention_{{page.user_id}}"></i></a>
-						 </li>
-						<li><a href="#tab3{{page.user_id}}" data-toggle="tab"><i class="icon_photo"></i></a></li>
-						<li><a href="#tab4{{page.user_id}}" data-toggle="tab"><i class="icon_msg"></i></a></li>
+					<ul class="list-inline card-nav">
+						<li class="active"><a href="#tab4{{dynamic.id}}"" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
+						<li><a href="#tab5{{dynamic.id}}" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></li>
+						<li><a href="#tab6{{dynamic.id}}" data-toggle="tab"><i class="icon_msg" title="消息"></i></a></li>
 					</ul>
 				</div>
 			</div>
@@ -432,11 +507,38 @@ a:hover {
 			  </div>
 			{%endifequal%}
             {% endfor %}
-		
+             {%if pages.paginator.num_pages|greater_than:8 %}
+               <div class="controlArrow prev"></div>
+			   <div class="controlArrow next"></div>
+             {%endif%}
 			
-			</div>
 		</div>
 	</div>
 </div>
-</div>
+
+
+<script type="text/javascript">
+	 $(document).ready(function(){
+		$('.venobox').venobox({
+			numeratio: true,
+			border: '0'
+		});
+		$('.venoboxvid').venobox({
+			bgcolor: '#000'
+		});
+		$('.venoboxframe').venobox({
+			border: '6px'
+		});
+		$('.venoboxinline').venobox({
+			framewidth: '300px',
+			frameheight: '250px',
+			border: '6px',
+			bgcolor: '#f46f00'
+		});
+		$('.venoboxajax').venobox({
+			border: '30px;',
+			frameheight: '220px'
+		});
+	})
+</script>
 {% endblock %}

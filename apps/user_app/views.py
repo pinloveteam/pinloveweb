@@ -404,7 +404,6 @@ def follow(request,type):
         return render(request, 'login.html', arg) 
 
 def fllowList_to_CardList(fllowList,type):
-    recommendResultList=[]
     userList=[]
     if type ==1:
         for myFollow in fllowList:
@@ -412,7 +411,7 @@ def fllowList_to_CardList(fllowList,type):
     else:
         for myFollow in fllowList:
             userList.append(myFollow.my)
-   
+    del fllowList.object_list[:]
     userProfileList=UserProfile.objects.select_related().filter(user_id__in=userList)
     for userProfile in userProfileList:
         scoreOther=u'需完善个人信息'
@@ -434,8 +433,8 @@ def fllowList_to_CardList(fllowList,type):
            isVote=False
         from apps.pojo.recommend import RecommendResult
         recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote)
-        recommendResultList.append(recommendResult)
-    return recommendResultList
+        fllowList.object_list.append(recommendResult)
+    return fllowList
      
 def friend(request):
     count = Friend.objects.filter(my_id=request.user.id).count()
