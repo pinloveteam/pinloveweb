@@ -405,7 +405,7 @@ function reply(username,dynamicId) {
           {%for dynamic in friendDynamicList%}
             <li id="dynamic_{{dynamic.id}}" class="lineD_btm">
               <div class="userPic">
-              <img src="{{MEDIA_URL}}user_img/image.png">
+              <img src="{{MEDIA_URL}}{{dynamic.get_profile}}" style="margin:4px;height:70px;width:70px;" >
               </div>
               <div class="feed_c">
                 <div class="msgCnt">
