@@ -12,6 +12,7 @@ ADMINS = (
 MANAGERS = ADMINS
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
@@ -20,7 +21,7 @@ ALLOWED_HOSTS = ['*']
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -39,9 +40,11 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
+
+
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ('css',os.path.join(PATH,'static/css').replace('\\','/') ),  
+   ('css',os.path.join(PATH,'static/css').replace('\\','/') ),  
     ('js',os.path.join(PATH,'static/js').replace('\\','/') ), 
     ('img',os.path.join(PATH,'static/img').replace('\\','/') ), 
      os.path.join(PATH,'apps/upload_avatar/static').replace('\\','/'), 
@@ -61,7 +64,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'zjz*z3^c@s@ay70o!$)8%f%y395_=$p5^*z$tlu_+j6$4ga!5+'
+SECRET_KEY = 'buxmr2-s(7c6)fd_omfcdh_e3w!*oi)yc222=v=5c_0=x79#00'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -76,7 +79,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-#登录拦截     
+    #登录拦截     
      'middleware.filter_middleware.AuthenticationMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -88,7 +91,7 @@ ROOT_URLCONF = 'pinloveweb.urls'
 WSGI_APPLICATION = 'pinloveweb.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.="/static/img/logo.png"/></a></d
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PATH,'templates').replace('\\','/'), 
@@ -99,7 +102,6 @@ TEMPLATE_DIRS = (
     os.path.join(PATH,'apps/verification_app/templates').replace('\\','/'),
     os.path.join(PATH,'apps/message_app/templates').replace('\\','/'),
     os.path.join(PATH,'apps/friend_dynamic_app/templates').replace('\\','/'), 
-    
 )
 
 INSTALLED_APPS = (
@@ -119,13 +121,19 @@ INSTALLED_APPS = (
     'apps.message_app',
     'apps.friend_dynamic_app',
     'apps.the_people_nearby',
-    'grappelli',
+#     'grappelli',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+#     'djcelery',   
+#     'apps.task_app',     
 )
-
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -249,7 +257,7 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': True,
         },
-       
+        
         'customapp': {#then you can change the level to control your custom app whether to output the debug infomation
             'handlers': ['console'],
             'level': 'DEBUG',
@@ -286,31 +294,31 @@ EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 SESSION_COOKIE_AGE=1000
 
 # 本地环境
-# DATABASES = {
-#      
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'django',                      # Or path to database file if using sqlite3.
-#                                                 # The following settings are not used with sqlite3:
-#         'USER': 'root',                         #pinloveteam
-#         'PASSWORD': 'jin521436',                       #redyellowblue123#
-#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#         'PORT': '',      
-#                                                 # Set to empty string for default.
-#     }
-# }
-# MEDIA_URL = '/media/'
-# STATIC_URL = '/static/'
-# MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
-# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-# UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-# UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+DATABASES = {
+     
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'django',                      # Or path to database file if using sqlite3.
+                                                # The following settings are not used with sqlite3:
+        'USER': 'root',                         #pinloveteam
+        'PASSWORD': 'jin521436',                       #redyellowblue123#
+        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',      
+                                                # Set to empty string for default.
+    }
+}
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 
 #---服务器环境-----
 DATABASES = {
-      
+       
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -335,3 +343,21 @@ UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 
+###################for tests##########
+# import djcelery
+# djcelery.setup_loader()
+# 
+# ## Celery config ##
+# 
+# BROKER_URL = "amqp://guest:guest@localhost:5672//"
+# 
+# 
+# CELERY_ALWAYS_EAGER = True
+# CELERY_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'apps.task_app.backends.CeleryEmailBackend'
+#  
+# CELERY_EMAIL_TASK_CONFIG = {
+#     'queue' : 'django_email',
+#     'delivery_mode' : 1, # non persistent
+#     'rate_limit' : '50/m', # 50 emails per minute
+# }

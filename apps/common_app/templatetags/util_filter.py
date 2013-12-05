@@ -6,6 +6,12 @@ Created on Jul 21, 2013
 '''
 from django import template
 register = template.Library()
+'''
+求余
+attribute：
+      value:本身的值
+      var：传入值
+'''
 @register.filter
 def mod(value,var):
     try:
@@ -15,8 +21,24 @@ def mod(value,var):
         pass
     value=value%var
     return value
-# register.filter('MOD', MOD)  
 
+'''
+大于
+attribute：
+      value:本身的值
+      var：传入值
+'''
+@register.filter
+def greater_than(value,var):
+    try:
+        value=int(value)
+        var=int(var)
+    except:
+        pass
+    if value>var:
+        return True
+    else:
+        return False
 '''
 test
 '''

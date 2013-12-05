@@ -8,7 +8,7 @@ Created on Sep 17, 2013
   推荐结果类
 '''
 class RecommendResult(object):
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote):
+    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote,city):
         self.user_id=userId
         self.username=username
         self.height=height
@@ -22,3 +22,4 @@ class RecommendResult(object):
         self.isFriend=isFriend
         self.avatar_name=avatar_name
         self.isVote=isVote
+        self.city=city

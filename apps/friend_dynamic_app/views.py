@@ -14,9 +14,11 @@ from apps.user_app.models import UserProfile, Friend
 from django.db import connection
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
+import logging
 '''
  发布消息
 '''
+logger = logging.getLogger('django_request_logfile')
 def send_dynamic(request):
     arg={}
     if request.user.is_authenticated():
@@ -120,6 +122,7 @@ def dynamic_list(request):
 def update_photo(request): 
     if request.method == 'POST':
       if request.FILES :
+        arg={}
         # uppload image
         f = request.FILES["file"]
         parser = ImageFile.Parser()  
@@ -137,8 +140,29 @@ def update_photo(request):
             request.session['images_path']=simplejson.dumps([pictureName,])
         name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
         img.save(name) 
-        return HttpResponseRedirect('/dynamic/send/')
-#     return render(request, 'test111.html',)   
+#         return HttpResponseRedirect('/dynamic/send/')
+        return HttpResponse(pictureName)
+
+'''
+删除图片
+attribute:图片名称
+'''
+def delete_photo(request):
+        try:
+            pictureName=request.GET.get('pictureName')
+        except:
+            logger.error('获取图片名称pictureName失败')
+            logging.exception('Got exception on main handler')
+        if 'images_path' in request.session.keys():
+            list=simplejson.loads(request.session['images_path'])
+            if pictureName in list:
+                list.remove(pictureName)
+        from util import util_settings
+        path = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
+        import os
+        os.remove(path)
+        return HttpResponse('删除成功!')
+    
 def update_video(request): 
     arg={}
     if request.user.is_authenticated():

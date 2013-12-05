@@ -22,6 +22,7 @@ from util.page import page
 from django.db import connection
 from apps.the_people_nearby.views import GetLocation
 import logging
+from django.views.decorators.csrf import csrf_protect
 
 
 
@@ -43,13 +44,18 @@ def login(request) :
 #         return response
     else : 
         args = {}
+        redirectURL=request.REQUEST.get('redirectURL','')
+        if redirectURL!='':
+            args['redirectURL']=redirectURL
         args.update(csrf(request))
         return render(request, 'login.html', args,) 
-
+    
+@csrf_protect
 def auth_view(request) : 
     
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
+    redirectURL=request.REQUEST.get('redirectURL', '')
     if request.REQUEST.getlist('remember_status')==[u'on']:
             request.session.set_expiry(100000)
     user = auth.authenticate(username=username, password=password)
@@ -71,7 +77,10 @@ def auth_view(request) :
             return response
         #获取ip 地址
         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
-        return HttpResponseRedirect('/account/loggedin/')
+        if redirectURL=='':
+            return HttpResponseRedirect('/account/loggedin/')
+        else:
+            return HttpResponseRedirect(redirectURL)
     else : 
         # Show an error page 
         return HttpResponseRedirect('/account/invalid/')

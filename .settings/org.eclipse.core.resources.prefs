@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
+#Fri Nov 29 18:45:45 CST 2013
+=======
 #Mon Nov 18 14:52:30 CST 2013
+>>>>>>> Stashed changes
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
@@ -30,6 +34,9 @@ encoding//apps/recommend_app/views.py=utf-8
 encoding//apps/search_app/forms.py=utf-8
 encoding//apps/search_app/urls.py=utf-8
 encoding//apps/search_app/views.py=utf-8
+encoding//apps/task_app/backends.py=utf-8
+encoding//apps/task_app/views.py=utf-8
+encoding//apps/the_people_nearby/views.py=utf-8
 encoding//apps/upload_avatar/__init__.py=utf-8
 encoding//apps/upload_avatar/app_settings.py=utf-8
 encoding//apps/upload_avatar/models.py=utf-8
@@ -40,10 +47,12 @@ encoding//apps/user_app/models.py=utf-8
 encoding//apps/user_app/test.py=utf-8
 encoding//apps/user_app/urls.py=utf-8
 encoding//apps/user_app/views.py=utf-8
+encoding//pinloveweb/celery.py=utf-8
 encoding//pinloveweb/settings.py=utf-8
 encoding//pinloveweb/test.py=utf-8
 encoding//pinloveweb/urls.py=utf-8
 encoding//pinloveweb/views.py=utf-8
+encoding//test/recommend_test.py=utf-8
 encoding//util/common_util.py=utf-8
 encoding//util/connection_db.py=utf-8
 encoding//util/form_util.py=utf-8
@@ -51,3 +60,4 @@ encoding//util/page.py=utf-8
 encoding//util/singal_common.py=utf-8
 encoding//util/test.py=utf-8
 encoding//util/util_settings.py=utf-8
+encoding/manage.py=utf-8

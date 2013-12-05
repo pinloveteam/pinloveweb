@@ -135,12 +135,13 @@ def matchResultList_to_RecommendResultList(matchResultList):
        income=userBaiscProfile.income
        jobIndustry=userBaiscProfile.get_jobIndustry_display()
        avatar_name=userBaiscProfile.avatar_name
+       city=userBaiscProfile.city
        isFriend=0
        if userBaiscProfile.avatar_name_status==3:
            isVote=True
        else:
            isVote=False
-       recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote)
+       recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote,city)
        recommendResultList.append(recommendResult)
     return recommendResultList
 
@@ -158,13 +159,14 @@ def userProfileList_to_RecommendResultList(userProfileList):
        income=userProfile.income
        jobIndustry=userProfile.get_jobIndustry_display()
        isFriend=0
+       city=userProfile.city
        if userProfile.avatar_name_status==3:
            avatar_name=userProfile.avatar_name
            isVote=True
        else:
            avatar_name='user_img/image.png'
            isVote=False
-       recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote)
+       recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote,city)
        recommendResultList.append(recommendResult)
      return recommendResultList
 '''

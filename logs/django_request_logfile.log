@@ -56,3 +56,1319 @@ Traceback (most recent call last):
 OperationalError: (1045, "Access denied for user 'root'@'localhost' (using password: YES)")
 WARNING 2013-11-20 14:28:20 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /the_people_nearby status_code:404
 WARNING 2013-11-20 14:29:19 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /user/hobby_interest/ status_code:404
+WARNING 2013-11-20 15:09:30 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:14:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:15:21 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:15:38 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:17:01 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:22:16 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:28:23 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:29:26 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:29:45 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:32:21 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 15:52:29 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-20 16:03:34 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: //account/login/ status_code:404
+ERROR 2013-11-20 16:13:27 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: / status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\python\lib\site-packages\django\utils\decorators.py", line 87, in _wrapped_view
+    result = middleware.process_view(request, view_func, args, kwargs)
+  File "D:\python\lib\site-packages\django\middleware\csrf.py", line 95, in process_view
+    request.COOKIES[settings.CSRF_COOKIE_NAME])
+AttributeError: 'AuthenticationMiddleware' object has no attribute 'COOKIES'
+ERROR 2013-11-20 16:14:06 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: / status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\python\lib\site-packages\django\utils\decorators.py", line 87, in _wrapped_view
+    result = middleware.process_view(request, view_func, args, kwargs)
+  File "D:\python\lib\site-packages\django\middleware\csrf.py", line 95, in process_view
+    request.COOKIES[settings.CSRF_COOKIE_NAME])
+AttributeError: 'AuthenticationMiddleware' object has no attribute 'COOKIES'
+WARNING 2013-11-21 15:27:52 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-21 15:27:52 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-21 15:27:52 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-21 15:29:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-21 15:29:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-21 15:29:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-22 10:23:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-22 10:23:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-22 10:23:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+ERROR 2013-11-22 10:31:38 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /admin/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\python\lib\site-packages\django\contrib\admin\sites.py", line 219, in wrapper
+    return self.admin_view(view, cacheable)(*args, **kwargs)
+  File "D:\python\lib\site-packages\django\utils\decorators.py", line 91, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "D:\python\lib\site-packages\django\views\decorators\cache.py", line 89, in _wrapped_view_func
+    response = view_func(request, *args, **kwargs)
+  File "D:\python\lib\site-packages\django\contrib\admin\sites.py", line 201, in inner
+    return self.login(request)
+  File "D:\python\lib\site-packages\django\views\decorators\cache.py", line 89, in _wrapped_view_func
+    response = view_func(request, *args, **kwargs)
+  File "D:\python\lib\site-packages\django\contrib\admin\sites.py", line 334, in login
+    return login(request, **defaults)
+  File "D:\python\lib\site-packages\django\views\decorators\debug.py", line 69, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+  File "D:\python\lib\site-packages\django\utils\decorators.py", line 91, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "D:\python\lib\site-packages\django\views\decorators\cache.py", line 89, in _wrapped_view_func
+    response = view_func(request, *args, **kwargs)
+  File "D:\python\lib\site-packages\django\contrib\auth\views.py", line 57, in login
+    current_site = get_current_site(request)
+  File "D:\python\lib\site-packages\django\contrib\sites\models.py", line 95, in get_current_site
+    current_site = Site.objects.get_current()
+  File "D:\python\lib\site-packages\django\contrib\sites\models.py", line 26, in get_current
+    current_site = self.get(pk=sid)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 143, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 382, in get
+    num = len(clone)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 90, in __len__
+    self._result_cache = list(self.iterator())
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 301, in iterator
+    for row in compiler.results_iter():
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 775, in results_iter
+    for rows in self.execute_sql(MULTI):
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 839, in execute_sql
+    cursor = self.connection.cursor()
+  File "D:\python\lib\site-packages\django\db\backends\__init__.py", line 324, in cursor
+    cursor = self.make_debug_cursor(self._cursor())
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 405, in _cursor
+    self.connection = Database.connect(**kwargs)
+  File "D:\python\lib\site-packages\MySQLdb\__init__.py", line 81, in Connect
+    return Connection(*args, **kwargs)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 187, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (2003, "Can't connect to MySQL server on 'localhost' (10061)")
+ERROR 2013-11-22 10:34:58 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /admin/publish_app/publish/add/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 140, in get_response
+    response = response.render()
+  File "D:\python\lib\site-packages\django\template\response.py", line 105, in render
+    self.content = self.rendered_content
+  File "D:\python\lib\site-packages\django\template\response.py", line 82, in rendered_content
+    content = template.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 140, in render
+    return self._render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 124, in render
+    return compiled_parent._render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 124, in render
+    return compiled_parent._render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\defaulttags.py", line 424, in render
+    raise e
+NoReverseMatch: Reverse for 'grp_related_lookup' with arguments '()' and keyword arguments '{}' not found.
+ERROR 2013-11-22 10:35:48 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /admin/publish_app/publish/add/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 140, in get_response
+    response = response.render()
+  File "D:\python\lib\site-packages\django\template\response.py", line 105, in render
+    self.content = self.rendered_content
+  File "D:\python\lib\site-packages\django\template\response.py", line 82, in rendered_content
+    content = template.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 140, in render
+    return self._render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 124, in render
+    return compiled_parent._render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 124, in render
+    return compiled_parent._render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "D:\python\lib\site-packages\django\template\base.py", line 830, in render
+    bit = self.render_node(node, context)
+  File "D:\python\lib\site-packages\django\template\debug.py", line 74, in render_node
+    return node.render(context)
+  File "D:\python\lib\site-packages\django\template\defaulttags.py", line 424, in render
+    raise e
+NoReverseMatch: Reverse for 'grp_related_lookup' with arguments '()' and keyword arguments '{}' not found.
+WARNING 2013-11-22 10:43:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 10:48:41 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 10:52:15 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 10:53:23 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 11:30:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 11:33:36 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 11:35:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 11:38:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/test/ status_code:404
+WARNING 2013-11-22 11:38:33 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/test/test/ status_code:404
+WARNING 2013-11-22 11:40:56 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:08:18 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:08:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:09:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/media_list.js/ status_code:404
+WARNING 2013-11-22 13:09:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:16:43 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:17:10 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:22:53 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:23:36 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:24:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:26:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:28:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:28:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:31:40 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:33:24 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:34:45 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:40:53 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:41:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:45:02 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-22 13:46:40 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /admin/publish_app/publish/add/lists/image_list.js/ status_code:404
+WARNING 2013-11-26 13:57:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 13:57:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 13:57:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 13:57:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 13:57:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 13:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+ERROR 2013-11-26 13:59:51 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /dynamic/deletePhoto/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 133, in get_response
+    raise ValueError("The view %s.%s didn't return an HttpResponse object." % (callback.__module__, view_name))
+ValueError: The view apps.friend_dynamic_app.views.delete_photo didn't return an HttpResponse object.
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:03:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+ERROR 2013-11-26 14:05:16 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /dynamic/deletePhoto/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 133, in get_response
+    raise ValueError("The view %s.%s didn't return an HttpResponse object." % (callback.__module__, view_name))
+ValueError: The view apps.friend_dynamic_app.views.delete_photo didn't return an HttpResponse object.
+WARNING 2013-11-26 14:08:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:08:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:08:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:08:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:08:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:08:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:08:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:08:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:08:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:08:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:10:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:10:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:10:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:10:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:10:06 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:10:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:10:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:10:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:10:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:10:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:22:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:22:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:22:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:22:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:22:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:22:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:22:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:22:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:22:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:22:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:23:54 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:23:54 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:23:54 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:23:54 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:23:54 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:23:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:23:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:23:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:23:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:23:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:24:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:24:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:24:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:24:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:24:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:24:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:24:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:24:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:24:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:24:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:26:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:26:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:26:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:26:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:26:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-26 14:26:27 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-26 14:26:27 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-26 14:26:27 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-26 14:26:27 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-26 14:26:27 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-27 14:16:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-27 14:16:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-27 14:16:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-27 15:43:14 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-27 15:44:30 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-27 15:45:05 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-27 15:45:28 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+ERROR 2013-11-27 15:57:07 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /account/loggedin/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\eclipse\code\pinloveweb\middleware\filter_middleware.py", line 18, in process_request
+    request.get['redirectURL']=request.path
+AttributeError: 'WSGIRequest' object has no attribute 'get'
+ERROR 2013-11-27 15:57:24 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /search/simple_search/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\eclipse\code\pinloveweb\middleware\filter_middleware.py", line 18, in process_request
+    request.get['redirectURL']=request.path
+AttributeError: 'WSGIRequest' object has no attribute 'get'
+ERROR 2013-11-27 15:57:34 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /search/simple_search/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\eclipse\code\pinloveweb\middleware\filter_middleware.py", line 18, in process_request
+    request.get['redirectURL']=request.path
+AttributeError: 'WSGIRequest' object has no attribute 'get'
+ERROR 2013-11-27 16:01:32 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /search/simple_search/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\eclipse\code\pinloveweb\middleware\filter_middleware.py", line 18, in process_request
+    request.GET['redirectURL']=request.path
+  File "D:\python\lib\site-packages\django\http\request.py", line 310, in __setitem__
+    self._assert_mutable()
+  File "D:\python\lib\site-packages\django\http\request.py", line 307, in _assert_mutable
+    raise AttributeError("This QueryDict instance is immutable")
+AttributeError: This QueryDict instance is immutable
+ERROR 2013-11-27 16:12:20 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /search/simple_search/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\eclipse\code\pinloveweb\middleware\filter_middleware.py", line 18, in process_request
+    request.GET['redirectURL']=request.path
+  File "D:\python\lib\site-packages\django\http\request.py", line 310, in __setitem__
+    self._assert_mutable()
+  File "D:\python\lib\site-packages\django\http\request.py", line 307, in _assert_mutable
+    raise AttributeError("This QueryDict instance is immutable")
+AttributeError: This QueryDict instance is immutable
+ERROR 2013-11-27 21:01:41 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /account/auth/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\python\lib\site-packages\django\utils\decorators.py", line 91, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "D:\eclipse\code\pinloveweb\pinloveweb\views.py", line 58, in auth_view
+    user = auth.authenticate(username=username, password=password)
+  File "D:\python\lib\site-packages\django\contrib\auth\__init__.py", line 59, in authenticate
+    user = backend.authenticate(**credentials)
+  File "D:\python\lib\site-packages\django\contrib\auth\backends.py", line 16, in authenticate
+    user = UserModel._default_manager.get_by_natural_key(username)
+  File "D:\python\lib\site-packages\django\contrib\auth\models.py", line 168, in get_by_natural_key
+    return self.get(**{self.model.USERNAME_FIELD: username})
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 143, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 382, in get
+    num = len(clone)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 90, in __len__
+    self._result_cache = list(self.iterator())
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 301, in iterator
+    for row in compiler.results_iter():
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 775, in results_iter
+    for rows in self.execute_sql(MULTI):
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 839, in execute_sql
+    cursor = self.connection.cursor()
+  File "D:\python\lib\site-packages\django\db\backends\__init__.py", line 324, in cursor
+    cursor = self.make_debug_cursor(self._cursor())
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 405, in _cursor
+    self.connection = Database.connect(**kwargs)
+  File "D:\python\lib\site-packages\MySQLdb\__init__.py", line 81, in Connect
+    return Connection(*args, **kwargs)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 187, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (2003, "Can't connect to MySQL server on 'localhost' (10061)")
+ERROR 2013-11-27 21:01:55 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /account/auth/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\python\lib\site-packages\django\utils\decorators.py", line 91, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "D:\eclipse\code\pinloveweb\pinloveweb\views.py", line 58, in auth_view
+    user = auth.authenticate(username=username, password=password)
+  File "D:\python\lib\site-packages\django\contrib\auth\__init__.py", line 59, in authenticate
+    user = backend.authenticate(**credentials)
+  File "D:\python\lib\site-packages\django\contrib\auth\backends.py", line 16, in authenticate
+    user = UserModel._default_manager.get_by_natural_key(username)
+  File "D:\python\lib\site-packages\django\contrib\auth\models.py", line 168, in get_by_natural_key
+    return self.get(**{self.model.USERNAME_FIELD: username})
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 143, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 382, in get
+    num = len(clone)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 90, in __len__
+    self._result_cache = list(self.iterator())
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 301, in iterator
+    for row in compiler.results_iter():
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 775, in results_iter
+    for rows in self.execute_sql(MULTI):
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 839, in execute_sql
+    cursor = self.connection.cursor()
+  File "D:\python\lib\site-packages\django\db\backends\__init__.py", line 324, in cursor
+    cursor = self.make_debug_cursor(self._cursor())
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 405, in _cursor
+    self.connection = Database.connect(**kwargs)
+  File "D:\python\lib\site-packages\MySQLdb\__init__.py", line 81, in Connect
+    return Connection(*args, **kwargs)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 187, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (2003, "Can't connect to MySQL server on 'localhost' (10061)")
+ERROR 2013-11-27 21:02:24 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /search/simple_search/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\eclipse\code\pinloveweb\middleware\filter_middleware.py", line 21, in process_request
+    arg.update(csrf(request))
+TypeError: 'module' object is not callable
+ERROR 2013-11-27 21:02:28 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /search/simple_search/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+  File "D:\eclipse\code\pinloveweb\middleware\filter_middleware.py", line 21, in process_request
+    arg.update(csrf(request))
+TypeError: 'module' object is not callable
+WARNING 2013-11-27 21:10:43 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+ERROR 2013-11-27 21:15:54 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: / status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 92, in get_response
+    response = middleware_method(request)
+TypeError: process_request() takes exactly 5 arguments (2 given)
+WARNING 2013-11-27 21:28:35 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-11-28 10:20:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-28 10:20:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-28 10:20:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-28 10:20:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-28 10:20:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-11-28 10:20:23 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-11-28 10:20:23 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-11-28 10:20:23 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113WIxJoHiQXz.jpg status_code:404
+WARNING 2013-11-28 10:20:23 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/1_20131113OWkxFtQTJh.jpg status_code:404
+WARNING 2013-11-28 10:20:23 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+ERROR 2013-11-28 18:31:31 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 103, in get_response
+    resolver_match = resolver.resolve(request.path_info)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 321, in resolve
+    sub_match = pattern.resolve(new_path)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 223, in resolve
+    return ResolverMatch(self.callback, args, kwargs, self.name)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 230, in callback
+    self._callback = get_callable(self._callback_str)
+  File "D:\python\lib\site-packages\django\utils\functional.py", line 29, in wrapper
+    result = func(*args)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 97, in get_callable
+    mod = import_module(mod_name)
+  File "D:\python\lib\site-packages\django\utils\importlib.py", line 35, in import_module
+    __import__(name)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 7, in <module>
+    from app import tasks
+ImportError: No module named app
+ERROR 2013-11-28 18:43:55 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 13, in test_celery
+    result.get(timeout=1)
+  File "D:\python\Lib\site-packages\celery-3.1.4-py2.7.egg\celery\result.py", line 136, in get
+    interval=interval)
+  File "D:\python\Lib\site-packages\celery-3.1.4-py2.7.egg\celery\backends\base.py", line 183, in wait_for
+    raise TimeoutError('The operation timed out.')
+TimeoutError: The operation timed out.
+WARNING 2013-11-29 17:36:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-29 17:36:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-29 17:36:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-11-29 17:36:45 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /test_celery/ status_code:404
+ERROR 2013-11-29 17:37:07 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 103, in get_response
+    resolver_match = resolver.resolve(request.path_info)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 321, in resolve
+    sub_match = pattern.resolve(new_path)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 223, in resolve
+    return ResolverMatch(self.callback, args, kwargs, self.name)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 230, in callback
+    self._callback = get_callable(self._callback_str)
+  File "D:\python\lib\site-packages\django\utils\functional.py", line 29, in wrapper
+    result = func(*args)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 97, in get_callable
+    mod = import_module(mod_name)
+  File "D:\python\lib\site-packages\django\utils\importlib.py", line 35, in import_module
+    __import__(name)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 22
+SyntaxError: Non-ASCII character '\xe5' in file D:\eclipse\code\pinloveweb\apps\task_app\views.py on line 22, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
+ERROR 2013-11-29 17:37:43 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 103, in get_response
+    resolver_match = resolver.resolve(request.path_info)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 321, in resolve
+    sub_match = pattern.resolve(new_path)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 223, in resolve
+    return ResolverMatch(self.callback, args, kwargs, self.name)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 230, in callback
+    self._callback = get_callable(self._callback_str)
+  File "D:\python\lib\site-packages\django\utils\functional.py", line 29, in wrapper
+    result = func(*args)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 97, in get_callable
+    mod = import_module(mod_name)
+  File "D:\python\lib\site-packages\django\utils\importlib.py", line 35, in import_module
+    __import__(name)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 22
+SyntaxError: Non-ASCII character '\xe5' in file D:\eclipse\code\pinloveweb\apps\task_app\views.py on line 22, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
+ERROR 2013-11-29 17:38:34 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 22, in test_celery
+    results = mail.send_mass_mail(emails)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 81, in send_mass_mail
+    fail_silently=fail_silently)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 36, in get_connection
+    % (mod_name, e)))
+ImproperlyConfigured: Error importing email backend module djcelery_email.backends: "No module named djcelery_email.backends"
+ERROR 2013-11-29 17:40:06 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 22, in test_celery
+    results = mail.send_mass_mail(emails)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 81, in send_mass_mail
+    fail_silently=fail_silently)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 36, in get_connection
+    % (mod_name, e)))
+ImproperlyConfigured: Error importing email backend module pinloveweb.apps.task_app.backends: "No module named apps.task_app.backends"
+ERROR 2013-11-29 17:42:43 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 22, in test_celery
+    results = mail.send_mass_mail(emails)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 84, in send_mass_mail
+    for subject, message, sender, recipient in datatuple]
+ValueError: need more than 0 values to unpack
+ERROR 2013-11-29 17:47:41 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 22, in test_celery
+    results = mail.send_mass_mail(emails)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 84, in send_mass_mail
+    for subject, message, sender, recipient in datatuple]
+ValueError: need more than 1 value to unpack
+ERROR 2013-11-29 18:09:53 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 22, in test_celery
+    results = mail.send_mass_mail(emails)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 81, in send_mass_mail
+    fail_silently=fail_silently)
+  File "D:\python\lib\site-packages\django\core\mail\__init__.py", line 36, in get_connection
+    % (mod_name, e)))
+ImproperlyConfigured: Error importing email backend module apps.task_app.backends: "cannot import name send_email"
+ERROR 2013-11-29 18:58:21 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /celery_test/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 103, in get_response
+    resolver_match = resolver.resolve(request.path_info)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 321, in resolve
+    sub_match = pattern.resolve(new_path)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 223, in resolve
+    return ResolverMatch(self.callback, args, kwargs, self.name)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 230, in callback
+    self._callback = get_callable(self._callback_str)
+  File "D:\python\lib\site-packages\django\utils\functional.py", line 29, in wrapper
+    result = func(*args)
+  File "D:\python\lib\site-packages\django\core\urlresolvers.py", line 97, in get_callable
+    mod = import_module(mod_name)
+  File "D:\python\lib\site-packages\django\utils\importlib.py", line 35, in import_module
+    __import__(name)
+  File "D:\eclipse\code\pinloveweb\apps\task_app\views.py", line 19
+SyntaxError: Non-ASCII character '\xe5' in file D:\eclipse\code\pinloveweb\apps\task_app\views.py on line 19, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
+WARNING 2013-12-01 22:38:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-01 22:38:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-01 22:38:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-01 22:44:11 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-01 22:44:11 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-01 22:44:11 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-02 13:14:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /v-0fe47/combo/common.js status_code:404
+WARNING 2013-12-02 13:14:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /v-db2cc/lib/jquery-1.7.1.js status_code:404
+WARNING 2013-12-02 13:14:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /v-946e3/combo/common.css status_code:404
+WARNING 2013-12-02 13:14:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /v-db2cc/lib/jquery-1.7.1.js status_code:404
+WARNING 2013-12-02 13:14:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /v-95d6b/css/zion/logo.png status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/95693a3df662a767e3b7d2078b8cd60b.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/7bf1c42e0ac28dbb7f17d27786b7c1dc.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/a33a8f0eee67110f97a87828ca8d4d9a.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/aa6651cbd8ef6f36db8e1d84042b4adf.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/ca546a110ed5f9594ba8b3b7cc9935d4.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/eb487b294b9326a8f392219ecae76cea.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/b008b5cbd2867c64932d0810d5e5eb4f.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/2da26f856da380a271a10d05235254b1.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/9556bc9bea10d91dd925c9bddb5442cb.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/8b40abf49028e0078dbb0bb46e8ef27c.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/l/d74d1b5b62cc1999a3170afc7c7addf2.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/95693a3df662a767e3b7d2078b8cd60b.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /v-0fe47/combo/common.js status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/4b6747ee6c86abed7dfa8000cdfb6fc4.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/1e74e9eaba4a890556c53f268e73e07c.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/51ae3fbb67a79957b43e71465f9be813.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/57e416ebf26143b15c74d763738d2127.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/292564c015ebcc1f8373864fde0835dc.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/3efe8837545e160375ccf06233444525.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/040059d7d82bdd8c7025dbd9fa757683.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/260ec7258ec74ec7c0300303473c998c.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/61a3b2ff4b87e4a3d2ffa055cd9524f2.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/1c0ae8e17bbd881cc80e900793d2dd28.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/617b16eca7a456ecc13aaa7ca3603797.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/1c0ae8e17bbd881cc80e900793d2dd28.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /v-95d6b/css/zion/logo.png status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/5a1b69d3db108cb6b10192bac4827974.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/04aada3cf70a7d854f539dc245f4acaa.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/7bf1c42e0ac28dbb7f17d27786b7c1dc.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/34b97e25945708a3965179a290b3ba7a.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/bcfb930d2a83c3adfae9fce881bb9df3.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/ec3ef1741e7a38e0a7021cee8b5d4add.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/l/d74d1b5b62cc1999a3170afc7c7addf2.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/7bf1c42e0ac28dbb7f17d27786b7c1dc.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/57e416ebf26143b15c74d763738d2127.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/a33a8f0eee67110f97a87828ca8d4d9a.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/ca546a110ed5f9594ba8b3b7cc9935d4.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/292564c015ebcc1f8373864fde0835dc.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/95693a3df662a767e3b7d2078b8cd60b.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/b/aa6651cbd8ef6f36db8e1d84042b4adf.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/51ae3fbb67a79957b43e71465f9be813.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/260ec7258ec74ec7c0300303473c998c.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/eb487b294b9326a8f392219ecae76cea.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/8b40abf49028e0078dbb0bb46e8ef27c.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/4b6747ee6c86abed7dfa8000cdfb6fc4.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/95693a3df662a767e3b7d2078b8cd60b.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/9556bc9bea10d91dd925c9bddb5442cb.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/2da26f856da380a271a10d05235254b1.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/3efe8837545e160375ccf06233444525.jpg status_code:404
+WARNING 2013-12-02 13:14:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/s/1e74e9eaba4a890556c53f268e73e07c.jpg status_code:404
+WARNING 2013-12-02 14:39:16 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-02 14:39:16 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-02 14:39:16 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-02 14:46:11 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): / status_code:403
+WARNING 2013-12-02 14:46:14 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): / status_code:403
+WARNING 2013-12-02 14:46:16 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): / status_code:403
+WARNING 2013-12-02 14:50:03 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): / status_code:403
+WARNING 2013-12-02 14:55:43 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): / status_code:403
+WARNING 2013-12-02 15:00:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): / status_code:403
+WARNING 2013-12-02 15:11:39 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 15:12:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 15:14:48 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 15:21:59 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 15:22:05 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 15:28:28 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 15:28:33 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 15:29:00 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 16:25:05 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 16:25:43 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-02 16:46:40 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 16:48:01 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-02 17:11:06 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 13:42:24 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-03 13:42:24 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-03 13:42:24 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-03 13:42:44 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 13:42:44 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-12-03 13:47:49 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 13:47:49 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-12-03 13:50:33 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 13:50:33 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:01:00 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:08 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:09 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:41 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:42 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:56 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:08:57 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:09:36 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:10:05 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:10:13 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 14:11:18 D:\python\lib\site-packages\django\middleware\csrf.py csrf 166 Forbidden (CSRF cookie not set.): /account/auth/ status_code:403
+WARNING 2013-12-03 16:05:27 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-12-03 16:05:45 D:\python\lib\site-packages\django\middleware\csrf.py csrf 186 Forbidden (CSRF token missing or incorrect.): /account/auth/ status_code:403
+WARNING 2013-12-04 15:15:19 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-04 15:15:19 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-04 15:15:19 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-04 15:16:58 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:17:17 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:17:22 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:17:28 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:18:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:18:59 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:18:59 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:19:01 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:19:11 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+WARNING 2013-12-04 15:19:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/CARD.png status_code:404
+ERROR 2013-12-04 15:31:47 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /account/loggedin/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\pinloveweb\views.py", line 146, in loggedin
+    return render(request, 'card.html',arg )
+  File "D:\python\lib\site-packages\django\shortcuts\__init__.py", line 53, in render
+    return HttpResponse(loader.render_to_string(*args, **kwargs),
+  File "D:\python\lib\site-packages\django\template\loader.py", line 170, in render_to_string
+    t = get_template(template_name)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 146, in get_template
+    template, origin = find_template(template_name)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 135, in find_template
+    source, display_name = loader(name, dirs)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 43, in __call__
+    return self.load_template(template_name, template_dirs)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 49, in load_template
+    template = get_template_from_string(source, origin, template_name)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 157, in get_template_from_string
+    return Template(source, origin, name)
+  File "D:\python\lib\site-packages\django\template\base.py", line 125, in __init__
+    self.nodelist = compile_string(template_string, origin)
+  File "D:\python\lib\site-packages\django\template\base.py", line 153, in compile_string
+    return parser.parse()
+  File "D:\python\lib\site-packages\django\template\base.py", line 274, in parse
+    compiled_result = compile_func(self, token)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 215, in do_extends
+    nodelist = parser.parse()
+  File "D:\python\lib\site-packages\django\template\base.py", line 274, in parse
+    compiled_result = compile_func(self, token)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 190, in do_block
+    nodelist = parser.parse(('endblock',))
+  File "D:\python\lib\site-packages\django\template\base.py", line 274, in parse
+    compiled_result = compile_func(self, token)
+  File "D:\python\lib\site-packages\django\template\defaulttags.py", line 767, in do_for
+    nodelist_loop = parser.parse(('empty', 'endfor',))
+  File "D:\python\lib\site-packages\django\template\base.py", line 272, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "D:\python\lib\site-packages\django\template\base.py", line 327, in invalid_block_tag
+    (command, get_text_list(["'%s'" % p for p in parse_until])))
+TemplateSyntaxError: Invalid block tag: 'endblock', expected 'empty' 或 'endfor'
+ERROR 2013-12-04 15:34:51 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /account/loggedin/img/logo.png status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\pinloveweb\views.py", line 92, in loggedin
+    userProfile=UserProfile.objects.get(user_id=request.user.id)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 143, in get
+    return self.get_query_set().get(*args, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 389, in get
+    (self.model._meta.object_name, kwargs))
+DoesNotExist: UserProfile matching query does not exist. Lookup parameters were {'user_id': None}
+ERROR 2013-12-04 16:09:03 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/follow/3/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\user_app\views.py", line 400, in follow
+    return render(request, 'card.html',arg )
+  File "D:\python\lib\site-packages\django\shortcuts\__init__.py", line 53, in render
+    return HttpResponse(loader.render_to_string(*args, **kwargs),
+  File "D:\python\lib\site-packages\django\template\loader.py", line 170, in render_to_string
+    t = get_template(template_name)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 146, in get_template
+    template, origin = find_template(template_name)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 135, in find_template
+    source, display_name = loader(name, dirs)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 43, in __call__
+    return self.load_template(template_name, template_dirs)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 49, in load_template
+    template = get_template_from_string(source, origin, template_name)
+  File "D:\python\lib\site-packages\django\template\loader.py", line 157, in get_template_from_string
+    return Template(source, origin, name)
+  File "D:\python\lib\site-packages\django\template\base.py", line 125, in __init__
+    self.nodelist = compile_string(template_string, origin)
+  File "D:\python\lib\site-packages\django\template\base.py", line 153, in compile_string
+    return parser.parse()
+  File "D:\python\lib\site-packages\django\template\base.py", line 274, in parse
+    compiled_result = compile_func(self, token)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 215, in do_extends
+    nodelist = parser.parse()
+  File "D:\python\lib\site-packages\django\template\base.py", line 274, in parse
+    compiled_result = compile_func(self, token)
+  File "D:\python\lib\site-packages\django\template\loader_tags.py", line 190, in do_block
+    nodelist = parser.parse(('endblock',))
+  File "D:\python\lib\site-packages\django\template\base.py", line 274, in parse
+    compiled_result = compile_func(self, token)
+  File "D:\python\lib\site-packages\django\template\defaulttags.py", line 903, in do_if
+    nodelist = parser.parse(('elif', 'else', 'endif'))
+  File "D:\python\lib\site-packages\django\template\base.py", line 272, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "D:\python\lib\site-packages\django\template\base.py", line 327, in invalid_block_tag
+    (command, get_text_list(["'%s'" % p for p in parse_until])))
+TemplateSyntaxError: Invalid block tag: 'endblock', expected 'elif'，'else' 或 'endif'
+ERROR 2013-12-04 16:25:43 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/follow/3/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\user_app\views.py", line 378, in follow
+    cardList=fllowList_to_CardList(fllowList,type)
+  File "D:\eclipse\code\pinloveweb\apps\user_app\views.py", line 415, in fllowList_to_CardList
+    fllowList.object_list.clear()
+AttributeError: 'list' object has no attribute 'clear'
+WARNING 2013-12-04 16:35:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:35:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:35:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:35:09 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:35:09 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:35:09 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:38:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:38:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:38:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:38:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:38:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:38:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:38:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:38:34 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:34 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:38:34 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:38:34 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:38:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:38 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:38:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:38:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:38:39 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:39:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:39:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:39:26 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:39:28 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:39:28 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:39:28 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 16:39:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 16:39:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 16:39:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:26:40 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-04 19:26:40 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-04 19:26:40 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2013-12-04 19:46:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:46:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:46:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:46:56 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:46:56 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:46:56 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:46:58 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:46:58 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:46:58 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:47:10 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:47:10 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:47:10 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:47:11 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:47:11 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:47:11 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:47:47 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:47:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:47:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:47:50 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:47:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:48:33 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:48:33 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:48:33 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:48:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:48:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:48:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:48:38 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:48:38 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:48:38 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:48:40 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113mbGSkEXHyA.jpg status_code:404
+WARNING 2013-12-04 19:49:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:49:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:49:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:49:32 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:49:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:49:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:49:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:49:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:51:01 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:51:01 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:51:02 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:51:02 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:51:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:51:04 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:51:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:51:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:51:31 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:51:31 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:55:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:55:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:55:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:55:07 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:56:02 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:56:02 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:56:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:56:03 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:59:09 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:59:09 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:59:10 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:59:10 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:59:24 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:59:24 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 19:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 19:59:25 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:00:17 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:00:17 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:00:18 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:00:18 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:18:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:18:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:18:35 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:18:36 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+ERROR 2013-12-04 20:19:41 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /message/send/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\message_app\views.py", line 172, in message_send
+    message.save()
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 546, in save
+    force_update=force_update, update_fields=update_fields)
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 650, in save_base
+    result = manager._insert([self], fields=fields, return_id=update_pk, using=using, raw=raw)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 215, in _insert
+    return insert_query(self.model, objs, fields, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 1661, in insert_query
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 937, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\util.py", line 41, in execute
+    return self.cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 127, in execute
+    six.reraise(utils.IntegrityError, utils.IntegrityError(*tuple(e.args)), sys.exc_info()[2])
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 120, in execute
+    return self.cursor.execute(query, args)
+  File "D:\python\lib\site-packages\MySQLdb\cursors.py", line 202, in execute
+    self.errorhandler(self, exc, value)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+IntegrityError: (1048, "Column 'content' cannot be null")
+ERROR 2013-12-04 20:19:44 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /message/send/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\message_app\views.py", line 172, in message_send
+    message.save()
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 546, in save
+    force_update=force_update, update_fields=update_fields)
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 650, in save_base
+    result = manager._insert([self], fields=fields, return_id=update_pk, using=using, raw=raw)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 215, in _insert
+    return insert_query(self.model, objs, fields, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 1661, in insert_query
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 937, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\util.py", line 41, in execute
+    return self.cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 127, in execute
+    six.reraise(utils.IntegrityError, utils.IntegrityError(*tuple(e.args)), sys.exc_info()[2])
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 120, in execute
+    return self.cursor.execute(query, args)
+  File "D:\python\lib\site-packages\MySQLdb\cursors.py", line 202, in execute
+    self.errorhandler(self, exc, value)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+IntegrityError: (1048, "Column 'content' cannot be null")
+ERROR 2013-12-04 20:20:01 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /message/send/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\message_app\views.py", line 172, in message_send
+    message.save()
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 546, in save
+    force_update=force_update, update_fields=update_fields)
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 650, in save_base
+    result = manager._insert([self], fields=fields, return_id=update_pk, using=using, raw=raw)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 215, in _insert
+    return insert_query(self.model, objs, fields, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 1661, in insert_query
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 937, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\util.py", line 41, in execute
+    return self.cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 127, in execute
+    six.reraise(utils.IntegrityError, utils.IntegrityError(*tuple(e.args)), sys.exc_info()[2])
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 120, in execute
+    return self.cursor.execute(query, args)
+  File "D:\python\lib\site-packages\MySQLdb\cursors.py", line 202, in execute
+    self.errorhandler(self, exc, value)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+IntegrityError: (1048, "Column 'content' cannot be null")
+ERROR 2013-12-04 20:20:01 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /message/send/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\message_app\views.py", line 172, in message_send
+    message.save()
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 546, in save
+    force_update=force_update, update_fields=update_fields)
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 650, in save_base
+    result = manager._insert([self], fields=fields, return_id=update_pk, using=using, raw=raw)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 215, in _insert
+    return insert_query(self.model, objs, fields, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 1661, in insert_query
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 937, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\util.py", line 41, in execute
+    return self.cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 127, in execute
+    six.reraise(utils.IntegrityError, utils.IntegrityError(*tuple(e.args)), sys.exc_info()[2])
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 120, in execute
+    return self.cursor.execute(query, args)
+  File "D:\python\lib\site-packages\MySQLdb\cursors.py", line 202, in execute
+    self.errorhandler(self, exc, value)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+IntegrityError: (1048, "Column 'content' cannot be null")
+ERROR 2013-12-04 20:20:03 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /message/send/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\message_app\views.py", line 172, in message_send
+    message.save()
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 546, in save
+    force_update=force_update, update_fields=update_fields)
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 650, in save_base
+    result = manager._insert([self], fields=fields, return_id=update_pk, using=using, raw=raw)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 215, in _insert
+    return insert_query(self.model, objs, fields, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 1661, in insert_query
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 937, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\util.py", line 41, in execute
+    return self.cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 127, in execute
+    six.reraise(utils.IntegrityError, utils.IntegrityError(*tuple(e.args)), sys.exc_info()[2])
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 120, in execute
+    return self.cursor.execute(query, args)
+  File "D:\python\lib\site-packages\MySQLdb\cursors.py", line 202, in execute
+    self.errorhandler(self, exc, value)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+IntegrityError: (1048, "Column 'content' cannot be null")
+ERROR 2013-12-04 20:21:09 D:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /message/send/ status_code:500
+Traceback (most recent call last):
+  File "D:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "D:\eclipse\code\pinloveweb\apps\message_app\views.py", line 172, in message_send
+    message.save()
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 546, in save
+    force_update=force_update, update_fields=update_fields)
+  File "D:\python\lib\site-packages\django\db\models\base.py", line 650, in save_base
+    result = manager._insert([self], fields=fields, return_id=update_pk, using=using, raw=raw)
+  File "D:\python\lib\site-packages\django\db\models\manager.py", line 215, in _insert
+    return insert_query(self.model, objs, fields, **kwargs)
+  File "D:\python\lib\site-packages\django\db\models\query.py", line 1661, in insert_query
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "D:\python\lib\site-packages\django\db\models\sql\compiler.py", line 937, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\util.py", line 41, in execute
+    return self.cursor.execute(sql, params)
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 127, in execute
+    six.reraise(utils.IntegrityError, utils.IntegrityError(*tuple(e.args)), sys.exc_info()[2])
+  File "D:\python\lib\site-packages\django\db\backends\mysql\base.py", line 120, in execute
+    return self.cursor.execute(query, args)
+  File "D:\python\lib\site-packages\MySQLdb\cursors.py", line 202, in execute
+    self.errorhandler(self, exc, value)
+  File "D:\python\lib\site-packages\MySQLdb\connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+IntegrityError: (1048, "Column 'content' cannot be null")
+WARNING 2013-12-04 20:21:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:21:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:21:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:21:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:26:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:26:08 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:26:09 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:26:09 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:26:33 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:26:33 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:26:34 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:26:34 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:28:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:28:29 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 20:28:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 20:28:30 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 23:48:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css\bootstrap-responsive.min.css status_code:404
+WARNING 2013-12-04 23:48:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css\main.css status_code:404
+WARNING 2013-12-04 23:48:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2013-12-04 23:48:53 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css\bootstrap-responsive.min.css status_code:404
+WARNING 2013-12-04 23:48:53 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css\main.css status_code:404
+WARNING 2013-12-04 23:48:53 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2013-12-04 23:50:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css\bootstrap-responsive.min.css status_code:404
+WARNING 2013-12-04 23:50:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css\main.css status_code:404
+WARNING 2013-12-04 23:50:05 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2013-12-04 23:50:47 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css/bootstrap-responsive.min.css status_code:404
+WARNING 2013-12-04 23:50:47 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css/main.css status_code:404
+WARNING 2013-12-04 23:50:48 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2013-12-04 23:51:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css/bootstrap-responsive.min.css status_code:404
+WARNING 2013-12-04 23:51:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /{STATIC_URL}}css/main.css status_code:404
+WARNING 2013-12-04 23:51:49 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2013-12-04 23:53:17 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2013-12-04 23:56:18 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2013-12-04 23:57:36 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 23:57:36 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 23:57:37 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 23:57:37 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 23:57:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 23:57:55 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 23:57:56 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 23:57:56 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 23:58:14 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 23:58:14 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404
+WARNING 2013-12-04 23:58:14 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113qMTNKazmSj.jpg status_code:404
+WARNING 2013-12-04 23:58:14 D:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/2_20131113PNLqHYWaun.jpg status_code:404

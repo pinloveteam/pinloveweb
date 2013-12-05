@@ -374,8 +374,8 @@ def follow(request,type):
         userProfile=UserProfile.objects.get(user_id=request.user.id)
         #分页
         arg=page(request,fllowList)
-        fllowList=arg.get('pages')
-        cardList=fllowList_to_CardList(fllowList,type)
+        cardList=arg.get('pages')
+        cardList=fllowList_to_CardList(cardList.object_list,type)
         #好友关系
         i=0 
         follows=[]
@@ -412,7 +412,6 @@ def fllowList_to_CardList(fllowList,type):
     else:
         for myFollow in fllowList:
             userList.append(myFollow.my)
-   
     userProfileList=UserProfile.objects.select_related().filter(user_id__in=userList)
     for userProfile in userProfileList:
         scoreOther=u'需完善个人信息'
@@ -432,8 +431,9 @@ def fllowList_to_CardList(fllowList,type):
         else:
            avatar_name='user_img/image.png'
            isVote=False
+        city=userProfile.city
         from apps.pojo.recommend import RecommendResult
-        recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote)
+        recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote,city)
         recommendResultList.append(recommendResult)
     return recommendResultList
      

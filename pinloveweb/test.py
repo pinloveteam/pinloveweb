@@ -31,6 +31,24 @@ from pinloveweb.settings import PATH
 # i=u'背'
 # text = i.decode('GB2312')
 # print text
+<<<<<<< Updated upstream
+# logger = logging.getLogger('django.db.backends')
+# try:
+#         from apps.user_app.models import Friend
+#         Friend.objects.filter(friend=1)
+#     
+# except:
+#         print '========================='
+#         logger.warn("test error")
+#         logging.exception('Got exception on main handler')
+from celery.decorators import task
+@task
+def add(x,y):
+    return x+y
+if __name__ =='__main__':
+    result=add.delay(8,8)
+    result.wait()
+=======
 logger = logging.getLogger('django.db.backends')
 try:
         from apps.user_app.models import Friend
@@ -40,3 +58,4 @@ except:
         print '========================='
         logger.warn("test error")
         logging.exception('Got exception on main handler')
+>>>>>>> Stashed changes
