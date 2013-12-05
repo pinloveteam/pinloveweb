@@ -375,7 +375,7 @@ def follow(request,type):
         #分页
         arg=page(request,fllowList)
         cardList=arg.get('pages')
-        cardList=fllowList_to_CardList(cardList.object_list,type)
+        cardList.object_list=fllowList_to_CardList(cardList.object_list,type)
         #好友关系
         i=0 
         follows=[]

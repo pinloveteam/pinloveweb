@@ -24,14 +24,14 @@ $(document).ready(function(){
 		$(this).find("canvas").css("display","inline");
 		var ctx = $(this).find("canvas").get(0).getContext("2d");
 		var data = {
-			labels : ["教育程度","性格","收入情况","样貌","年龄"],
+			labels : ["教育程度","性格","收入情况","样貌","年龄","身高"],
 			datasets : [
 				{
 					fillColor : "rgba(220,0,220,0.5)",
 					strokeColor : "rgba(220,0,220,0.1)",
 					pointColor : "rgba(220,0,220,1)",
 					pointStrokeColor : "rgba(220,0,220,0.1)",
-					data : [60,20,40,20,20]
+					data : [60,20,40,20,20,30]
 				}
 				,
 				{
@@ -39,7 +39,7 @@ $(document).ready(function(){
 					strokeColor : "rgba(151,187,205,0.1)",
 					pointColor : "rgba(151,187,205,1)",
 					pointStrokeColor : "#fff",
-					data : [20,20,90,20,20]
+					data : [20,20,90,20,20,40]
 				}
 			]
 };
@@ -400,7 +400,7 @@ hr{
 					<tbody>
 					  <tr>
 						<td><i class="icon_like"></i></td>
-						<td><a id="myFollow" href="/user/follow/1">关注</td>
+						<td><a href="/user/follow/1">关注</td>
 						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
 					  </tr>
 					  <tr>
@@ -449,13 +449,14 @@ hr{
 			<div class="card card_panel col-sm-6">
 			    <div class="tabbable">
 					<div class="tab-content">
-						<div class="tab-pane active" id="tab4{{dynamic.id}}"">
+						<div class="tab-pane active" id="tab4{{dynamic.id}}">
 							<div class="introBox venoboxajax" data-gall="gall3" data-type="ajax" href="ajax.php">
 								<img alt="140x140" src="{{MEDIA_URL}}{{dynamic.get_profile}}" class="head head_girl"/>
 								<div class="card-introBox"><span class="detail_info">查看<br/>详细信息</span></div>
 							</div>
 							<div id="1" class="name other_name">{{dynamic.publishUser.username}}
 							 <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_{{page.isFriend}}" id="attention_{{page.user_id}}"></i></a>
+							<canvas height="260" width="260"></canvas>
 							</div>
 							<hr />
 						<div class="tag">
@@ -497,7 +498,7 @@ hr{
 						</div>
 					</div>
 					<ul class="list-inline card-nav">
-						<li class="active"><a href="#tab4{{dynamic.id}}"" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
+						<li class="active"><a href="#tab4{{dynamic.id}}" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
 						<li><a href="#tab5{{dynamic.id}}" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></li>
 						<li><a href="#tab6{{dynamic.id}}" data-toggle="tab"><i class="icon_msg" title="消息"></i></a></li>
 					</ul>
@@ -507,10 +508,12 @@ hr{
 			  </div>
 			{%endifequal%}
             {% endfor %}
-             {%if pages.paginator.num_pages|greater_than:8 %}
-               <div class="controlArrow prev"></div>
-			   <div class="controlArrow next"></div>
-             {%endif%}
+             {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">
+			      <div class="controlArrow prev"></div> 
+			   {% endif %}
+		      {% if pages.has_next %}
+		      <a href="?page={{ pages.next_page_number }}"><div class="controlArrow next"></div></a>
+		      {% endif %}
 			
 		</div>
 	</div>

@@ -3,13 +3,10 @@
 	<title> {% block title %} 拼爱网--个人主页 {% endblock %} </title>
 {% load staticfiles %}
 {% block staticfiles %}
-<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/hoverbox.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 <script type="text/javascript" >
 var myFollow={{myFollow}}
@@ -17,21 +14,19 @@ var follow={{follow}}
 var fans={{fans}}
 $(document).ready(function(){
 	//卡片效果
-	var card_content = $("#card_content");
-	var card_pbOverlay = $("#card_pbOverlay");
 
 	$(".name").mouseover(function(){
 		$(this).find("canvas").css("display","inline");
 		var ctx = $(this).find("canvas").get(0).getContext("2d");
 		var data = {
-			labels : ["教育程度","性格","收入情况","样貌","年龄"],
+			labels : ["教育程度","性格","收入情况","样貌","年龄","身高"],
 			datasets : [
 				{
 					fillColor : "rgba(220,0,220,0.5)",
 					strokeColor : "rgba(220,0,220,0.1)",
 					pointColor : "rgba(220,0,220,1)",
 					pointStrokeColor : "rgba(220,0,220,0.1)",
-					data : [60,20,40,20,20]
+					data : [60,20,40,20,20,40]
 				}
 				,
 				{
@@ -39,7 +34,7 @@ $(document).ready(function(){
 					strokeColor : "rgba(151,187,205,0.1)",
 					pointColor : "rgba(151,187,205,1)",
 					pointStrokeColor : "#fff",
-					data : [20,20,90,20,20]
+					data : [20,20,90,20,20,50]
 				}
 			]
 };
@@ -48,7 +43,6 @@ $(document).ready(function(){
 	$(".name").mouseleave(function(){
 		$(this).find("canvas").css("display","none");
 	});});
-
 //发送信息
 function sendMessage(receiver_id){
 	   var reply_content_id='reply_content_'+receiver_id
@@ -400,7 +394,7 @@ hr{
 					<tbody>
 					  <tr>
 						<td><i class="icon_like"></i></td>
-						<td><a id="myFollow" href="/user/follow/1">关注</td>
+						<td><a href="/user/follow/1">关注</a></td>
 						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
 					  </tr>
 					  <tr>
@@ -449,13 +443,14 @@ hr{
 			<div class="card card_panel col-sm-6">
 			    <div class="tabbable">
 					<div class="tab-content">
-						<div class="tab-pane active" id="tab4{{page.user_id}}"">
-							<div class="introBox venoboxajax" data-gall="gall3" data-type="ajax" href="ajax.php">
+						<div class="tab-pane active" id="tab4{{page.user_id}}">
+							<div class="introBox venoboxajax" data-gall="gall3" data-type="ajax">
 								<img alt="140x140" src="{{MEDIA_URL}}{{page.avatar_name}}" class="head head_girl"/>
 								<div class="card-introBox"><span class="detail_info">查看<br/>详细信息</span></div>
 							</div>
 							<div id="1" class="name other_name">{{page.username}}
 														   <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_{{page.isFriend}}" id="attention_{{page.user_id}}"></i></a>
+							<canvas height="260" width="260"></canvas>
 							</div>
 							<hr />
 						<div class="tag">
@@ -491,7 +486,7 @@ hr{
 						</div>
 					</div>
 					<ul class="list-inline card-nav">
-						<li class="active"><a href="#tab4{{page.user_id}}"" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
+						<li class="active"><a href="#tab4{{page.user_id}}" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
 						<li><a href="#tab5{{page.user_id}}" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></li>
 						<li><a href="#tab6{{page.user_id}}" data-toggle="tab"><i class="icon_msg" title="消息"></i></a></li>
 					</ul>
@@ -501,10 +496,14 @@ hr{
 			  </div>
 			{%endifequal%}
             {% endfor %}
-             {%if pages.paginator.num_pages|greater_than:8 %}
-               <div class="controlArrow prev"></div>
-			   <div class="controlArrow next"></div>
-             {%endif%}
+            <!--   {%if pages.paginator.count|greater_than:8 %}-->
+			   {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">
+			      <div class="controlArrow prev"></div> 
+			   {% endif %}
+		      {% if pages.has_next %}
+		      <a href="?page={{ pages.next_page_number }}"><div class="controlArrow next"></div></a>
+		      {% endif %}
+            <!--  {%endif%}-->
 			
 		</div>
 	</div>
