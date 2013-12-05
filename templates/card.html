@@ -414,7 +414,7 @@ hr{
 			<div class="send_pic card_panel">
 			</div>
 		</div>
-		<div class="col-md-9">
+		<div class="col-md-9" style="height:550px;">
 <!-- 			<ul class="list-inline sub-nav">
 				<li>
 					<a href="#"><img alt="140x140" src="./img/动态.png"/><span>动态</span></a>
@@ -436,7 +436,7 @@ hr{
 			{% for page  in pages %}
 			{% ifequal forloop.counter|mod:4 1%}
 			  {% ifnotequal forloop.counter 1%}
-			  <div class="row" style="width:894px;margin-top:20px;">
+			  <div class="row" style="width:894px;margin-top:10px;">
 			   {%endifnotequal%}
 		    {%endifequal%}
 			
@@ -497,11 +497,10 @@ hr{
 			{%endifequal%}
             {% endfor %}
             <!--   {%if pages.paginator.count|greater_than:8 %}-->
-			   {% if pages.has_previous %}<a href="?page={{ pages.previous_page_number }}">
-			      <div class="controlArrow prev"></div> 
+			   {% if pages.has_previous %}<a  class="controlArrow prev" href="?page={{ pages.previous_page_number }}"></a>
 			   {% endif %}
 		      {% if pages.has_next %}
-		      <a href="?page={{ pages.next_page_number }}"><div class="controlArrow next"></div></a>
+		      <a class="controlArrow next" href="?page={{ pages.next_page_number }}"></a>
 		      {% endif %}
             <!--  {%endif%}-->
 			

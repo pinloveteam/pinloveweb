@@ -40,8 +40,7 @@ input{
 	background-color:transparent !important;
 }
 </style>
-{% endblock %}
-{% block content %}
+{% endblock %}{% block content %}
 <div class="register button_type_1"><a href="/account/register/">注册</a></div>
 	<form id="login" class="login_form" action="/account/auth/" method="post" class="form-signin">{% csrf_token %}
 		<span class="title">拼爱网</span>
