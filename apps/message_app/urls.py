@@ -14,5 +14,6 @@ urlpatterns = patterns('apps.message_app.views',
     url(r'^reply/', 'message_reply'),
     url(r'^send/', 'message_send'),
     url(r'^has_new_message/$', 'has_new_message'),
-    
+    url(r'^get_messge_by_id/$', 'get_messge_by_id'),
+    url(r'^get_noread_messges/$','get_noread_messges_by_userid')
     )

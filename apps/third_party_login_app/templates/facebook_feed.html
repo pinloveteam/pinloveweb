@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block javascript %}
+  <h2> facebook 上墙 </h2> 
+  <script type="text/javascript">
+var appId='1412943645609984'
+	$(document).ready(function() {
+		  $.ajaxSetup({ cache: true });
+		  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+		    FB.init({
+		      appId:appId,
+		    });     
+		  });
+		});
+function feeds(){
+	FB.ui({
+		  method: 'feed',
+		  link: 'https://developers.facebook.com/docs/dialogs/',
+		  app_id:appId,
+		  caption: 'An example caption',
+		  description:'test success',
+		  name:'test'
+		}, function(response){});
+}
+</script>
+{% endblock %} 
+{% block second_content %}
+
+ 
+<input type="button" onclick='feeds()' value="上墙" />
+
+
+</table>
+
+{% endblock %}

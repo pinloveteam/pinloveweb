@@ -160,7 +160,7 @@ def userProfileList_to_RecommendResultList(userProfileList):
        jobIndustry=userProfile.get_jobIndustry_display()
        isFriend=0
        city=userProfile.city
-       if userProfile.avatar_name_status==3:
+       if userProfile.avatar_name_status=='3':
            avatar_name=userProfile.avatar_name
            isVote=True
        else:

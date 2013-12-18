@@ -23,6 +23,7 @@ from django.db import connection
 from apps.the_people_nearby.views import GetLocation
 import logging
 from django.views.decorators.csrf import csrf_protect
+from django.http.response import HttpResponse
 
 
 
@@ -97,7 +98,10 @@ def loggedin(request) :
     cursor=connection.cursor();
     cursor.execute(sql)
     follow=cursor.fetchall()
-   
+    #相互关注的人的id
+    focusEachOtherList=[]
+    for f in follow:
+        focusEachOtherList.append(f[0])
     if count>0:
          matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
          arg=page(request,matchResultList)
@@ -105,19 +109,7 @@ def loggedin(request) :
          from apps.recommend_app.views import matchResultList_to_RecommendResultList
          matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
          friends = Friend.objects.filter(my_id=request.user.id)
-         i=0
-         follows=[]
-         for f in follow:
-             follows.append(f[0])
-         for user in matchResultList:
-           for friend in friends:
-               if user.user_id == friend.friend_id:
-                   if  user.user_id in follows:
-                       matchResultList[i].isFriend=2
-                   else:
-                       matchResultList[i].isFriend=1
-           i+=1
-         arg['pages']=matchResultList
+         arg['pages']=is_focus_each_other(request,matchResultList,focusEachOtherList)
     else:
           userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender).order_by("?")
           arg=page(request,userProfileList)   
@@ -125,25 +117,29 @@ def loggedin(request) :
           from apps.recommend_app.views import userProfileList_to_RecommendResultList
           matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
           friends = Friend.objects.select_related().filter(my=request.user)
-          i=0 
-          attentionEachOther=[]
-          for f in follow:  
-              attentionEachOther.append(f[0])
-          for user in matchResultList:
-           for friend in friends:
-               if user.user_id == friend.friend_id:
-                   if  user.user_id in attentionEachOther:
-                       matchResultList[i].isFriend=2
-                   else:
-                       matchResultList[i].isFriend=1
-           i+=1
-          arg['pages']=matchResultList
-    
+          arg['pages']=is_focus_each_other(request,matchResultList,focusEachOtherList)
     arg=init_card(arg,userProfile)
     arg['myFollow']=myFollow
     arg['fans']=fans
     arg['follow']=len(follow)  
     return render(request, 'card.html',arg )
+
+'''
+判断是否是相互关注
+'''
+def is_focus_each_other(request,matchResultList,focusEachOtherList):
+    i=0
+    focus = Friend.objects.select_related().filter(my=request.user)
+    for user in matchResultList:
+        for f in focus:
+            if user.user_id == f.friend_id:
+                if  user.user_id in focusEachOtherList:
+                    matchResultList[i].isFriend=2
+                else:
+                    matchResultList[i].isFriend=1
+        i+=1
+    return matchResultList
+
 #用于初始化card页面所需要的信息
 def init_card(arg,userProfile):
     if userProfile.avatar_name_status!='3':
@@ -165,6 +161,7 @@ def invalid_login(request) :
 def logout(request) : 
     
     auth.logout(request)
+    del request.session['messageList']
 #     if "userId"  in request.COOKIES:
 #             response= render(request, 'loggedout.html')
 #             response.delete_cookie("userId")
@@ -252,4 +249,5 @@ def forget_password(request) :
     return render(request, 'forget_password.html')   
  
                           
-                          
+
+    

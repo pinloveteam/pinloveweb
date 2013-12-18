@@ -1,8 +1,14 @@
 {% extends "base_later.html" %}
 {% block staticfiles %}
 <title> {% block title %} 拼爱网---登录页面 {% endblock %} </title>
+<meta property="qc:admins" content="14302567776016016476563757" />
+<meta property="qc:admins" content="1430256361142166513066547" />
+<meta property="qc:admins" content="143025601647656375" />
+<meta property="wb:webmaster" content="e67843f5f9933b87" />
+
 <link href="{{STATIC_URL}}css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
+
 <style type="text/css">
 .register{
 	padding:13px 0px !important;
@@ -48,12 +54,17 @@ input{
 		<input type="text" class="form-control input-lg" placeholder="请输入用户名" name="username" value="" id="username"/>
 		<input type="password" class="form-control input-lg" placeholder="请输入密码" name="password" value="" id="password"/>
 		<input type="hidden" name="redirectURL" value="{{redirectURL}}"/>
-		<input type="checkbox" name="remember_status">记住登录状态
+		<input type="checkbox" name="remember_status">记住登录状态<br>
+		第三方登录：
+        <a href="/third_party_login/qq_login_url/"><img src="{{STATIC_URL}}img/qq_login_logo.png"></a>&nbsp;&nbsp;
+        <a href="/third_party_login/sina_login_url/" ><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+         <a href="/third_party_login/facebook_login_url/" ><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
+		<a href="/third_party_login/twitter_login_url/" >twitter</a>
 		</div>
 		<div class="button_type_1"><a href="/account/forgetpwdpage/">忘记密码</a></div>
 		<div class="button_type_1"><a href="#" onclick="submit()">登录</a></div>
+		
 	</form>
-</body>
 <script  type="text/javascript">
 	var picGroup = new Array("{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","img/Cityscape09.png","img/Cityscape55.jpg","img/Cityscape55.jpg");
     document.body.style.backgroundImage="url("+picGroup[new Date().getHours()>>2]+")";
@@ -63,6 +74,7 @@ function submit(){
 	login.submit();
 }
 </script>
+
 {% endblock %}
 {% block footer %}
 {% endblock %}

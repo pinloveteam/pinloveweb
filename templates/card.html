@@ -6,6 +6,9 @@
 <link href="{{STATIC_URL}}css/hoverbox.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/jquery.jscrollpane.css" rel="stylesheet">
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.jscrollpane.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 <script type="text/javascript" >
@@ -13,20 +16,45 @@ var myFollow={{myFollow}}
 var follow={{follow}}
 var fans={{fans}}
 $(document).ready(function(){
+    $(".icon_msg").click(function(){
+    	   userId=$(this).attr('id')
+    	   $.getJSON("/message/get_noread_messges/",{userId:userId},function(data) {
+    		   $('#chat_'+userId).children().remove();
+    		   for(var message in data){
+    			   if (userId!=data[message].receiver_id){
+    				   var api = pane.data('jsp');
+    					var chat = $('#chat_'+data[message].receiver_id).children().children();
+    					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+    					pane.jScrollPane();
+    					api.scrollTo(0,9999);
+    			   }else{
+    				   var api = pane.data('jsp');
+    				   var chat = $('#chat_'+data[message].receiver_id).children().children();
+    					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+    					pane.jScrollPane();
+    					api.scrollTo(0,9999);
+    			   }
+ 		    	  
+ 		      }
+    	   });
+    	});
+	//初始化对话框
+	pane = $('.chat');
+	pane.jScrollPane();
 	//卡片效果
 
 	$(".name").mouseover(function(){
 		$(this).find("canvas").css("display","inline");
 		var ctx = $(this).find("canvas").get(0).getContext("2d");
 		var data = {
-			labels : ["教育程度","性格","收入情况","样貌","年龄","身高"],
+			labels : ["教育程度","性格","收入情况","样貌","身高"],
 			datasets : [
 				{
 					fillColor : "rgba(220,0,220,0.5)",
 					strokeColor : "rgba(220,0,220,0.1)",
 					pointColor : "rgba(220,0,220,1)",
 					pointStrokeColor : "rgba(220,0,220,0.1)",
-					data : [60,20,40,20,20,40]
+					data : [60,20,40,20,40]
 				}
 				,
 				{
@@ -34,7 +62,7 @@ $(document).ready(function(){
 					strokeColor : "rgba(151,187,205,0.1)",
 					pointColor : "rgba(151,187,205,1)",
 					pointStrokeColor : "#fff",
-					data : [20,20,90,20,20,50]
+					data : [20,20,90,20,50]
 				}
 			]
 };
@@ -87,11 +115,115 @@ function sendMessage(receiver_id){
 			       
 			    });
 		};
+		
+		
+//拉取信息
+var userIdString=''
+{% for page  in pages %}
+    userIdString=userIdString+{{page.user_id}}+','
+{% endfor %}  
+  userIdString=userIdString.substring(0,userIdString.length-1)
+var time=1000*10;
+interval = self.setInterval("polling()", time);
+ var polling=function(){
+	   $.getJSON('/message/get_messge_by_id/',{userIdList:userIdString},function(data){
+		   for(var message in data){
+		    	  var api = pane.data('jsp');
+					var chat = $('#chat_'+data[message].receiver_id).children().children();
+					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+					pane.jScrollPane();
+					api.scrollTo(0,9999);
+		      }
+
+			   });  
+   };
 </script>
+
+$(".tab-pane chat_tab").click(function(){
+   
+});
 {% endblock %}
 {% block css %}
 
 <style type="text/css">	
+.chat{
+	width: 203px;
+	height: 160px;
+	overflow: hidden;
+}
+.chat_content_group.self {
+    text-align: right;
+}
+.chat_content_group {
+    padding: 10px;
+}
+
+.chat_tab{
+	margin:0;
+	padding:0;
+}
+
+.chat_content_group.self > .chat_content_avatar {
+    float: right;
+    margin: 0 0 0 10px;
+}
+.chat_content_avatar {
+    float: left;
+    height: 40px;
+    margin-right: 10px;
+    width: 40px;
+}
+
+.chat_content_group.self > .chat_content {
+    text-align: left;
+}
+.chat_content_group.self > .chat_content {
+    background: #fafafa repeat scroll 0 0;
+}
+.chat_content {
+    position: relative;
+    background: #99CC33 repeat scroll 0 0;
+    border-radius: 5px;
+    display: inline-block;
+    line-height: 1.4;
+    max-width: 90%;
+    min-height: 16px;
+    padding: 10px 15px;
+    word-break: break-all;
+}
+
+.cloudArrow {
+	background: #fafafa repeat scroll 0 0;
+    display: block;
+    font-size: 0;
+    height: 10px;
+    position: absolute;
+    top: 15px;
+    width: 10px;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+}
+
+.chat_content_group.self > .chat_content >.cloudArrow {
+    right: -5px;
+}
+
+.chat_content_group.other > .chat_content >.cloudArrow {
+	background: #99CC33 repeat scroll 0 0;
+    left: -5px;
+}
+
+.chat_textarea{
+ resize: none;
+ display:inline;
+ width: 100%;
+ height:35px;
+}
+
+.col-sm-6{
+	padding:0;
+}
+
 .name:hover svg {
 	cursor:pointer;
     transform: scale(1.5);
@@ -186,17 +318,19 @@ canvas{
 	position:absolute;
 	left:120px;
 	top:0;
-	background-color: rgba(255, 255, 255, 0.9);
+	background-color: white;
 	Z-index:999;
 }
 
 .head,.card-introBox{
 	border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	background-clip: padding-box;
+	overflow: hidden;
+	display: block;
 }
-.head{
-	width: 103px;
-    height: 103px;
-}
+
 .head_girl{
 	border:2px solid rgba(255, 102, 51, 0.6);
 }
@@ -207,9 +341,9 @@ canvas{
 
 .introBox{
 	position: relative;
-	width: 100px;
-    height: 100px;
-	left:30px;
+	width: 97px;
+    height: 97px;
+	left:50px;
 	top:4px;
 }
 
@@ -243,7 +377,7 @@ canvas{
 }
 
 .card-nav{
-	margin-left:20px;
+	margin-left:40px;
 	position:absolute; 
 	top:220px;
 	border-bottom: none;
@@ -322,6 +456,7 @@ hr{
     border-width: 50px 40px 50px 0;
     left: -50px;
     width: 0;
+	
 }
 
 .controlArrow.next {
@@ -354,7 +489,7 @@ hr{
     <nav class="navigation">
       <ul class="nav navbar-nav">
         <li>
-          <a href="#">推荐</a>
+          <a href="/">推荐</a>
         </li>
         <li>
           <a href="/dynamic/">动态</a>
@@ -367,6 +502,9 @@ hr{
         </li>
         <li>
           <a href="/game/game_pintu/">缘分拼图</a>
+        </li>
+         <li>
+          <a href="/account/logout/">注销</a>
         </li>
 		<li>
           <a href="#">+</a>
@@ -434,12 +572,6 @@ hr{
 			</ul> -->
 			<div class="row" style="width:894px;">
 			{% for page  in pages %}
-			{% ifequal forloop.counter|mod:4 1%}
-			  {% ifnotequal forloop.counter 1%}
-			  <div class="row" style="width:894px;margin-top:10px;">
-			   {%endifnotequal%}
-		    {%endifequal%}
-			
 			<div class="card card_panel col-sm-6">
 			    <div class="tabbable">
 					<div class="tab-content">
@@ -480,21 +612,32 @@ hr{
 								</ul>
 							</div>
 						</div>
-						<div class="tab-pane" id="tab6{{page.user_id}}">
-							<textarea id="reply_content_{{page.user_id}}" rows="3"></textarea>
-							<button class="btn btn-success" style="float:right;margin-right:13px;" onclick="sendMessage({{page.user_id}});">发送</button> 
+						<div class="tab-pane chat_tab" id="tab6{{page.user_id}}">
+						<div class="chat" id="chat_{{page.user_id}}">
+						<!-- <div class="chat_content_group other"> -->
+							<!-- <img width="30px" height="30px" src="http://face9.web.qq.com/cgi/svr/face/getface?cache=1&amp;type=1&amp;f=40&amp;uin=491958669&amp;t=1386293093&amp;vfwebqq=a19b4a7febed8a565a6f77c38012b0736288543eb6435a9f954c5bd2f2bec1f558a92ef6f1a9f86e" class="chat_content_avatar"> -->
+							<!-- <div class="chat_content">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈<div class="cloudArrow "></div></div> -->
+							
+						<!-- </div> -->
+						<!-- <div  class="chat_content_group self"> -->
+							<!-- <img width="30px" height="30px" src="http://face9.web.qq.com/cgi/svr/face/getface?cache=1&amp;type=1&amp;f=40&amp;uin=491958669&amp;t=1386293093&amp;vfwebqq=a19b4a7febed8a565a6f77c38012b0736288543eb6435a9f954c5bd2f2bec1f558a92ef6f1a9f86e" class="chat_content_avatar"> -->
+							 <!-- <div class="chat_content">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵<div class="cloudArrow "></div></div> -->
+							
+						<!-- </div> -->
 						</div>
+							<textarea rows="1" class="chat_textarea" id="reply_content_{{page.user_id}}"></textarea>
+							<button style="display:inline" class="btn btn-xs btn-success btn_send_msg" style="float:right;margin-right:13px;" onclick="sendMessage({{page.user_id}});">发送</button> 
+							<a href="#" class="venoboxframe" data-type="iframe">聊天记录</a>
+						</div>
+						
 					</div>
 					<ul class="list-inline card-nav">
 						<li class="active"><a href="#tab4{{page.user_id}}" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
 						<li><a href="#tab5{{page.user_id}}" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></li>
-						<li><a href="#tab6{{page.user_id}}" data-toggle="tab"><i class="icon_msg" title="消息"></i></a></li>
+						<li><a href="#tab6{{page.user_id}}" data-toggle="tab"><i class="icon_msg" title="消息" id="{{page.user_id}}"></i></a></li>
 					</ul>
 				</div>
 			</div>
-			{% ifequal forloop.counter|mod:4 0%}
-			  </div>
-			{%endifequal%}
             {% endfor %}
             <!--   {%if pages.paginator.count|greater_than:8 %}-->
 			   {% if pages.has_previous %}<a  class="controlArrow prev" href="?page={{ pages.previous_page_number }}"></a>
@@ -527,8 +670,21 @@ hr{
 			bgcolor: '#f46f00'
 		});
 		$('.venoboxajax').venobox({
-			border: '30px;',
-			frameheight: '220px'
+			framewidth: '465px',
+			frameheight: '232px',
+			border: '30px;'
+		});
+		$('.btn_send_msg').click(function(){
+			var api = pane.data('jsp');
+			var content = $(this).prev();
+			var chat = $(this).prev().prev().children().children();
+			var str = content.val().replace(/^\s*$/g,'');
+			if(str!=''){
+				chat.append('<div class="chat_content_group self"><div class="chat_content">'+str+'<div class="cloudArrow "></div></div></div>');
+				content.val('');
+			}
+			pane.jScrollPane();
+			api.scrollTo(0,9999);
 		});
 	})
 </script>

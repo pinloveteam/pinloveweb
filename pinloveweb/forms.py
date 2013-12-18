@@ -4,7 +4,9 @@ from django import forms
 from django.contrib.auth.models import User 
 from django.contrib.auth.forms import UserCreationForm
 from util.form_util import HorizRadioRenderer
-
+import re
+from django.core import validators
+USERNAME_ERROR_MESSAGE=u'必填。英文，或者中文，或者下划线开头,2～20个字符'
 class RegistrationForm (UserCreationForm) : 
     
     def __init__(self, *args, **kwargs):
@@ -14,15 +16,22 @@ class RegistrationForm (UserCreationForm) :
         self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名'
         self.fields['password1'].widget.attrs['placeholder'] = r'6-20位字符，可由英文字母、数字和下划线组成'
         self.fields['password2'].widget.attrs['placeholder'] = r'再次输入密码'
-         
+    def validate(self, value):
+        "Check if value consists only of valid emails."
+
+        # Use the parent's handling of required fields, etc.
+        super(RegistrationForm, self).validate(value)
     email = forms.EmailField(required=True, label='邮件',widget=forms.TextInput(attrs={'placeholder': r'请输入常用邮箱'})) 
     gender=forms.ChoiceField(required=True, label='性别', choices=((u'M', u'帅哥'), (u'F', u'美女'), ),
                              widget=forms.RadioSelect())
     username=forms.RegexField(label=_("Username"), max_length=30,
-        regex=r'^[a-zA-Z\xa0-\xff_][0-9a-zA-Z\xa0-\xff_]{2,20}$',
-        help_text=r"必填。英文，或者中文，或者下划线开头,2～20个字符",
+        regex=ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}$',
+        help_text=USERNAME_ERROR_MESSAGE,
         error_messages={
-            'invalid':r'必须英文，或者中文，或者下划线开头,2～20个字符'})
+            'invalid':USERNAME_ERROR_MESSAGE},
+        validators=[
+            validators.RegexValidator(re.compile(ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}$'), USERNAME_ERROR_MESSAGE, 'invalid')]
+                              )
     password1=forms.RegexField(label=_("Password"),widget=forms.PasswordInput,
         regex=r'^[0-9a-zA-Z\xff_]{6,20}$',
         help_text=r"必填。6-20位字符，可由英文字母、数字和下划线组成",

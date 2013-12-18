@@ -1,2 +1,8 @@
-[19/Nov/2013 14:24:05] DEBUG [django.db.backends:51] (0.001) SELECT `user_app_friend`.`id`, `user_app_friend`.`my_id`, `user_app_friend`.`friend_id`, `user_app_friend`.`type` FROM `user_app_friend` WHERE `user_app_friend`.`friend_id` = 1 ; args=(1,)
-[19/Nov/2013 14:24:05] WARNING [django.db.backends:41] test error
+ERROR customapp.engine 2013-12-18 09:48:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 186 OAUTH_TOKEN===tljkwxjvf0nhwVRKKVZE8PxKH8gGOJjxAFm79iq6VtQ
+ERROR customapp.engine 2013-12-18 09:48:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 187 OAUTH_TOKEN_SECRET===dY1hChB10EGKUQ4522FBH0MEQWgzpe8RBatx1jrZhs
+ERROR customapp.engine 2013-12-18 10:35:04 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 186 OAUTH_TOKEN===vQO8ljARqbGPqx1gv3LDlpuamB1tBd2jnQn3cCsslwo
+ERROR customapp.engine 2013-12-18 10:35:04 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 187 OAUTH_TOKEN_SECRET===0lrGkzMLoNv9ZZwfK7nqvkeJmJGGCbGCljHrGayz0
+ERROR customapp.engine 2013-12-18 10:35:34 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 193 OAUTH_TOKEN111===vQO8ljARqbGPqx1gv3LDlpuamB1tBd2jnQn3cCsslwo
+ERROR customapp.engine 2013-12-18 11:06:40 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 186 OAUTH_TOKEN===GUnGkJ34h0oSDqa2YFtjZCtlqogm7j63tZCntIQmwAA
+ERROR customapp.engine 2013-12-18 11:06:40 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 187 OAUTH_TOKEN_SECRET===OUt2Q8PQDStBbdItmetBv4HBaw6wRSPhXSeVxb6eypI
+ERROR customapp.engine 2013-12-18 11:36:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 193 OAUTH_TOKEN111===GUnGkJ34h0oSDqa2YFtjZCtlqogm7j63tZCntIQmwAA

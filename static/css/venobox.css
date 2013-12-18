@@ -98,9 +98,11 @@ body{
     width: 420px;
     height: 315px;
     padding: 10px;
-    background: #fff;
+    /* background: #fff; */
     text-align: left;
     margin: 0 auto;
+	background:url("../img/详细资料-05.png") !important;
+	border-radius: 8px;
     /* overflow: scroll; */
 }
 

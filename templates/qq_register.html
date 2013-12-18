@@ -1,0 +1,144 @@
+﻿{% extends "base_later.html" %}
+{% load staticfiles %}
+{% block staticfiles %}
+<script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="100571298" charset="utf-8"></script>
+<script type="text/javascript">
+//从页面收集OpenAPI必要的参数。get_user_info不需要输入参数，因此paras中没有参数
+var paras = {};
+
+//用JS SDK调用OpenAPI
+QC.api("get_user_info", paras)
+	//指定接口访问成功的接收函数，s为成功返回Response对象
+	.success(function(s){
+		//成功回调，通过s.data获取OpenAPI的返回数据
+		alert("获取用户信息成功！当前用户昵称为："+s.data.nickname);
+	})
+	//指定接口访问失败的接收函数，f为失败返回Response对象
+	.error(function(f){
+		//失败回调
+		alert("获取用户信息失败！");
+	})
+	//指定接口完成请求后的接收函数，c为完成请求返回Response对象
+	.complete(function(c){
+		//完成请求回调
+		alert("获取用户信息完成！");
+	});
+</script>
+<script>
+
+    $(document).ready(function(){
+          $("#btn_reg").click(function(event){
+            event.preventDefault();
+          });
+     
+    $("#checkbox1").click(function(){
+       $("#btn_reg").removeClass("btn-warning").addClass("disabled");
+      if(($("#checkbox1")[0]).checked){
+          $("#btn_reg").addClass("btn-warning").removeClass("disabled");
+      }
+    });
+    $("#btn_reg").click(function(){
+        if (($("#checkbox1")[0]).checked){
+              document.forms[0].action="/account/register/";
+    		  document.forms[0].submit();
+        };
+     });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+{% if user_form.errors %}
+<p style="color: red;">
+	填写的信息有误，请重填。
+</p>
+{% endif %}
+<div class="container-fluid main">
+<div class="row-fluid common_form" > 
+<form class="form-horizontal" action="/account/register/" method="post">{% csrf_token %}
+    <fieldset>
+      <div class="common_form_head">
+        <h4 class="h4_text">用户注册</h4>
+		<p>如果您已拥有账户，则可<a class="cor_yellow" href="/account/login/">在此登录</a></p>
+      </div>
+    <div class="control-group common_form1">
+          <!-- Text input-->
+          <label class="control-label" for="input01">邮箱</label>
+          <div class="controls">
+            {{user_form.email}}
+            <p class="help-block"></p>
+            {{user_form.email.errors}}
+          </div>
+    </div>
+    <div class="control-group">
+          <!-- Text input-->
+          <label class="control-label" for="input01">用户名</label>
+          <div class="controls">
+            {{user_form.username}}
+            <p class="help-block"></p>
+            {%if user_form.username.errors|length == 0 %}
+            {{user_form.username.help_text}}
+            {%endif %}
+            {{user_form.username.errors}}
+          </div>
+        </div>
+    <div class="control-group">
+          <label class="control-label">性别</label>
+          <div class="controls">
+      <!-- Inline Radios -->
+      {% for choice in user_form.gender.field.choices %}
+        <label for="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}" class="radio inline" name="gender">
+            <input type="radio"
+                id="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}"
+                value="{{ choice.0 }}"
+                name="gender" />
+            {{ choice.1 }}
+        </label>
+      {% endfor %}
+       {{user_form.gender.errors}}
+       </div>
+     </div>
+    <div class="control-group">
+          <!-- Text input-->
+          <label class="control-label" for="input01">密码</label>
+          <div class="controls">
+           {{user_form.password1}}
+            <p class="help-block"></p>
+            {{user_form.password1.errors}}
+          </div>
+        </div>
+    <div class="control-group">
+          <!-- Text input-->
+          <label class="control-label" for="input01">确认密码</label>
+          <div class="controls">
+           {{user_form.password2}}
+            <p class="help-block"></p>
+            {{user_form.password2.errors}}
+          </div>
+        </div>
+    <div class="control-group">
+          <label class="control-label"></label>
+          <!-- Multiple Checkboxes -->
+          <div class="controls">
+		  <!-- Inline Checkboxes -->
+			<label class="checkbox inline">
+			<input id="checkbox1" type="checkbox" value="我接受" name="check_box_list"/>
+				我接受
+			</label>
+			{{check_box_list_errors}}
+		</div>
+    </div>
+    <div class="control-group">
+          <label class="control-label"></label>
+          <!-- Button -->
+          <div class="controls">
+            <input type="submit" id="btn_reg" class="btn btn-large disabled" value="立即注册"/>
+          </div>
+        </div>
+    </fieldset>
+  </form>
+</div>
+</div>
+{% endblock %}
+
+ 

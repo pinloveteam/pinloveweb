@@ -199,3 +199,35 @@ def has_new_message(request):
         arg['isLogin']=False  
         json = simplejson.dumps(arg)
         return HttpResponse(json)
+    
+'''
+根据id获取信息
+attribute：
+   userIdList：用户id列表
+return：
+  messageList：列表
+'''
+def get_messge_by_id(request):
+    userIdString=request.GET.get('userIdList')
+    userIdList=[int(x) for x in userIdString.split(',')]
+    excludeMessageList=[]
+    if 'messageList' in request.session.keys():
+        excludeMessageList=request.session['messageList']
+    messageList=Message.objects.filter( receiver=request.user,isRead=False,isDeletereceiver=False).exclude(id__in=excludeMessageList)
+    for message in messageList:
+        excludeMessageList.append(message.id)
+    request.session['messageList']=excludeMessageList
+    result=[message.as_json_for_id_conent() for message in messageList ]
+    json = simplejson.dumps(result)
+    return HttpResponse(json, mimetype="application/json")
+
+'''
+获得所有未读消息
+'''
+def get_noread_messges_by_userid(request):
+    userId=request.GET.get('userId')
+    messageList=Message.objects.filter(receiver_id__in=[request.user,userId],sender_id__in=[request.user,userId],isRead=False,isDeletereceiver=False).order_by('sendTime')
+    result=[message.as_json_for_id_conent() for message in messageList ]
+    json = simplejson.dumps(result)
+    return HttpResponse(json, mimetype="application/json")
+

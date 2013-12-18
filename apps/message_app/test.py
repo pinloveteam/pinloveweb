@@ -212,5 +212,23 @@
 #     sml.sendMail()
 #     print "发送成功"
 #     
-from django.core.urlresolvers import reverse
-print reverse('grp_related_lookup')
+# from django.core.urlresolvers import reverse
+# print reverse('grp_related_lookup')
+# from django.utils import simplejson
+# def a(messageList):
+#     arg=[]
+#     for  message in messageList:
+#         id=message.receiver.id
+#         content=message.content
+#         arg.append({'id':id,'content':content})
+#     return arg
+# from apps.message_app.models import Message
+# messageList=Message.objects.filter( receiver_id__in=[3,2],isRead=False,isDeletereceiver=False)
+# args=['receiver.id','content']
+# b= a(messageList)
+# from django.contrib.auth.models import User
+# User.objects.filter(id__gt=20).delete()
+from apps.message_app.models import Message
+messageList=Message.objects.filter( ).order_by('sendTime')[:2]
+for message in messageList:
+    print message.sendTime

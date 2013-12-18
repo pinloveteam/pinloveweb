@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block javascript %}
+  <h2> facebook 好友列表 </h2> 
+  <script type="text/javascript">
+var appId='1412943645609984'
+$(document).ready(function() {
+	  $.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+	    FB.init({
+	      appId:appId,
+	    });     
+	  });
+	});
+function facebook_send_message() {
+	var id=$('input:radio:checked').val();
+    FB.ui({
+        app_id:appId,
+        method: 'send',
+        name: "拼爱 ",
+        link: 'http://www.pinlove.com/',
+        to:id,
+
+    });
+}
+function feeds(){
+	FB.ui({
+		  method: 'feed',
+		  link: 'https://developers.facebook.com/docs/dialogs/',
+		  app_id:appId,
+		  caption: 'An example caption',
+		  description:'test success',
+		  name:'test'
+		}, function(response){});
+}
+</script>
+{% endblock %} 
+{% block second_content %}
+<table>
+{% for friend in friends%}
+ <tr>
+ <td>
+ <input type="radio"  id="{{friend.id}}" value="{{friend.id}}" />{{friend.name}}<br>
+ </td>
+ </tr>
+ {% endfor%}
+<input type="button" onclick='facebook_send_message()' value="发送" />
+<tr><td><input type="button" onclick='feeds()' value=feeds /></td></tr>
+</table>
+{% endblock %}

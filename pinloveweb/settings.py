@@ -83,6 +83,9 @@ MIDDLEWARE_CLASSES = (
      'middleware.filter_middleware.AuthenticationMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'django.middleware.cache.UpdateCacheMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'pinloveweb.urls'
@@ -102,6 +105,7 @@ TEMPLATE_DIRS = (
     os.path.join(PATH,'apps/verification_app/templates').replace('\\','/'),
     os.path.join(PATH,'apps/message_app/templates').replace('\\','/'),
     os.path.join(PATH,'apps/friend_dynamic_app/templates').replace('\\','/'), 
+    os.path.join(PATH,'apps/third_party_login_app/templates').replace('\\','/'), 
 )
 
 INSTALLED_APPS = (
@@ -121,6 +125,8 @@ INSTALLED_APPS = (
     'apps.message_app',
     'apps.friend_dynamic_app',
     'apps.the_people_nearby',
+    'apps.third_party_login_app',
+    'social_auth',
 #     'grappelli',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
@@ -317,31 +323,31 @@ UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 
 #---服务器环境-----
-DATABASES = {
-       
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
-                                                # The following settings are not used with sqlite3:
-        'USER': 'pinloveteam',
-        'PASSWORD': 'redyellowblue#123',
-        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                             # Set to empty string for default.
-    }
-}
-#upload 上传地址
-MEDIA_URL = 'http://www.pinpinlove.com/update/'
-MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
-#静态文件地址
-STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
-STATIC_URL = 'http://www.pinpinlove.com/static/'
-#头像上传地址
-UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
-UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-#grappelli
-UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
+# DATABASES = {
+#        
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
+#                                                 # The following settings are not used with sqlite3:
+#         'USER': 'pinloveteam',
+#         'PASSWORD': 'redyellowblue#123',
+#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#         'PORT': '',                             # Set to empty string for default.
+#     }
+# }
+# #upload 上传地址
+# MEDIA_URL = 'http://www.pinpinlove.com/update/'
+# MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
+# #静态文件地址
+# STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+# STATIC_URL = 'http://www.pinpinlove.com/static/'
+# #头像上传地址
+# UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+# #grappelli
+# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+# ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 
 ###################for tests##########
 # import djcelery
@@ -361,3 +367,19 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 #     'delivery_mode' : 1, # non persistent
 #     'rate_limit' : '50/m', # 50 emails per minute
 # }
+
+'''
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+                           )
+FACEBOOK_APP_ID              = '1412943645609984'
+FACEBOOK_API_SECRET          = '4613e006bced32e5e124f65f5bc997fe'
+LOGIN_URL          = '/'
+LOGIN_REDIRECT_URL = '/account/loggedin/'
+LOGIN_ERROR_URL    = '/login-error/'
+
+# TEMPLATE_CONTEXT_PROCESSORS = (
+#   "social_auth.context_processors.social_auth_by_type_backends"
+# )
+'''

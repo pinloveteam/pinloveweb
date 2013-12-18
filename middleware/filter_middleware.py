@@ -7,8 +7,8 @@ from django.http.response import HttpResponseRedirect
 import re
 class AuthenticationMiddleware(object):   
     def process_request(self, request):  
-        passList=['/account/forgetpwdpage/','/account/auth/','/account/register/','/']
-        pattern = re.compile(r'^/admin/')
+        passList=['/account/forgetpwdpage/','/account/auth/','/account/register/','/',]
+        pattern = re.compile(r'^/admin/|/third_party_login/|/login/|/complete/')
         match = pattern.match(request.path)
         if match!=None:
             return None
@@ -16,6 +16,9 @@ class AuthenticationMiddleware(object):
             if request.user.is_authenticated():
                 return None  
             else:
-                return HttpResponseRedirect('/?redirectURL='+request.path)
+                if request.path=='/account/loggedout/':
+                    return HttpResponseRedirect('/')
+                else:
+                    return HttpResponseRedirect('/?redirectURL='+request.path)
         else:
             return None

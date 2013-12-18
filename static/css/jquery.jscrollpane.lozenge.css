@@ -1,0 +1,46 @@
+.jspHorizontalBar, .jspVerticalBar, .jspTrack {
+	background: rgba(0,0,0,0);
+}
+
+.jspDrag {
+	background: #6B747A;
+	opacity:0.8;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.jspTrack .jspActive, .jspTrack .jspHover, .jspDrag:hover {
+	background: #8B8B9F;
+}
+
+.jspArrow {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+
+.jspVerticalBar .jspArrow {
+	height: 15px;
+}
+
+.jspHorizontalBar .jspArrow {
+	width: 15px;
+}
+
+.jspArrowUp {
+	background-position: 0 0;
+}
+
+.jspArrowDown {
+	background-position: -64px 0 !important;
+}
+
+.jspArrowLeft {
+	background-position: -96px 0 !important;
+}
+
+.jspArrowRight {
+	background-position: -32px 0 !important;
+}

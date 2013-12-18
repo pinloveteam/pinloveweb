@@ -369,7 +369,7 @@
           updateoverlay();
 
       }) .fail(function() {
-          content.html('<div class="vbox-inline">载入失败</div>');
+          content.html('<div class="vbox-inline"></div>');
           updateoverlay();
       })
     }

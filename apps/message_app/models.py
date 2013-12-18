@@ -37,6 +37,16 @@ class Message(models.Model):
     isDeletereceiver=models.NullBooleanField(verbose_name="收信删除状态",default=False)
     #接收者是否读件
     isRead=models.NullBooleanField(verbose_name="是否阅读",default=False)
+    
+    '''
+    序列化
+    '''
+    def as_json_for_id_conent(self):
+        return dict(
+            sender_id=self.sender.id,
+            content=self.content, 
+            receiver_id=self.receiver.id,
+           )
     class Meta:
         verbose_name = u'私信消息表' 
         verbose_name_plural = u'私信消息表'

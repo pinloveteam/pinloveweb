@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-#Fri Nov 29 18:45:45 CST 2013
-=======
-#Mon Nov 18 14:52:30 CST 2013
->>>>>>> Stashed changes
+#Wed Dec 18 12:28:05 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
@@ -13,6 +9,7 @@ encoding//apps/common_app/time_task.py=utf-8
 encoding//apps/friend_dynamic_app/models.py=utf-8
 encoding//apps/friend_dynamic_app/urls.py=utf-8
 encoding//apps/friend_dynamic_app/views.py=utf-8
+encoding//apps/game_app/models.py=utf-8
 encoding//apps/message_app/admin.py=utf-8
 encoding//apps/message_app/models.py=utf-8
 encoding//apps/message_app/test.py=utf-8
@@ -37,17 +34,34 @@ encoding//apps/search_app/views.py=utf-8
 encoding//apps/task_app/backends.py=utf-8
 encoding//apps/task_app/views.py=utf-8
 encoding//apps/the_people_nearby/views.py=utf-8
+encoding//apps/third_party_login_app/__init__.py=utf-8
+encoding//apps/third_party_login_app/models.py=utf-8
+encoding//apps/third_party_login_app/openqqpy.py=utf-8
+encoding//apps/third_party_login_app/setting.py=utf-8
+encoding//apps/third_party_login_app/sina_snspy.py=utf-8
+encoding//apps/third_party_login_app/twython/advisory.py=utf-8
+encoding//apps/third_party_login_app/twython/api.py=utf-8
+encoding//apps/third_party_login_app/twython/compat.py=utf-8
+encoding//apps/third_party_login_app/twython/endpoints.py=utf-8
+encoding//apps/third_party_login_app/twython/test.py=utf-8
+encoding//apps/third_party_login_app/urls.py=utf-8
+encoding//apps/third_party_login_app/views.py=utf-8
+encoding//apps/third_party_login_app/weibo.py=utf-8
 encoding//apps/upload_avatar/__init__.py=utf-8
 encoding//apps/upload_avatar/app_settings.py=utf-8
 encoding//apps/upload_avatar/models.py=utf-8
 encoding//apps/upload_avatar/signals.py=utf-8
 encoding//apps/upload_avatar/urls.py=utf-8
 encoding//apps/upload_avatar/views.py=utf-8
+encoding//apps/user_app/admin.py=utf-8
 encoding//apps/user_app/models.py=utf-8
 encoding//apps/user_app/test.py=utf-8
 encoding//apps/user_app/urls.py=utf-8
 encoding//apps/user_app/views.py=utf-8
+encoding//apps/verification_app/urls.py=utf-8
+encoding//apps/verification_app/views.py=utf-8
 encoding//pinloveweb/celery.py=utf-8
+encoding//pinloveweb/forms.py=utf-8
 encoding//pinloveweb/settings.py=utf-8
 encoding//pinloveweb/test.py=utf-8
 encoding//pinloveweb/urls.py=utf-8

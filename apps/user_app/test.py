@@ -14,6 +14,7 @@ from PIL import ImageFile
 from django.conf import settings
 from apps.upload_avatar import app_settings
 import re
+from django.contrib.auth.models import User
 # db = MySQLdb.connect(user='root', db='django', passwd='jin521436', host='localhost')
 # cursor=connection.cursor();
 # sql='''select c1.id,c1.username,c2.age,c2.gender,c2.height,c2.income,c3.jobIndustry,c4.avatar_name
@@ -61,6 +62,10 @@ import re
 # fllowList=Friend.objects.raw(sql)
 # for follow in fllowList:
 #     print follow.my.id
-UserProfile.objects.filter(user_id=2).update(lastLoginAddress='本机地址')
-u=UserProfile.objects.get(user_id=2)
-print u.lastLoginAddress
+# UserProfile.objects.filter(user_id=2).update(lastLoginAddress='本机地址')
+# u=UserProfile.objects.get(user_id=2)
+# print u.lastLoginAddress
+# user=UserProfile.objects.select_related().get(QQopenId='61C5FF21E0D49DD32BBF4E6571B536E3').user
+# User(username='sdsd',password="None").save()
+print User.objects.get(username='sdsd').password
+
