@@ -135,8 +135,8 @@ class OpenQQClient(object):
         url = '%s%s/%s?%s' % (self.base_url, self.version, 'token', _encode_params(params))
         resp = urllib2.urlopen(url)
         result = urlparse.parse_qs(resp.read(), True)
-        if 'error' in result.keys():
-            log.error('result==error')
+        import simplejson
+        log.error(simplejson.dumps(result))
         access_token = str(result['access_token'][0])
         expires_in = float(int(result['expires_in'][0]) + int(time.time()))
 
