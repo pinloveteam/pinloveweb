@@ -30,5 +30,23 @@ TwitterConsumerSecret='OFAdY6pCfAHpmCjoOUdvpCLYao3rxG1QB1DpEtiblE'
 TWITTER_CALLBACK_URL= WEB_ROOT+'/third_party_login/twitter_login/'
 
 #生产环境的使用，如测试环境请注释
-# FaceBookAppID='400350543428768'
-# FaceBookAppSecret='fafdcdabccd34c67311c41489de8dcc2'
+FaceBookAppID='400350543428768'
+FaceBookAppSecret='fafdcdabccd34c67311c41489de8dcc2'
+
+#sign in whth twitter
+TwitterConsumerKey='nypTu4l4D1sQVef8LgWjQ'
+TwitterConsumerSecret='OFAdY6pCfAHpmCjoOUdvpCLYao3rxG1QB1DpEtiblE'
+TWITTER_CALLBACK_URL= WEB_ROOT+'/third_party_login/twitter_login/'
+
+WEB_ROOT='http://pinlove.com/'
+
+DEFAULT_PASSWORD='PIN_LOVE_10086'
+#sign in with QQ
+QQAPPID='100579249'
+QQAPPKEY='d8c6c988791321284df188e4c5e9cad3'
+QQ_CALLBACK_URL=WEB_ROOT+'/third_party_login/qq_login/'
+
+#sign in with sina
+SinaAppKey='3477271030'
+SinaAppSercet='415b5aef35b05962842be73b904ac4e6'
+SINA_CALLBACK_URL =WEB_ROOT+'/third_party_login/sina_login/' # callback url
