@@ -43,16 +43,10 @@ def get_qq_login_url(request):
 '''
 def qq_login(request):
     from apps.third_party_login_app.setting import DEFAULT_PASSWORD
-    try:
-        code=request.REQUEST.get('code','')
-        if code=='':
-            raise Exception("不能获取code值")
-    except Exception, e:
-        print e
     from apps.third_party_login_app.openqqpy import OpenQQClient
     client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri='http://snailjin.eicp.net/',scope='')
 #     log.error(code)
-    access=client.request_access_token(code) #返回access_token,expires_in
+    access=client.request_access_token(request.GET.get('code')) #返回access_token,expires_in
     access_token=access['access_token']
     expires_in=access['expires_in']
     request.session['access_token']=access_token
@@ -77,7 +71,7 @@ def qq_login(request):
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
-        login(request,user.username,'DEFAULT_PASSWORD')
+        login(request,user.username,DEFAULT_PASSWORD)
     return HttpResponseRedirect('/account/loggedin/')
        
 '''

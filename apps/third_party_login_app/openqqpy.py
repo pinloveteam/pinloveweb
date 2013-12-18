@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # coding=utf-8
+import logging
 __author__ = 'Xulu(email:xulu@xulu.cc)'
 __version__ = '0.1.0'
 
 import json
 import time
 import urllib, urllib2, urlparse
+log=logging.getLogger('customapp.engine')
 
 def _obj_hook(pairs):
     o = JsonObject()
@@ -133,6 +135,8 @@ class OpenQQClient(object):
         url = '%s%s/%s?%s' % (self.base_url, self.version, 'token', _encode_params(params))
         resp = urllib2.urlopen(url)
         result = urlparse.parse_qs(resp.read(), True)
+        if 'error' in result.keys():
+            log.error('result==error')
         access_token = str(result['access_token'][0])
         expires_in = float(int(result['expires_in'][0]) + int(time.time()))
 
