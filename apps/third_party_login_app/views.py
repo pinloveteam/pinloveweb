@@ -44,7 +44,7 @@ def get_qq_login_url(request):
 def qq_login(request):
     from apps.third_party_login_app.setting import DEFAULT_PASSWORD
     from apps.third_party_login_app.openqqpy import OpenQQClient
-    client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri='http://snailjin.eicp.net/',scope='')
+    client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL,scope='')
     log.error(request.GET.get('code'))
     access=client.request_access_token(request.GET.get('code')) #返回access_token,expires_in
     access_token=access['access_token']
