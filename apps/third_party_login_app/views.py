@@ -129,7 +129,7 @@ def sina_login(request):
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
-        login(request,user.username,'DEFAULT_PASSWORD')
+        login(request,user.username,DEFAULT_PASSWORD)
     return HttpResponseRedirect('/account/loggedin/')
 
     user_info=client.users.show.get(uid=uid)
