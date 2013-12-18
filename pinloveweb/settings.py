@@ -126,7 +126,6 @@ INSTALLED_APPS = (
     'apps.friend_dynamic_app',
     'apps.the_people_nearby',
     'apps.third_party_login_app',
-    'social_auth',
 #     'grappelli',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
