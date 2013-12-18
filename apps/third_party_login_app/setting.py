@@ -29,7 +29,7 @@ Created on Dec 7, 2013
 # TWITTER_CALLBACK_URL= WEB_ROOT+'/third_party_login/twitter_login/'
 
 #生产环境的使用，如测试环境请注释
-WEB_ROOT='http://pinlove.com/'
+WEB_ROOT='http://pinpinlove.com'
 DEFAULT_PASSWORD='PIN_LOVE_10086'
 
 FaceBookAppID='400350543428768'
