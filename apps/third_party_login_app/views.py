@@ -194,7 +194,7 @@ def twitter_login(request):
     from apps.third_party_login_app.twython.api import Twython
     twitter = Twython(TwitterConsumerKey, TwitterConsumerSecret,request.session['OAUTH_TOKEN'],request.session['OAUTH_TOKEN_SECRET'])
     get_user_info = twitter.get_authorized_tokens(request.GET['oauth_verifier'])
-    return HttpResponse(get_user_info)
+    return HttpResponse(get_user_info['screen_name'])
     
 ''''
 用户登录并且获得本机ip

@@ -161,7 +161,7 @@ def invalid_login(request) :
 def logout(request) : 
     
     auth.logout(request)
-    if 'messageList' in request.session.keys()():
+    if 'messageList' in request.session.keys():
         del request.session['messageList']
 #     if "userId"  in request.COOKIES:
 #             response= render(request, 'loggedout.html')
