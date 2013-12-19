@@ -21,7 +21,7 @@ urlpatterns = patterns('apps.third_party_login_app.views',
     #login in twitter url
     url(r'^twitter_login_url/', 'twitter_login_url'),
     url(r'^twitter_login/', 'twitter_login'),
-    
+    url(r'^update_gender/$','update_gender')
     
     
 )

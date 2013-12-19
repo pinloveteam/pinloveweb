@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+
+{% block javascript %}
+  <h2> twitter 性别选择 </h2> 
+
+</script>
+{% endblock %} 
+{% block second_content %}
+<form action="/third_party_login/update_gender/"  method="POST">{% csrf_token %}
+ 请选择性别：<br>
+<input id="id_gender_0" type="radio" name="gender" value="M">帅哥
+<input id="id_gender_1" type="radio" name="gender" value="F">
+美女 
+<br>
+<input type="submit" value="提交">
+</form>
+
+{% endblock %}

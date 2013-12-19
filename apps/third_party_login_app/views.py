@@ -184,12 +184,40 @@ def twitter_login_url(request):
     return HttpResponseRedirect(auth['auth_url'])
 
 def twitter_login(request):
-#     log.error('OAUTH_TOKEN111==='+request.GET.get('oauth_token'))
     from apps.third_party_login_app.twython.api import Twython
+    log.error('session=='+request.session['OAUTH_TOKEN']+",,,,"+request.session['OAUTH_TOKEN_SECRET'])
     twitter = Twython(TwitterConsumerKey, TwitterConsumerSecret,request.session['OAUTH_TOKEN'],request.session['OAUTH_TOKEN_SECRET'])
-    get_user_info = twitter.get_authorized_tokens(request.GET['oauth_verifier'])
-    return HttpResponse(get_user_info['screen_name'])
-    
+    authorized_tokens = twitter.get_authorized_tokens(request.GET['oauth_verifier'])
+    OAUTH_TOKEN = authorized_tokens['oauth_token']
+    OAUTH_TOKEN_SECERT = authorized_tokens['oauth_token_secret']
+    request.session['OAUTH_TOKEN']=OAUTH_TOKEN
+    request.session['OAUTH_TOKEN_SECRET']=OAUTH_TOKEN_SECERT
+    twitter = Twython(TwitterConsumerKey, TwitterConsumerSecret,OAUTH_TOKEN,OAUTH_TOKEN_SECERT)
+    log.error('session=='+request.session['OAUTH_TOKEN']+",,,,"+request.session['OAUTH_TOKEN_SECRET'])
+    user_info=twitter.verify_credentials()
+    from apps.third_party_login_app.models import ThirdPsartyLogin
+    if not ThirdPsartyLogin.objects.filter(provider='4',uid=user_info['id']).exists():
+            #创建用户
+            user=create_user(user_info['screen_name'].strip(),
+                             )
+            #创建第三方登录表信息
+            ThirdPsartyLogin(user=user,provider='4',uid=user_info['id'],access_token='%s%s%s'% (request.session['OAUTH_TOKEN'],'|',request.session['OAUTH_TOKEN_SECRET'])).save()
+            #创建用户详细信息
+            create_user_profile(user,None)
+            login(request,user.username,DEFAULT_PASSWORD)
+            #选择性别
+            return render(request,'chose_gender.html')
+    else:
+        #根据QQopenId获取用户信息
+        user=ThirdPsartyLogin.objects.get(provider='4',uid=user_info['id']).user
+        login(request,user.username,DEFAULT_PASSWORD)
+    return HttpResponseRedirect('/account/loggedin/')
+ 
+def update_gender(request):
+    gender=request.POST.get('gender')
+    UserProfile.objects.filter(user=request.user).update(gender=gender)
+    return HttpResponseRedirect('/account/loggedin/')
+       
 ''''
 用户登录并且获得本机ip
 attribute：
@@ -240,9 +268,9 @@ def create_user_profile(user,gender,**kwarg):
     userProfile=UserProfile(user=user)
     genderList=['m',u"男",'male']
     if gender in genderList:
-        userProfile.gender='F'
-    else:
         userProfile.gender='M'
+    else:
+        userProfile.gender='F'
     if kwarg.get('country')!=None:
         if kwarg.get('country')=='zh_CN':
             userProfile.country=='中国'
