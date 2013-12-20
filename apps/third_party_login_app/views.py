@@ -174,18 +174,18 @@ def facebook_login(request):
 def twitter_login_url(request):
     from apps.third_party_login_app.twython.api import Twython
     twitter = Twython(TwitterConsumerKey, TwitterConsumerSecret)
-    auth = twitter.get_authentication_tokens(callback_url=TWITTER_CALLBACK_URL)
+    auth = twitter.get_authentication_tokens()
     OAUTH_TOKEN = auth['oauth_token']
     OAUTH_TOKEN_SECRET = auth['oauth_token_secret']
-#     log.error('OAUTH_TOKEN==='+OAUTH_TOKEN)
-#     log.error('OAUTH_TOKEN_SECRET==='+OAUTH_TOKEN_SECRET)
     request.session['OAUTH_TOKEN']=OAUTH_TOKEN
     request.session['OAUTH_TOKEN_SECRET']=OAUTH_TOKEN_SECRET
+    log.error('OAUTH_TOKEN==='+request.session['OAUTH_TOKEN'])
+    log.error('OAUTH_TOKEN_SECRET==='+request.session['OAUTH_TOKEN'])
     return HttpResponseRedirect(auth['auth_url'])
 
 def twitter_login(request):
     from apps.third_party_login_app.twython.api import Twython
-#     log.error('session=='+request.session['OAUTH_TOKEN']+",,,,"+request.session['OAUTH_TOKEN_SECRET'])
+    log.error('session=='+request.session['OAUTH_TOKEN']+",,,,"+request.session['OAUTH_TOKEN_SECRET'])
     twitter = Twython(TwitterConsumerKey, TwitterConsumerSecret,request.session['OAUTH_TOKEN'],request.session['OAUTH_TOKEN_SECRET'])
     authorized_tokens = twitter.get_authorized_tokens(request.GET['oauth_verifier'])
     OAUTH_TOKEN = authorized_tokens['oauth_token']
