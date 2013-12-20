@@ -42,7 +42,6 @@ def get_qq_login_url(request):
 获取qq信息并登录个人主页
 '''
 def qq_login(request):
-    from apps.third_party_login_app.setting import DEFAULT_PASSWORD
     from apps.third_party_login_app.openqqpy import OpenQQClient
     client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL,scope='')
     log.error(request.GET.get('code'))
@@ -118,7 +117,6 @@ def sina_login(request):
             #创建用户详细信息
             create_user_profile(user,user_info['gender'],)
             #登录
-            from apps.third_party_login_app.setting import DEFAULT_PASSWORD
             login(request,user.username,DEFAULT_PASSWORD)
     else:
         #根据QQopenId获取用户信息
@@ -251,7 +249,6 @@ def create_user(username,**kwarg):
         user.first_name=kwarg.get('firstName')
     if  kwarg.get('lastName')!=None:
         user.last_name=kwarg.get('lastName')
-    from apps.third_party_login_app.setting import DEFAULT_PASSWORD
     user.password=make_password(DEFAULT_PASSWORD)
     user.is_active=True
     user.date_joined=datetime.datetime.today()
