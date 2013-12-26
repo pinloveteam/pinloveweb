@@ -61,6 +61,8 @@ urlpatterns = patterns('',
 ####第三方登录###
     (r'^third_party_login/', include('apps.third_party_login_app.urls')),
 #      url(r'', include('social_auth.urls')),
+
+     url(r'^test/$', 'pinloveweb.views.test'),
 )
 
 

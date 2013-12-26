@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'apps.friend_dynamic_app',
     'apps.the_people_nearby',
     'apps.third_party_login_app',
+#     'social_auth',
 #     'grappelli',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
@@ -258,8 +259,8 @@ LOGGING = {
             'propagate': True,
         },
         'django.db.backends': {
-            'handlers': ['django_db_backends_logfile',],
-            'level': 'WARNING',
+            'handlers': ['django_db_backends_logfile','console'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         
@@ -297,29 +298,37 @@ EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 #set the session paramter session的控制
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE=1000
-
-# 本地环境
-DATABASES = {
-     
+#缓存
+CACHES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'django',                      # Or path to database file if using sqlite3.
-                                                # The following settings are not used with sqlite3:
-        'USER': 'root',                         #pinloveteam
-        'PASSWORD': 'jin521436',                       #redyellowblue123#
-        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',      
-                                                # Set to empty string for default.
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
 }
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
-MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
-STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+# 本地环境
+# DATABASES = {
+#      
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#         'NAME': 'django',                      # Or path to database file if using sqlite3.
+#                                                 # The following settings are not used with sqlite3:
+#         'USER': 'root',                         #pinloveteam
+#         'PASSWORD': 'jin521436',                       #redyellowblue123#
+#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#         'PORT': '',      
+#                                                 # Set to empty string for default.
+#     }
+# }
+# MEDIA_URL = '/media/'
+# STATIC_URL = '/static/'
+# MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+# UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+# UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+
+
 
 #---服务器环境-----
 DATABASES = {

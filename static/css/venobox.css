@@ -111,7 +111,7 @@ body{
     border: none;
     width: 960px;
     height: 720px;
-    overflow: scroll;
+    overflow: hidden;
 }
 @media (max-width: 992px) {
     .venoframe{

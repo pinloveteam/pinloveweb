@@ -59,7 +59,6 @@ from pinloveweb.settings import PATH
 #         logging.exception('Got exception on main handler')
 # >>>>>>> Stashed changes 1386963224.48
 
-import time
-print time.time() - 1386963224.48
-print time.strftime('%Y-%m-%d-%H-%s',str(time.time() - 1386963224.48))
-print type(time.time())
+list=[1,2,3,4]
+a=[1,2]
+print [x for x in list if x not in a]

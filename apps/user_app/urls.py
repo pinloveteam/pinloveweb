@@ -23,6 +23,12 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^photo_check/$', 'photo_check'),
      #关注
      url(r'^follow/(.+)/$', 'follow'),
+     #详细信息
+     url(r'^detailed_info/(.+)/$', 'detailed_info'),
+     #不喜欢
+     url(r'^dislike/$', 'dislike'),
+     
+     
      
      
      

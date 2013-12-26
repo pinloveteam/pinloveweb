@@ -15,6 +15,8 @@ from django.conf import settings
 from apps.upload_avatar import app_settings
 import re
 from django.contrib.auth.models import User
+from apps.message_app.models import Message
+from django.db.models.query_utils import Q
 # db = MySQLdb.connect(user='root', db='django', passwd='jin521436', host='localhost')
 # cursor=connection.cursor();
 # sql='''select c1.id,c1.username,c2.age,c2.gender,c2.height,c2.income,c3.jobIndustry,c4.avatar_name
@@ -67,5 +69,9 @@ from django.contrib.auth.models import User
 # print u.lastLoginAddress
 # user=UserProfile.objects.select_related().get(QQopenId='61C5FF21E0D49DD32BBF4E6571B536E3').user
 # User(username='sdsd',password="None").save()
-print User.objects.get(username='sdsd').password
+# MessageList=Message.objects.filter(Q(receiver_id=1,sender_id=6,isRead=False,isDeletereceiver=False)|Q(receiver_id=6,sender_id=1)[:3]).order_by('sendTime')
+MessageList=Message.objects.raw('SELECT * from message where receiver_id=%s and sender_id=%s and isRead=%s and isDeletereceiver=%s or id in(select id from (SELECT id from message m where m.receiver_id=%s and m.sender_id=%s limit 3) as s) ORDER BY sendTime DESC',
+                                [1,6,0,0,6,1])
+for m in MessageList:
+    print m.receiver_id
 

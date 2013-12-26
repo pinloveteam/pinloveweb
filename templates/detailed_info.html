@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html> 
+<html>
+<head>
+<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
+<style>
+html{
+	overflow: hidden;
+}
+
+.head{
+	margin:30px;
+	border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	background-clip: padding-box;
+	overflow: hidden;
+	display: inline-block;
+}
+
+.head_girl{
+	border:2px solid rgba(255, 102, 51, 0.6);
+}
+
+.main{
+	float:right;
+	margin-top:60px;
+	margin-right:110px;
+}
+h4{
+	display: inline;
+}
+
+.tag{
+	margin-left:30px;
+}
+
+.table{
+	margin-top:50px;
+	margin-left:20px;
+}
+
+td{
+	border:none !important;
+}
+
+.icon_height,.icon_education,.icon_age,.icon_income,.icon_trade,.icon_constellation{
+	background: url("{{STATIC_URL}}img/身高.png") no-repeat;
+	display: inline-block;
+    height: 32px;
+    width: 32px;
+}
+
+.icon_education{
+	background: url("{{STATIC_URL}}img/学历.png") no-repeat;
+}
+
+.icon_age{
+	background: url("{{STATIC_URL}}img/年龄.png") no-repeat;
+}
+
+.icon_income{
+	background: url("{{STATIC_URL}}img/收入.png") no-repeat;
+}
+
+.icon_trade{
+	background: url("{{STATIC_URL}}img/行业.png") no-repeat;
+}
+
+.icon_constellation{
+	background: url("{{STATIC_URL}}img/星座.png") no-repeat;
+}
+</style>	
+</head>
+<body>
+	<div class="head head_girl">
+		<img src="{{MEDIA_URL}}{{avatar_name}}" alt="当前头像">
+	</div>
+	<div class="main">
+		<span><strong>{{username}}</strong></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span>{{city}}</span>
+	</div>
+	<div class="tag">
+		<h4><span class="label label-info">年轻</span></h4>
+		<h4><span class="label label-info">非主流</span></h4>
+		<h4><span class="label label-info">呵呵</span></h4>
+		<h4><span class="label label-info">哈哈</span></h4>		
+		<h4><span class="label label-info">嘿嘿</span></h4>
+	</div>
+	<table class="table">
+		<tbody>
+		  <tr>
+			<td><i class="icon_height"></i>&nbsp;&nbsp;身高：{{height}}</td>
+			<td><i class="icon_education"></i>&nbsp;&nbsp;学历：{{education}}</td>
+		  </tr>
+		  <tr>
+			<td><i class="icon_age"></i>&nbsp;&nbsp;年龄：{{age}}</td>
+			<td><i class="icon_income"></i>&nbsp;&nbsp;收入：{{income}}</td>
+		  </tr>
+		  <tr>
+			<td><i class="icon_trade"></i>&nbsp;&nbsp;行业：{{jobIndustry}}</td>
+			<td><i class="icon_constellation"></i>&nbsp;&nbsp;星座：{{sunSign}}</td>
+		  </tr>
+		</tbody>
+	</table>
+</body>
+</html>

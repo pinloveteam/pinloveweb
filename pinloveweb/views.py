@@ -24,6 +24,7 @@ from apps.the_people_nearby.views import GetLocation
 import logging
 from django.views.decorators.csrf import csrf_protect
 from django.http.response import HttpResponse
+import simplejson
 
 
 
@@ -85,8 +86,15 @@ def auth_view(request) :
     else : 
         # Show an error page 
         return HttpResponseRedirect('/account/invalid/')
-
-def loggedin(request) : 
+'''
+根据key 获取缓存数据
+'''
+def get_cache_by_key(key):
+    cache_key = key
+    from django.core.cache import cache
+    data = cache.get(cache_key)
+    return data
+def loggedin(request,**kwargs) : 
     from apps.recommend_app.models import MatchResult
     #判断推荐分数是否生成
     count=MatchResult.objects.filter(my_id=request.user.id).count()
@@ -102,22 +110,56 @@ def loggedin(request) :
     focusEachOtherList=[]
     for f in follow:
         focusEachOtherList.append(f[0])
+    #从缓存中获取不推荐用户id
+    disLikeUserIdList=get_cache_by_key(request.user.id)
     if count>0:
-         matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
-         arg=page(request,matchResultList)
+         if disLikeUserIdList is None:
+             matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
+         else:
+            matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id).execute(other_id__in=disLikeUserIdList)
+         arg=page(request,matchResultList,**kwargs)
          matchResultList=arg['pages']
          from apps.recommend_app.views import matchResultList_to_RecommendResultList
          matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
          friends = Friend.objects.filter(my_id=request.user.id)
          arg['pages']=is_focus_each_other(request,matchResultList,focusEachOtherList)
     else:
-          userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender).order_by("?")
-          arg=page(request,userProfileList)   
+          if disLikeUserIdList is None: 
+              userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender)
+          else:
+              disLikeUserIdList.append(request.user.id)
+              userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender)
+#               userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender).exclude(user_id__in=disLikeUserIdList)
+          arg=page(request,userProfileList,**kwargs)   
           matchResultList=arg['pages']
           from apps.recommend_app.views import userProfileList_to_RecommendResultList
           matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
           friends = Friend.objects.select_related().filter(my=request.user)
           arg['pages']=is_focus_each_other(request,matchResultList,focusEachOtherList)
+    if kwargs.get('card')==True:
+        return matchResultList
+    if request.GET.get('ajax')=='true':
+         data={}
+         data['has_next']=matchResultList.has_next()
+         if matchResultList.has_next():
+             data['next_page_number']=matchResultList.next_page_number()
+         if matchResultList.has_previous():
+            data['previous_page_number']=matchResultList.previous_page_number()
+         data['has_previous']=matchResultList.has_previous()
+         data['result']='success'
+         if request.GET.get('choseCards[]')!=None:
+             choseCardslist=request.GET.getlist('choseCards[]')
+             matchResultList.object_list = [matchResult for matchResult in matchResultList.object_list if str(matchResult.user_id) not in choseCardslist]
+             if len(matchResultList.object_list)<8:
+                 data['removeCard']=True
+#              for matchResult in matchResultList.object_list:
+#                  if str(matchResult.user_id) in choseCardslist:
+#                      matchResultList.object_list.remove(matchResult) 
+#                      data['removeCard']=True
+         data['cards']=matchResultList.object_list
+         from apps.pojo.recommend import MyEncoder
+         json=simplejson.dumps(data,cls=MyEncoder)
+         return HttpResponse(json)
     arg=init_card(arg,userProfile)
     arg['myFollow']=myFollow
     arg['fans']=fans
@@ -250,5 +292,14 @@ def forget_password(request) :
     return render(request, 'forget_password.html')   
  
                           
-
+def test(request):
+    from django.core.cache import cache
+    cache_key = "myID"
+    result = cache.get(cache_key)
+    if result is None:
+        data = "hello, found"
+        cache.set(cache_key, data, 60)
+        return HttpResponse("not found")
+    else:
+        return HttpResponse(result)
     

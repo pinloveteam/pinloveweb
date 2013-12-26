@@ -1,8 +1,15 @@
-ERROR customapp.engine 2013-12-18 09:48:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 186 OAUTH_TOKEN===tljkwxjvf0nhwVRKKVZE8PxKH8gGOJjxAFm79iq6VtQ
-ERROR customapp.engine 2013-12-18 09:48:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 187 OAUTH_TOKEN_SECRET===dY1hChB10EGKUQ4522FBH0MEQWgzpe8RBatx1jrZhs
-ERROR customapp.engine 2013-12-18 10:35:04 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 186 OAUTH_TOKEN===vQO8ljARqbGPqx1gv3LDlpuamB1tBd2jnQn3cCsslwo
-ERROR customapp.engine 2013-12-18 10:35:04 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 187 OAUTH_TOKEN_SECRET===0lrGkzMLoNv9ZZwfK7nqvkeJmJGGCbGCljHrGayz0
-ERROR customapp.engine 2013-12-18 10:35:34 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 193 OAUTH_TOKEN111===vQO8ljARqbGPqx1gv3LDlpuamB1tBd2jnQn3cCsslwo
-ERROR customapp.engine 2013-12-18 11:06:40 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 186 OAUTH_TOKEN===GUnGkJ34h0oSDqa2YFtjZCtlqogm7j63tZCntIQmwAA
-ERROR customapp.engine 2013-12-18 11:06:40 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 187 OAUTH_TOKEN_SECRET===OUt2Q8PQDStBbdItmetBv4HBaw6wRSPhXSeVxb6eypI
-ERROR customapp.engine 2013-12-18 11:36:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 193 OAUTH_TOKEN111===GUnGkJ34h0oSDqa2YFtjZCtlqogm7j63tZCntIQmwAA
+ERROR customapp.engine 2013-12-20 09:33:02 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 182 OAUTH_TOKEN===a68ZCPepOgj2YYQHF0I3FAjyqQqKd8Fi7M9ACET3c
+ERROR customapp.engine 2013-12-20 09:33:02 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 183 OAUTH_TOKEN_SECRET===a68ZCPepOgj2YYQHF0I3FAjyqQqKd8Fi7M9ACET3c
+ERROR customapp.engine 2013-12-20 09:33:11 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 196 session==2249878794-QGk7iGnMgFQZAttHYV1HJjbkjTJTkFtOR6PqVsn,,,,9AsQvWkKEYai7u65TMH2Fcnqcvp6tdV04XPGUNFN5C3Te
+ERROR customapp.engine 2013-12-20 09:33:13 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 230 pinloveweb   PIN_LOVE_10086
+ERROR customapp.engine 2013-12-20 09:33:13 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 233 login successpinlovewebfcsdfsf
+ERROR customapp.engine 2013-12-20 09:53:12 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 182 OAUTH_TOKEN===gXQAH8s7HImsG3aPzKt1WDBXiEkQoRRRDDk5TxAZqik
+ERROR customapp.engine 2013-12-20 09:53:12 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 183 OAUTH_TOKEN_SECRET===gXQAH8s7HImsG3aPzKt1WDBXiEkQoRRRDDk5TxAZqik
+ERROR customapp.engine 2013-12-20 09:53:15 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 182 OAUTH_TOKEN===WQoGLky7LYKeAQ4YvneqDkh32TZOwEP1ZlXCVx2UQu8
+ERROR customapp.engine 2013-12-20 09:53:15 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 183 OAUTH_TOKEN_SECRET===WQoGLky7LYKeAQ4YvneqDkh32TZOwEP1ZlXCVx2UQu8
+ERROR customapp.engine 2013-12-20 09:53:45 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 198 session==2249878794-QGk7iGnMgFQZAttHYV1HJjbkjTJTkFtOR6PqVsn,,,,9AsQvWkKEYai7u65TMH2Fcnqcvp6tdV04XPGUNFN5C3Te
+ERROR customapp.engine 2013-12-20 09:53:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 232 pinloveweb   PIN_LOVE_10086
+ERROR customapp.engine 2013-12-20 09:53:47 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 235 login successpinlovewebfcsdfsf
+ERROR customapp.engine 2013-12-20 10:09:40 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 182 OAUTH_TOKEN===x0RjQWXh0KtBbadzyCHS0ua7bUvPtCfHomlzQ9olg
+ERROR customapp.engine 2013-12-20 10:09:40 D:/eclipse/code/pinloveweb\apps\third_party_login_app\views.py views 183 OAUTH_TOKEN_SECRET===x0RjQWXh0KtBbadzyCHS0ua7bUvPtCfHomlzQ9olg
+ERROR customapp.engine 2013-12-25 10:42:17 D:\eclipse\code\pinloveweb\apps\third_party_login_app\views.py views 83 url====https://api.weibo.com/oauth2/authorize?redirect_uri=http%3A//snailjin.eicp.net/third_party_login/sina_login/&response_type=code&client_id=2523894606

@@ -11,66 +11,306 @@
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
+<script type="text/javascript">
+var comparable = false;
+var name_self = '';
+var name_other = '';
+var isshow = false;
+var data_self = [];
+var data_other = [];
+var labels = ["教育程度","性格","收入情况","样貌","身高"]
+var datasets_self = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(0,151,36)",pointColor : "rgb(0,151,36)"}
+var datasets_other = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(241,23,25)",pointColor : "rgb(241,23,25)"}
+var dataArray = [[60,20,40,20,20],[20,60,90,20,20],[20,60,90,60,20],[20,63,50,20,20],[27,60,50,20,20],[20,60,60,20,20],[20,70,80,20,20],[20,60,60,20,20]];
+//下一页
+{% if pages.has_next %}
+var next_page_number={{pages.next_page_number}}
+{%else%}
+var next_page_number=-1
+{% endif %}
+//上一页
+{% if pages.has_previous %}
+var previous_page_number={{pages.previous_page_number}}
+{%else%}
+var previous_page_number=-1
+{% endif %}
+$(document).ready(function(){
+	 venobox();
+	$('.next').click(function(){
+		var choseCardslist = new Array();　
+		var choseCards=$('.card_row').children().not('.hideable').not('.controlArrow');
+		var choseCardsSize=choseCards.length
+		if (choseCardsSize>=8){
+			alert('选中项大于等于8个')
+		}
+		if (choseCardsSize>0){
+			for(i=0;i<choseCardsSize;i++){
+				choseCardslist[i]=parseInt(choseCards[i].id)
+			 }
+		}
+		var preCard = $('.card_row').children('.hideable');
+		var size = preCard.hide('slow').removeClass('hideable').size();
+		
+		 $.getJSON("/account/loggedin/",{ajax:true,page:next_page_number,choseCards:choseCardslist},function(data) {
+			 if(data['result']=='success'){
+				 if (data['has_next']){
+					 next_page_number=data['next_page_number'];
+				 }else{
+					 next_page_number=-1;
+					 $('.next').hide();
+				 }
+				 $('.prev').show();
+				 previous_page_number=data['previous_page_number'];
+				 var cards=data['cards'];
+				 if  (data['removeCard']){
+					 choseCardsSize=0
+				 }
+				 for(x=0;x<cards.length-choseCardsSize;x++){
+						 var avatar_name='/media/'+cards[x].avatar_name;
+						 loadCard(cards[x].username,cards[x].age,cards[x].city,avatar_name,cards[x].user_id,cards[x].isFriend);
+					 } 
+				 preCard.remove();
+				 venobox();
+			 }
+		 });
+	});
+	
+	$('.prev').click(function(){
+		var choseCardslist = new Array();　
+		var choseCards=$('.card_row').children().not('.hideable').not('.controlArrow');
+		var choseCardsSize=choseCards.length
+		if (choseCardsSize>=8){
+			alert('选中项大于等于8个')
+		}
+		if (choseCardsSize>0){
+			for(i=0;i<choseCardsSize;i++){
+				choseCardslist[i]=parseInt(choseCards[i].id)
+			 }
+		}
+		var nextCard = $('.card_row').children('.hideable');
+		var size = nextCard.hide('slow').removeClass('hideable').size();
+		//a = $('.card_row').children('.hideable').hide('slow').removeClass('hideable').size();
+		 $.getJSON("/account/loggedin/",{ajax:true,page:previous_page_number,choseCards:choseCardslist},function(data) {
+			 if(data['result']=='success'){
+				 if (data['has_previous']){
+					 previous_page_number=data['previous_page_number'];
+				 }else{
+					 previous_page_number=-1;
+					 $('.prev').hide();
+				 }
+				 next_page_number=data['next_page_number'];
+				 $('.next').show();
+				 var cards=data['cards'];
+				 if  (data['removeCard']){
+					 choseCardsSize=0
+				 }
+				 for(x=0;x<cards.length-choseCardsSize;x++){
+					     var avatar_name='/media/'+cards[x].avatar_name;
+						 loadCard(cards[x].username,cards[x].age,cards[x].city,avatar_name,cards[x].user_id,cards[x].isFriend);
+					 } 
+				 nextCard.remove();
+				 venobox();
+			 }
+		 });
+		
+	});
+	
+});
+
+function sendMsg(e){
+	var api = pane.data('jsp');
+	var content = $(e).prev();
+	var chat = $(e).prev().prev().children().children();
+	var send_content = content.val();
+	var receiver_id=$(e).parents('.card_panel').attr('id');
+	if(send_content!=''){
+		$.getJSON('/message/send/',{receiver_id:receiver_id,reply_content:send_content},function(data){
+			chat.append('<div class="chat_content_group self"><div class="chat_content">'+send_content+'<div class="cloudArrow"></div></div></div>');
+			content.val('');
+		  });
+	}
+	
+	
+	pane.jScrollPane();
+	api.scrollTo(0,9999);
+}
+
+function leida(e){
+	if(isshow){
+		$(e).children().not('.name').hide('fast');
+		isshow = false;
+	}
+	else{
+	$(e).find("canvas").show('fast');
+	var ctx = $(e).find("canvas").get(0).getContext("2d");
+	var id = $(e).attr('id');
+	if(comparable){
+		name_other = $(e).attr('title');
+		$(e).find(".compare_cancle").show('fast');
+		$(e).find(".chart_info").show('fast')
+		datasets_self.data = data_self;
+		datasets_other.data = dataArray[id];
+		var data = {labels : labels, datasets : [datasets_other,datasets_self]};
+		var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
+		if(name_self!=name_other){
+			$(e).find(".chart_info").find(".name_self").html(name_self);
+			$(e).find(".chart_info").find(".name_other").html(name_other);
+		}
+		else{
+			$(e).find(".chart_info").find(".name_self").html('');
+			$(e).find(".chart_info").find(".name_other").html('');
+		}
+	}
+	else{
+		$(e).find(".compare").show('fast');
+		datasets_self.data = dataArray[id];
+		var data = {labels : labels, datasets : [datasets_self]};
+		data_self = datasets_self.data;
+	var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
+	}
+	isshow = true;
+	}
+}
+
+function compare(e){
+	$(e).parents('.card').addClass('chosen');
+	$(e).hide().find('.compare_cancle').show('fast');
+	name_self = $(e).parent().attr('title');
+	$('#compare_tip').show('slow',function(){
+		$(e).delay(2000).hide('slow');
+	});
+	comparable = true;
+}
+
+function compare_cancle(e){
+		$('.chosen').removeClass('chosen');
+		$(e).hide().find('.compare').show('fast');
+		comparable = false;
+		name_other = '';
+		name_self = '';
+}
+
+function ding(e){
+	$(e).toggleClass('ding').hasClass('ding')?$(e).attr('title','取消固定').parents('.card').removeClass('hideable'):$(e).attr('title','固定').parents('.card').addClass('hideable');
+}
+
+function dislike(e){
+	 var userId=$(e).parents('.card').attr('id');
+	 $.getJSON("/user/dislike/",{userId:userId,page:next_page_number},function(data) {
+		 if(data['result']=='success'){
+			 $(e).parents('.card').hide('slow');
+			 card=data['card'];
+			 var avatar_name='/media/'+card.avatar_name;
+			 loadCard(card.username,card.age,card.city,avatar_name,card.user_id,card.isFriend);
+			 if (data['has_next']){
+			 }else{
+				 next_page_number=-1;
+				 $('.next').hide();
+			 }
+		 }else if(data['result']=='remove_card'){
+			 $(e).parents('.card').hide('slow');
+		 }
+	 });
+	 venobox();
+	
+}
+function loadCard(username,age,city,headImg,user_id,isFriend){
+	var card = $('#card');
+	//添加用户id
+	card.find('.card_panel').attr('id',user_id.toString());
+	card.find('.introBox').attr('href','/user/detailed_info/'+user_id.toString());
+	card.find('.username').html(username);
+	card.find('.tag').children().first().html(age).next().html(city);
+	card.find('.head').children().attr('src',headImg);
+	card.find('.hoverbox').children().remove();
+	//是否关注
+	var icon_like=card.find('.tool_bar :nth-child(2) ').children();
+	icon_like.removeClass().addClass('icon_like_'+isFriend);
+	
+	for (i=0;i<4;i++){
+		card.find('.hoverbox').append('<li><a class="venobox" data-gall="gall1" href="/static/img/img2.jpg" title="ss"><img alt="demo1" src="/static/img/img2.jpg" title="demo1"></a></li>');
+	}
+	for (i=0;i<3;i++){
+		card.find('.username').html(username);
+	}	
+	var tab=card.find('.tab-pane');
+	var nav=card.find('.card-nav').children().children();
+	for (i=0;i<3;i++){
+      j=i+4
+	  tab[i].id='tab'+j+user_id;
+	  nav[i].href='#tab'+j+user_id;
+	}
+	$('.card_row').append(card.html());
+}
+
+function venobox(){
+	$('.venobox').venobox({
+		numeratio: true,
+		border: '0'
+	});
+	$('.venoboxvid').venobox({
+		bgcolor: '#000'
+	});
+	$('.venoboxframe').venobox({
+		framewidth: '400px',
+		frameheight: '551px',
+		border: '6px',
+	});
+	$('.venoboxinline').venobox({
+		framewidth: '300px',
+		frameheight: '250px',
+		border: '6px',
+		bgcolor: '#f46f00'
+	});
+	$('.venoboxajax').venobox({
+		framewidth: '400px',
+		frameheight: '551px',
+		border: '30px;'
+	});
+}
+</script>
+
 <script type="text/javascript" >
 var myFollow={{myFollow}}
 var follow={{follow}}
 var fans={{fans}}
+function initMsg(e){
+	 pane = $(e).parents('.card-nav').prev().find('.chat');
+	 pane.jScrollPane();
+	  var userId=$(e).parents('.card_panel').attr('id');
+	   $.getJSON("/message/get_noread_messges/",{userId:userId,ajax:true},function(data) {
+		   if (data['login']=='invalid'){
+			   alert("请先登录！");
+			   window.location =data['redirectURL'];
+		   }
+		   pane.children().children().children().remove();
+		   for(var message in data){
+			   if (userId!=data[message].receiver_id){
+				   var api = pane.data('jsp');
+					var chat = pane.find('.jspPane');
+					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+					pane.jScrollPane();
+					api.scrollTo(0,9999);
+			   }else{
+				   var api = pane.data('jsp');
+				    var chat = pane.find('.jspPane');
+					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+					pane.jScrollPane();
+					api.scrollTo(0,9999);
+			   }
+	    	  
+	      }
+	   });	
+}
 $(document).ready(function(){
     $(".icon_msg").click(function(){
-    	   userId=$(this).attr('id')
-    	   $.getJSON("/message/get_noread_messges/",{userId:userId},function(data) {
-    		   $('#chat_'+userId).children().remove();
-    		   for(var message in data){
-    			   if (userId!=data[message].receiver_id){
-    				   var api = pane.data('jsp');
-    					var chat = $('#chat_'+data[message].receiver_id).children().children();
-    					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
-    					pane.jScrollPane();
-    					api.scrollTo(0,9999);
-    			   }else{
-    				   var api = pane.data('jsp');
-    				   var chat = $('#chat_'+data[message].receiver_id).children().children();
-    					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
-    					pane.jScrollPane();
-    					api.scrollTo(0,9999);
-    			   }
- 		    	  
- 		      }
-    	   });
+    	  
+	
     	});
-	//初始化对话框
-	pane = $('.chat');
-	pane.jScrollPane();
-	//卡片效果
+	
 
-	$(".name").mouseover(function(){
-		$(this).find("canvas").css("display","inline");
-		var ctx = $(this).find("canvas").get(0).getContext("2d");
-		var data = {
-			labels : ["教育程度","性格","收入情况","样貌","身高"],
-			datasets : [
-				{
-					fillColor : "rgba(220,0,220,0.5)",
-					strokeColor : "rgba(220,0,220,0.1)",
-					pointColor : "rgba(220,0,220,1)",
-					pointStrokeColor : "rgba(220,0,220,0.1)",
-					data : [60,20,40,20,40]
-				}
-				,
-				{
-					fillColor : "rgba(151,187,205,0.5)",
-					strokeColor : "rgba(151,187,205,0.1)",
-					pointColor : "rgba(151,187,205,1)",
-					pointStrokeColor : "#fff",
-					data : [20,20,90,20,50]
-				}
-			]
-};
-		var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:1});
-	});
-	$(".name").mouseleave(function(){
-		$(this).find("canvas").css("display","none");
-	});});
+});
+
 //发送信息
 function sendMessage(receiver_id){
 	   var reply_content_id='reply_content_'+receiver_id
@@ -80,44 +320,44 @@ function sendMessage(receiver_id){
 	      alert(data);
 	   });
 	};
-	function attention(userId,isFriend) {
-			  $.getJSON("/user/addFriend/",{userId:userId},function(data) {
-				  if(data['type']==1){
-						$("#attention_"+userId).removeClass("icon_like_0")
-						$("#attention_"+userId).addClass("icon_like_1")
-						myFollow=myFollow+1
-						$('#myFollow').html(myFollow)
+	
+function like(e){
+	    var userId=$(e).parents('.card_panel').attr('id');
+		$.getJSON("/user/addFriend/",{userId:userId},function(data) {
+			  var icon_like=$(e).parents('.tool_bar :nth-child(2) ').children();
+			  if(data['type']==1){
+					icon_like.removeClass("icon_like_0").addClass("icon_like_1")
+					myFollow=myFollow+1
+					$('#myFollow').html(myFollow)
 
-				  }else if(data['type']==2){
-						$("#attention_"+userId).removeClass("icon_like_0")
-						$("#attention_"+userId).addClass("icon_like_2")
-						follow=follow+1
-						myFollow=myFollow+1
-						$('#follow').html(follow)
-						$('#myFollow').html(myFollow)
-					  }else{
-						 $("#attention_"+userId).removeClass("icon_like_1")
-						 $("#attention_"+userId).removeClass("icon_like_2")
-					     $("#attention_"+userId).addClass("icon_like_0") 
-					     if(data['type']==-1){
-					    	 myFollow=myFollow-1
-						     $('#myFollow').html(myFollow)
-					     }else{
-					    	 follow=follow-1
-							 myFollow=myFollow-1
-							 $('#follow').html(follow)
-							 $('#myFollow').html(myFollow)
-					     }
-					     
-					  };
-			       alert(data['content']);
-			       
-			       
-			    });
-		};
-		
+			  }else if(data['type']==2){
+				  icon_like.removeClass("icon_like_0").addClass("icon_like_2")
+					follow=follow+1
+					myFollow=myFollow+1
+					$('#follow').html(follow)
+					$('#myFollow').html(myFollow)
+				  }else{
+					  icon_like.removeClass("icon_like_1").removeClass("icon_like_2").addClass("icon_like_0") 
+				     if(data['type']==-1){
+				    	 myFollow=myFollow-1
+					     $('#myFollow').html(myFollow)
+				     }else{
+				    	 follow=follow-1
+						 myFollow=myFollow-1
+						 $('#follow').html(follow)
+						 $('#myFollow').html(myFollow)
+				     }
+				     
+				  };
+		       alert(data['content']);
+		       
+		       
+		    });
+	};
+	
 		
 //拉取信息
+/**
 var userIdString=''
 {% for page  in pages %}
     userIdString=userIdString+{{page.user_id}}+','
@@ -137,6 +377,7 @@ interval = self.setInterval("polling()", time);
 
 			   });  
    };
+   **/
 </script>
 
 {% endblock %}
@@ -145,14 +386,16 @@ interval = self.setInterval("polling()", time);
 <style type="text/css">	
 .chat{
 	width: 203px;
-	height: 160px;
+	height: 90px;
 	overflow: hidden;
 }
+
 .chat_content_group.self {
     text-align: right;
 }
+
 .chat_content_group {
-    padding: 10px;
+    padding: 5px 10px 5px 10px;
 }
 
 .chat_tab{
@@ -164,6 +407,7 @@ interval = self.setInterval("polling()", time);
     float: right;
     margin: 0 0 0 10px;
 }
+
 .chat_content_avatar {
     float: left;
     height: 40px;
@@ -174,9 +418,11 @@ interval = self.setInterval("polling()", time);
 .chat_content_group.self > .chat_content {
     text-align: left;
 }
+
 .chat_content_group.self > .chat_content {
     background: #fafafa repeat scroll 0 0;
 }
+
 .chat_content {
     position: relative;
     background: #99CC33 repeat scroll 0 0;
@@ -185,7 +431,7 @@ interval = self.setInterval("polling()", time);
     line-height: 1.4;
     max-width: 90%;
     min-height: 16px;
-    padding: 10px 15px;
+    padding: 5px 15px;
     word-break: break-all;
 }
 
@@ -195,7 +441,7 @@ interval = self.setInterval("polling()", time);
     font-size: 0;
     height: 10px;
     position: absolute;
-    top: 15px;
+    top: 10px;
     width: 10px;
 	transform: rotate(45deg);
 	-webkit-transform: rotate(45deg);
@@ -215,6 +461,12 @@ interval = self.setInterval("polling()", time);
  display:inline;
  width: 100%;
  height:35px;
+}
+
+.btn_send_msg{
+	display:inline;
+	float:right;
+	margin-right:1px;
 }
 
 .col-sm-6{
@@ -264,59 +516,36 @@ interval = self.setInterval("polling()", time);
 	height:194px;
 }
 
-.icon_like,.icon_fans,.icon_mutual_like{
-	background:url("{{STATIC_URL}}img/关注.png") no-repeat;
-	margin-left:8px;
-	display:block;
-    height: 27px;
-    width: 32px;
-}
-
-.icon_fans{
-	background-image: url("{{STATIC_URL}}img/粉丝.png");
-}
-
-.icon_mutual_like{
-	background-image: url("{{STATIC_URL}}img/相互关注.png");
-}
-
-.icon_like_0,.icon_like_1,.icon_like_2{
-	background-image: url("{{STATIC_URL}}img/profile.png");
-    background-repeat: no-repeat;
-	display: inline-block;
-    height: 27px;
-    line-height: 14px;
-    margin-top: 1px;
-    vertical-align: text-top;
-    width: 27px;
-}
-.icon_like_0{
-	background-image: url("{{STATIC_URL}}img/like.png");
-	title:"未关注"
-}
-.icon_like_1{
-	background-image: url("{{STATIC_URL}}img/slike.png");
-	title:"已关注"
-}
-.icon_like_2{
-	background-image: url("{{STATIC_URL}}img/dlike.png");
-	title:"相互关注"
-}
-
-
 /* card */
 .card{
 	margin-right:20px;
 	height:260px;
 }
 
-canvas{
+.chosen{
+	border:2px solid green !important;
+}
+
+.compare_cancle,.compare,.chart_info,canvas{
 	display:none;
-	position:absolute;
-	left:120px;
-	top:0;
-	background-color: white;
+	position: absolute; 
+	left: 120px; top: 0px;
+	width: 100px;
+	Z-index:1000;
+}
+
+canvas{
+	background-color: rgba(255, 255, 255, 0.9);
+	width: 320px;
 	Z-index:999;
+}
+
+.chart_info{
+	top: 300px;
+}
+
+.other_name{
+	cursor:pointer;
 }
 
 .head,.card-introBox{
@@ -380,19 +609,83 @@ canvas{
 	border-bottom: none;
 }
 
-.icon_profile,.icon_photo,.icon_msg{
+.icon_profile,.icon_photo,.icon_msg,.icon_ding,.icon_like_0,.icon_like_1,.icon_like_2,.icon_dislike{
 	background: url("{{STATIC_URL}}img/profile.png") no-repeat;
 	margin-right:3px;
 	display: inline-block;
-    height: 24px;
+    height: 32px;
     width: 32px;
 }
-
 .icon_photo{
 	background-image: url("{{STATIC_URL}}img/photo.png");
 }
 .icon_msg{
 	background-image: url("{{STATIC_URL}}img/msg.png");
+}
+
+.tool_bar{
+	margin-left:50px;
+	margin-top:10px;
+}
+
+.icon_ding,.icon_like_0,.icon_like_1,.icon_like_2,.icon_dislike{
+    height: 20px;
+    width: 24px;
+	position:absolute; 
+	transition: opacity 0.5s;
+	opacity:0;
+}
+
+.icon_ding{
+	top:10px;
+	left:10px;
+	background-image: url("{{STATIC_URL}}img/2.png");
+}
+
+.icon_like_0,.icon_like_1,.icon_like_2{
+	top:107px;
+	left:130px;
+	opacity:1;
+	background-image: url("{{STATIC_URL}}img/like.png");
+}
+.icon_like_0{
+	background-image: url("{{STATIC_URL}}img/like.png");
+	title:"未关注"
+}
+.icon_like_1{
+	background-image: url("{{STATIC_URL}}img/slike.png");
+	title:"已关注"
+}
+.icon_like_2{
+	background-image: url("{{STATIC_URL}}img/dlike.png");
+	title:"相互关注"
+}
+.icon_dislike{
+	top:-5px;
+	left:185px;
+	background-image: url("{{STATIC_URL}}img/dislike.png");
+}
+
+
+.icon_follow,.icon_fans,.icon_mutual_like{
+	background:url("{{STATIC_URL}}img/关注.png") no-repeat;
+	margin-left:8px;
+	display:block;
+    height: 27px;
+    width: 32px;
+}
+
+.icon_fans{
+	background-image: url("{{STATIC_URL}}img/粉丝.png");
+}
+
+.icon_mutual_like{
+	background-image: url("{{STATIC_URL}}img/相互关注.png");
+}
+
+.ding{
+	opacity:1;
+	background-image: url("{{STATIC_URL}}img/1.png");
 }
 
 /*common*/
@@ -433,6 +726,10 @@ hr{
 	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
 }
 
+.card_panel:hover .icon_ding,.card_panel:hover .icon_like,.card_panel:hover .icon_dislike{
+	opacity:1;
+}
+
 .label,.fR,.btn,.badge,.progress {
     border-radius: 0;
 }
@@ -453,7 +750,6 @@ hr{
     border-width: 50px 40px 50px 0;
     left: -50px;
     width: 0;
-	
 }
 
 .controlArrow.next {
@@ -469,13 +765,20 @@ hr{
 .controlArrow.prev:hover{
 	border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.7) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 }
+
+#compare_tip{
+	display:none;
+	width: 600px;
+	position: absolute;
+	z-index:9999;
+}
 </style>
 {% endblock %}
 {% block navigation %}
 {% endblock %}
 {% block content %}
 <header class="navbar">
-  <div class="container">
+  <div class="container" style="height:10px;">
     <div class="navbar-header">
     <a href='/'>
       <img alt="140x140" src="{{STATIC_URL}}img/logo.png"/>
@@ -509,7 +812,7 @@ hr{
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <!-- <a href="../about">关于</a> -->
+          <!-- <a href=".{{STATIC_URL}}about">关于</a> -->
         </li>
       </ul>
     </nav>
@@ -528,7 +831,7 @@ hr{
 				<table class="table">
 					<tbody>
 					  <tr>
-						<td><i class="icon_like"></i></td>
+						<td><i class="icon_follow"></i></td>
 						<td><a href="/user/follow/1">关注</a></td>
 						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
 					  </tr>
@@ -567,19 +870,26 @@ hr{
 					<a href="#"><div>缘分拼图</div></a>
 				</li>
 			</ul> -->
-			<div class="row" style="width:894px;">
+			<div class="row card_row" style="width:894px;">
 			{% for page  in pages %}
-			<div class="card card_panel col-sm-6">
+			<div class="card card_panel col-sm-6 hideable" id="{{page.user_id}}">
 			    <div class="tabbable">
 					<div class="tab-content">
 						<div class="tab-pane active" id="tab4{{page.user_id}}">
-							<div class="introBox venoboxajax" data-gall="gall3" data-type="ajax">
+							<div class="introBox venoboxframe" data-type="iframe" href="/user/detailed_info/{{page.user_id}}">
 								<img alt="140x140" src="{{MEDIA_URL}}{{page.avatar_name}}" class="head head_girl"/>
-								<div class="card-introBox"><span class="detail_info">查看<br/>详细信息</span></div>
+								<div class="card-introBox" title="查看详细信息"><span class="detail_info">查看<br/>详细信息</span></div>
 							</div>
-							<div id="1" class="name other_name">{{page.username}}
-														   <a  href="javascript:void(0);" onclick="attention({{page.user_id}},{{page.isFriend}});" data-toggle="tab" ><i class="icon_like_{{page.isFriend}}" id="attention_{{page.user_id}}"></i></a>
-							<canvas height="260" width="260"></canvas>
+							<div  id="{{forloop.counter}}" class="name other_name" title="{{page.username}}" onclick="leida(this);">
+							<span class="name">{{page.username}}</span>
+							
+							    <button class="compare_cancle btn btn-success" onclick="compare_cancle(this)">取消对比</button>
+								<button class="compare btn btn-success" onclick="compare(this)">对比</button>
+								<ul class="list-inline chart_info small">
+									<li style="color:rgb(0,151,36)" class="name_self"></li>
+									<li style="color:rgb(241,23,25)" class="name_other"></li>
+								</ul>
+								<canvas height="320" width="320"></canvas>
 							</div>
 							<hr />
 						<div class="tag">
@@ -590,10 +900,19 @@ hr{
 							{%ifequal page.city None%}未填{%else%} {{page.city}}{%endifequal%}
 							</span>
 						</div>
+						<div class="tool_bar">
+							<a href="#"><i class="icon_ding" title="固定" onclick="ding(this)"></i></a>
+							<a href="javascript:void(0);"><i  class="icon_like_{{page.isFriend}}" title="喜欢" onclick="like(this)"></i></a>
+							<a href="#"><i class="icon_dislike" title="不喜欢" id="{{page.user_id}}" onclick="dislike(this);"></i></a>
+						</div>
 						</div>
 						<div class="tab-pane" id="tab5{{page.user_id}}">
+							<div class="head head_girl" style="margin-left:20px;margin-top:4px;height:60px;width:60px;display:inline-block;">
+								<img alt="140x140" src="{{MEDIA_URL}}{{page.avatar_name}}"/>
+							</div>
+							<div class="name" style="position:absolute;top:10px;left:80px;">{{page.username}}</div>
 							<div class="scroller">
-								<ul class="hoverbox">
+								<ul class="hoverbox" style="margin-left:22px;">
 								<li>
 								<a id="firstlink" class="venobox" data-gall="gall1" href="{{STATIC_URL}}img/img1.jpg" title="ss"><img alt="demo1" src="{{STATIC_URL}}img/img1.jpg" title="demo1"></a>
 								</li>
@@ -610,20 +929,14 @@ hr{
 							</div>
 						</div>
 						<div class="tab-pane chat_tab" id="tab6{{page.user_id}}">
+						<div class="head head_girl" style="margin-left:20px;margin-top:4px;height:60px;width:60px;display:inline-block;">
+								<img alt="140x140" src="{{MEDIA_URL}}{{page.avatar_name}}"/>
+							</div>
+							<div class="name" style="position:absolute;top:10px;left:80px;">{{page.username}}</div>
 						<div class="chat" id="chat_{{page.user_id}}">
-						<!-- <div class="chat_content_group other"> -->
-							<!-- <img width="30px" height="30px" src="http://face9.web.qq.com/cgi/svr/face/getface?cache=1&amp;type=1&amp;f=40&amp;uin=491958669&amp;t=1386293093&amp;vfwebqq=a19b4a7febed8a565a6f77c38012b0736288543eb6435a9f954c5bd2f2bec1f558a92ef6f1a9f86e" class="chat_content_avatar"> -->
-							<!-- <div class="chat_content">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈<div class="cloudArrow "></div></div> -->
-							
-						<!-- </div> -->
-						<!-- <div  class="chat_content_group self"> -->
-							<!-- <img width="30px" height="30px" src="http://face9.web.qq.com/cgi/svr/face/getface?cache=1&amp;type=1&amp;f=40&amp;uin=491958669&amp;t=1386293093&amp;vfwebqq=a19b4a7febed8a565a6f77c38012b0736288543eb6435a9f954c5bd2f2bec1f558a92ef6f1a9f86e" class="chat_content_avatar"> -->
-							 <!-- <div class="chat_content">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵<div class="cloudArrow "></div></div> -->
-							
-						<!-- </div> -->
 						</div>
 							<textarea rows="1" class="chat_textarea" id="reply_content_{{page.user_id}}"></textarea>
-							<button style="display:inline" class="btn btn-xs btn-success btn_send_msg" style="float:right;margin-right:13px;" onclick="sendMessage({{page.user_id}});">发送</button> 
+							<button style="display:inline" class="btn btn-xs btn_send_msg" style="float:right;margin-right:13px;"  onclick="sendMsg(this)">发送</button> 
 							<a href="#" class="venoboxframe" data-type="iframe">聊天记录</a>
 						</div>
 						
@@ -631,16 +944,20 @@ hr{
 					<ul class="list-inline card-nav">
 						<li class="active"><a href="#tab4{{page.user_id}}" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
 						<li><a href="#tab5{{page.user_id}}" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></li>
-						<li><a href="#tab6{{page.user_id}}" data-toggle="tab"><i class="icon_msg" title="消息" id="{{page.user_id}}"></i></a></li>
+						<li><a href="#tab6{{page.user_id}}" data-toggle="tab"><i class="icon_msg" title="消息" onclick="initMsg(this)"></i></a></li>
 					</ul>
 				</div>
 			</div>
             {% endfor %}
             <!--   {%if pages.paginator.count|greater_than:8 %}-->
-			   {% if pages.has_previous %}<a  class="controlArrow prev" href="?page={{ pages.previous_page_number }}"></a>
+			   {% if pages.has_previous %}<a  class="controlArrow prev" title="上一页"></a>
+			   {% else %}
+			     <a  class="controlArrow prev" title="上一页" style="display:none;">
 			   {% endif %}
 		      {% if pages.has_next %}
-		      <a class="controlArrow next" href="?page={{ pages.next_page_number }}"></a>
+		      <a class="controlArrow next" title="下一页" ></a>
+		      {% else %}
+			     <a class="controlArrow next" title="下一页" style="display:none;">
 		      {% endif %}
             <!--  {%endif%}-->
 			
@@ -648,41 +965,66 @@ hr{
 	</div>
 </div>
 
-<script type="text/javascript">
-	 $(document).ready(function(){
-		$('.venobox').venobox({
-			numeratio: true,
-			border: '0'
-		});
-		$('.venoboxvid').venobox({
-			bgcolor: '#000'
-		});
-		$('.venoboxframe').venobox({
-			border: '6px'
-		});
-		$('.venoboxinline').venobox({
-			framewidth: '300px',
-			frameheight: '250px',
-			border: '6px',
-			bgcolor: '#f46f00'
-		});
-		$('.venoboxajax').venobox({
-			framewidth: '465px',
-			frameheight: '232px',
-			border: '30px;'
-		});
-		$('.btn_send_msg').click(function(){
-			var api = pane.data('jsp');
-			var content = $(this).prev();
-			var chat = $(this).prev().prev().children().children();
-			var str = content.val().replace(/^\s*$/g,'');
-			if(str!=''){
-				chat.append('<div class="chat_content_group self"><div class="chat_content">'+str+'<div class="cloudArrow "></div></div></div>');
-				content.val('');
-			}
-			pane.jScrollPane();
-			api.scrollTo(0,9999);
-		});
-	})
-</script>
+<div id="card" style="display:none;">
+<div class="card card_panel col-sm-6 hideable">
+	    <div class="tabbable">
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab4">
+					<div class="introBox venoboxframe" data-type="iframe" href="detailed_info.html">
+					<div class="head head_girl">
+						<img src=".\img\image1.jpeg" alt="当前头像">
+					</div>
+						<div class="card-introBox" title="查看详细信息"><span class="detail_info">查看<br/>详细信息</span></div>
+					</div>
+					<div id="0" class="name other_name" title="王雪" onclick="leida(this);">
+						<span class="name username">王雪</span>
+						<button class="compare_cancle btn btn-success" onclick="compare_cancle(this)">取消对比</button>
+						<button class="compare btn btn-success" onclick="compare(this)">对比</button>
+						<ul class="list-inline chart_info small">
+							<li style="color:rgb(0,151,36)" class="name_self"></li>
+							<li style="color:rgb(241,23,25)" class="name_other"></li>
+						</ul>
+						<canvas height="320" width="320"></canvas>
+					</div>
+					<hr />
+				<div class="tag">
+					<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span>杭州</span>
+				</div>
+				<div class="tool_bar">
+					<a href="#"><i class="icon_ding" title="固定" onclick="ding(this);"></i></a>
+					<a href="javascript:void(0);"><i class="icon_like" title="喜欢" onclick="like(this)"></i></a>
+					<a href="#"><i class="icon_dislike" title="不喜欢" onclick="dislike(this);"></i></a>
+				</div>
+				</div>
+				<div class="tab-pane" id="tab5">
+					<div class="head head_girl" style="margin-left:20px;margin-top:4px;height:60px;width:60px;display:inline-block;">
+						<img alt="140x140" src=".\img\image1.jpeg"/>
+					</div>
+					<span class="name username" style="position:absolute;top:10px;left:80px;">王雪</span>
+					<div class="scroller">
+						<ul class="hoverbox" style="margin-left:22px;">
+						</ul>
+					</div>
+				</div>
+				<div class="tab-pane chat_tab" id="tab6">
+					<div class="head head_girl" style="margin-left:20px;margin-top:4px;height:60px;width:60px;display:inline-block;">
+						<img alt="140x140" src=".\img\image1.jpeg"/>
+					</div>
+					<span class="name username" style="position:absolute;top:10px;left:80px;">王雪</span>
+				<div class="chat">
+				</div>
+					<textarea rows="1" class="chat_textarea"></textarea>
+					<button class="btn btn-xs btn_send_msg" onclick="sendMsg(this)">发送</button> 
+					<a href="#" class="venoboxframe" data-type="iframe">聊天记录</a>
+				</div>
+			</div>
+			<ul class="list-inline card-nav">
+				<li class="active"><a href="#tab4" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
+				<li><a href="#tab5" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></li>
+				<li><a href="#tab6" data-toggle="tab" ><i class="icon_msg" title="消息" onclick="initMsg(this)"></i></a></li>
+			</ul>
+		</div>
+	</div>
+</div>
 {% endblock %}

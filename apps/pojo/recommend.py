@@ -4,6 +4,7 @@ Created on Sep 17, 2013
 
 @author: jin
 '''
+import simplejson
 '''
   推荐结果类
 '''
@@ -23,3 +24,15 @@ class RecommendResult(object):
         self.avatar_name=avatar_name
         self.isVote=isVote
         self.city=city
+        
+class MyEncoder(simplejson.JSONEncoder):
+    def default(self, obj):
+        if not isinstance(obj, RecommendResult):
+            return super(MyEncoder, self).default(obj)
+        dict=obj.__dict__
+        for key in dict.keys():
+            if dict[key] in [-1,'N',None]:
+                dict[key]=u'未填'
+        if dict['age']!=u'未填':
+            dict['age']=str(dict['age'])+u'岁'
+        return dict

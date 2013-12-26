@@ -19,11 +19,12 @@ def page(request,querySet,**kwargs):
      after_range_num = kwargs.get('after_range_num', util_settings.AFTER_RANGE_NUM)
      bevor_range_num = kwargs.get('bevor_range_num', util_settings.BEVOR_RANGE_NUM)
      per_page_num = kwargs.get('page_num', util_settings.PAGE_NUM)
-     
+     page=kwargs.get('page',None)
      try:
-         page=int(request.GET.get('page', '1'))
-         if page<1:
-             page=1
+         if page==None:
+               page=int(request.GET.get('page', '1'))
+               if page<1:
+                   page=1
      except:
          page=1
      paginator =Paginator(querySet,per_page_num)

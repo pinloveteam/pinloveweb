@@ -20,7 +20,6 @@ import time
 
 import string
 from django.contrib.auth.models import User
-from django.utils import simplejson
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from PIL import ImageFile
@@ -29,6 +28,7 @@ from django.contrib import auth
 from apps.upload_avatar import app_settings
 from apps.recommend_app.models import Grade
 from util.page import page
+import simplejson
 
 # update user basic information
 def update_Basic_Profile_view(request): 
@@ -578,3 +578,45 @@ def photo_check(request):
              return render(request,'member/photo_check.html',arg)
     else:
         return render(request,'login.html',arg)
+
+
+def  detailed_info(request,userId):
+    try:
+        userId=int(userId)
+    except Exception as e:
+        print 'userId转换失败'
+    arg={}
+    userProfile=UserProfile.objects.get_user_info(userId)
+    from apps.user_app.method import user_info_card
+    return render(request,'detailed_info.html',user_info_card(userProfile))
+
+def dislike(request):
+    arg={}
+    try:
+        userId=int(request.GET.get('userId'))
+        page=int(request.GET.get('page'))
+    except Exception:
+            raise '转换失败'
+    cache_key = request.user.id
+    from django.core.cache import cache
+    data = cache.get(cache_key)
+    if data is None:
+        cache.set(cache_key, [userId,])
+    else:
+        data.append(userId)
+        cache.set(cache_key, data)
+    #没有下一页
+    if  page == -1:
+        arg['result']='remove_card'
+        json=simplejson.dumps(arg)
+        return HttpResponse(json)
+    from pinloveweb.views import loggedin
+    matchResult=loggedin(request,page=page,card=True)
+    arg['card']=matchResult.object_list[0]
+    if page<=matchResult.number:
+        arg['has_next']=True
+#     arg['next_page']=matchResult.has_next()
+    arg['result']='success'
+    from apps.pojo.recommend import MyEncoder
+    json=simplejson.dumps(arg,cls=MyEncoder)
+    return HttpResponse(json)

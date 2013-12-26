@@ -3,8 +3,9 @@ Created on Nov 19, 2013
 
 @author: jin
 '''
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 import re
+import simplejson
 class AuthenticationMiddleware(object):   
     def process_request(self, request):  
         passList=['/account/forgetpwdpage/','/account/auth/','/account/register/','/',]
@@ -16,7 +17,10 @@ class AuthenticationMiddleware(object):
             if request.user.is_authenticated():
                 return None  
             else:
-                if request.path=='/account/loggedout/':
+                if request.REQUEST.get('ajax',False):
+                    json=simplejson.dumps({'login':'invalid','redirectURL':'/?redirectURL=request.path'})
+                    return HttpResponse(json)
+                if request.path in ['/account/loggedout/','/account/invalid/']:
                     return HttpResponseRedirect('/')
                 else:
                     return HttpResponseRedirect('/?redirectURL='+request.path)

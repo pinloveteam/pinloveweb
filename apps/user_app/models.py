@@ -24,8 +24,15 @@ from apps.recommend_app.recommend_util import cal_recommend
 from util.singal_common import cal_recommend_user
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
 
-
-
+class UserProfileManager(models.Manager):
+    '''
+    根据用户id获取用户详细信息
+    '''    
+    def get_user_info(self,userId):
+        try:
+            return UserProfile.objects.get(user_id=userId)  
+        except Exception as e:
+            print e 
 
 class UserProfile(models.Model, UploadAvatarMixIn):
     
@@ -221,7 +228,9 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     likeChild=models.CharField(verbose_name=r'是否喜欢有孩子',choices=(('N',r'未填'),('0',r'愿意'),('1',r'不愿意'),('2',r'视情况而定'),),max_length=1,null=True,blank=True,)
     lastLoginAddress=models.CharField(verbose_name=r'最后登录地点',max_length=100,null=True,blank=True,)
  
-             
+    #定制管理器
+    objects = UserProfileManager()
+    
     class Meta:
         verbose_name=u'用户基本信息'
         verbose_name_plural = u'用户基本信息'
