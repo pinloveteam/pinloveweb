@@ -230,7 +230,7 @@ def get_noread_messges_by_userid(request):
     #获取未读的message和最近发出的三条message
     sqlList=[user.id,userId,0,0,userId,user.id]
     messageList=Message.objects.raw('SELECT * from message where receiver_id=%s and sender_id=%s and isRead=%s and isDeletereceiver=%s or id in(select id from (SELECT id from message m where m.receiver_id=%s and m.sender_id=%s limit 3) as s) ORDER BY sendTime DESC',
-                                [1,6,0,0,6,1])
+                                sqlList)
 # messageList=Message.objects.filter(receiver_id=request.user,sender_id=userId,isRead=False,isDeletereceiver=False).order_by('sendTime')
     result=[message.as_json_for_id_conent() for message in messageList ]
     json = simplejson.dumps(result)
