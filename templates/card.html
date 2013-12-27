@@ -90,7 +90,7 @@ $(document).ready(function(){
 		var nextCard = $('.card_row').children('.hideable');
 		var size = nextCard.hide('slow').removeClass('hideable').size();
 		//a = $('.card_row').children('.hideable').hide('slow').removeClass('hideable').size();
-		 $.getJSON((window.location.href,{ajax:true,page:previous_page_number,choseCards:choseCardslist},function(data) {
+		 $.getJSON(window.location.href,{ajax:true,page:previous_page_number,choseCards:choseCardslist},function(data) {
 			 if(data['result']=='success'){
 				 if (data['has_previous']){
 					 previous_page_number=data['previous_page_number'];
