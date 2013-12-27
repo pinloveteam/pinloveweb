@@ -29,6 +29,8 @@ from apps.upload_avatar import app_settings
 from apps.recommend_app.models import Grade
 from util.page import page
 import simplejson
+import logging
+log=logging.getLogger('django.db.backends')
 
 # update user basic information
 def update_Basic_Profile_view(request): 
@@ -347,7 +349,7 @@ attribute：
 return：
    page 
 '''       
-def follow(request,type):
+def follow(request,type,ajax='false'):
     arg={}
     if request.user.is_authenticated() :
         try:
@@ -390,8 +392,21 @@ def follow(request,type):
                    else:
                        cardList[i].isFriend=1
            i+=1
+        ajax=request.GET.get('ajax')
+        if ajax =='true':
+            data={}
+            data['has_next']=cardList.has_next()
+            if cardList.has_next():
+                data['next_page_number']=cardList.next_page_number()
+            if cardList.has_previous():
+               data['previous_page_number']=cardList.previous_page_number()
+            data['has_previous']=cardList.has_previous()
+            data['result']='success'
+            data['cards']=cardList.object_list
+            from apps.pojo.recommend import MyEncoder
+            json=simplejson.dumps(data,cls=MyEncoder)
+            return HttpResponse(json)
         arg['pages']=cardList
-        
         from pinloveweb.views import init_card
         arg=init_card(arg,userProfile)
         arg['myFollow']=myFollow
