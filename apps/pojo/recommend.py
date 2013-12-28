@@ -8,6 +8,7 @@ import simplejson
 '''
   推荐结果类
 '''
+empty_result_list=[-1,'N',None]
 class RecommendResult(object):
     def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote,city):
         self.user_id=userId
@@ -24,6 +25,13 @@ class RecommendResult(object):
         self.avatar_name=avatar_name
         self.isVote=isVote
         self.city=city
+        
+    def _dict_(self):
+        dict=vars(self) 
+        for key in dict.keys():
+            if dict[key] in [-1,'N',None]:
+                dict[key]=u'未填'
+        return dict
         
 class MyEncoder(simplejson.JSONEncoder):
     def default(self, obj):

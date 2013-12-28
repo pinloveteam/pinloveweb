@@ -393,9 +393,10 @@ class Friend(models.Model):
     friend=models.ForeignKey(User,related_name='user_friend',verbose_name=r'异性',)
     # friend type
     type=models.CharField(max_length=1,verbose_name=r'类型',)
+    
     class Meta:
-        verbose_name = u'朋友' 
-        verbose_name_plural = u'朋友'
+        verbose_name = u'关注表' 
+        verbose_name_plural = u'关注表'
 #     
 # class Message(models.Model):
 #     messageId=models.AutoField(primary_key=True,max_length=8)

@@ -1,4 +1,4 @@
-#Mon Dec 23 13:15:08 CST 2013
+#Fri Dec 27 15:01:24 CST 2013
 =\=\=\=\=\=\=
 <<<<<<<=HEAD
 >>>>>>>=8c96ad0f96d2264376e99c8817f83cab7d318606
@@ -54,6 +54,7 @@ encoding//apps/upload_avatar/signals.py=utf-8
 encoding//apps/upload_avatar/urls.py=utf-8
 encoding//apps/upload_avatar/views.py=utf-8
 encoding//apps/user_app/admin.py=utf-8
+encoding//apps/user_app/forms.py=utf-8
 encoding//apps/user_app/method.py=utf-8
 encoding//apps/user_app/models.py=utf-8
 encoding//apps/user_app/test.py=utf-8

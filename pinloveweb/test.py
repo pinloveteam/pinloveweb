@@ -58,7 +58,5 @@ from pinloveweb.settings import PATH
 #         logger.warn("test error")
 #         logging.exception('Got exception on main handler')
 # >>>>>>> Stashed changes 1386963224.48
-
-list=[1,2,3,4]
-a=[1,2]
-print [x for x in list if x not in a]
+from django.core.cache import cache
+cache.set(1, [1,])

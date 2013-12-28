@@ -110,10 +110,10 @@ list=[0.000]*100001
 # print  '话费时间:'+str(finish-start)
 
 # print School.objects.filter(name='哈佛大学').count()
-if  not (UserProfile.objects.filter(user_id=2).filter(height=-1).exists() )and not (UserExpect.objects.filter(user_id=userId).filter(heighty1=0.00).filter(heighty2=0.00).filter(heighty3=0.00).exclude(heighty4=0.00).filter(heighty5=0.00).filter(heighty6=0.00).filter(heighty7=0.00).filter(heighty8=0.00).exists()):
-     print 1
-if Grade.objects.filter(user_id=101).exclude(heightweight__isnull=True).exclude(incomescore__isnull=True).exclude(incomeweight__isnull=True).exclude(edcationscore__isnull=True).exclude(edcationweight__isnull=True).exclude(appearancescore__isnull=True).exclude(appearanceweight__isnull=True).exists():
-      print 2
+# if  not (UserProfile.objects.filter(user_id=2).filter(height=-1).exists() )and not (UserExpect.objects.filter(user_id=userId).filter(heighty1=0.00).filter(heighty2=0.00).filter(heighty3=0.00).exclude(heighty4=0.00).filter(heighty5=0.00).filter(heighty6=0.00).filter(heighty7=0.00).filter(heighty8=0.00).exists()):
+#      print 1
+# if Grade.objects.filter(user_id=101).exclude(heightweight__isnull=True).exclude(incomescore__isnull=True).exclude(incomeweight__isnull=True).exclude(edcationscore__isnull=True).exclude(edcationweight__isnull=True).exclude(appearancescore__isnull=True).exclude(appearanceweight__isnull=True).exists():
+#       print 2
       
-      
+print getattr(settings, "AUTH_USER_MODEL", "auth.User")
       

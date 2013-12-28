@@ -55,13 +55,21 @@ class UserExpect(models.Model):
 #     class Meta:
 #         verbose_name = u'用户期望biao' 
 #         verbose_name_plural = u'推荐打分表'
-
+class MatchResultManager(models.Manager):
+    '''
+    根据id判断是否存在
+    '''
+    def is_exist_by_userid(self,myId):
+        return MatchResult.objects.filter(my_id=myId).exists()
+       
 class MatchResult(models.Model):
     my=models.ForeignKey(User,related_name='my_User',verbose_name=u"自己")
     other=models.ForeignKey(User,related_name='other_User',verbose_name=u"异性")
     scoreMyself=models.FloatField(verbose_name=u"异性给自己打分",default='0.00')
     scoreOther=models.FloatField(verbose_name=u"自己给异性打分",default='0.00')
     macthScore=models.FloatField(verbose_name=u"计算总分",default='0.00')
+     #定制管理器
+    objects = MatchResultManager()
     class Meta:
         verbose_name = u'推荐结果表' 
         verbose_name_plural = u'推荐结果表'

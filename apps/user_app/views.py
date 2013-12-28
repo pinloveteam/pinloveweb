@@ -406,6 +406,8 @@ def follow(request,type,ajax='false'):
             from apps.pojo.recommend import MyEncoder
             json=simplejson.dumps(data,cls=MyEncoder)
             return HttpResponse(json)
+        from apps.pojo.recommend import MyEncoder
+        cardList.object_list=simplejson.dumps(cardList.object_list,cls=MyEncoder)
         arg['pages']=cardList
         from pinloveweb.views import init_card
         arg=init_card(arg,userProfile)
@@ -621,14 +623,14 @@ def dislike(request):
         data.append(userId)
         cache.set(cache_key, data)
     #没有下一页
-    if  page == -1:
+    if  page < 0:
         arg['result']='remove_card'
         json=simplejson.dumps(arg)
         return HttpResponse(json)
     from pinloveweb.views import loggedin
     matchResult=loggedin(request,page=page,card=True)
-    arg['card']=matchResult.object_list[0]
-    if page<=matchResult.number:
+    arg['card']=matchResult.object_list[7]
+    if page+1<=matchResult.number:
         arg['has_next']=True
 #     arg['next_page']=matchResult.has_next()
     arg['result']='success'

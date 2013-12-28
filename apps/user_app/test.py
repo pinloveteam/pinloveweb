@@ -70,8 +70,27 @@ from django.db.models.query_utils import Q
 # user=UserProfile.objects.select_related().get(QQopenId='61C5FF21E0D49DD32BBF4E6571B536E3').user
 # User(username='sdsd',password="None").save()
 # MessageList=Message.objects.filter(Q(receiver_id=1,sender_id=6,isRead=False,isDeletereceiver=False)|Q(receiver_id=6,sender_id=1)[:3]).order_by('sendTime')
-MessageList=Message.objects.raw('SELECT * from message where receiver_id=%s and sender_id=%s and isRead=%s and isDeletereceiver=%s or id in(select id from (SELECT id from message m where m.receiver_id=%s and m.sender_id=%s limit 3) as s) ORDER BY sendTime DESC',
-                                [1,6,0,0,6,1])
-for m in MessageList:
-    print m.receiver_id
-
+# MessageList=Message.objects.raw('SELECT * from message where receiver_id=%s and sender_id=%s and isRead=%s and isDeletereceiver=%s or id in(select id from (SELECT id from message m where m.receiver_id=%s and m.sender_id=%s limit 3) as s) ORDER BY sendTime DESC',
+#                                 [1,6,0,0,6,1])
+# for m in MessageList:
+#     print m.receiver_id
+# def cache(key):
+#     cache_key = key
+#     from django.core.cache import cache
+#     data = cache.get(cache_key)
+#     if data is None:
+#        cache.set(cache_key, [1111,])
+#     else:
+#         print data
+# cache(3)
+class Animal(object):
+    def __init__(self):
+        self.legs = 2
+        self.name = 'Dog'
+        self.color= 'Spotted'
+        self.smell= 'Alot'
+        self.age  = 10
+        self.kids = 0
+an = Animal()
+attrs = vars(an)
+print attrs

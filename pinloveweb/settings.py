@@ -307,7 +307,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#      
+#       
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -332,7 +332,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-        
+         
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.

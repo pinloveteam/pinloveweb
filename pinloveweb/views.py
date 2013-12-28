@@ -97,8 +97,8 @@ def get_cache_by_key(key):
 def loggedin(request,**kwargs) : 
     from apps.recommend_app.models import MatchResult
     #判断推荐分数是否生成
-    count=MatchResult.objects.filter(my_id=request.user.id).count()
-    userProfile=UserProfile.objects.get(user_id=request.user.id)
+    flag=MatchResult.objects.is_exist_by_userid(request.user.id)
+    userProfile=UserProfile.objects.get_user_info(request.user.id)
     #关注
     myFollow=Friend.objects.filter(my=request.user).count()
     fans=Friend.objects.filter(friend=request.user).count()
@@ -106,13 +106,14 @@ def loggedin(request,**kwargs) :
     cursor=connection.cursor();
     cursor.execute(sql)
     follow=cursor.fetchall()
+    
     #相互关注的人的id
     focusEachOtherList=[]
     for f in follow:
         focusEachOtherList.append(f[0])
     #从缓存中获取不推荐用户id
     disLikeUserIdList=get_cache_by_key(request.user.id)
-    if count>0:
+    if flag:
          if disLikeUserIdList is None:
              matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
          else:
@@ -122,12 +123,11 @@ def loggedin(request,**kwargs) :
          from apps.recommend_app.views import matchResultList_to_RecommendResultList
          matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
          friends = Friend.objects.filter(my_id=request.user.id)
-         arg['pages']=is_focus_each_other(request,matchResultList,focusEachOtherList)
+         matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
     else:
           if disLikeUserIdList is None: 
-              userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender)
+              userProfileList=UserProfile.objects.exclude(gender=userProfile.gender)
           else:
-              disLikeUserIdList.append(request.user.id)
               userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender)
 #               userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender).exclude(user_id__in=disLikeUserIdList)
           arg=page(request,userProfileList,**kwargs)   
@@ -135,7 +135,7 @@ def loggedin(request,**kwargs) :
           from apps.recommend_app.views import userProfileList_to_RecommendResultList
           matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
           friends = Friend.objects.select_related().filter(my=request.user)
-          arg['pages']=is_focus_each_other(request,matchResultList,focusEachOtherList)
+          matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
     if kwargs.get('card')==True:
         return matchResultList
     if request.GET.get('ajax')=='true':
@@ -160,6 +160,9 @@ def loggedin(request,**kwargs) :
          from apps.pojo.recommend import MyEncoder
          json=simplejson.dumps(data,cls=MyEncoder)
          return HttpResponse(json)
+    from apps.pojo.recommend import MyEncoder
+    matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
+    arg['pages']=matchResultList
     arg=init_card(arg,userProfile)
     arg['myFollow']=myFollow
     arg['fans']=fans

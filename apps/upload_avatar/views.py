@@ -159,7 +159,7 @@ def crop_avatar(request):
         _delete_crop_avatar_on_disk(None, user,None,None)
     #save 图片到user_profile
     from apps.upload_avatar.app_settings import UPLOAD_AVATAR_DEFAULT_SIZE
-    avatar_name='user_img/'+avatar_name+'-'+str(UPLOAD_AVATAR_DEFAULT_SIZE)+'.'+UPLOAD_AVATAR_SAVE_FORMAT
+    avatar_name='user_img/'+avatar_name
     avatar_crop_done.send(sender=None, uid=get_uid(request), avatar_name=avatar_name)
     if UPLOAD_AVATAR_DELETE_ORIGINAL_AFTER_CROP:
         upim.delete()
