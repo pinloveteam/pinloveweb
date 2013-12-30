@@ -261,8 +261,8 @@ canvas{
 }
 
 .icon_ding{
-	top:10px;
-	left:10px;
+	top:0px;
+	left:0px;
 	background-image: url("/static/img/2.png");
 }
 
@@ -285,7 +285,7 @@ canvas{
 	title:"相互关注"
 }
 .icon_dislike{
-	top:-5px;
+	top:0px;
 	left:185px;
 	background-image: url("/static/img/dislike.png");
 }
