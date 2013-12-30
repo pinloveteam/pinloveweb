@@ -62,6 +62,36 @@ window.Card = function(person){
 		    });
 	};
 	
+	//初始化对话框
+	var init_msg = function(){
+	    panel = $(this).parents('.card-nav').prev().find('.chat');
+    	 panel.jScrollPane();
+    	  var userId=$(this).parents('.card_panel').attr('id');
+    	   $.getJSON("/message/get_noread_messges/",{userId:userId,ajax:true},function(data) {
+    		   if (data['login']=='invalid'){
+    			   alert("请先登录");
+    			   window.location =data['redirectURL'];
+    		   }
+    		   panel.children().children().children().remove();
+    		   for(var message in data){
+    			   if (userId!=data[message].receiver_id){
+    				   var api = panel.data('jsp');
+    					var chat = panel.find('.jspPane');
+    					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+    					panel.jScrollPane();
+    					api.scrollTo(0,9999);
+    			   }else{
+    				   var api = panel.data('jsp');
+    				    var chat = panel.find('.jspPane');
+    					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+    					panel.jScrollPane();
+    					api.scrollTo(0,9999);
+    			   }
+    	    	  
+    	      }
+    	   });	
+	};
+	
 	var ding = function(){
 		$(this).toggleClass('ding').hasClass('ding')?$(this).attr('title','取消固定').parents('.card').removeClass('hideable'):$(this).attr('title','固定').parents('.card').addClass('hideable');
 	}
@@ -184,7 +214,7 @@ window.Card = function(person){
 		
 	$('.card_row').append(this.template.html());
 	
-	$('.icon_dislike,.icon_ding,.btn_send_msg,.other_name,.compare,.compare_cancle,[class^="icon_like"]').unbind();
+	$('.icon_dislike,.icon_ding,.btn_send_msg,.other_name,.compare,.compare_cancle,[class^="icon_like"],.icon_msg').unbind();
 	
 	$('.icon_dislike').on('click',dislike);
 	
@@ -199,6 +229,8 @@ window.Card = function(person){
 	$('.compare_cancle').on('click',compare_cancle);
 	
 	$("[class^='icon_like']").on('click',like);
+	
+	$(".icon_msg").on('click',init_msg);
 }
 
 function Person(username,age,city,headImg,userId,isFriend){
