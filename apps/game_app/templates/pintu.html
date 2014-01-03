@@ -2,7 +2,6 @@
 <html>
 <head>
 <link href="./static/css/bootstrap.min.css" rel="stylesheet">
-<link href="./static/css/main.css" rel="stylesheet">
 <style type="text/css">
 body{
     margin:0px;
@@ -90,8 +89,8 @@ function loadStage() {
 	stage.add(layer);
 
         }
-
-	function commit(){
+$(document).ready(function(){
+	$('#btn1').click(function(){
 		for(i=0;i<pieces;i++){
 			if(piecesArray[i].shape.getOpacity()==1){
 				selectedPieces[piecesArray[i].shape.getId()]=piecesArray[i].shape.getId();
@@ -125,8 +124,9 @@ function loadStage() {
 				  	$('#card').find('.tag').first().html(data['age']).next().html(data['city']);
 				}
 				$('#count').html('游戏次数:'+data['count']);
-				$('#card').show('slow');
 				$('#btn2').show();
+				$('#btn1').hide();
+				$('#card').show('slow');
 	 });
 	 }
 	 else{
@@ -134,13 +134,11 @@ function loadStage() {
 	 	$('#btn1').show();
 	 }
 	 
-	}
-$(document).ready(function(){
-	$('#btn1').click(function(){
-		$(this).hide();	
 	});
 		
 	$('#btn2').click(function(){
+		selectedPieces = new Array();
+		loadStage();
 		$(this).hide();
 		$('#card').hide();
 		$('#btn1').show();
@@ -150,8 +148,8 @@ $(document).ready(function(){
 </head>
 <body onload="loadStage()">
     <div id="container"></div>
-	<button id="btn1" type="button" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;" onclick="commit();">开始匹配</button>
-	<button id="btn2" type="button" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;" onclick="loadStage();">在玩一次</button>
+	<button id="btn1" type="button" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;">开始匹配</button>
+	<button id="btn2" type="button" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;">在玩一次</button>
 	<span id="count" style="position: absolute; left: 900px; top: 300px; float: left; display: block">游戏次数:{{count}}</span>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
 <div class="card">
@@ -159,13 +157,13 @@ $(document).ready(function(){
 		<img src="" class="img-circle">
 	</div>
 	<div class="name" title="22">
-		<h3><strong></strong></h3>
+		<h3><strong></strong></h3>count
 	</div>
 	<div class="tag">
 		<span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span></span>
 	</div>
-	<button id="btn" type="button" class="btn btn-warning">打招呼</button>
+	<button type="button" class="btn btn-warning">打招呼</button>
 </div>
 </div>	
 </body>

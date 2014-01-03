@@ -46,11 +46,11 @@ class Yuanfenjigsaw:
         if self.data_unavailable() :
             return {'status_code':jiglobal.DATA_UNAVAILABLE}
         if self.achieve_game_times() :
-            return {'status_code':jiglobal.GAME_TIMES_REACH_THE_LIMIT}
+            return {'status_code':jiglobal.GAME_TIMES_REACH_THE_LIMIT,'count':0}
         matching_user = self.get_matching_user()
         if matching_user != None :
 #             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
-            return [{'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'city':matching_user.city,'age':matching_user.age,'avatar_name':matching_user.avatar_name,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}]
+            return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'city':matching_user.city,'age':matching_user.age,'avatar_name':matching_user.avatar_name,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
         else :  
             return {'status_code':jiglobal.NO_MATCHING_USER,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
         
