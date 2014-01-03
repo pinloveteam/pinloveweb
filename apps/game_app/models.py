@@ -16,7 +16,7 @@ class Yuanfenjigsaw:
             reset_game()
             
         self.current_username = request.user.username
-        self.selected_pieces_str=request.POST.get("selectedPieces",'')
+        self.selected_pieces_str=request.GET.get("selectedPieces",'')
         self.selected_pieces = set([int(i) for i in self.selected_pieces_str.split("-") if i])#用户提交的集合
         self.matching_pieces =  jiglobal.ALL_PIECE - self.selected_pieces#与之互补的集合
         self.gender = UserProfile.objects.get(user=request.user).gender
@@ -49,8 +49,8 @@ class Yuanfenjigsaw:
             return {'status_code':jiglobal.GAME_TIMES_REACH_THE_LIMIT}
         matching_user = self.get_matching_user()
         if matching_user != None :
-#             return {'status_code':jiglobal.MATCH_SUCCESS,'matching_user':matching_user,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
-            return [{'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.username,'height':matching_user.height,'age':matching_user.age,'avatar_name':matching_user.avatar_name,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}]
+#             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
+            return [{'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'height':matching_user.height,'age':matching_user.age,'avatar_name':matching_user.avatar_name,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}]
         else :  
             return {'status_code':jiglobal.NO_MATCHING_USER,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
         
