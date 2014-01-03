@@ -122,7 +122,7 @@ function loadStage() {
 				if(data['status_code']=='3'){
 					$('#card').find('.head').first().attr('src',data['avatar_name']);
 				  	$('#card').find('strong').html(data['username']);
-				  	$('#card').find('.tag').first().html(data['age']).next().html(data['height']);
+				  	$('#card').find('.tag').first().html(data['age']).next().html(data['city']);
 				}
 				$('#count').html('游戏次数:'+data['count']);
 				$('#card').show('slow');

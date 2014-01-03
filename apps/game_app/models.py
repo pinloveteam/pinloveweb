@@ -50,7 +50,7 @@ class Yuanfenjigsaw:
         matching_user = self.get_matching_user()
         if matching_user != None :
 #             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
-            return [{'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'height':matching_user.height,'age':matching_user.age,'avatar_name':matching_user.avatar_name,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}]
+            return [{'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'city':matching_user.city,'age':matching_user.age,'avatar_name':matching_user.avatar_name,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}]
         else :  
             return {'status_code':jiglobal.NO_MATCHING_USER,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
         
