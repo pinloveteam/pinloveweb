@@ -11,5 +11,3 @@ NO_MATCHING_USER = "0"
 DATA_UNAVAILABLE = "1"
 GAME_TIMES_REACH_THE_LIMIT = "2"
 MATCH_SUCCESS = "3"
-
-print '\xe5\xae\xa1\xe6\xa0\xb8\xe6\x9c\xaa\xe9\x80\x9a\xe8\xbf\x87'.decode('utf-8')
