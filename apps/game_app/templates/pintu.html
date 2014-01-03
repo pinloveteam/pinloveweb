@@ -119,14 +119,14 @@ $(document).ready(function(){
 				if(data['status_code']=='1'){$('#card').find('.card').html('选择有误');}
 				if(data['status_code']=='2'){$('#card').find('.card').html('不能再玩来，明天再来');}
 				if(data['status_code']=='3'){
-					$('#card').find('.img-circle').attr('src',data['avatar_name']);
+					$('#card').find('.img-circle').attr('src',data['avatar_name']+'-110.jpeg');
 				  	$('#card').find('strong').html(data['username']);
 				  	$('#card').find('.age').html(data['age']).next().html(data['city']);
 				}
+				$('#card').show('slow');
 				$('#count').html('游戏次数:'+data['count']);
 				$('#btn2').show();
 				$('#btn1').hide();
-				$('#card').show('slow');
 	 });
 	 }
 	 else{
