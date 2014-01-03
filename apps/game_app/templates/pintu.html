@@ -119,7 +119,7 @@ $(document).ready(function(){
 				if(data['status_code']=='1'){$('#card').find('.card').html('选择有误');}
 				if(data['status_code']=='2'){$('#card').find('.card').html('不能再玩来，明天再来');}
 				if(data['status_code']=='3'){
-					$('#card').find('.img-circle').attr('src',data['avatar_name']+'-110.jpeg');
+					$('#card').find('.img-circle').attr('src','/media/'+data['avatar_name']+'-110.jpeg');
 				  	$('#card').find('strong').html(data['username']);
 				  	$('#card').find('.age').html(data['age']).next().html(data['city']);
 				}
