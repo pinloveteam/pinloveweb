@@ -119,9 +119,9 @@ $(document).ready(function(){
 				if(data['status_code']=='1'){$('#card').find('.card').html('选择有误');}
 				if(data['status_code']=='2'){$('#card').find('.card').html('不能再玩来，明天再来');}
 				if(data['status_code']=='3'){
-					$('#card').find('.head').first().attr('src',data['avatar_name']);
+					$('#card').find('.img-circle').attr('src',data['avatar_name']);
 				  	$('#card').find('strong').html(data['username']);
-				  	$('#card').find('.tag').first().html(data['age']).next().html(data['city']);
+				  	$('#card').find('.age').html(data['age']).next().html(data['city']);
 				}
 				$('#count').html('游戏次数:'+data['count']);
 				$('#btn2').show();
@@ -156,12 +156,12 @@ $(document).ready(function(){
 	<div class="head head_girl">
 		<img src="" class="img-circle">
 	</div>
-	<div class="name" title="22">
+	<div class="name">
 		<h3><strong></strong></h3>count
 	</div>
 	<div class="tag">
-		<span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span></span>
+		<span class="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span class="city"></span>
 	</div>
 	<button type="button" class="btn btn-warning">打招呼</button>
 </div>
