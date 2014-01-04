@@ -6,6 +6,7 @@
 body{
     margin:0px;
     overflow:hidden;
+    background: url("/static/img/CARD.png");
 }
 
 .card{
@@ -148,8 +149,8 @@ $(document).ready(function(){
 </head>
 <body onload="loadStage()">
     <div id="container"></div>
-	<button id="btn1" type="button" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;">开始匹配</button>
-	<button id="btn2" type="button" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;">在玩一次</button>
+	<button id="btn1" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;">开始匹配</button>
+	<button id="btn2" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;">在玩一次</button>
 	<span id="count" style="position: absolute; left: 900px; top: 300px; float: left; display: block">游戏次数:{{count}}</span>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
 <div class="card">
@@ -163,7 +164,7 @@ $(document).ready(function(){
 		<span class="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span class="city"></span>
 	</div>
-	<button type="button" class="btn btn-warning">打招呼</button>
+	<button class="btn btn-warning">打招呼</button>
 </div>
 </div>	
 </body>
