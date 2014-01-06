@@ -10,7 +10,7 @@ log=logging.getLogger('customapp.engine')
 def jigsaw(request):
     match_result = Yuanfenjigsaw(request).get_match_result()
     json=simplejson.dumps(match_result)
-    log.debug(json)
+    log.error(json)
     return HttpResponse(json, mimetype='application/javascript')
 
 def pintu(request):
