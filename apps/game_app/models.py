@@ -28,6 +28,11 @@ class Yuanfenjigsaw:
         return  jiglobal.USER_GAME_COUNT.get(self.current_username) == 0
 
     def get_matching_user(self):
+        import logging
+        log=logging.getLogger('customapp.engine')
+        log.error(str(self.current_username))
+        count=jiglobal.USER_GAME_COUNT.get(self.current_username) - 1
+        log.error(str(count))
         jiglobal.USER_GAME_COUNT[self.current_username] = jiglobal.USER_GAME_COUNT.get(self.current_username) - 1
         if  self.gender == 'M':
             jiglobal.BOYS[str(self.selected_pieces)] = self.current_username#如果位男性，则将其存入JIGSW_BOYS
