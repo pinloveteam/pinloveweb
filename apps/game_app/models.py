@@ -31,6 +31,8 @@ class Yuanfenjigsaw:
         import logging
         log=logging.getLogger('customapp.engine')
         log.error(str(self.current_username))
+        from django.utils import simplejson
+        log.error(simplejson.dumps(jiglobal.USER_GAME_COUNT))
         count=jiglobal.USER_GAME_COUNT.get(self.current_username) - 1
         log.error(str(count))
         jiglobal.USER_GAME_COUNT[self.current_username] = jiglobal.USER_GAME_COUNT.get(self.current_username) - 1
