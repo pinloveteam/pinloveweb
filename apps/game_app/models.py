@@ -32,7 +32,10 @@ class Yuanfenjigsaw:
     def get_matching_user(self):
         user_game_count = cache.get('USER_GAME_COUNT')
 #         print user_game_count
-        user_game_count[self.current_username] = user_game_count.get(self.current_username) - 1
+        if user_game_count.get(self.current_username)==None:
+            user_game_count[self.current_username] =9
+        else:
+            user_game_count[self.current_username] = user_game_count.get(self.current_username) - 1
         cache.set('USER_GAME_COUNT',user_game_count)
         if  self.gender == 'M':
             boys = cache.get('BOYS')
