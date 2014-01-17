@@ -126,6 +126,8 @@ INSTALLED_APPS = (
     'apps.friend_dynamic_app',
     'apps.the_people_nearby',
     'apps.third_party_login_app',
+    #监控memcahe
+#     'django_memcached',
 #     'social_auth',
 #     'grappelli',
     # Uncomment the next line to enable the admin:
@@ -303,11 +305,14 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
-    }
+        'TIMEOUT':0,
+    },
 }
+from util.cache import init_cache
+init_cache()
 # 本地环境
 # DATABASES = {
-#       
+#        
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -323,8 +328,8 @@ CACHES = {
 # STATIC_URL = '/static/'
 # MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
 # STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-# UPLOAD_AVATAR_UPLOAD_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
-# UPLOAD_AVATAR_AVATAR_ROOT='D:\\eclipse\\code\\pinloveweb\\update\\user_img'
+# UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
+# UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
 # UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 # UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 
@@ -332,7 +337,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-         
+          
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
