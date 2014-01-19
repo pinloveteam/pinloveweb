@@ -21,3 +21,14 @@ RELATRVE_IMAGE_UPLOAD_PATH_M='images/'
 PUBLIC_IMAGE_UPLOAD_PATH='%s%s'%(settings.MEDIA_ROOT,'/publish_img/')
 '''相册图片上传路径相对路径'''
 RELATRVE_PUBLIC_IMAGE_UPLOAD_PATH='publish_img/'
+
+
+'''
+邮件设置
+'''
+domain_name=u'http://www.pinpinlove.com/user/reset_password/'
+
+'''
+性格标签
+'''
+INIT_TAGS=(u'内向',u'急性子',u'节省',u'责任心强',u'幽默',u'乐观主义',u'细心',u'稳重',u'神经大条',u'独立',u'外向',u'慢性子',u'花钱',u'责任心一般',u'一般',u'悲观主义',u'不拘小节',u'冲动','多愁善感',u'依赖')

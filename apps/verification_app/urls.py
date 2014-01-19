@@ -2,6 +2,7 @@
 from django.conf.urls import patterns, include, url
  #search:
 urlpatterns=patterns('apps.verification_app.views',
+     url(r'^valid/$', 'valid'),
     url(r'^list/$', 'verif_list'),
     #email valid
     url(r'^emailvalid/$', 'emailvalid'),

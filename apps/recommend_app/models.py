@@ -30,6 +30,7 @@ class Grade(models.Model):
     class Meta:
         verbose_name = u'推荐打分表' 
         verbose_name_plural = u'推荐打分表'
+        db_table=u'recommend_grade'
 
 '''
 用户期望数据
@@ -52,9 +53,11 @@ class UserExpect(models.Model):
     heighty7=models.FloatField(verbose_name=u'y7分数',default='0.00',null=True)
 #     heightx8=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
     heighty8=models.FloatField(verbose_name=u'y18分数',default='0.00',null=True)
-#     class Meta:
-#         verbose_name = u'用户期望biao' 
-#         verbose_name_plural = u'推荐打分表'
+    class Meta:
+        verbose_name = u'用户期望表' 
+        verbose_name_plural = u'推荐打分表'
+        db_table=u'recommend_user_expect'
+        
 class MatchResultManager(models.Manager):
     '''
     根据id判断是否存在
@@ -73,6 +76,7 @@ class MatchResult(models.Model):
     class Meta:
         verbose_name = u'推荐结果表' 
         verbose_name_plural = u'推荐结果表'
+        db_table=u'recommend_match_result'
 
 #   获取对应的用户基本信息表的信息
 #   attribute：

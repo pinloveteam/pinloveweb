@@ -70,7 +70,7 @@ $(document).ready(function(){
 					 choseCardsSize=0
 				 }
 				 for(x=0;x<cards.length-choseCardsSize;x++){
-						 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].isFriend));
+						 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus));
 					 } 
 				 preCard.remove();
 				 venobox();
@@ -109,7 +109,7 @@ $(document).ready(function(){
 					 choseCardsSize=0
 				 }
 				 for(x=0;x<cards.length-choseCardsSize;x++){
-					 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].isFriend));
+					 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus));
 					 } 
 				 nextCard.remove();
 				 venobox();
@@ -128,7 +128,7 @@ $(document).ready(function(){
 });
 function init_card(cards){
 	for(y=0;y<cards.length;y++){
-		new Card(new Person(cards[y].username,cards[y].age,cards[y].city,'/media/'+cards[y].avatar_name,cards[y].user_id,cards[y].isFriend));
+		new Card(new Person(cards[y].username,cards[y].age,cards[y].city,'/media/'+cards[y].avatar_name,cards[y].user_id,cards[y].followStatus));
 	}
 };
 
@@ -192,7 +192,7 @@ interval = self.setInterval("polling()", time);
 {% block css %}
 
 {% endblock %}
-{% block navigation %}
+{% block logo %}
 {% endblock %}
 {% block content %}
 <header class="navbar">
@@ -240,10 +240,10 @@ interval = self.setInterval("polling()", time);
 	<div class="row" style="margin-top:63px;">
 		<div class="col-md-3">
 			<div class="user_info card_panel"> 
-				<div class="head head_boy" style="margin:4px;height:70px;width:70px;">
-				<img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-110.jpeg"/>
+				<div class="head head_boy" style="margin:4px;height:60px;width:60px;">
+				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
 				</div>
-				<div class="name">{{user.username}}</div>
+				<a href='/user/user_profile/#self_info'><div class="name">{{user.username}}</div></a>
 				<hr/>
 				<p style="margin:20px 0 20px 20px;">搬砖砌墙敲代码，只为买瓶哇哈哈。</p>
 			</div>

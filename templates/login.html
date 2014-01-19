@@ -46,14 +46,17 @@ input{
 	background-color:transparent !important;
 }
 </style>
-{% endblock %}{% block content %}
+{% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block content %}
 <div class="register button_type_1"><a href="/account/register/">注册</a></div>
 	<form id="login" class="login_form" action="/account/auth/" method="post" class="form-signin">{% csrf_token %}
 		<span class="title">拼爱网</span>
 		<div class="form-group">
 		<input type="text" class="form-control input-lg" placeholder="请输入用户名" name="username" value="" id="username"/>
 		<input type="password" class="form-control input-lg" placeholder="请输入密码" name="password" value="" id="password"/>
-		<input type="hidden" name="redirectURL" value="{{redirectURL}}"/>
+		<input type="hidden" name="next" value="{{next}}"/>
 		<input type="checkbox" name="remember_status">记住登录状态<br>
 		第三方登录：
         <a href="/third_party_login/qq_login_url/"><img src="{{STATIC_URL}}img/qq_login_logo.png"></a>&nbsp;&nbsp;
@@ -62,7 +65,7 @@ input{
 		<a href="/third_party_login/twitter_login_url/" >twitter</a>
 		</div>
 		<div class="button_type_1"><a href="/account/forgetpwdpage/">忘记密码</a></div>
-		<div class="button_type_1"><a href="#" onclick="submit()">登录</a></div>
+		<div class="button_type_1"><a id='login' href="#" onclick="submit()">登录</a></div>
 		
 	</form>
 <script  type="text/javascript">
@@ -73,6 +76,14 @@ input{
 function submit(){
 	login.submit();
 }
+
+$(document).ready(function(){
+    $(".input-lg").keydown(function(e){
+        if(e.keyCode == 13){
+            submit()
+        };
+    });
+});
 </script>
 
 {% endblock %}

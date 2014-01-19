@@ -14,11 +14,11 @@ Created on Sep 1, 2013
 
 from django.core.paginator import Paginator
 from django.db.models.query import RawQuerySet
-from util import util_settings
+from util_settings import AFTER_RANGE_NUM, BEVOR_RANGE_NUM, PAGE_NUM
 def page(request,querySet,**kwargs):
-     after_range_num = kwargs.get('after_range_num', util_settings.AFTER_RANGE_NUM)
-     bevor_range_num = kwargs.get('bevor_range_num', util_settings.BEVOR_RANGE_NUM)
-     per_page_num = kwargs.get('page_num', util_settings.PAGE_NUM)
+     after_range_num = kwargs.get('after_range_num', AFTER_RANGE_NUM)
+     bevor_range_num = kwargs.get('bevor_range_num', BEVOR_RANGE_NUM)
+     per_page_num = kwargs.get('page_num', PAGE_NUM)
      page=kwargs.get('page',None)
      try:
          if page==None:

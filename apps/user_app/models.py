@@ -16,13 +16,10 @@ from django.db.models import signals
 from django.dispatch.dispatcher import Signal
 from django.contrib.sessions.backends.base import SessionBase
 # import MySQLdb
-from pinloveweb import settings
-
-from asyncore import dispatcher
-from apps.recommend_app.models import UserExpect
+from apps.recommend_app.models import  MatchResult
 from apps.recommend_app.recommend_util import cal_recommend
-from util.singal_common import cal_recommend_user
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
+from util.singal import cal_recommend_user
 
 class UserProfileManager(models.Manager):
     '''
@@ -33,7 +30,11 @@ class UserProfileManager(models.Manager):
             return UserProfile.objects.get(user_id=userId)  
         except Exception as e:
             print e 
-
+    '''
+    根据id获取在推荐得分
+    '''
+    def get_march_result(self,my_id,other_id):
+        return MatchResult.objects.filter(my_id=my_id,other_id=other_id)[:1]
 class UserProfile(models.Model, UploadAvatarMixIn):
     
     user = models.ForeignKey(User)
@@ -231,9 +232,16 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     #定制管理器
     objects = UserProfileManager()
     
+    #获取头像
+    def get_avatar_image(self):
+        if self.avatar_name_status!='3':
+            return 'user_img/image'
+        else:
+            return self.avatar_name
     class Meta:
         verbose_name=u'用户基本信息'
         verbose_name_plural = u'用户基本信息'
+        db_table='user_profile'
 
 class UserContactLink(models.Model):
     user=models.ForeignKey(User)
@@ -254,6 +262,10 @@ class UserContactLink(models.Model):
     CountryHome=models.CharField(verbose_name=r"户口所在地国家", max_length=50,null=True,blank=True,)
     stateProvinceHome=models.CharField(verbose_name=r"户口所在地省", max_length=50,null=True,blank=True,)
     cityHome=models.CharField(verbose_name=r"户口所在地市", max_length=50,null=True,blank=True,)
+    class Meta:
+        verbose_name=u'用户身份信息'
+        verbose_name_plural = u'用户身份信息'
+        db_table = "user_contact_link" 
 
     
 class UserVerification(models.Model):
@@ -278,59 +290,10 @@ class UserVerification(models.Model):
     class Meta:
         verbose_name=u'用户信息验证'
         verbose_name_plural = u'用户信息验证'
-'''    
-class user_appearance(models.Model):
-    user=models.ForeignKey(User)
-    self_evaluation=models.FloatField(verbose_name=r"自我评价",choices=((0.0,r'未填'),(0.35,r'普通'),(0.70,r'不错'),(1.00,r'很好')),null=True,blank=True,default=0.0)
-    CHOICE_WEIGHT=((-1,r'未填'),)
-    for i in range(20,300,1):
-        CHOICE_WEIGHT+=((i,str(i)),)
-    weight=models.SmallIntegerField(verbose_name=r"体重(kg)",choices=CHOICE_WEIGHT,null=True,blank=True,default=-1)
-    
-    HAIR_STYLE_CHOICE=(('N',r'未填'),('0',r'顺直长发'),('1',r'卷曲长发'),('2',r'中等长度'),('3',r'短发'),('4',r'平头'),('5',r'光头'),('6',r'其他'),)
-    hairStyle=models.CharField(verbose_name=r"发型",choices=HAIR_STYLE_CHOICE,max_length=2,null=True,blank=True,default='N')
-    
-    HAIR_COLOR_CHOICE=(('N',r'未填'),('0',r'黑色'),('1',r'金色'),('2',r'褐色'),('3',r'栗色'),('4',r'灰色'),('5',r'红色'),('6',r'白色'),('7',r'挑染'),('8',r'光头'),('9',r'其他'),)
-    hairColor=models.CharField(verbose_name=r"发型",choices=HAIR_COLOR_CHOICE,max_length=2,null=True,default='N')
-    
-    FACE_CHOICE=(('N',r'未填'),('0',r'圆脸型'),('1',r'方脸型'),('2',r'长脸型'),('3',r'瓜子脸型'),('4',r'国字脸型'),('5',r'三角脸型'),('6',r'菱形脸型'),('7',r'其他'),)
-    face=models.CharField(verbose_name=r"发型",choices=HAIR_STYLE_CHOICE,max_length=2,null=True,default='N')
-    
-    EYE_COLOR_CHOICE=(('N',r'未填'),('0',r'黑色'),('1',r'蓝色'),('2',r'浅褐色'),('3',r'棕色'),('4',r'灰色'),('5',r'绿色'),('6',r'其它'),)
-    eyeColor=models.CharField(verbose_name=r"发型",choices=HAIR_STYLE_CHOICE,max_length=2,null=True,default='N')
-    
-    BODY_SHAPE_CHOICE=(('N',r'未填'),('0',r'苗条'),('1',r'匀称'),('2',r'高挑'),('3',r'丰满'),('4',r'健壮'),('5',r'魁梧'),('6',r'其他'),)
-    bodyShape=models.CharField(verbose_name=r"发型",choices=HAIR_STYLE_CHOICE,max_length=2,null=True,default='N')
-    
-class user_study_work(models.Model):
-    user=models.ForeignKey(User)
-    # current job 
-    JOB_INDUSRY_CHOICE=((-1,r'未填'),(0,r'计算机/互联网/通信'),(1,r'公务员/事业单位'),(2,r'教师'),(3,r'医生'),(4,r'护士'),(5,r'空乘人员'),
-                        (6,r'生产/工艺/制造'),(7,r'生产/工艺/制造'),(8,r'商业/服务业/个体经营'),(9,r'文化/广告/传媒'),(10,r'娱乐/艺术/表演'),
-                        (11,r'律师/法务'),(12,r'教育/培训/管理咨询'),(13,r'建筑/房地产/物业'),(14,r'消费零售/贸易/交通物流'),(15,r'酒店旅游'),
-                        (16,r'现代农业'),(17,r'在校学生'))
-    jobIndustry = models.IntegerField(verbose_name=r"职业领域",choices=JOB_INDUSRY_CHOICE, max_length=50,null=True,default=-1) 
-    
-    jOB_TITLE=((-1,r'未填'),(0,r'普通职员'),(1,r'中层管理者'),(2,r'高层管理者'),(3,r'企业主'),)
-    jobTitle = models.IntegerField(verbose_name=r"目前职位",choices=jOB_TITLE, max_length=50,null=True,default=-1) 
-    
-    COMPANY_TYPE_CHOICE=(('N',r'未填'),('0',r'政府机关'),('1',r'事业单位'),('2',r'外企企业'),('3',r'上市公司'),('4',r'国有企业'),('5',r'私营企业'),('6',r'自有公司'),)
-    companyType=models.CharField(verbose_name=r"公司性质", choices=COMPANY_TYPE_CHOICE,max_length=2,null=True,default='N') 
-    
-    WORK_STATUS_CHOICE=(('N',r'未填'),('0',r'轻松稳定'),('1',r'朝九晚五'),('2',r'偶尔加班'),('3',r'经常加班'),('4',r'偶尔出差'),('5',r'经常出差'),('6',r'经常有应酬'),('7',r'工作时间自由'),('8',r'其他'),)
-    workStatus=models.CharField(verbose_name=r"工作状态", choices=WORK_STATUS_CHOICE,max_length=2,null=True,default='N') 
-    
-    companyName=models.CharField(verbose_name=r"公司名字", max_length=50,null=True) 
-  
-    educationCountry = models.CharField(verbose_name=r"最高学位毕业国家", max_length=50,null=True) 
-    
-    
-    # previous education experience 
-    
-    isStudyAbroad = models.NullBooleanField(verbose_name=r"是否留学",null=True)
+        db_table = "user_verification" 
 
-'''
-class user_hobby_interest(models.Model):
+
+class UserHobbyInterest(models.Model):
     user=models.ForeignKey(User)
     sport=models.CharField(verbose_name=r"爱好什么体育运动", max_length=50,null=True) 
     food=models.CharField(verbose_name=r"爱好什么食物", max_length=50,null=True) 
@@ -339,83 +302,53 @@ class user_hobby_interest(models.Model):
     TVShow=models.CharField(verbose_name=r"爱好什么关注节目", max_length=50,null=True) 
     recreation=models.CharField(verbose_name=r"爱好什么娱乐休闲", max_length=50,null=True) 
     travel=models.CharField(verbose_name=r"爱好什么旅游去处", max_length=50,null=True) 
-'''' 
-class user_personal_habit(models.Model):
-    user=models.ForeignKey(User)
-    
-    BELIEF_CHOICE=(('N',r'未填'),('0',r'无宗教信仰'),('1',r'佛教'),('2',r'基督教'),('3',r'犹太教'),('4',r'伊斯兰教'),('5',r'印度教'),('6',r'神道教'),('7',r'其他'),)
-    belief=models.CharField(verbose_name=r"信仰",choices=BELIEF_CHOICE, max_length=2,null=True,default='N') 
-   
-    SMOKE_CHOICE=(('N',r'未填'),('0',r'不吸烟'),('1',r'社交时偶尔吸'),('2',r'每周吸几次'),('3',r'每天都吸'),)
-    isSmoke=models.CharField(verbose_name=r"吸烟",choices=SMOKE_CHOICE, max_length=2,null=True,default='N') 
-    
-    DRINK_CHOICE=(('N',r'未填'),('0',r'不喝'),('1',r'社交时喝酒'),('2',r'有兴致时喝'),('3',r'每天都离不开酒)'),)
-    isDrink=models.CharField(verbose_name=r"喝酒",choices=DRINK_CHOICE, max_length=2,null=True,default='N') 
-    
-    BEDDING_TIME_CHOICE=(('N',r'未填'),('0',r'早睡早起很规律'),('1',r'经常夜猫子'),('2',r'总是早起鸟'),('3',r'偶尔懒散一下'),('4',r'总是早起鸟'),('5',r'没有规律'),)
-    beddingTime=models.CharField(verbose_name=r"作息习惯",choices=BEDDING_TIME_CHOICE, max_length=2,null=True,default='N') 
-    pet=models.CharField(verbose_name=r"宠物",max_length=30,null=True) 
-    character=models.CharField(verbose_name=r"个性", max_length=50,null=True) 
-    
-class user_family_information(models.Model):
-    user=models.ForeignKey(User)
-    MONTHLY_EXPENSE_CHOICE=((-1,r'未填'),(1,r'1000元以下'),)
-    for i in range(1,20,1):
-        temp=str(i*1000)+'-'+str((i+1)*1000)+'元'
-        MONTHLY_EXPENSE_CHOICE+=((i*100+5,temp),)
-    MONTHLY_EXPENSE_CHOICE+=((90000,r'2万以上'),)
-    monthlyExpense=models.IntegerField(verbose_name=r'月消费',choices=MONTHLY_EXPENSE_CHOICE,default=-1,null=True)
-    isOnlyChild=models.NullBooleanField(verbose_name=r'是否是独生子女',choices=((True,r'是'),(False,r'否'),),null=True)
-    hasCar=models.NullBooleanField(verbose_name=r'是否购车',choices=((True,r'是'),(False,r'否'),),null=True)
-    hasHouse=models.NullBooleanField(verbose_name=r'是否是购房',choices=((True,r'是'),(False,r'否'),),null=True)
-    financialCondition=models.CharField(verbose_name=r'家庭经济条件',choices=(('N',r'未填'),('0',r'富裕'),('1',r'小康'),('2',r'温饱'),),max_length=1,null=True,default='N')
-    parentEducation=models.CharField(verbose_name=r'父母受教育水平',choices=(('N',r'未填'),('0',r'高级知识分子'),('1',r'普通知识分子'),),max_length=1,null=True,default='N')
-    
-class user_family_life(models.Model):
-    user=models.ForeignKey(User)
-    liveWithParent=models.CharField(verbose_name=r'愿与Ta父母同住',choices=(('N',r'未填'),('0',r'愿意'),('1',r'不愿意'),('2',r'视情况而定'),),max_length=1,null=True)
-    likeChild=models.CharField(verbose_name=r'是否喜欢有孩子',choices=(('N',r'未填'),('0',r'愿意'),('1',r'不愿意'),('2',r'视情况而定'),),max_length=1,null=True)
-    # pinlove verification 
-    # verificationStatus = models.IntegerField() # bit 0 : self verified - self_verified
-                                               # bit 1 : verified by website - web_verified
-                                               # bit 2 : verified by friends or families - family_friend_verified
-                                               # bit 3 : verified by pinlove team - pinlove_verified   
-    
-    # login status 
-    # lastLoginTime = models.DateField(auto_now=False,auto_now_add=False)
-    
-    # checkState=models.CharField(max_length=1)
-    # stauts=models.CharField(max_length=1)    
+    class Meta:
+        verbose_name=u'用户兴趣爱好'
+        verbose_name_plural = u'用户兴趣爱好'
+        db_table = "user_hobby_interest" 
 '''
-
-class Friend(models.Model):
+关注表
+'''
+class FollwManager(models.Manager):
+    def follow_each(self,follow_id):
+        follow_id=str(follow_id)
+        followEachList=Follow.objects.raw("select * from follow where follow_id= %s and my_id in (SELECT follow_id from follow where my_id=%s) ",(follow_id,follow_id))
+        return followEachList
+class Follow(models.Model):
     my=models.ForeignKey(User,related_name='user_my',verbose_name=r'自己',)
-    friend=models.ForeignKey(User,related_name='user_friend',verbose_name=r'异性',)
-    # friend type
-    type=models.CharField(max_length=1,verbose_name=r'类型',)
-    
+    follow=models.ForeignKey(User,related_name='user_follow',verbose_name=r'关注的人',)
+    objects=FollwManager()
     class Meta:
         verbose_name = u'关注表' 
         verbose_name_plural = u'关注表'
-#     
-# class Message(models.Model):
-#     messageId=models.AutoField(primary_key=True,max_length=8)
-#     fromId=models.ForeignKey(User,related_name='User_fromId')
-#     toId=models.ForeignKey(User,related_name='User_toId')
-#     messageContent=models.TextField()
-#     sendTime=models.DateTimeField()
-#     type=models.CharField(max_length=1)
-#     
-# class New(models.Model):
-#     newId=models.AutoField(primary_key=True,max_length=8)
-#     userId=models.ForeignKey(User,related_name='User_userId')
-#     createTime=models.DateTimeField()
-#     contentText=models.CharField(max_length=255)
-#     picture_path=models.ImageField(upload_to='news_img',max_length=128)
-#     video_path=models.CharField(max_length=128)
-#     commentNum=models.IntegerField(default=0)
-#     shareNum=models.IntegerField(default=0)
-#     type=models.CharField(max_length=1)
+        db_table = "follow" 
+
+'''
+标签表
+'''
+TAB_CHOICES=((u'外向',u'外向'),(u'内向',u'内向'),(u'不外不内',u'不外不内'),(u'急性子',u'急性子'),(u'慢性子',u'慢性子')
+             ,(u'节省',u'节省'),(u'花钱',u'花钱'),(u'责任心',u'责任心'),(u'幽默',u'幽默'),(u'一般',u'一般'),
+             (u'乐观主义',u'乐观主义'),(u'悲观主义',u'悲观主义'),(u'细心',u'细心'),(u'不拘小节',u'不拘小节'),
+             (u'稳重',u'稳重'),(u'冲动',u'冲动'),(u'神经大条',u'神经大条'),(u'多愁善感',u'多愁善感'),
+             (u'独立',u'独立'),(u'依赖',u'依赖')) 
+class TagManage(models.Manager):
+    '''
+    获得自己的标签集合
+    '''
+    def get_tags_by_myself(self,*args, **kwargs):   
+        return Tag.objects.filter(type=0,*args, **kwargs)    
+class Tag(models.Model):
+    user=models.ForeignKey(User,related_name='tab_user',verbose_name=u'用户')
+    content=models.CharField(max_length=25,verbose_name=u'标签内容',choices=TAB_CHOICES)
+    TYPE_CHOICES=((0,u'自己的标签'),(1,u'对另一半的标签'))
+    type=models.SmallIntegerField(verbose_name='类型',choices=TYPE_CHOICES)
+    objects=TagManage()
+    class Meta:
+        verbose_name = u'用户标签' 
+        verbose_name_plural = u'用户标签'
+        db_table = "tag" 
+        
+
 
 class Dictionary(models.Model):
 
@@ -424,11 +357,16 @@ class Dictionary(models.Model):
     value=models.CharField(max_length=255)
 
 class Verification(models.Model):
+    def __init__(self,username,verification_code,*args,**kwargs):
+        self.username=username
+        self.verification_code=verification_code
+        
     username = models.CharField(max_length=30)
     verification_code = models.CharField(max_length=50)
     class Meta:
         verbose_name=u'临时验证码'
         verbose_name_plural = u'临时验证码'
+        db_table='verification'
     
 
 def save_avatar_in_db(sender, uid, avatar_name, **kwargs):

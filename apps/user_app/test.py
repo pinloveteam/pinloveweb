@@ -8,7 +8,7 @@ Created on Jul 4, 2013
 import os
 from django.db import connection
 import MySQLdb
-from apps.user_app.models import Friend, UserProfile
+from apps.user_app.models import  UserProfile
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
 from PIL import ImageFile
 from django.conf import settings
@@ -17,6 +17,7 @@ import re
 from django.contrib.auth.models import User
 from apps.message_app.models import Message
 from django.db.models.query_utils import Q
+from django.core.cache import cache
 # db = MySQLdb.connect(user='root', db='django', passwd='jin521436', host='localhost')
 # cursor=connection.cursor();
 # sql='''select c1.id,c1.username,c2.age,c2.gender,c2.height,c2.income,c3.jobIndustry,c4.avatar_name
@@ -83,14 +84,15 @@ from django.db.models.query_utils import Q
 #     else:
 #         print data
 # cache(3)
-class Animal(object):
-    def __init__(self):
-        self.legs = 2
-        self.name = 'Dog'
-        self.color= 'Spotted'
-        self.smell= 'Alot'
-        self.age  = 10
-        self.kids = 0
-an = Animal()
-attrs = vars(an)
-print attrs
+# class Animal(object):
+#     def __init__(self):
+#         self.legs = 2
+#         self.name = 'Dog'
+#         self.color= 'Spotted'
+#         self.smell= 'Alot'
+#         self.age  = 10
+#         self.kids = 0
+# an = Animal()
+# attrs = vars(an)
+# print attrs
+cache.clear()

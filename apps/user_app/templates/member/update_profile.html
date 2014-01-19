@@ -1,0 +1,150 @@
+{%load util_filter%}
+<SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
+ <SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+    <SCRIPT>
+        $(document).ready(function(){
+        		$("#updateUserProfile").submit(function(){
+                    
+                    var data = $(this).serialize();
+                    var tagObj = new Array()
+                    var tag = $('.tag').find('a');
+                	tag.each(function(){
+                		if($(this).css('opacity') == '1'){
+                			tagObj.push($(this).html());
+                		}
+                	});
+                	data=data+'&tagList='+tagObj.toString();
+                    $.ajax({
+                        type: $(this).attr('method'),
+                        url: "/user/update_profile/",
+                        data:data,
+                        beforeSend: function(XMLHttpRequest){
+                        },
+                        success: function(response){
+                            if(response == 'success'){
+                                var content = $('#id_content');
+                                $('#answer-list').append('<p>'+content.val()+'</p>');
+                                content.val('');
+                            }
+                        },
+                        complete: function(XMLHttpRequest, textStatus){
+                        },
+                        error: function(response){
+                            $('#answer-list').html(response);
+                        }
+                    });
+                    return false;
+                });
+            
+        		//修改透明度
+        		$('.tag-trigger').click(function(){
+        			var opstr = $(this).css('opacity');
+        			var opint = parseFloat(opstr);
+        			thisid = parseInt($(this).attr('id'));
+        			str = '.' + thisid%10 + '';
+        			if(opint == 0.5){
+        				$('.tag').find(str).css('opacity','0.5');
+        			}
+        			var op = 0.5/opint;
+        			$(this).css('opacity',op+'');
+        		});
+        });
+
+    </SCRIPT> 
+                         <form id=updateUserProfile action="" method="post" >{% csrf_token %}
+						<table class="table">
+							            <tbody>
+            <tr>
+                <td>昵称<span class="text-danger">*</span></td>
+                <td>
+                    <input id='username' type="text" class="form-control" name='username' value="{{user.username}}"/>
+                </td>
+                <td>学历<span class="text-danger">*</span></td>
+                <td>
+                    {{user_profile_form.education}}
+                </td>
+            </tr>
+            <tr>
+                <td>性别<span class="text-danger">*</span></td>
+                <td>
+                    {{user_profile_form.gender}}
+                </td>
+                <td>年龄</td>
+                <td>
+                    {{user_profile_form.age}}
+                </td>
+            </tr>
+            <tr>
+                <td>身高(mm)<span class="text-danger">*</span></td>
+                <td>
+                    {{user_profile_form.height}}
+                </td>
+                <td>体重(kg)</td>
+                <td>
+                    {{user_profile_form.weight}}
+                </td>
+            </tr>
+            <tr>
+                <td>行业</td>
+                <td>
+                    {{user_profile_form.jobIndustry}}
+                </td>
+                <td>收入<span class="text-danger">*</span></td>
+                <td>
+                    {{user_profile_form.income}}
+                </td>
+            </tr>
+            <tr>
+                <td>现居地<span class="text-danger">*</span></td>
+                <td>
+                    <select id="id_country" name="country" class="form-control"  style="width: 220px;">
+                        {%ifnotequal country  Null%}
+                        <option value="-1" >请选择</option>
+                        <option value="{{country}}" selected="selected">{{country}}</option>
+                        {% else %}
+                        <option value="-1" >请选择</option>
+                        {%endifnotequal%}
+                    </select>
+                    <select id="id_stateProvince" name="stateProvince" class="form-control"  style="width: 220px; position: relative;left: 270px;top:-35px;">
+                        {%ifnotequal stateProvince Null%}
+                        <option value="-1" >请选择</option>
+                        <option value="{{stateProvince}}" selected="selected">{{stateProvince}}</option>
+                        {% else %}
+                        <option value="-1" >请选择</option>
+                        {%endifnotequal%}
+                    </select>
+                    <select id="id_city" name="city" class="form-control" style="width: 220px; position: relative;left: 534px;top:-69px;">
+                        {%ifnotequal city Null%}
+                        <option value="-1" >请选择</option>
+                        <option value="{{city}}" selected="selected">{{city}}</option>
+                        {% else %}
+                        <option value="-1" >请选择</option>
+                        {%endifnotequal%}
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="tag">
+        {% for tag in tagbeanList %}
+           {% ifequal forloop.counter0 10 %}
+             <tr>
+           {% endifequal%}
+          {% if forloop.counter|greater_than:10 %}
+            {%if tag.isChoice%}
+              <td><a class="tag-trigger tag-limeGreen " style="opacity: 1;" href="javascript:;">{{tag.content}}</a></td>
+             {% else %}
+                <td><a class="tag-trigger tag-limeGreen " href="javascript:;">{{tag.content}}</a></td>
+             {% endif %}
+          {% else %}
+            {%if tag.isChoice%}
+               <td><a class="tag-trigger tag-softPink " style="opacity: 1;" href="javascript:;">{{tag.content}}</a></td>
+             {%else%}
+               <td><a class="tag-trigger tag-softPink " href="javascript:;">{{tag.content}}</a></td>
+             {% endif %}
+          {% endif %}
+      
+        {% endfor %}
+  </table>
+  <button class="btn btn-warning user-save" style="position: relative; left: 300px;">保存上传</button>
+</form>

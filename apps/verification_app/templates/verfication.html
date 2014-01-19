@@ -1,0 +1,254 @@
+<SCRIPT>
+/**
+        $(document).ready(function(){
+        	   //收入认证
+        		$("#income_valid").submit(function(){
+                    
+                    var data = $(this).serialize();
+                    $.ajax({
+                        type: $(this).attr('method'),
+                        url: "/verification/valid/",
+                        enctype: "multipart/form-data",
+                        data:data,
+                        beforeSend: function(XMLHttpRequest){
+                        },
+                        success: function(response){
+                            if(response == 'success'){
+                            	alert('成功')
+                            }
+                        },
+                        complete: function(XMLHttpRequest, textStatus){
+                        },
+                        error: function(response){
+                            $('#answer-list').html(response);
+                        }
+                    });
+                    return false;
+                });
+        		
+        	   //身份认证
+        	   $("#IDCard_valid").submit(function(){
+                    var data = $(this).serialize();
+                    $.ajax({
+                        type: $(this).attr('method'),
+                        url: "/verification/valid/",
+                        enctype: "multipart/form-data",
+                        data:data,
+                        beforeSend: function(XMLHttpRequest){
+                        },
+                        success: function(response){
+                            if(response == 'success'){
+                            	alert('成功')
+                            }
+                        },
+                        complete: function(XMLHttpRequest, textStatus){
+                        },
+                        error: function(response){
+                            $('#answer-list').html(response);
+                        }
+                    });
+                    return false;
+                });
+            
+        });
+        
+        //学历认证
+        $("#education_valid").submit(function(){
+            
+            var data = $(this).serialize();
+            $.ajax({
+                type: $(this).attr('method'),
+                url: "/verification/valid/",
+                enctype: "multipart/form-data",
+                data:data,
+                beforeSend: function(XMLHttpRequest){
+                },
+                success: function(response){
+                    if(response == 'success'){
+                    	alert('成功')
+                    }
+                },
+                complete: function(XMLHttpRequest, textStatus){
+                },
+                error: function(response){
+                    $('#answer-list').html(response);
+                }
+            });
+            return false;
+        });
+        **/
+    </SCRIPT> 
+<div id="income">
+							<ul class="list-inline">
+								<li>
+									<img src="{{STATIC_URL}}img/income.png" class="icon"/>
+								</li>
+								<li>
+									<ul style="list-style:none;">
+										<li>
+											<span>收入认证</span>
+										</li>
+										<li>
+											<span>可以选择上传收入证明或者房产证进行认证。</span>
+										</li>
+										<li>
+											<span></span>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							{% ifequal incomeValid '未认证'%}
+							<button class="btn btn-warning cerbtn">现在认证</button>
+							{% else %}
+							<button class="btn btn-warning cerbtn" disabled="true">{{incomeValid}}</button>
+							{% endifequal %}
+						</div>
+						<div id="cer_education" class="cer_tab">
+							<div class="divArrow"></div>
+							{% ifequal incomeValid '未认证'%}
+							<form id ="income_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" target="iframe-name">{% csrf_token %}
+							<input type="hidden" name="type" value="income">
+							{% if incomeValidForm.errors %}
+							<p style="color: red;">
+							填写的信息有误，请重填。
+							</p>
+							{% endif %}
+							<table class="table">
+							<tbody>
+							  
+									<tr>
+										<td>收入:</td>
+										<td>{{incomeValidForm.income}}{{incomeValidForm.income.errors }}</td>
+									</tr>
+									<tr>
+										<td>收入证明:</td>
+										<td>{{incomeValidForm.incomePicture}} <br>{{incomeValidForm.incomePicture.errors }}</td>
+										 <div class="text-muted">
+										 <span >请上传公司的收入证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span>
+										 </div>
+									</tr>
+									<tr>
+									  <td colspan="2"><input type="submit" id="income_verfaction" class="btn btn-warning"  style="position: relative;">提交</button></td>
+									</tr>
+								 
+								</tbody></table>
+							</form>	
+							<iframe name="iframe-name"></iframe>
+							{% endifequal %}
+						</div>
+
+						<div id="identity">
+							<ul class="list-inline">
+								<li>
+									<img src="{{STATIC_URL}}img/identity.png" class="icon"/>
+								</li>
+								<li>
+									<ul style="list-style:none;">
+										<li>
+											<span>身份认证</span>
+										</li>
+										<li>
+											<span>填写真实姓名和身份证号进行认证。</span>
+										</li>
+										<li>
+											<span></span>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							{% ifequal IDCardValid '未认证'%}
+							<button class="btn btn-warning cerbtn">现在认证</button>
+							{% else %}
+							<button class="btn btn-warning cerbtn" disabled="true">{{IDCardValid}}</button>
+							{% endifequal %}
+						</div>
+						<div id="cer_education" class="cer_tab">
+							<div class="divArrow"></div>
+							{% ifequal IDCardValid '未认证'%}
+							<form id="IDCard_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" >{% csrf_token %}
+							<input type="hidden" name="type" value="IDCard">
+							<table class="table">
+								<tbody>
+									<tr>
+										<td>真实姓名:</td>
+										<td>{{IDcardValidForm.trueName}}{{IDcardValidForm.trueName.errors }}</td></td>
+									</tr>
+									<tr>
+									    <td>证件类型:</td>
+									     <td>{{IDcardValidForm.IDCardChoice}}{{IDcardValidForm.IDCardChoice.errors }}</td>
+									</tr>
+									<tr>
+										<td>身份证号:</td>
+										<td>{{IDcardValidForm.IDCardNumber}}{{IDcardValidForm.IDCardNumber.errors }}</td>
+									</tr>
+									<tr>
+										<td>证件照:</td>
+										<td>{{IDcardValidForm.IDCardPicture}}<br>{{IDcardValidForm.IDCardPicture.errors }}</td>
+									     <div class="text-muted">
+									     <span >请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span>
+                                          </div>
+									</tr>
+									<tr>
+									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;">提交</button></td>
+									</tr>
+								</tbody>
+							</table>
+							</form>
+							{% endifequal %}
+						</div>
+
+						<div id="education">
+							<ul class="list-inline">
+								<li>
+									<img src="{{STATIC_URL}}img/education.png" class="icon"/>
+								</li>
+								<li>
+									<ul style="list-style:none;">
+										<li>
+											<span>学历认证</span>
+										</li>
+										<li>
+											<span>上传学历证件进行认证。</span>
+										</li>
+										<li>
+											<span></span>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							{% ifequal educationValid '未认证'%}
+							<button class="btn btn-warning cerbtn">现在认证</button>
+							{% else %}
+							<button class="btn btn-warning cerbtn" disabled="true">{{educationValid}}</button>
+							{% endifequal %}
+						</div>
+						<div id="cer_education" class="cer_tab">
+							<div class="divArrow"></div>
+							{% ifequal educationValid '未认证'%}
+							<form id='education_valid' action="/verification/valid/" method="POST" enctype="multipart/form-data" ">{% csrf_token %}
+							<input type="hidden" name="type" value="education">
+							<table>
+							  <tbody>
+							   <tr> 
+							      <td>学历:</td>
+							      <td>{{educationValidForm.education}}{{educationValidForm.education.errors }}</td>
+							   </tr>
+							   <tr> 
+							      <td>毕业学校:</td>
+							      <td>{{educationValidForm.educationSchool}}{{educationValidForm.educationSchool.errors }}</td>
+							   </tr>
+							   <tr>
+							      <td>学历证明:</td>
+							      <td> {{educationValidForm.educationPicture}}<br>{{educationValidForm.educationPicture.errors }}</td>
+							       <div class="text-muted">
+							        <span >请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span>
+							       </div>
+							   </tr>
+							   <tr>
+									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;">提交</button></td>
+								</tr>
+							  </tbody>
+							 </table>
+							 </form>
+							{% endifequal %}
+						</div>

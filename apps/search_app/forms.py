@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from apps.user_app.models import UserProfile, UserContactLink,user_hobby_interest
+from apps.user_app.models import UserProfile, UserContactLink
 from apps.user_app import user_validators
 class AdvanceSearchForm(ModelForm):
     

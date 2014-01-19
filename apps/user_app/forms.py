@@ -5,8 +5,50 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from apps.user_app.models import UserProfile, UserContactLink,user_hobby_interest
+from apps.user_app.models import UserProfile, UserContactLink, UserHobbyInterest
 from apps.user_app import user_validators
+'''
+个人信息编辑页面
+'''
+class UserProfileForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['age'].widget.attrs['readonly'] = True
+            self.fields['gender'].widget.attrs['readonly'] = True
+        for key in self.fields:
+            self.fields[key].required = False
+            self.fields[key].widget.attrs['class']='form-control'
+    
+    def clean_age(self):
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            return instance.age
+        else:
+            return self.cleaned_data['age']
+        
+    def clean_gender(self):
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            return instance.gender
+        else:
+            return self.cleaned_data['gender']
+        
+    class Meta : 
+        model = UserProfile  
+        fields = ( 'gender', 'income','weight','jobIndustry','age',
+        'height', 'education', )
+        
+        exclude = ('stateProvince','avatar_name','city', 'country', 'sunSign', 'zodiac','avatar_name_status',
+                   'self_evaluation','hairStyle','hairColor','face','eyeColor','bodyShape',
+                   'jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
+                   'belief','isSmoke','isDrink','beddingTime','pet','character',
+                   'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
+                   'liveWithParent','likeChild','lastLoginAddress','year_of_birth', 'month_of_birth', 'day_of_birth', 'maritalStatus', 'hasChild' ,
+                   'link', 'streetAddress','position','language','educationSchool','ethnicGroup','bloodType',
+                   ) 
+
 
 #个人基本详细
 class UserBasicProfileForm (ModelForm) : 
@@ -122,7 +164,7 @@ class UserHobbyInterestForm(ModelForm):
         for key in self.fields:
             self.fields[key].required = False
     class Meta:
-        model=user_hobby_interest
+        model=UserHobbyInterest
         field=('sport','food','book','movice',
                'TVShow','recreation','travel',)
         exclude=('user')

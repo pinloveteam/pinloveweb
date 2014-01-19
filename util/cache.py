@@ -33,3 +33,16 @@ def init_yuanfenpintu_cache():
     cache.set('BOYS',{})
     cache.set('USER_GAME_COUNT',{})
 
+'''
+插入可以值，如果值为None，则创建
+'''
+def set_cache(key,value):
+    data=cache.get(key)
+    #如果 args 不为空
+    if data is None:
+        cache.set(key,[value,])
+    else:
+        data.append(value)
+        cache.set(key,data)
+        
+

@@ -18,11 +18,11 @@ class AuthenticationMiddleware(object):
                 return None  
             else:
                 if request.REQUEST.get('ajax',False):
-                    json=simplejson.dumps({'login':'invalid','redirectURL':'/?redirectURL=request.path'})
+                    json=simplejson.dumps({'login':'invalid','redirectURL':'/?next=request.path'})
                     return HttpResponse(json)
                 if request.path in ['/account/loggedout/','/account/invalid/']:
                     return HttpResponseRedirect('/')
                 else:
-                    return HttpResponseRedirect('/?redirectURL='+request.path)
+                    return HttpResponseRedirect('/?next='+request.path)
         else:
             return None

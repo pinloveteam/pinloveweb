@@ -1,0 +1,243 @@
+{% extends "base_later.html" %}
+{% block title %} 拼爱网--个人主页 {% endblock %}
+{% block staticfiles %}
+<link href="{{STATIC_URL}}css/docs.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css" type="text/css" />
+<script type="text/javascript" src="{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.scrollUp.min.js"></script>
+<style type="text/css">
+			.col-sm-9 {
+				width: 870px;
+				height: 48px;
+				letter-spacing: 2px;
+				margin-top: 65px;
+			}
+
+			#scrollUp {
+				background: url("./img/top.png") no-repeat scroll 0 0 transparent;
+				bottom: 20px;
+				height: 38px;
+				right: 20px;
+				width: 38px;
+			}
+			.card_panel {
+				height: 530px;
+				width: 870px;
+			}
+
+			.upload {
+				border: solid 1px #3A87AD;
+				width: 70px;
+				display: inline-block;
+				cursor: pointer;
+				margin-left: 40px;
+				margin-top: 10px;
+			}
+
+			td {
+				border: none !important;
+			}
+
+			.table {
+				margin-top: 30px;
+			}
+
+			#income, #identity, #education {
+				border: solid 1px #716B7A;
+				width: 800px;
+				height: 100px;
+				margin: 20px;
+			}
+
+			.cerbtn {
+				position: relative;
+				left: 650px;
+				top: -60px;
+			}
+
+			.cer_tab {
+				border: solid 1px #ed9c28;
+				background-color: #FFFFc9;
+				width: 800px;
+				height: 130px;
+				margin-left: 20px;
+				position: relative;
+				display: none;
+			}
+
+			.divArrow {
+				border-style: solid none none solid;
+				border-color: #ed9c28;
+				border-width: 1px;
+				background-color: #FFFFc9;
+				width: 25px;
+				height: 25px;
+				transform: rotate(45deg);
+				-webkit-transform: rotate(45deg);
+				position: absolute;
+				top: -13px;
+				left: 700px;
+			}
+
+			.tag a {
+				color: #FFFFFF;
+				display: inline-block;
+				height: 25px;
+				padding: 0 9px;
+				text-decoration: none;
+				white-space: nowrap;
+			}
+			.tag {
+				line-height: 25px;
+				text-align: left;
+			}
+
+			.tag-limeGreen {
+				background: none repeat scroll 0 0 #52B369;
+			}
+			/*.tag-limeGreen:hover {
+				background: none repeat scroll 0 0 #52B369;
+			}*/
+			.tag-desaturatedBlue {
+				background: none repeat scroll 0 0 #75A6CF;
+			}
+			/*.tag-desaturatedBlue:hover {
+				background: none repeat scroll 0 0 #478CC6;
+			}*/
+			.tag-softPink {
+				background: none repeat scroll 0 0 #EA3873;
+			}
+			/*.tag-softPink:hover {
+				background: none repeat scroll 0 0 #EA3873;
+			}*/
+			.tag-trigger{
+				opacity: 0.5;
+			}
+		</style>
+
+{% endblock %}
+{% block logo %}
+{% endblock %}
+{% block content %}
+<body data-spy="scroll">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+					<div role="complementary" class="bs-sidebar hidden-print affix">
+						<ul class="nav bs-sidenav">
+							<li class="active">
+								<a href="#upload_head">上传头像</a>
+							</li>
+							<li>
+								<a href="#self_info">个人信息</a>
+							</li>
+							<li>
+								<a href="#certification">申请认证</a>
+							</li>
+							<li>
+								<a href="#account_info">账户信息</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-9">
+				 <!-- 头像上传 -->
+				  <div id="upload_head" class="card_panel upload_head">
+                           {%include "upload_avatar/upload_avatar.html"%}
+                   </div>
+                   
+                   <!-- 个人信息编辑 -->
+				  <div id="self_info" class="card_panel self_info">
+					{% include "member/update_profile.html"%}
+				   </div>
+					
+					
+					<div id="certification" class="card_panel">
+						{% include "verfication.html" %}
+					</div>
+					<div id="account_info" class="card_panel account_info">
+					<script>
+					 $(document).ready(function(){
+							 $("#alter_password").submit(function(){
+									var data=$(this).serialize();
+									$.ajax({
+				                        type: $(this).attr('method'),
+				                        url: "/user/alter_password/",
+				                        data:data,
+				                        success: function(response){
+				                            alert("修改成功！")
+				                        },
+				                    
+				                    });
+								});
+						
+					 });
+					
+					</script>
+					    <form id='alter_password',name="alter_password" action="" menthod='POST'>
+						<table class="table">
+							<tbody>
+								<tr>
+									<td>旧密码:</td>
+									<td>
+									<input type="text" name='oldpassword' class="form-control" style="width: 300px;"/>
+									</td>
+								</tr>
+								<tr>
+									<td>新密码:</td>
+									<td>
+									<input type="text" name='newpassword' class="form-control" style="width: 300px;"/>
+									</td>
+								</tr>
+								<tr>
+									<td>重复密码:</td>
+									<td>
+									<input type="text" name='oldpassword' class="form-control" style="width: 300px;"/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<button class="btn btn-warning alter_password" style="position: relative; left: 300px;">保存</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a id="scrollUp" href="#top" title="返回顶部" style="position: fixed; z-index: 2147483647;"></a>
+		<script>
+$(document).ready(function(){
+$.scrollUp({
+scrollName: 'scrollUp', // Element ID
+topDistance: '300', // Distance from top before showing element (px)
+topSpeed: 300, // Speed back to top (ms)
+animation: 'fade', // Fade, slide, none
+animationInSpeed: 200, // Animation in speed (ms)
+animationOutSpeed: 200, // Animation out speed (ms)
+scrollText: '', // Text for element
+activeOverlay: false  // Set CSS color to display scrollUp active point, e.g '#00FFFF'
+});
+
+$('.cerbtn').click(function(){
+current = this;
+$('.cerbtn').each(function(){
+if(current!=this){
+this.isshow=false;
+$(this).parent().next().hide('slow');
+}
+});
+
+if(this.isshow){
+$(this).parent().next().hide('slow');
+this.isshow=false;
+}else{
+$(this).parent().next().show('slow');
+this.isshow=true;
+}
+});
+
+
+});
+		</script>
+{% endblock %}
+{% block footer %}
+{% endblock %} 

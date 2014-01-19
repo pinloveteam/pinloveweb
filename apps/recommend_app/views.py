@@ -4,7 +4,7 @@ Created on Sep 3, 2013
 
 @author: jin
 '''
-from apps.user_app.models import UserProfile, Friend
+from apps.user_app.models import UserProfile, Follow
 from apps.recommend_app.models import MatchResult, Grade, UserExpect
 from util.page import page
 from django.shortcuts import render
@@ -67,7 +67,7 @@ def recommend(request):
          arg=page(request,matchResultList)
          matchResultList=arg['pages']
          matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
-         friends = Friend.objects.filter(myId=request.user.id)
+         friends = Follow.objects.filter(myId=request.user.id)
          i=0 
          for user in matchResultList:
            for friend in friends:
@@ -90,7 +90,7 @@ def recommend(request):
           arg=page(request,userProfileList)   
           matchResultList=arg['pages']
           matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
-          friends = Friend.objects.filter(my=request.user)
+          friends = Follow.objects.filter(my=request.user)
           i=0 
           for user in matchResultList:
            for friend in friends:

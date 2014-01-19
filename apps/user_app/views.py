@@ -4,39 +4,259 @@ Created on Jul 4, 2013
 
 @author: jin
 '''
-from pinloveweb import  settings
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
-from django.core.mail import send_mail
-import random, string
-from apps.user_app.models import UserProfile,UserContactLink,UserVerification,user_hobby_interest,Friend,\
-    Verification
+from apps.user_app.models import UserProfile,UserContactLink,Follow,Verification,\
+    Tag
 from apps.user_app.forms import UserBasicProfileForm, UserContactForm,UserAppearanceForm, UserStudyWorkForm, UserPersonalHabitForm,\
-    UserFamilyInformationForm, PhotoCheck
+    UserFamilyInformationForm, UserProfileForm
 from django.core.context_processors import csrf 
-import time
 
-import string
 from django.contrib.auth.models import User
-from django.db import connection
 from django.contrib.auth.decorators import login_required
 from PIL import ImageFile
 from apps.upload_avatar import get_uploadavatar_context
 from django.contrib import auth
-from apps.upload_avatar import app_settings
 from apps.recommend_app.models import Grade
 from util.page import page
 import simplejson
 import logging
+from util.singal import cal_recommend_user
+from apps.pojo.card import MyEncoder
+from apps.the_people_nearby.tt import request
+from django.core import serializers
+from util.util_settings import INIT_TAGS
 log=logging.getLogger('django.db.backends')
+
+'''
+推荐页面移除不喜欢用户
+attribute：
+ userId： int 移除用户id
+ page：  int 当前页面页数
+'''
+def dislike(request):
+    arg={}
+    try:
+        userId=int(request.GET.get('userId'))
+        page=int(request.GET.get('page'))
+    except Exception:
+            raise '转换失败'
+    from util.cache import set_cache
+    set_cache(request.user.id,userId)
+    #如果没有下一页，则直接移除卡片
+    if  page < 0:
+        arg['result']='remove_card'
+        json=simplejson.dumps(arg)
+        return HttpResponse(json)
+    #获取分页数据
+    from pinloveweb.views import loggedin
+    matchResult=loggedin(request,page=page,card=True)
+    arg['card']=matchResult.object_list[7]
+    if page+1<=matchResult.paginator.num_pages:
+        arg['has_next']=True
+#     arg['next_page']=matchResult.has_next()
+    arg['result']='success'
+    from apps.pojo.card import MyEncoder
+    json=simplejson.dumps(arg,cls=MyEncoder)
+    return HttpResponse(json)
+'''
+用户详细信息
+userId： int 用户id
+'''
+def detailed_info(request,userId):
+    try:
+        userId=int(userId)
+    except Exception as e:
+        print 'userId转换失败'
+    arg={}
+    userProfile=UserProfile.objects.get_user_info(userId)
+    from apps.user_app.method import user_info_card
+    return render(request,'detailed_info.html',user_info_card(userProfile))
+'''
+查看关注信息
+attribute：
+    type(int) 关注类型 :
+        1  我的关注   
+        2  我的粉丝
+        3  相互关注
+return：
+   page 
+'''       
+def follow(request,type,ajax='false'):
+    arg={}
+    if request.user.is_authenticated() :
+        try:
+            type=int(type)
+        except ValueError:
+            raise Http404()
+        if type==1:
+            #获得我的关注列表
+            fllowList=Follow.objects.filter(my=request.user)
+        elif type==2:
+            #获得我的粉丝列表
+            fllowList=Follow.objects.filter(follow=request.user)   
+        elif  type==3:
+            #获得相互关注列表
+            fllowList=Follow.objects.follow_each(request.user.id)
+          
+        #获取相互关注列表
+        followEachList=Follow.objects.follow_each(request.user.id)
+        focusEachOtherList=[follow.my_id for follow in followEachList]
+        userProfile=UserProfile.objects.get(user_id=request.user.id)
+        #分页
+        arg=page(request,fllowList)
+        cardList=arg.get('pages')
+        #将关注列表转换成Card列表
+        from apps.pojo.card import fllowList_to_CardList
+        cardList.object_list=fllowList_to_CardList(request.user,cardList.object_list,type)
+        #好友关系
+        from pinloveweb.method import is_focus_each_other
+        cardList.object_list=is_focus_each_other(request, cardList.object_list, focusEachOtherList)
+        ajax=request.GET.get('ajax')
+        if ajax =='true':
+            data={}
+            data['has_next']=cardList.has_next()
+            if cardList.has_next():
+                data['next_page_number']=cardList.next_page_number()
+            if cardList.has_previous():
+               data['previous_page_number']=cardList.previous_page_number()
+            data['has_previous']=cardList.has_previous()
+            data['result']='success'
+            data['cards']=cardList.object_list
+            json=simplejson.dumps(data,cls=MyEncoder)
+            return HttpResponse(json)
+        cardList.object_list=simplejson.dumps(cardList.object_list,cls=MyEncoder)
+        arg['pages']=cardList
+        from pinloveweb.method import init_person_info_for_card_page
+        arg.update(init_person_info_for_card_page(userProfile))
+        return render(request, 'card.html',arg )
+    else:
+        arg = {}
+        arg.update(csrf(request))
+        return render(request, 'login.html', arg) 
+'''
+修改关注情况：
+attribute：
+    userId ：int 用户id
+return：
+    type：
+        1 ,-1 单向关注
+        2 ,-2 双向关注
+    content:
+         返回提示
+'''
+def update_follow(request):
+    arg = {}
+    offset = request.GET.get('userId')
+    if Follow.objects.filter(my=request.user,follow_id=offset).exists():
+        Follow.objects.filter(my=request.user,follow=offset).delete()
+        if Follow.objects.filter(my_id=offset,follow=request.user).exists():
+            arg['type']=-2
+        else:
+            arg['type']=-1
+        arg['content'] = "取消关注"
+    else:
+        Follow(my_id=request.user.id,follow_id=offset).save()
+        if Follow.objects.filter(my_id=offset,follow=request.user).exists():
+            arg['type']=2
+        else:
+            arg['type']=1
+        arg['content'] = '关注成功'
+    json = simplejson.dumps(arg)
+    return HttpResponse(json)
+
+'''
+初始化个人信息页面
+
+
+'''       
+def user_profile(request):
+        args=get_uploadavatar_context()
+        useBasicrProfile = UserProfile.objects.get(user_id=request.user.id)
+        #获取个人标签
+        tags=Tag.objects.get_tags_by_myself(user=request.user)
+        from apps.pojo.tag import tag_to_tagbean
+        tagbeanList=tag_to_tagbean(tags)
+        args['tagbeanList']=tagbeanList
+        args['user_profile_form'] = UserProfileForm(instance=useBasicrProfile) 
+        args['country']=useBasicrProfile.country
+        args['city']=useBasicrProfile.city
+        args['stateProvince']=useBasicrProfile.stateProvince
+        #认证
+        from apps.verification_app.views import verification
+        args.update(verification(request))
+         
+        return render_to_response(
+         'member/user_profile.html',
+         args,
+         context_instance = RequestContext(request)
+         )
+'''
+修改个人信息
+'''
+def update_profile(request):
+    if request.is_ajax():
+        userProfile = UserProfile.objects.get(user_id=request.user.id)
+        userProfileForm = UserProfileForm(request.POST,  instance=userProfile) 
+        if userProfileForm.is_valid():
+            tagList=request.REQUEST.get('tagList','').split(',')
+            username=request.POST['username']
+            country=request.POST['country']
+            stateProvince = request.POST['stateProvince']
+            city = request.POST['city']
+            #保存 user_profle信息
+            userProfile = userProfileForm.save(commit=False)
+            userProfile.user.username=username
+            userProfile.country=country
+            userProfile.stateProvince=stateProvince
+            userProfile.city=city
+            userProfile.save()
+            #保存tag信息
+            tags=[]
+            Tag.objects.filter(user=request.user,type=0).delete()
+            for tag in tagList:
+                from util.util_settings import INIT_TAGS
+                if not tag in INIT_TAGS:
+                    return HttpResponse({'error':'选择表情错误'}, mimetype='application/json')
+                else:
+                    tags.append(Tag(user=request.user,content=tag,type=0))
+            Tag.objects.bulk_create(tags)
+            data = serializers.serialize('json', [userProfile,])
+            return HttpResponse(data, mimetype='application/json')
+ 
+'''
+修改密码
+
+'''
+@csrf_protect
+def alter_password(request):
+    oldpassword = request.REQUEST.get('oldpassword','')
+    newpassword = request.REQUEST.get('newpassword','')
+    repassword = request.REQUEST.get('repassword','')
+    if newpassword == repassword:
+        if isIdAuthen(request): 
+            user = User.objects.get(username=request.REQUEST.get('username',''))
+        elif auth.authenticate(username=request.user.username, password=oldpassword) is not None :
+            user = request.user
+        else :
+            return render(request, 'error.html') 
+        user.set_password(newpassword)
+        user.save()
+        return render(request, 'success.html') 
+    else :
+        return render(request, 'error.html') 
+           
+#######################################################
+#上面是改版页面
+#######################################################
+
 
 # update user basic information
 def update_Basic_Profile_view(request): 
     
     if request.user.is_authenticated() :
-        
         args = {}
         args.update(csrf(request))
         user = request.user
@@ -69,7 +289,6 @@ def update_Basic_Profile_view(request):
                 userProfile.city = city
                 userProfile.country = country
                 
-                from util.singal_common import cal_recommend_user
                 map=request.session['user_original_data']
                 cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),
                                         education=map.get('education'),educationSchool=map.get('educationSchool'),income=map.get('income'))
@@ -306,160 +525,14 @@ def userInfor(request, offset):
 
 
 
-def addFriend(request):
-     if request.user.is_authenticated() :
-         offset = request.GET.get('userId')
-         count = Friend.objects.filter(my=request.user,friend_id=offset).count();
-         arg = {}
-         if count == 0:
-#              Myfriend = User.objects.get(id=offset)
-             friend = Friend()
-             friend.my = request.user
-             friend.friend_id = offset
-             friend.type = '0'
-             friend.save()
-             count = Friend.objects.filter(my_id=offset,friend=request.user).count()
-             if count==0:
-                 arg['type']=1
-             if count==1:
-                 arg['type']=2
-             arg['content'] = '关注成功'
-         else:
-             Friend.objects.filter(my=request.user,friend_id=offset).delete()
-             count_1 = Friend.objects.filter(my_id=offset,friend=request.user).count()
-             if count_1==0:
-                 arg['type']=-1
-             else:
-                 arg['type']=-2
-             arg['content'] = "取消关注"
-        
-         json = simplejson.dumps(arg)
-         return HttpResponse(json)
-     else:
-           args = {}
-           args.update(csrf(request))
-           return render(request, 'login.html', args) 
-'''
-查看关注
-attribute：
-    type(int) 关注类型 :
-        1  我的关注   
-        2  我的粉丝
-        3  相互关注
-return：
-   page 
-'''       
-def follow(request,type,ajax='false'):
-    arg={}
-    if request.user.is_authenticated() :
-        try:
-            type=int(type)
-        except ValueError:
-            raise Http404()
-        if type==1:
-            #获得我的关注列表
-            fllowList=Friend.objects.filter(my=request.user)
-        elif type==2:
-            #获得我的粉丝列表
-            fllowList=Friend.objects.filter(friend=request.user)   
-        elif  type==3:
-            #获得相互关注列表
-            sql= "%s%d%s%d%s" %("select * from user_app_friend where friend_id=",request.user.id," and my_id in (SELECT friend_id from user_app_friend where my_id=",request.user.id,")")
-            fllowList=Friend.objects.raw(sql)
-        #关注
-        myFollow=Friend.objects.filter(my=request.user).count()
-        fans=Friend.objects.filter(friend=request.user).count()
-        sql="select my_id from user_app_friend where friend_id="+str(request.user.id)+" and my_id in (SELECT friend_id from user_app_friend where my_id="+str(request.user.id)+") "
-        cursor=connection.cursor();
-        cursor.execute(sql)
-        follow=cursor.fetchall()
-        userProfile=UserProfile.objects.get(user_id=request.user.id)
-        #分页
-        arg=page(request,fllowList)
-        cardList=arg.get('pages')
-        cardList.object_list=fllowList_to_CardList(cardList.object_list,type)
-        #好友关系
-        i=0 
-        follows=[]
-        for f in follow:
-            follows.append(f[0])
-        friends = Friend.objects.filter(my_id=request.user.id)
-        for user in cardList:
-           for friend in friends:
-               if user.user_id == friend.friend_id:
-                   if  user.user_id in follows:
-                       cardList[i].isFriend=2
-                   else:
-                       cardList[i].isFriend=1
-           i+=1
-        ajax=request.GET.get('ajax')
-        if ajax =='true':
-            data={}
-            data['has_next']=cardList.has_next()
-            if cardList.has_next():
-                data['next_page_number']=cardList.next_page_number()
-            if cardList.has_previous():
-               data['previous_page_number']=cardList.previous_page_number()
-            data['has_previous']=cardList.has_previous()
-            data['result']='success'
-            data['cards']=cardList.object_list
-            from apps.pojo.recommend import MyEncoder
-            json=simplejson.dumps(data,cls=MyEncoder)
-            return HttpResponse(json)
-        from apps.pojo.recommend import MyEncoder
-        cardList.object_list=simplejson.dumps(cardList.object_list,cls=MyEncoder)
-        arg['pages']=cardList
-        from pinloveweb.views import init_card
-        arg=init_card(arg,userProfile)
-        arg['myFollow']=myFollow
-        arg['fans']=fans
-        arg['follow']=len(follow)
-        return render(request, 'card.html',arg )
-    else:
-        arg = {}
-        arg.update(csrf(request))
-        return render(request, 'login.html', arg) 
 
-def fllowList_to_CardList(fllowList,type):
-    recommendResultList=[]
-    userList=[]
-    if type ==1:
-        for myFollow in fllowList:
-            userList.append(myFollow.friend)
-    else:
-        for myFollow in fllowList:
-            userList.append(myFollow.my)
-    userProfileList=UserProfile.objects.select_related().filter(user_id__in=userList)
-    for userProfile in userProfileList:
-        scoreOther=u'需完善个人信息'
-        scoreMyself=u'需完善个人信息'
-        macthScore=u'需完善个人信息'
-        userId=userProfile.user_id
-        username=userProfile.user.username
-        height=userProfile.height
-        age=userProfile.age
-        education=userProfile.get_education_display()
-        income=userProfile.income
-        jobIndustry=userProfile.get_jobIndustry_display()
-        isFriend=0
-        if userProfile.avatar_name_status==3:
-           avatar_name=userProfile.avatar_name
-           isVote=True
-        else:
-           avatar_name='user_img/image.png'
-           isVote=False
-        city=userProfile.city
-        from apps.pojo.recommend import RecommendResult
-        recommendResult=RecommendResult(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote,city)
-        recommendResultList.append(recommendResult)
-    return recommendResultList
-     
+
 def friend(request):
-    count = Friend.objects.filter(my_id=request.user.id).count()
+    count = Follow.objects.filter(my_id=request.user.id).count()
     if count == 0:
         return render(request, 'member/friend.html', {'count':count})
     else :
-        friendList = Friend.objects.filter(my_id=request.user.id)
+        friendList = Follow.objects.filter(my_id=request.user.id)
         return render(request, 'member/friend.html', {'count':count, 'friendList':friendList})
 
 
@@ -471,7 +544,7 @@ def removeFriend(request, offset):
              offset = int(offset)
          except ValueError:
              raise Http404()
-         Friend.objects.filter(friend_id=offset).delete()
+         Follow.objects.filter(follow_id=offset).delete()
          return HttpResponseRedirect("/user/friend/")
     else:
          return HttpResponseRedirect("/user/friend/")
@@ -494,8 +567,6 @@ def forget_password(request):
                 return render(request, 'error.html')
          else :
             return render(request, 'error.html') 
-         #user verification
-         user_code = random_str()
          verification = Verification()
          verification.username = user.username
          verification.verification_code = user_code
@@ -503,12 +574,7 @@ def forget_password(request):
             # we need to generate a random number as</font> the verification key 
             
             # user needs email verification 
-         domain_name = u'http://www.pinpinlove.com/user/reset_password/'
-         email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + user_code
-         email_message = u"请您点击下面这个链接修改密码："
-         email_message += email_verification_link
-#        send_mail(u'拼爱网，密码找回', email_message,'pinloveteam@pinpinlove.com', [user.email])     
-         send_mail(u'拼爱网，密码找回', email_message,'pinloveteam@pinpinlove.com',[user.email]) 
+         
          return render(request, 'success.html')  
 
 #reset the password
@@ -552,13 +618,7 @@ def  isIdAuthen(request):
     else :
         return False   
     
-def random_str(randomlength=32):
-    a = list(string.ascii_letters)
-    random.shuffle(a)
-    return ''.join(a[:randomlength])
 
-def alter_password(request) : 
-    return render(request, 'alter_password.html',{'username': request.user.username})   
 
 # def generate_verification(username) :
 #     if Verification.objects.get(username=username) is not None :
@@ -595,45 +655,3 @@ def photo_check(request):
              return render(request,'member/photo_check.html',arg)
     else:
         return render(request,'login.html',arg)
-
-
-def  detailed_info(request,userId):
-    try:
-        userId=int(userId)
-    except Exception as e:
-        print 'userId转换失败'
-    arg={}
-    userProfile=UserProfile.objects.get_user_info(userId)
-    from apps.user_app.method import user_info_card
-    return render(request,'detailed_info.html',user_info_card(userProfile))
-
-def dislike(request):
-    arg={}
-    try:
-        userId=int(request.GET.get('userId'))
-        page=int(request.GET.get('page'))
-    except Exception:
-            raise '转换失败'
-    cache_key = request.user.id
-    from django.core.cache import cache
-    data = cache.get(cache_key)
-    if data is None:
-        cache.set(cache_key, [userId,])
-    else:
-        data.append(userId)
-        cache.set(cache_key, data)
-    #没有下一页
-    if  page < 0:
-        arg['result']='remove_card'
-        json=simplejson.dumps(arg)
-        return HttpResponse(json)
-    from pinloveweb.views import loggedin
-    matchResult=loggedin(request,page=page,card=True)
-    arg['card']=matchResult.object_list[7]
-    if page+1<=matchResult.number:
-        arg['has_next']=True
-#     arg['next_page']=matchResult.has_next()
-    arg['result']='success'
-    from apps.pojo.recommend import MyEncoder
-    json=simplejson.dumps(arg,cls=MyEncoder)
-    return HttpResponse(json)

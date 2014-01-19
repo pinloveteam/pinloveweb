@@ -49,7 +49,7 @@ STATICFILES_DIRS = (
     ('img',os.path.join(PATH,'static/img').replace('\\','/') ), 
      os.path.join(PATH,'apps/upload_avatar/static').replace('\\','/'), 
      os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
-     os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
+     os.path.join(PATH,'apps/verification_app/static').replace('\\','/'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -312,7 +312,7 @@ from util.cache import init_cache
 init_cache()
 # 本地环境
 # DATABASES = {
-#        
+#         
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -337,7 +337,7 @@ init_cache()
 
 #---服务器环境-----
 DATABASES = {
-          
+           
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.

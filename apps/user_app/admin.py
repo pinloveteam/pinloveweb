@@ -8,7 +8,7 @@ Created on Jul 4, 2013
 from django.contrib import admin
 from models import UserProfile,Dictionary
 from django.db import models
-from apps.user_app.models import Friend
+from apps.user_app.models import Follow
 from django.conf import settings
 from apps.recommend_app.models import Grade
 from django import forms
@@ -179,10 +179,10 @@ class AvatarCheckAdmin(admin.ModelAdmin):
         obj.save(commit=False)
         user_1=obj.user
         Grade.objects.filter(user=user_1).update(appearancescore=obj.appearancescore)
-class FriendAdmin(admin.ModelAdmin):
-    list_display=('my','friend',)
-    search_fields =('my__username','friend__username',)
-    fields =('my','friend','type')
+class FollowAdmin(admin.ModelAdmin):
+    list_display=('my','follow',)
+    search_fields =('my__username','follow__username',)
+    fields =('my','follow',)
 #     list_filter=('type','hasCar','hasHouse','financialCondition','parentEducation',)   
 
 admin.site.register(UserBasicProfile,UserBasicProfileAdmin)
@@ -191,7 +191,7 @@ admin.site.register(UserStudyWork,UserStudyWorkAdmin)
 admin.site.register(UserFamilyInformation,UserFamilyInformationAdmin)
 admin.site.register(UserPersonalHabit,UerPersonalHabitAdmin)
 admin.site.register(AvatarCheck,AvatarCheckAdmin)
-admin.site.register(Friend,FriendAdmin)
+admin.site.register(Follow,FollowAdmin)
 # admin.site.register(Dictionary)
 # admin.site.register(Message)
 # admin.site.register(new)

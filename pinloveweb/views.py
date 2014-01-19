@@ -8,13 +8,13 @@ from django.contrib import auth , messages
 from django.core.context_processors import csrf 
 
 from django.contrib.auth.models import User 
-from apps.user_app.models import Verification, UserVerification, Friend
-from apps.user_app.models import UserProfile,UserContactLink,UserVerification,user_hobby_interest
+from apps.user_app.models import Verification, UserVerification, Follow
+from apps.user_app.models import UserProfile,UserContactLink,UserVerification
 from django.core.mail import send_mail
 
 from forms import RegistrationForm 
 from pinloveweb import settings
-from apps.user_app.views import isIdAuthen, random_str
+from apps.user_app.views import isIdAuthen
 import time
 import datetime
 from django.contrib.auth.forms import UserCreationForm
@@ -25,6 +25,7 @@ import logging
 from django.views.decorators.csrf import csrf_protect
 from django.http.response import HttpResponse
 import simplejson
+from apps.recommend_app.models import MatchResult
 
 
 
@@ -57,7 +58,6 @@ def auth_view(request) :
     
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
-    redirectURL=request.REQUEST.get('redirectURL', '')
     if request.REQUEST.getlist('remember_status')==[u'on']:
             request.session.set_expiry(100000)
     user = auth.authenticate(username=username, password=password)
@@ -79,7 +79,10 @@ def auth_view(request) :
             return response
         #获取ip 地址
         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
-        if redirectURL=='':
+        #获取登录成=成功跳转地址
+        from util.urls import next_url
+        redirectURL = next_url(request)
+        if redirectURL is None:
             return HttpResponseRedirect('/account/loggedin/')
         else:
             return HttpResponseRedirect(redirectURL)
@@ -94,25 +97,40 @@ def get_cache_by_key(key):
     from django.core.cache import cache
     data = cache.get(cache_key)
     return data
-def loggedin(request,**kwargs) : 
-    from apps.recommend_app.models import MatchResult
+
+def loggedin(request,**kwargs) :
+    arg={} 
     #判断推荐分数是否生成
     flag=MatchResult.objects.is_exist_by_userid(request.user.id)
     userProfile=UserProfile.objects.get_user_info(request.user.id)
-    #关注
-    myFollow=Friend.objects.filter(my=request.user).count()
-    fans=Friend.objects.filter(friend=request.user).count()
-    sql="select my_id from user_app_friend where friend_id="+str(request.user.id)+" and my_id in (SELECT friend_id from user_app_friend where my_id="+str(request.user.id)+") "
-    cursor=connection.cursor();
-    cursor.execute(sql)
-    follow=cursor.fetchall()
-    
     #相互关注的人的id
-    focusEachOtherList=[]
-    for f in follow:
-        focusEachOtherList.append(f[0])
+    follows=Follow.objects.follow_each(request.user.id)
+    focusEachOtherList=[follow.my.id for follow in follows ]
     #从缓存中获取不推荐用户id
     disLikeUserIdList=get_cache_by_key(request.user.id)
+    #获取推荐列表
+    matchResultList=get_recommend_list(request,flag,disLikeUserIdList,focusEachOtherList,userProfile,**kwargs)
+    if kwargs.get('card')==True:
+        return matchResultList
+    if request.GET.get('ajax')=='true':
+        from pinloveweb.method import load_cards_by_ajax
+        return load_cards_by_ajax(request,matchResultList)
+    from apps.pojo.card import MyEncoder
+    matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
+    arg['pages']=matchResultList
+    from pinloveweb.method import init_person_info_for_card_page
+    arg.update(init_person_info_for_card_page(userProfile,followEachCount=len(focusEachOtherList)))
+    return render(request, 'card.html',arg )
+
+'''
+获得推荐列表
+attribute：
+  request：request
+  flag(boolean)：是否已经生成推荐列表
+  focusEachOtherList(List)：相互关注列表
+  userProfile(UserProfile)：当前用户详细信息
+'''
+def get_recommend_list(request,flag,disLikeUserIdList,focusEachOtherList,userProfile,**kwargs):
     if flag:
          if disLikeUserIdList is None:
              matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
@@ -120,83 +138,21 @@ def loggedin(request,**kwargs) :
             matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id).execute(other_id__in=disLikeUserIdList)
          arg=page(request,matchResultList,**kwargs)
          matchResultList=arg['pages']
-         from apps.recommend_app.views import matchResultList_to_RecommendResultList
-         matchResultList.object_list=matchResultList_to_RecommendResultList(matchResultList.object_list)
-         friends = Friend.objects.filter(my_id=request.user.id)
-         matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
+         from apps.pojo.card import matchResultList_to_CardList
+         matchResultList.object_list=matchResultList_to_CardList(matchResultList.object_list)
     else:
           if disLikeUserIdList is None: 
               userProfileList=UserProfile.objects.exclude(gender=userProfile.gender)
           else:
               userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender)
-#               userProfileList=UserProfile.objects.exclude(user=request.user).exclude(gender=userProfile.gender).exclude(user_id__in=disLikeUserIdList)
           arg=page(request,userProfileList,**kwargs)   
           matchResultList=arg['pages']
-          from apps.recommend_app.views import userProfileList_to_RecommendResultList
-          matchResultList.object_list=userProfileList_to_RecommendResultList(matchResultList.object_list)
-          friends = Friend.objects.select_related().filter(my=request.user)
-          matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
-    if kwargs.get('card')==True:
-        return matchResultList
-    if request.GET.get('ajax')=='true':
-         data={}
-         data['has_next']=matchResultList.has_next()
-         if matchResultList.has_next():
-             data['next_page_number']=matchResultList.next_page_number()
-         if matchResultList.has_previous():
-            data['previous_page_number']=matchResultList.previous_page_number()
-         data['has_previous']=matchResultList.has_previous()
-         data['result']='success'
-         if request.GET.get('choseCards[]')!=None:
-             choseCardslist=request.GET.getlist('choseCards[]')
-             matchResultList.object_list = [matchResult for matchResult in matchResultList.object_list if str(matchResult.user_id) not in choseCardslist]
-             if len(matchResultList.object_list)<8:
-                 data['removeCard']=True
-#              for matchResult in matchResultList.object_list:
-#                  if str(matchResult.user_id) in choseCardslist:
-#                      matchResultList.object_list.remove(matchResult) 
-#                      data['removeCard']=True
-         data['cards']=matchResultList.object_list
-         from apps.pojo.recommend import MyEncoder
-         json=simplejson.dumps(data,cls=MyEncoder)
-         return HttpResponse(json)
-    from apps.pojo.recommend import MyEncoder
-    matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
-    arg['pages']=matchResultList
-    arg=init_card(arg,userProfile)
-    arg['myFollow']=myFollow
-    arg['fans']=fans
-    arg['follow']=len(follow)  
-    return render(request, 'card.html',arg )
-
-'''
-判断是否是相互关注
-'''
-def is_focus_each_other(request,matchResultList,focusEachOtherList):
-    i=0
-    focus = Friend.objects.select_related().filter(my=request.user)
-    for user in matchResultList:
-        for f in focus:
-            if user.user_id == f.friend_id:
-                if  user.user_id in focusEachOtherList:
-                    matchResultList[i].isFriend=2
-                else:
-                    matchResultList[i].isFriend=1
-        i+=1
+          from apps.pojo.card import userProfileList_to_CardList
+          matchResultList.object_list=userProfileList_to_CardList(matchResultList.object_list)
+    from pinloveweb.method import is_focus_each_other
+    matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
     return matchResultList
 
-#用于初始化card页面所需要的信息
-def init_card(arg,userProfile):
-    if userProfile.avatar_name_status!='3':
-        arg['avatar_name']='user_img/image.png'
-    else:
-        arg['avatar_name']=userProfile.avatar_name
-    arg['age']=userProfile.age
-    arg['height']=userProfile.height
-    arg['income']=userProfile.income
-    arg['education']=userProfile.get_education_display()
-    arg['jobIndustry']=userProfile.get_jobIndustry_display()
-    return arg
      
      
 def invalid_login(request) : 

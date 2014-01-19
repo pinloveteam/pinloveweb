@@ -10,7 +10,7 @@ from apps.friend_dynamic_app.models import FriendDynamic, Picture,\
 from pinloveweb import settings
 from PIL import ImageFile 
 import time
-from apps.user_app.models import UserProfile, Friend
+from apps.user_app.models import UserProfile, Follow
 from django.db import connection
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
@@ -66,11 +66,11 @@ def send_dynamic(request):
 '''
 def init_dynamic(user,arg):
     #查询关注的人列表
-    followList=Friend.objects.filter(my=user)
+    followList=Follow.objects.filter(my=user)
     #我关注的人id列表
     followIdList=[]
-    for friend in followList:
-        followIdList.append(friend.friend_id)
+    for follow in followList:
+        followIdList.append(follow.follow_id)
     followIdList.append(user.id)
     friendDynamicList=FriendDynamic.objects.filter(publishUser_id__in=followIdList).order_by('-publishTime')[0:8]
     #获取点赞列表
@@ -129,7 +129,6 @@ def update_photo(request):
         for chunk in f.chunks():
             parser.feed(chunk)  
         img = parser.close()
-        from util.common_util import random_str
         from util import util_settings
         pictureName='%s%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10),f.name[f.name.find('.'):])
         if 'images_path' in request.session.keys():
@@ -314,8 +313,8 @@ def dynamic(request):
     if request.user.is_authenticated():
         userProfile=UserProfile.objects.get(user_id=request.user.id)
         #关注
-        myFollow=Friend.objects.filter(my=request.user).count()
-        fans=Friend.objects.filter(friend=request.user).count()
+        myFollow=Follow.objects.filter(my=request.user).count()
+        fans=Follow.objects.filter(Follow=request.user).count()
         sql="select my_id from user_app_friend where friend_id="+str(request.user.id)+" and my_id in (SELECT friend_id from user_app_friend where my_id="+str(request.user.id)+") "
         cursor=connection.cursor();
         cursor.execute(sql)

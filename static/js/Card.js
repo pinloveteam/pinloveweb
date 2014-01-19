@@ -31,7 +31,7 @@ window.Card = function(person){
 	var like= function(){
 	    var userId=$(this).parents('.card_panel').attr('id');
 		var icon_like=$(this).parents('.tool_bar :nth-child(2) ').children();
-		$.getJSON("/user/addFriend/",{userId:userId},function(data) {
+		$.getJSON("/user/update_follow/",{userId:userId},function(data) {
 			  if(data['type']==1){
 					icon_like.removeClass("icon_like_0").addClass("icon_like_1")
 					myFollow=myFollow+1

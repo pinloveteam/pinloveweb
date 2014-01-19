@@ -5,7 +5,7 @@ Created on Jul 4, 2013
 @author: jin
 '''
 from django.shortcuts import render_to_response, render
-from apps.user_app.models import UserProfile, Friend
+from apps.user_app.models import UserProfile, Follow
 from django.contrib.flatpages.tests import csrf
 from django.db import connection, transaction
 from util.connection_db import connection_to_db
@@ -38,7 +38,7 @@ def search_result(request):
        arg=page(request,searchRsultList)  
        searchRsultList=arg.get('pages')
        searchRsultList.object_list=searchRsultBeanList_to_searchRsultList(searchRsultList.object_list)
-       friends = Friend.objects.filter(my=request.user.id)
+       friends = Follow.objects.filter(my=request.user.id)
        i=0 
        for user in searchRsultList:
             for friend in friends:
@@ -50,7 +50,7 @@ def search_result(request):
     else:
        arg=page(request,request.session['searchQuery']) 
        searchRsultList=searchRsultBeanList_to_searchRsultList(arg.get('pages'))
-       friends = Friend.objects.filter(my=request.user.id)
+       friends = Follow.objects.filter(my=request.user.id)
        i=0 
        for user in searchRsultList:
             for friend in friends:
@@ -125,7 +125,7 @@ def advance_search_result(request):
             arg=page(request,searchRsultList)
             searchRsultList=arg.get('pages')
             searchRsultList.object_list=searchRsultBeanList_to_searchRsultList(searchRsultList.object_list)
-            friends = Friend.objects.filter(my=request.user.id)
+            friends = Follow.objects.filter(my=request.user.id)
             i=0 
             for user in searchRsultList:
               for friend in friends:
@@ -139,7 +139,7 @@ def advance_search_result(request):
        searchRsultList=UserProfile.objects.raw(request.session['advanceSearchSql'])
        arg=page(request,searchRsultList) 
        searchRsultList=searchRsultBeanList_to_searchRsultList(arg.get('pages'))
-       friends = Friend.objects.filter(my=request.user.id)
+       friends = Follow.objects.filter(my=request.user.id)
        i=0 
        for user in searchRsultList:
             for friend in friends:

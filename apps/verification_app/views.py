@@ -14,7 +14,80 @@ from django.core.exceptions import ValidationError
 from apps.verification_app.forms import IDCardValidForm, IncomeValidForm,\
     EducationValidForm
 from django.conf import settings
-
+from apps.the_people_nearby.tt import request
+from django.http.response import HttpResponse, HttpResponseRedirect
+'''
+获取认证信息
+'''
+def verification(request):
+        arg={}
+    #认证
+        try:
+           userVerification=UserVerification.objects.get(user=request.user)
+        except UserVerification.DoesNotExist:
+          userVerification=UserVerification()
+          userVerification.user=request.user
+          userVerification.save()
+        userProfile=UserProfile.objects.get(user=request.user)
+        
+        if userVerification.incomeValid=='1':
+            incomeValidForm=IncomeValidForm(instance=userProfile)
+            arg['incomeValidForm']=incomeValidForm
+        if  userVerification.IDCardValid=='1':
+            try:
+               userContactLink=UserContactLink.objects.get(user=request.user)
+            except UserContactLink.DoesNotExist:
+                userContactLink=UserContactLink()
+                userContactLink.user=request.user
+                userContactLink.save()
+            IDcardValidForm=IDCardValidForm(instance=userContactLink)
+            arg['IDcardValidForm']=IDcardValidForm
+        if userVerification.educationValid:
+            educationValidForm=EducationValidForm(instance=userProfile)
+            arg['educationValidForm']=educationValidForm
+          
+        arg['incomeValid']=userVerification.get_incomeValid_display()
+        arg['educationValid']=userVerification.get_educationValid_display()
+        arg['IDCardValid']=userVerification.get_IDCardValid_display()
+        return arg
+def valid(request):
+        type=request.REQUEST.get('type',None)
+        if type=="income":
+            userProfile=UserProfile.objects.get(user=request.user)
+            incomeValidForm=IncomeValidForm(request.POST,request.FILES,instance=userProfile)
+            if incomeValidForm.is_valid():
+                userVerification=UserVerification.objects.get(user=request.user)
+                userVerification.incomePicture=incomeValidForm.cleaned_data['incomePicture']
+                userVerification.incomeValid=2
+                userProfile=incomeValidForm.save(commit=False)
+                userVerification.save()
+                userProfile.save()
+                return HttpResponseRedirect('/user/user_profile/')
+        elif type=='IDCard':
+            userContactLink=UserContactLink.objects.get(user=request.user)
+            IDcardValidForm=IDCardValidForm(request.POST,request.FILES,instance=userContactLink)
+            if IDcardValidForm.is_valid():
+                userVerification=UserVerification.objects.get(user=request.user)
+                userVerification.IDCardPicture=IDcardValidForm.cleaned_data['IDCardPicture']
+                userVerification.IDCardValid=2
+                userContactLink=IDcardValidForm.save(commit=False)
+                userVerification.save()
+                userContactLink.save()
+                return HttpResponseRedirect('/user/user_profile/')
+        elif type=='education':
+            userProfile=UserProfile.objects.get(user=request.user)
+            educationValidForm=EducationValidForm(request.POST,request.FILES,instance=userProfile)
+            if educationValidForm.is_valid():
+                userVerification=UserVerification.objects.get(user=request.user)
+                userVerification.educationPicture=educationValidForm.cleaned_data['educationPicture']
+                userVerification.educationValid=2
+                userProfile=educationValidForm.save(commit=False)
+                userVerification.save()
+                userProfile.save()
+                return HttpResponseRedirect('/user/user_profile/')
+######################################    
+#####以上正在用
+##################################
 def verif_list(request):
     arg={}
     if request.user.is_authenticated():
