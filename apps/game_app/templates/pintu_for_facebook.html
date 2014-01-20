@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+body{
+    margin:0px;
+    overflow:hidden;
+    background:url("{{STATIC_URL}}img/CARD.png");
+}
+
+.card{
+	height:260px;
+	width:200px;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.3);
+}
+
+.head{
+	width: 104px;
+	height: 104px;
+	border-radius: 50%;
+	margin-left:45px;
+}
+
+button{
+	margin-top:30px;
+	margin-left:60px;
+}
+
+.head_girl{
+	border:2px solid rgba(255, 102, 51, 0.6);
+}
+
+.tag,.name{
+	text-align:center;
+}
+</style>
+<script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v4.7.4.min.js"></script>  
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+<script type="text/javascript">
+var selectedPieces = new Array();
+var piecesArray=new Array();
+var position = new Array({X:160,Y:320},{X:320-80*Math.sqrt(2),Y:320-80*Math.sqrt(2)},{X:320,Y:160},{X:320+80*Math.sqrt(2),Y:320-80*Math.sqrt(2)},{X:480,Y:320},{X:320+80*Math.sqrt(2),Y:320+80*Math.sqrt(2)},{X:320,Y:480},{X:320-80*Math.sqrt(2),Y:320+80*Math.sqrt(2)},{X:160,Y:320});
+var color = new Array("#f15a22","#bb141a","#ed1c24","#f15a22","#fbb040","#fff8a3","#fffcd5","#f58220","#fbb040","#fff8a3");
+var pieces = 8;
+var size = 320;
+function loadStage() {
+    var stage = new Kinetic.Stage({
+		container: "container",
+		width: window.innerWidth,
+		height: window.innerHeight
+        });
+    layer = new Kinetic.Layer();
+	for(i=0;i<pieces;i++){
+		piecesArray[i] = new Object();
+		piecesArray[i].shape=new Kinetic.Shape({
+            drawFunc: function(i){
+                return function(context) {
+					context.beginPath();
+					context.moveTo(position[i].X,position[i].Y);
+					context.arc(size,size,160,Math.PI+Math.PI/4*i,Math.PI+Math.PI/4*(i+1));
+					context.lineTo(size,size);
+					context.lineTo(position[i].X,position[i].Y);
+					context.fillStrokeShape(this);
+                    }
+                 }(i),
+					fill: color[i],
+					id:i,
+					opacity:0.382,
+					stroke: "#ffffff",
+					strokeWidth: 0.5,
+					draggable: false
+                    });
+//		piecesArray[i].shape.disableStroke();
+  		piecesArray[i].shape.on("mousedown", function(){
+  		this.setOpacity(0.382/this.getOpacity());
+  		this.setStrokeEnabled(!this.getStrokeEnabled());
+  		layer.batchDraw();
+         }); 
+        layer.add(piecesArray[i].shape);
+
+	}
+	stage.add(layer);
+
+        }
+
+
+       var index=0,           //当前亮区位置
+       prevIndex=0,          //前一位置
+       Speed=300,           //初始速度
+       Time,               //定义对象
+       EndIndex=0,        //决定在哪一格变慢
+       cycle=0,          //转动圈数   
+       EndCycle=0,      //计算圈数
+       flag=false,     //结束转动标志 
+       quick=0;       //加速
+        
+       function StartGame(){
+	     clearInterval(Time);
+         cycle=0;
+         flag=false;
+         EndIndex=Math.floor(Math.random()*16);
+         //EndCycle=Math.floor(Math.random()*4);
+         EndCycle=1;
+         Time = setInterval(Star,Speed);
+        }
+              
+              
+        function Star(num){
+            //跑马灯变速
+            if(flag==false){
+              //走五格开始加速
+             if(quick==5){
+                 clearInterval(Time);
+                 Speed=50;
+                 Time=setInterval(Star,Speed);
+             }
+             //跑N圈减速
+             if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
+                 clearInterval(Time);
+                 Speed=300;
+                 flag=true;       //触发结束			 
+                 Time=setInterval(Star,Speed);
+             }
+            }
+            
+            if(index>=piecesArray.length){
+                index=0;
+                cycle++;
+            }
+            
+           //结束转动并选中号码
+		   //trim里改成数字就可以减速，变成Endindex的话就没有减速效果了
+//       if(flag==true){ 
+//        quick=0;
+//        clearInterval(Time);
+//          }
+            if(index>0)
+                prevIndex=index-1;
+            else{
+                prevIndex=piecesArray.length-1;
+            }
+            piecesArray[index].shape.setOpacity(1);
+            piecesArray[prevIndex].shape.setOpacity(0.382);
+            layer.batchDraw();
+            index++;
+            quick++;
+            
+        }
+                 
+              
+	function commit(){
+		for(i=0;i<pieces;i++){
+			if(piecesArray[i].shape.getOpacity()==1){
+				selectedPieces[piecesArray[i].shape.getId()]=piecesArray[i].shape.getId();
+				}
+			}
+
+  				for(i=0;i<pieces;i++){
+					piecesArray[i].shape.setOpacity(1);
+					layer.batchDraw();
+					piecesArray[i].shape.setOpacity(0.382);
+					layer.batchDraw();
+  				} 
+
+
+
+			var opacity = 0.382;
+			var velocity = 50;
+			var anim = new Kinetic.Animation(function(frame) {
+				piecesArray[0].shape.setOpacity(1);
+				piecesArray[0].shape.setOpacity(opacity);
+				
+//				for(i=0;i<pieces;i++){
+//					var dist = velocity * (frame.timeDiff / 1000);
+//					piecesArray[i].shape.setOpacity(frame.timeDiff / 1000);
+//					alert(frame.timeDiff / 1000);
+  					
+//					if(piecesArray[i].shape.getOpacity()==0){
+//						piecesArray[i].shape.remove();
+//						this.stop();
+//						$('#card').show('slow')
+//						$('#btn2').show();
+//					}
+//				} 
+			}, layer); 
+
+//			anim.start(); 
+	}
+	$(document).ready(function(){
+		$('#btn1').click(function(){
+			$(this).hide();	
+		});
+		
+		$('#btn2').click(function(){
+			$(this).hide();
+			$('#card').hide();
+			$('#btn1').show();
+		});
+	});
+</script>
+</head>
+<body onload="loadStage()">
+    <div id="container"></div>
+	<button id="btn1" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;" onclick="StartGame();">开始匹配</button>
+	<button id="btn2" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;" onclick="loadStage();">在玩一次</button>
+<div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
+<div class="card">
+	<div class="head head_girl">
+		<img src="{{STATIC_URL}}/img/image1.jpeg" class="img-circle">
+	</div>
+	<div class="name" title="22">
+		<h3><strong>王雪</strong></h3>
+	</div>
+	<div class="tag">
+		<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span>杭州</span>
+	</div>
+	<button id="btn" class="btn btn-warning">打招呼</button>
+	
+	
+</body>
+</html>
