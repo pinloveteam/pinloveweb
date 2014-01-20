@@ -8,7 +8,7 @@ import re
 import simplejson
 class AuthenticationMiddleware(object):   
     def process_request(self, request):  
-        passList=['/account/forgetpwdpage/','/account/auth/','/account/register/','/',]
+        passList=['/account/forgetpwdpage/','/account/auth/','/account/register/','/','/game/pintu_for_facebook_url/']
         pattern = re.compile(r'^/admin/|/third_party_login/|/login/|/complete/')
         match = pattern.match(request.path)
         if match!=None:
