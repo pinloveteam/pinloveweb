@@ -26,6 +26,7 @@ from .setting import (
      )
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 log=logging.getLogger('customapp.engine')
 
 ##########three paerty login######
@@ -130,6 +131,7 @@ def sina_login(request):
 '''
 获取facebook授权登录地址,跳转到回调地址（redirect_uri）
 '''
+@csrf_exempt
 def facebook_login_url(request):
     from apps.third_party_login_app.facebook import auth_url
     url=auth_url(FaceBookAppID,FACEBOOK_CALLBACK_URL)
