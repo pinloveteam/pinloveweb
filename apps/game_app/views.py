@@ -23,7 +23,7 @@ def pintu(request):
 获取facebook授权登录地址,跳转到回调地址（redirect_uri）
 '''
 @csrf_exempt
-def facebook_login_url(request):
+def pintu_for_facebook_url(request):
     from apps.third_party_login_app.facebook import auth_url
     from apps.third_party_login_app.setting import FaceBookAppID
     url=auth_url(FaceBookAppID,'http://pinpinlove.com/game/pintu_for_facebook/')
