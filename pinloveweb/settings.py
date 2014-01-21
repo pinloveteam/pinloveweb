@@ -312,7 +312,7 @@ from util.cache import init_cache
 init_cache()
 # 本地环境
 # DATABASES = {
-#         
+#           
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -337,7 +337,7 @@ init_cache()
 
 #---服务器环境-----
 DATABASES = {
-           
+            
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -349,11 +349,11 @@ DATABASES = {
     }
 }
 #upload 上传地址
-MEDIA_URL = 'http://www.pinpinlove.com/update/'
+MEDIA_URL = '/update/'
 MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
 #静态文件地址
 STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
-STATIC_URL = 'http://www.pinpinlove.com/static/'
+STATIC_URL = '/static/'
 #头像上传地址
 UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
 UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
