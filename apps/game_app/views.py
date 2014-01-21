@@ -31,5 +31,5 @@ def pintu_for_facebook_url(request):
     return HttpResponseRedirect(url)
 @csrf_exempt
 def pintu_for_facebook(request):
-    me = request.facebook.graph.get_object('me')
-    return render(request, 'pintu_for_facebook.html',{'me':me})
+#     me = request.facebook.graph.get_object('me')
+    return render(request, 'pintu_for_facebook.html',)
