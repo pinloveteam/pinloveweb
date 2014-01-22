@@ -27,6 +27,7 @@ from apps.pojo.card import MyEncoder
 from apps.the_people_nearby.tt import request
 from django.core import serializers
 from util.util_settings import INIT_TAGS
+from django.utils import simplejson
 log=logging.getLogger('django.db.backends')
 
 '''
