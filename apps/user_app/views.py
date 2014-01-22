@@ -21,7 +21,6 @@ from apps.upload_avatar import get_uploadavatar_context
 from django.contrib import auth
 from apps.recommend_app.models import Grade
 from util.page import page
-import simplejson
 import logging
 from util.singal import cal_recommend_user
 from apps.pojo.card import MyEncoder
@@ -164,6 +163,7 @@ def update_follow(request):
         else:
             arg['type']=1
         arg['content'] = '关注成功'
+    from django.utils import simplejson
     json = simplejson.dumps(arg)
     return HttpResponse(json)
 

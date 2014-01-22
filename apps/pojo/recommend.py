@@ -4,7 +4,7 @@ Created on Sep 17, 2013
 
 @author: jin
 '''
-import simplejson
+from django.utils import simplejson
 '''
   推荐结果类
 '''

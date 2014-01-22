@@ -24,7 +24,6 @@ from apps.the_people_nearby.views import GetLocation
 import logging
 from django.views.decorators.csrf import csrf_protect
 from django.http.response import HttpResponse
-import simplejson
 from apps.recommend_app.models import MatchResult
 
 
@@ -116,6 +115,7 @@ def loggedin(request,**kwargs) :
         from pinloveweb.method import load_cards_by_ajax
         return load_cards_by_ajax(request,matchResultList)
     from apps.pojo.card import MyEncoder
+    from django.utils import simplejson
     matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
     arg['pages']=matchResultList
     from pinloveweb.method import init_person_info_for_card_page
