@@ -81,6 +81,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     #登录拦截     
      'middleware.filter_middleware.AuthenticationMiddleware',
+     #facebook
+     'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #     'django.middleware.cache.UpdateCacheMiddleware',
@@ -312,7 +314,7 @@ from util.cache import init_cache
 init_cache()
 # 本地环境
 # DATABASES = {
-#           
+#            
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -337,7 +339,7 @@ init_cache()
 
 #---服务器环境-----
 DATABASES = {
-            
+             
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -382,3 +384,11 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 # }
 
 
+'''
+facebook 
+'''
+FACEBOOK_APP_ID = '400350543428768'
+FACEBOOK_SECRET_KEY = 'fafdcdabccd34c67311c41489de8dcc2'
+FACEBOOK_CANVAS_PAGE = 'https://apps.facebook.com/%s/' % FACEBOOK_APP_ID
+# Optionally set default permissions to request, e.g: ['email', 'user_about_me']
+FACEBOOK_SCOPE = ['publish_stream',]
