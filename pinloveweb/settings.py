@@ -82,6 +82,7 @@ MIDDLEWARE_CLASSES = (
     #登录拦截     
      'middleware.filter_middleware.AuthenticationMiddleware',
      #facebook
+     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
      'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -314,7 +315,7 @@ from util.cache import init_cache
 init_cache()
 # 本地环境
 # DATABASES = {
-#            
+#             
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -339,7 +340,7 @@ init_cache()
 
 #---服务器环境-----
 DATABASES = {
-             
+              
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -392,3 +393,10 @@ FACEBOOK_SECRET_KEY = 'fafdcdabccd34c67311c41489de8dcc2'
 FACEBOOK_CANVAS_PAGE = 'https://apps.facebook.com/%s/' % FACEBOOK_APP_ID
 # Optionally set default permissions to request, e.g: ['email', 'user_about_me']
 FACEBOOK_SCOPE = ['publish_stream',]
+
+
+# And for local debugging, use one of the debug middlewares and set:
+FACEBOOK_DEBUG_TOKEN = 'CAACEdEose0cBAAv03yiC8gnp8vNjUtqNzH2BrkbnvHd3RldZAQyqyl5ZAoaJY39T8JBaDD1DNZAb9ZAAoTFKrlHperWJlIpgDOsHLvupKKymLKQHBYZB5lkrBhrO19K65zVfsV2LXhyaZCzHAMz34jchQtBRlDOgkhljLpZAreurXS1LGzs4wK6I4dLXA2MYFIZD'
+FACEBOOK_DEBUG_UID = '100007203789389'
+FACEBOOK_DEBUG_COOKIE = ''
+FACEBOOK_DEBUG_SIGNEDREQ = '    c2vzdwy5olF89D-CsSTAFxeq8QN4loA6UKo1-0L6Nsk.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTAzNjY4MDAsImlzc3VlZF9hdCI6MTM5MDM2MDI0MSwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFKTVZsUGs0ZFpCNWdYaGwzNWhrOHZrMW5uc0hydG5tT2t4bU1WNW43TThGeHVSRUNmdHFIblpBN2poajhjcWN2bGIzQ1lGaVFMcjdEcHJ2cEtpMjdaQXZWdE0yWG42RWlsWkFHS01NbklDd2NTOGpuMzJRWkNNUDFoY1RaQ0hZdFNIVzVRRTRWWEM5ME9ERUlQSnJLUXNLM0YzQ0FaQmwyeWFPekd6OEtaQ1NEWkE2TlpCSk5aQU1Zd1pEIiwidXNlciI6eyJjb3VudHJ5IjoidXMiLCJsb2NhbGUiOiJ6aF9DTiIsImFnZSI6eyJtaW4iOjIxfX0sInVzZXJfaWQiOiIxMDAwMDcyMDM3ODkzODkifQ'

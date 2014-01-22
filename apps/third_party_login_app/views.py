@@ -321,6 +321,7 @@ from apps.third_party_login_app.django_facebook.decorators import canvas_only
 @csrf_exempt
 @canvas_only
 def pintu_for_facebook(request):
+    
     me = request.facebook.graph.get_object('me')
     return render(request, 'pintu_for_facebook.html',{'me':me})
         
