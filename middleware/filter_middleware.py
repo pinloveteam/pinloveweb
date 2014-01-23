@@ -8,7 +8,7 @@ import re
 from django.utils import simplejson
 class AuthenticationMiddleware(object):   
     def process_request(self, request):  
-        passList=['/account/forgetpwdpage/','/account/auth/','/account/register/','/','/game/pintu_for_facebook_url/','/game/pintu_for_facebook/']
+        passList=['/account/forgetpwdpage/','/account/auth/','/account/register/','/','/game/pintu_for_facebook_url/','/game/pintu_for_facebook/','/pay_app/icon/']
         pattern = re.compile(r'^/admin/|/third_party_login/|/login/|/complete/')
         match = pattern.match(request.path)
         if match!=None:
