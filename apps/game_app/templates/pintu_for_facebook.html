@@ -201,10 +201,44 @@ function loadStage() {
 		});
 	});
 </script>
+ <script type="text/javascript">
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '400350543428768',
+          status     : true,
+          cookie     : true,
+          xfbml      : true
+        });
+
+        function buy() {
+          var obj = {
+            method: 'pay',
+            action: 'purchaseitem',
+            product: '/pay_app/icon/'
+          };
+
+          FB.ui(obj, function(data) {
+              console.log(data);
+            });
+        }
+
+        document.getElementById('pay').onclick = function() {buy()};
+      };
+
+      // Load the SDK Asynchronously
+      (function(d){
+        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement('script'); js.id = id; js.async = true;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        ref.parentNode.insertBefore(js, ref);
+      }(document));
+    </script>
 </head>
 <body onload="loadStage()">
     <div id="container"></div>
 	<button id="btn1" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;" onclick="StartGame();">{{me.username}}开始匹配</button>
+	<button id="pay" >购买</button>
 	<button id="btn2" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;" onclick="loadStage();">在玩一次</button>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
 <div class="card">

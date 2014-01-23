@@ -7,3 +7,6 @@ Created on Sep 8, 2013
 from django.shortcuts import render
 def get_icon(request):
     return render(request,'icon.html')
+
+def pay(request):
+    return render(request,'facebook_pay.html')
