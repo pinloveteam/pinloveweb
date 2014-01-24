@@ -9292,3 +9292,189 @@ WARNING 2014-01-23 14:00:29 E:\python\lib\site-packages\django\core\handlers\bas
 WARNING 2014-01-23 14:00:30 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /pay_app/icon/ status_code:404
 WARNING 2014-01-23 14:00:44 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /pay_app/icon/ status_code:404
 WARNING 2014-01-23 14:00:54 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /pay_app/icon/ status_code:404
+WARNING 2014-01-23 15:02:10 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape09.png status_code:404
+WARNING 2014-01-23 15:32:14 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape09.png status_code:404
+WARNING 2014-01-23 15:32:20 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape09.png status_code:404
+ERROR 2014-01-23 16:05:52 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 296, in request
+    post_data, timeout=self.timeout)
+  File "E:\python\lib\urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+  File "E:\python\lib\urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "E:\python\lib\urllib2.py", line 422, in _open
+    '_open', req)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 1222, in https_open
+    return self.do_open(httplib.HTTPSConnection, req)
+  File "E:\python\lib\urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 10053] >
+ERROR 2014-01-23 16:08:07 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 296, in request
+    post_data, timeout=self.timeout)
+  File "E:\python\lib\urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+  File "E:\python\lib\urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "E:\python\lib\urllib2.py", line 422, in _open
+    '_open', req)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 1222, in https_open
+    return self.do_open(httplib.HTTPSConnection, req)
+  File "E:\python\lib\urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 10053] >
+WARNING 2014-01-23 16:22:33 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+WARNING 2014-01-23 16:24:17 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+ERROR 2014-01-23 16:24:46 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 296, in request
+    post_data, timeout=self.timeout)
+  File "E:\python\lib\urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+  File "E:\python\lib\urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "E:\python\lib\urllib2.py", line 422, in _open
+    '_open', req)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 1222, in https_open
+    return self.do_open(httplib.HTTPSConnection, req)
+  File "E:\python\lib\urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 10053] >
+ERROR 2014-01-23 16:25:19 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 296, in request
+    post_data, timeout=self.timeout)
+  File "E:\python\lib\urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+  File "E:\python\lib\urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "E:\python\lib\urllib2.py", line 422, in _open
+    '_open', req)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 1222, in https_open
+    return self.do_open(httplib.HTTPSConnection, req)
+  File "E:\python\lib\urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 10053] >
+ERROR 2014-01-23 16:29:37 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 296, in request
+    post_data, timeout=self.timeout)
+  File "E:\python\lib\urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+  File "E:\python\lib\urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "E:\python\lib\urllib2.py", line 422, in _open
+    '_open', req)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 1222, in https_open
+    return self.do_open(httplib.HTTPSConnection, req)
+  File "E:\python\lib\urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 10053] >
+WARNING 2014-01-23 16:33:22 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /img/Cityscape55.jpg status_code:404
+ERROR 2014-01-24 10:31:37 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 299, in request
+    raise GraphAPIError(response)
+GraphAPIError: Error validating access token: Session has expired on Jan 23, 2014 1:00am. The current time is Jan 23, 2014 6:31pm.
+ERROR 2014-01-24 10:33:14 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 299, in request
+    raise GraphAPIError(response)
+GraphAPIError: Error validating access token: Session has expired on Jan 23, 2014 1:00am. The current time is Jan 23, 2014 6:33pm.
+ERROR 2014-01-24 10:33:40 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 325, in pintu_for_facebook
+    me = request.facebook.graph.get_object('me')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 299, in request
+    raise GraphAPIError(response)
+GraphAPIError: Error validating access token: Session has expired on Jan 23, 2014 1:00am. The current time is Jan 23, 2014 6:33pm.

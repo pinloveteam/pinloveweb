@@ -28,3 +28,4 @@ ERROR customapp.engine 2014-01-18 14:47:23 E:/eclipse_64/code/pinloveweb\apps\th
 ERROR customapp.engine 2014-01-19 19:07:11 E:/eclipse_64/code/pinloveweb\apps\third_party_login_app\views.py views 136 url====https://www.facebook.com/dialog/oauth?redirect_uri=http%3A%2F%2Fpinlove.xicp.net%2F%2Fthird_party_login%2Ffacebook_login%2F&client_id=1412943645609984
 ERROR customapp.engine 2014-01-19 19:07:17 E:/eclipse_64/code/pinloveweb\apps\third_party_login_app\views.py views 226 Jin  Snail   PIN_LOVE_10086
 ERROR customapp.engine 2014-01-19 19:07:18 E:/eclipse_64/code/pinloveweb\apps\third_party_login_app\views.py views 229 login successJin  Snailfcsdfsf
+ERROR customapp.engine 2014-01-23 16:33:24 E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py views 138 url====https://www.facebook.com/dialog/oauth?redirect_uri=http%3A%2F%2Fpinpinlove.com%2Fthird_party_login%2Ffacebook_login%2F&client_id=400350543428768
