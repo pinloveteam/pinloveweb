@@ -1,15 +1,22 @@
-<!DOCTYPE HTML>
-{{me}}
+﻿<!DOCTYPE HTML>
 <html>
 <head>
-<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
 body{
     margin:0px;
     overflow:hidden;
-    background:url("{{STATIC_URL}}img/CARD.png");
+    background-color:#fff5eb;
 }
 
+.kineticjs-content{
+	margin: 100px;
+	background-color:#fff;
+	border-radius: 50%;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
+	-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+	-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
+	box-shadow:2px 2px 10px #909090;/*opera或ie9*/
+}
 .card{
 	height:260px;
 	width:200px;
@@ -37,20 +44,51 @@ button{
 	text-align:center;
 }
 </style>
-<script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v4.7.4.min.js"></script>  
+<script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>  
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+
+</head>
+<body onload="loadStage()">
+    <div id="container"></div>
+    <ul class="list-inline" style="position: absolute; left: 900px; top: 100px; float: left;">
+		<li class="active">请输入你的幸运数字:</li>
+		<li><input id="num" type="text"/></li>
+	</ul>
+    
+	<button id="btn1" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;" onclick="StartGame();">开始匹配</button>
+	<button id="btn2" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;" onclick="loadStage();">在玩一次</button>
+<div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
+<div class="card">
+	<div class="head head_girl">
+		<img src=".\img\image1.jpeg" class="img-circle">
+	</div>
+	<div class="name" title="22">
+		<h3><strong>王雪</strong></h3>
+	</div>
+	<div class="tag">
+		<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span>杭州</span>
+	</div>
+	<button id="btn">打招呼</button>
 <script type="text/javascript">
-var selectedPieces = new Array();
-var piecesArray=new Array();
-var position = new Array({X:160,Y:320},{X:320-80*Math.sqrt(2),Y:320-80*Math.sqrt(2)},{X:320,Y:160},{X:320+80*Math.sqrt(2),Y:320-80*Math.sqrt(2)},{X:480,Y:320},{X:320+80*Math.sqrt(2),Y:320+80*Math.sqrt(2)},{X:320,Y:480},{X:320-80*Math.sqrt(2),Y:320+80*Math.sqrt(2)},{X:160,Y:320});
-var color = new Array("#f15a22","#bb141a","#ed1c24","#f15a22","#fbb040","#fff8a3","#fffcd5","#f58220","#fbb040","#fff8a3");
-var pieces = 8;
-var size = 320;
+var selectedPieces = new Array(),
+	piecesArray=new Array();
+var pieces = 8,
+	size = 500,
+	add = 4;
+	
+var color = new Array("#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff");
+var position = new Array({X:add,Y:size/2+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size/2+add,Y:add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size+add,Y:size/2+add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:size/2+add,Y:size+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:add,Y:size/2+add});
+
+function Trim(str){
+    return str.replace(/(^\s*)|(\s*$)/g, ""); 
+}
+     
 function loadStage() {
     var stage = new Kinetic.Stage({
 		container: "container",
-		width: window.innerWidth,
-		height: window.innerHeight
+		width: 508,
+		height: 508
         });
     layer = new Kinetic.Layer();
 	for(i=0;i<pieces;i++){
@@ -60,32 +98,29 @@ function loadStage() {
                 return function(context) {
 					context.beginPath();
 					context.moveTo(position[i].X,position[i].Y);
-					context.arc(size,size,160,Math.PI+Math.PI/4*i,Math.PI+Math.PI/4*(i+1));
-					context.lineTo(size,size);
+					context.arc(size/2+4,size/2+4,size/2,Math.PI+Math.PI/4*i,Math.PI+Math.PI/4*(i+1));
+					context.lineTo(size/2+4,size/2+4);
 					context.lineTo(position[i].X,position[i].Y);
 					context.fillStrokeShape(this);
                     }
                  }(i),
 					fill: color[i],
 					id:i,
-					opacity:0.382,
+					opacity:0.5,
 					stroke: "#ffffff",
-					strokeWidth: 0.5,
+					strokeWidth: 4,
 					draggable: false
                     });
 //		piecesArray[i].shape.disableStroke();
   		piecesArray[i].shape.on("mousedown", function(){
-  		this.setOpacity(0.382/this.getOpacity());
-  		this.setStrokeEnabled(!this.getStrokeEnabled());
+  		this.setOpacity(0.5/this.getOpacity());
+//		this.setStrokeEnabled(!this.getStrokeEnabled());
   		layer.batchDraw();
          }); 
         layer.add(piecesArray[i].shape);
-
 	}
 	stage.add(layer);
-
         }
-
 
        var index=0,           //当前亮区位置
        prevIndex=0,          //前一位置
@@ -95,33 +130,50 @@ function loadStage() {
        cycle=0,          //转动圈数   
        EndCycle=0,      //计算圈数
        flag=false,     //结束转动标志 
-       quick=0;       //加速
+       quick=0,     //加速
+       piece = [];
         
        function StartGame(){
 	     clearInterval(Time);
          cycle=0;
          flag=false;
-         EndIndex=Math.floor(Math.random()*16);
          //EndCycle=Math.floor(Math.random()*4);
-         EndCycle=1;
+         EndCycle=3;
          Time = setInterval(Star,Speed);
+         num = $('#num').val();
+         $.getJSON("/game/jigsaw/",{number:num},function(data) {
+				if(data['login']=='invalid'){window.location =data['redirectURL'];}
+		  		if(data['status_code']=='0'){$('#card').find('.card').html('没有匹配用户');}
+				if(data['status_code']=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
+				if(data['status_code']=='2'){
+					$('#card').find('.img-circle').attr('src','/media/'+data['avatar_name']+'-110.jpeg');
+				  	$('#card').find('strong').html(data['username']);
+				  	$('#card').find('.age').html(data['age']).next().html(data['city']);
+				}
+				clearInterval(Time);
+				piece = data[1];
+				EndIndex = piece[piece.length-1];
+				Time = setInterval(Star,Speed);
+				
+				//$('#card').show('slow');
+				//$('#count').html('游戏次数:'+data['count']);
+				//$('#btn2').show();
+				//$('#btn1').hide();
+	 });
         }
-              
-              
-        function Star(num){
-            //跑马灯变速
+        function Star(NUM){
             if(flag==false){
               //走五格开始加速
              if(quick==5){
                  clearInterval(Time);
-                 Speed=50;
+                 Speed=100;
                  Time=setInterval(Star,Speed);
              }
              //跑N圈减速
-             if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
+             if(cycle==EndCycle+1){
                  clearInterval(Time);
                  Speed=300;
-                 flag=true;       //触发结束			 
+                 flag=true;       //触发结束
                  Time=setInterval(Star,Speed);
              }
             }
@@ -132,66 +184,44 @@ function loadStage() {
             }
             
            //结束转动并选中号码
-		   //trim里改成数字就可以减速，变成Endindex的话就没有减速效果了
-//       if(flag==true){ 
-//        quick=0;
-//        clearInterval(Time);
-//          }
+         if(flag==true && cycle==EndCycle+1 && index==parseInt(EndIndex)){ 
+          quick=0;
+          clearInterval(Time);
+            }
             if(index>0)
                 prevIndex=index-1;
             else{
                 prevIndex=piecesArray.length-1;
             }
-            piecesArray[index].shape.setOpacity(1);
-            piecesArray[prevIndex].shape.setOpacity(0.382);
+            piecesArray[index].shape.opacity(1);
+				
+            if(cycle > EndCycle){
+              if(piece.concat(prevIndex).unique5().sort().toString()!=piece.sort().toString()){
+            	piecesArray[prevIndex].shape.opacity(0.5);
+               }
+            }else{
+            	piecesArray[prevIndex].shape.opacity(0.5);
+            }
+
             layer.batchDraw();
             index++;
             quick++;
-            
         }
-                 
               
-	function commit(){
-		for(i=0;i<pieces;i++){
-			if(piecesArray[i].shape.getOpacity()==1){
-				selectedPieces[piecesArray[i].shape.getId()]=piecesArray[i].shape.getId();
-				}
-			}
-
-  				for(i=0;i<pieces;i++){
-					piecesArray[i].shape.setOpacity(1);
-					layer.batchDraw();
-					piecesArray[i].shape.setOpacity(0.382);
-					layer.batchDraw();
-  				} 
-
-
-
-			var opacity = 0.382;
-			var velocity = 50;
-			var anim = new Kinetic.Animation(function(frame) {
-				piecesArray[0].shape.setOpacity(1);
-				piecesArray[0].shape.setOpacity(opacity);
-				
-//				for(i=0;i<pieces;i++){
-//					var dist = velocity * (frame.timeDiff / 1000);
-//					piecesArray[i].shape.setOpacity(frame.timeDiff / 1000);
-//					alert(frame.timeDiff / 1000);
-  					
-//					if(piecesArray[i].shape.getOpacity()==0){
-//						piecesArray[i].shape.remove();
-//						this.stop();
-//						$('#card').show('slow')
-//						$('#btn2').show();
-//					}
-//				} 
-			}, layer); 
-
-//			anim.start(); 
-	}
+       Array.prototype.unique5 = function() {
+	    var res = [], hash = {};
+	    for(var i=0, elem; (elem = this[i]) != null; i++)  {
+	        if (!hash[elem])
+	        {
+	            res.push(elem);
+	            hash[elem] = true;
+	        }
+	    }
+	    return res;
+	}       
 	$(document).ready(function(){
 		$('#btn1').click(function(){
-			$(this).hide();	
+			//$(this).hide();	
 		});
 		
 		$('#btn2').click(function(){
@@ -201,25 +231,5 @@ function loadStage() {
 		});
 	});
 </script>
-</head>
-<body onload="loadStage()">
-    <div id="container"></div>
-	<button id="btn1" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;" onclick="StartGame();">{{me.username}}开始匹配</button>
-	<button id="btn2" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;" onclick="loadStage();">在玩一次</button>
-<div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
-<div class="card">
-	<div class="head head_girl">
-		<img src="{{STATIC_URL}}/img/image1.jpeg" class="img-circle">
-	</div>
-	<div class="name" title="22">
-		<h3><strong>王雪</strong></h3>
-	</div>
-	<div class="tag">
-		<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span>杭州</span>
-	</div>
-	<button id="btn" class="btn btn-warning">打招呼</button>
-	
-	
 </body>
 </html>
