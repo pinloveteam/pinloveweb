@@ -4,10 +4,10 @@ Created on Sep 17, 2013
 
 @author: jin
 '''
-import simplejson
 from apps.user_app.models import UserProfile
 from apps.upload_avatar.app_settings import default_iamge_name
 from apps.recommend_app.models import MatchResult
+from django.utils import simplejson
 '''
   卡片类
 '''

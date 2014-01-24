@@ -60,7 +60,7 @@ urlpatterns = patterns('',
 #      url(r'^celery_test/', 'apps.task_app.views.test_celery'),
 ####第三方登录###
     (r'^third_party_login/', include('apps.third_party_login_app.urls')),
-#      url(r'', include('social_auth.urls')),
+    (r'^pay_app/', include('apps.pay_app.urls')),
 
      url(r'^test/$', 'pinloveweb.views.test'),
 )
