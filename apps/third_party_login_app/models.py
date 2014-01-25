@@ -19,3 +19,18 @@ class ThirdPsartyLogin(models.Model):
         verbose_name_plural = u'第三方登录表'
         db_table = "third_party_login" 
         
+class FacebookUser(models.Model):
+    uid=models.CharField(verbose_name=u'用户ID',primary_key=True,max_length=125)
+    username=models.CharField(verbose_name=u'用户名',max_length=125)
+    GENDER_CHOISE=(
+                   (u'male',u'F'),
+                   (u'female',u'M')
+                   )
+    gender=models.CharField(verbose_name=u'性别',max_length='1',choices=GENDER_CHOISE)
+    avatar=models.CharField(verbose_name=u'头像',max_length=125,null=True,blank=True,)
+    location=models.CharField(verbose_name=u'地址',max_length=125,null=True,blank=True,)
+    updateTime=models.DateTimeField(verbose_name='最后更新时间')
+    class Meta:
+        verbose_name = u'facebook用户表' 
+        verbose_name_plural = u'facebook用户表'
+        db_table = "facebook_user" 

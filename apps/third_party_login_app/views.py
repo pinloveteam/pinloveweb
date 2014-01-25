@@ -318,10 +318,26 @@ def facebook_feeds(request):
         return render(request,'facebook_feed.html')
     
 from apps.third_party_login_app.django_facebook.decorators import canvas_only
-@csrf_exempt
-@canvas_only
+# @csrf_exempt
+# @canvas_only
 def pintu_for_facebook(request):
-    
-    me = request.facebook.graph.get_object('me')
-    return render(request, 'pintu_for_facebook.html',{'me':me})
+    from apps.third_party_login_app.models import FacebookUser
+    uid=request.facebook.user.get('uid')
+    if FacebookUser.objects.filter(uid=uid).exists():
+        me=request.facebook.user
+    else:
+        me = request.facebook.graph.get_object(uid)
+        avatar= request.facebook.graph.get_object('me/picture',height=110,width=110)
+        updateTime=datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000')
+        if me.get('gender')==u'male':
+            gender='F'
+        else:
+            gender='M'
+        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime)
+        if 'location' in me.keys():
+            facebookUser.location=me.get('location').get('name')
+        if not  avatar is None:
+            facebookUser.avatar=avatar.get('url')
+        facebookUser.save()
+    return render(request, 'pintu_for_facebook.html',{'usermame':me.get('name'),'uid':uid})
         

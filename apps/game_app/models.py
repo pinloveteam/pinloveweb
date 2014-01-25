@@ -4,6 +4,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from apps.third_party_login_app.models import FacebookUser
 
 class Yuanfenjigsaw:
 #     selected_pieces_str = ''
@@ -16,13 +17,14 @@ class Yuanfenjigsaw:
         if cache.get('TODAY') != datetime.date.today():
             reset_game()
             get_count(request)
-            
-        self.current_username = request.user.username
+        uid=request.GET.get('uid')
+        facebookUser=FacebookUser.objects.get(uid=uid)
+        self.current_username = facebookUser.username
         self.number=int(request.GET.get("number",''))
 #         self.pieces = set([int(i) for i in self.selected_pieces_str.split("-") if i])#用户提交的集合
         self.pieces = self.generate_pieces()
         self.matching_pieces =  cache.get('ALL_PIECE') - self.pieces#与之互补的集合
-        self.gender = UserProfile.objects.get(user=request.user).gender
+        self.gender = facebookUser.gender
         
 #     def data_unavailable(self):
 #         return  self.pieces - cache.get('ALL_PIECE') != set([]) or self.matching_pieces ==  cache.get('ALL_PIECE') or self.matching_pieces == set([])
@@ -35,7 +37,7 @@ class Yuanfenjigsaw:
         if user_game_count.get(self.current_username)==None:
             user_game_count[self.current_username] =9
         else:
-            user_game_count[self.current_username] = user_game_count.get(self.current_username) - 1
+            user_game_count[self.current_username] = user_game_count.filter(self.current_username) - 1
         cache.set('USER_GAME_COUNT',user_game_count)
         if  self.gender == 'M':
             boys = cache.get('BOYS')
@@ -49,7 +51,7 @@ class Yuanfenjigsaw:
             cache.set('GIRLS',girls)
             
         if matching_username != None:
-            matching_user = UserProfile.objects.get(user=User.objects.get(username=matching_username))  
+            matching_user =FacebookUser.objects.filter(username=matching_username)
         else :
             return None
         return matching_user

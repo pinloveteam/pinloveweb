@@ -318,7 +318,7 @@ from util.cache import init_cache
 init_cache()
 # 本地环境
 # DATABASES = {
-#               
+#                
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -343,7 +343,7 @@ init_cache()
 
 #---服务器环境-----
 DATABASES = {
-                
+                 
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -399,7 +399,7 @@ FACEBOOK_SCOPE = ['publish_stream',]
 
 
 # And for local debugging, use one of the debug middlewares and set:
-FACEBOOK_DEBUG_TOKEN = 'CAACEdEose0cBAAv03yiC8gnp8vNjUtqNzH2BrkbnvHd3RldZAQyqyl5ZAoaJY39T8JBaDD1DNZAb9ZAAoTFKrlHperWJlIpgDOsHLvupKKymLKQHBYZB5lkrBhrO19K65zVfsV2LXhyaZCzHAMz34jchQtBRlDOgkhljLpZAreurXS1LGzs4wK6I4dLXA2MYFIZD'
+FACEBOOK_DEBUG_TOKEN = 'CAACEdEose0cBALZCmDqbone22aDeggskZC8mVdK16uhiVsHuwQa23G6QfprLLWV0xDXuzPx4U9JkGfhJup6tMGru7yDJXXPQkMAvM04CTchs9ZCiIPIrPVYY5cOfkWBbbHmJyCzRNl7XhYZCIW3XlpnuAvsCdXPZA9g4UNZBwf6Jo54EPWAzGwqqqwU7H9i0CjbxZC7yGZCDFQZDZD'
 FACEBOOK_DEBUG_UID = '100007203789389'
 FACEBOOK_DEBUG_COOKIE = ''
-FACEBOOK_DEBUG_SIGNEDREQ = 'JK5qCdpE4BGHHDRalpxiLWCcsOOH2gu_rnChSsDIKWc.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTA1MzYwMDAsImlzc3VlZF9hdCI6MTM5MDUzMTQzMSwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFJUWhtcERDY0pnYVUxZzdzRWdDRTluaGdPaURWZlFRY1dZMmVKbGd6OUloRmMwaGFjdjVrZUJ2MHZOckRLWkJpU0FZQVhoWkNINVpDd1pDNVNGaG42U2dheUQyWkJxZkpma1pBZGtxcnRjcGhNNGV3dmhtb21qWkFVUWJaQXBOWkN1dGtkSHRCVDRTaDdkNFg0WWFta1VCam81ZG9GSUxTclNmSUdlZFZmb2F4Y2ZlRTNBTDdxaDkzTjU1YURUYUkwQVpEWkQiLCJ1c2VyIjp7ImNvdW50cnkiOiJjYSIsImxvY2FsZSI6InpoX0NOIiwiYWdlIjp7Im1pbiI6MjF9fSwidXNlcl9pZCI6IjEwMDAwNzIwMzc4OTM4OSJ9'
+FACEBOOK_DEBUG_SIGNEDREQ = '    Bg8ojSyM_w2PvLHy48txltQDpTdmft780NFT5_cTEpM.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTA2Mjk2MDAsImlzc3VlZF9hdCI6MTM5MDYyMjg5NSwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFBWkFsRE94VWpBNWFRZ3d0SWV3dEN6NFhXZHdLeTZBWkNDa2hETVpBMjRScVM0cUtQbjhPelByMHQ1eWdWcVVnRE90VEFHS2JUY09aQ0J3QnlGR0NXc1drUDlram1iNFpCYTJoRlpBMHc3V1pDb01MVHA2VGtyenJjSWZhR2NOaHRNSldwaGdFQ3daQklqYzA2S2g0d0VPekdwQ3pKWkNKS1B0TFFORENNclA4UnpVWFdLNWJDa3I5bHlEZm12R0I0d1pEWkQiLCJ1c2VyIjp7ImNvdW50cnkiOiJ1cyIsImxvY2FsZSI6ImVuX1VTIiwiYWdlIjp7Im1pbiI6MTMsIm1heCI6MTd9fSwidXNlcl9pZCI6IjEwMDAwNzI0NzQ3MDI4OSJ9'
