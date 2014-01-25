@@ -23,7 +23,7 @@ class Yuanfenjigsaw:
         self.number=int(request.GET.get("number",''))
 #         self.pieces = set([int(i) for i in self.selected_pieces_str.split("-") if i])#用户提交的集合
         self.pieces = self.generate_pieces()
-        self.matching_pieces =  cache.get('ALL_PIECE') - self.pieces#与之互补的集合
+        self.matching_pieces = self.pieces#与之互补的集合
         self.gender = facebookUser.gender
         
 #     def data_unavailable(self):
@@ -37,7 +37,7 @@ class Yuanfenjigsaw:
         if user_game_count.get(self.current_username)==None:
             user_game_count[self.current_username] =9
         else:
-            user_game_count[self.current_username] = user_game_count.filter(self.current_username) - 1
+            user_game_count[self.current_username] = user_game_count.get(self.current_username) - 1
         cache.set('USER_GAME_COUNT',user_game_count)
         if  self.gender == 'M':
             boys = cache.get('BOYS')
@@ -64,10 +64,13 @@ class Yuanfenjigsaw:
         matching_user = self.get_matching_user()
         pieces = [i for i in self.pieces]
         if matching_user != None :
-            username = matching_user.user.username
-            city = matching_user.city
-            age = matching_user.age
-            avatar_name = matching_user.avatar_name
+            username = matching_user.username
+#             city = matching_user.city
+#             age = matching_user.age
+#             avatar_name = matching_user.avatar_name
+            city = 'ttt'
+            age = '22'
+            avatar_name = 'matching_user.avatar_name'
 #             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
             return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar_name,cache.get('USER_GAME_COUNT').get(self.current_username)]
         else :  
