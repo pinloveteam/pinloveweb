@@ -318,8 +318,8 @@ def facebook_feeds(request):
         return render(request,'facebook_feed.html')
     
 from apps.third_party_login_app.django_facebook.decorators import canvas_only
-# @csrf_exempt
-# @canvas_only
+@csrf_exempt
+@canvas_only
 def pintu_for_facebook(request):
     from apps.third_party_login_app.models import FacebookUser
     uid=request.facebook.user.get('uid')
