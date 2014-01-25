@@ -70,9 +70,9 @@ class Yuanfenjigsaw:
 #             avatar_name = matching_user.avatar_name
             city = 'ttt'
             age = '22'
-            avatar_name = 'matching_user.avatar_name'
+            avatar = matching_user.avatar
 #             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
-            return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar_name,cache.get('USER_GAME_COUNT').get(self.current_username)]
+            return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar,cache.get('USER_GAME_COUNT').get(self.current_username)]
         else :  
             return [cache.get('NO_MATCHING_USER'),pieces,cache.get('USER_GAME_COUNT').get(self.current_username)]
         

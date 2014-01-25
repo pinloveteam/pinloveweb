@@ -142,19 +142,14 @@ function loadStage() {
          Time = setInterval(Star,Speed);
          num = $('#num').val();
          $.getJSON("/game/jigsaw/",{number:num,uid:{{uid}}},function(data) {
-        	 /**
 				if(data['login']=='invalid'){window.location =data['redirectURL'];}
 		  		if(data['status_code']=='0'){$('#card').find('.card').html('没有匹配用户');}
 				if(data['status_code']=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
 				if(data['status_code']=='2'){
-					$('#card').find('.img-circle').attr('src','/media/'+data['avatar_name']+'-110.jpeg');
+					$('#card').find('.img-circle').attr('src',data['avatar']);
 				  	$('#card').find('strong').html(data['username']);
 				  	$('#card').find('.age').html(data['age']).next().html(data['city']);
 				}
-				**/
-				$('#card').find('.img-circle').attr('src','/media/'+data['avatar_name']+'-110.jpeg');
-			  	$('#card').find('strong').html(data['username']);
-			  	$('#card').find('.age').html(data['age']).next().html(data['city']);
 				clearInterval(Time);
 				piece = data[1];
 				EndIndex = piece[piece.length-1];
