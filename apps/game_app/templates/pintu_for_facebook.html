@@ -59,6 +59,7 @@ button{
 	<button id="btn2" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;" onclick="loadStage();">在玩一次</button>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
 <div class="card">
+    <input type="hidden" id="userId" value=""></div>
 	<div class="head head_girl">
 		<img src=".\img\image1.jpeg" class="img-circle">
 	</div>
@@ -69,8 +70,10 @@ button{
 		<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span>杭州</span>
 	</div>
-	<button id="btn">打招呼</button>
+	<button id="btn" onclick="facebook_add_friend()">添加好友</button>
+	<button id="btn" onclick="facebook_send_message()">打招呼</button>
 <script type="text/javascript">
+var appId='400350543428768'
 var selectedPieces = new Array(),
 	piecesArray=new Array();
 var pieces = 8,
@@ -146,6 +149,7 @@ function loadStage() {
 		  		if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
 				if(data[0]=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
 				if(data[0]=='2'){
+					$('#card').find('#userId').val(data[2]['uid']);
 					$('#card').find('.img-circle').attr('src',data[2]['avatar']);
 				  	$('#card').find('strong').html(data[2]['username']);
 				  	$('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
@@ -230,6 +234,46 @@ function loadStage() {
 			$('#btn1').show();
 		});
 	});
+	
+</script>
+<script>
+$(document).ready(function() {
+	   var appId='400350543428768'
+	  $.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+	    FB.init({
+	      appId:appId,
+	    });     
+	  });
+	});
+	
+//用facebook私信
+function facebook_send_message() {
+	var userId=$('#userId').val()
+    FB.ui({
+        app_id:appId,
+        method: 'send',
+        name: "拼爱 ",
+        link: 'http://www.pinlove.com/',
+        to:userId,
+
+    });
+}
+//添加好友
+function facebook_add_friend() {
+	var userId=$('#userId').val()
+FB.ui(
+	     { 
+	      method: 'friends', 
+	      id:userId
+	     }, 
+	     function(param){
+
+	      console.log(param);
+
+	     }
+	    );
+};
 </script>
 </body>
 </html>
