@@ -65,6 +65,7 @@ class Yuanfenjigsaw:
         pieces = [i for i in self.pieces]
         if matching_user != None :
             username = matching_user[0].username
+            uid=matching_user[0].uid
 #             city = matching_user.city
 #             age = matching_user.age
 #             avatar_name = matching_user.avatar_name
@@ -73,7 +74,7 @@ class Yuanfenjigsaw:
             avatar = matching_user[0].avatar
 #             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
 #             return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar,cache.get('USER_GAME_COUNT').get(self.current_username)]
-            return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,
+            return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,
                                                        'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.current_username)}]
         else :  
             return [cache.get('NO_MATCHING_USER'),pieces,cache.get('USER_GAME_COUNT').get(self.current_username)]
