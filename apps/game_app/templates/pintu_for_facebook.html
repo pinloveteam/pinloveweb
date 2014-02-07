@@ -47,8 +47,42 @@ button{
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>  
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
 
+ <script type="text/javascript">
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '400350543428768',
+          status     : true,
+          cookie     : true,
+          xfbml      : true
+        });
+
+        function buy() {
+          var obj = {
+            method: 'pay',
+            action: 'purchaseitem',
+            product: '/pay_app/icon/'
+          };
+
+          FB.ui(obj, function(data) {
+              console.log(data);
+            });
+        }
+
+        document.getElementById('pay').onclick = function() {buy()};
+      };
+
+      // Load the SDK Asynchronously
+      (function(d){
+        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement('script'); js.id = id; js.async = true;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        ref.parentNode.insertBefore(js, ref);
+      }(document));
+    </script>
 </head>
 <body onload="loadStage()">
+<button id="pay" >购买</button>
     <div id="container"></div>
     <ul class="list-inline" style="position: absolute; left: 900px; top: 100px; float: left;">
 		<li class="active">请输入你的幸运数字:</li>
@@ -255,7 +289,7 @@ function facebook_send_message() {
         app_id:appId,
         method: 'send',
         name: "拼爱 ",
-        link: 'http://www.pinlove.com/',
+        link: 'https://apps.facebook.com/pinloveloveweb/',
         to:userId,
 
     });
