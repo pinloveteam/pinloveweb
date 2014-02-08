@@ -2,7 +2,9 @@
 <html>
 <head>
 <style type="text/css">
+
 body{
+	font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
     margin:0px;
     overflow:hidden;
     background-color:#fff5eb;
@@ -34,8 +36,75 @@ body{
 button{
 	margin-top:30px;
 	margin-left:60px;
+	position: absolute; 
+	left: 900px; 
+	top: 200px; 
+	cursor: pointer; 
+	float: left; 
+	display: block;
 }
 
+#buy_page{
+	position: absolute; 
+	left: 860px; 
+	top: 20px; 
+	width: 377px;
+	height: 500px;
+	background-color: #E5E3E9;
+}
+
+.num{
+	position: absolute; 
+	top: 15px; 
+}
+
+.num1{
+	position: absolute; 
+	top: 33px;
+	left:105px; 
+}
+
+.num2{
+	position:relative;
+	top: -18px;
+	margin-left: 40px;
+}
+
+#tab{
+	margin-top: 30px;
+}
+
+#tab div{
+	display: table-cell;
+	width: 126px;
+	height: 45px;
+	padding-top: 10px;
+	color: #ff5a39;
+	font-size:26px;
+	text-align:center;
+	border-bottom: solid 4px #ffdd71;
+	cursor: pointer;
+}
+
+#exchange div{
+	position: relative;	
+	padding:  20px 65px 20px 55px;
+	display: inline-block;
+}
+
+.text-orange{
+	color: #ff641f;
+}
+
+.active{
+	background-color: #ffdd71;
+	color: #FFFFFF !important;
+}
+
+#count,#gold{
+	margin-right: 30px;
+	display: inline-block;
+}
 .head_girl{
 	border:2px solid rgba(255, 102, 51, 0.6);
 }
@@ -43,57 +112,27 @@ button{
 .tag,.name{
 	text-align:center;
 }
+
+#buy li {
+	list-style-type:none;
+	margin-top: 40px;
+}
 </style>
-<script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>  
+<script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
 
- <script type="text/javascript">
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '400350543428768',
-          status     : true,
-          cookie     : true,
-          xfbml      : true
-        });
-
-        function buy() {
-          var obj = {
-            method: 'pay',
-            action: 'purchaseitem',
-            product: 'www.pinpinlove.com/pay_app/icon/'
-          };
-
-          FB.ui(obj, function(data) {
-              console.log(data);
-            });
-        }
-
-        document.getElementById('pay').onclick = function() {buy()};
-      };
-
-      // Load the SDK Asynchronously
-      (function(d){
-        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement('script'); js.id = id; js.async = true;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        ref.parentNode.insertBefore(js, ref);
-      }(document));
-    </script>
 </head>
 <body onload="loadStage()">
-<button id="pay" >购买</button>
     <div id="container"></div>
-    <ul class="list-inline" style="position: absolute; left: 900px; top: 100px; float: left;">
-		<li class="active">请输入你的幸运数字:</li>
-		<li><input id="num" type="text"/></li>
+    <ul class="list-inline" style="position: absolute; left: 600px; top: 100px; float: left;">
+		<li>请输入你的幸运数字:</li>
+		<li><input type="text"/></li>
 	</ul>
-    
-	<button id="btn1" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: block;" onclick="StartGame();">开始匹配</button>
-	<button id="btn2" style="position: absolute; left: 900px; top: 200px; cursor: pointer; float: left; display: none;" onclick="loadStage();">在玩一次</button>
+    <button id="buy_button" style="left: 800px;" onclick="buy();">buy</button>
+	<button id="btn1"  onclick="StartGame();" style="left: 600px;">开始匹配</button>
+	<button id="btn2" style="display: none;" onclick="loadStage();"style="left: 600px;">在玩一次</button>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
 <div class="card">
-    
 	<div class="head head_girl">
 		<img src=".\img\image1.jpeg" class="img-circle">
 	</div>
@@ -104,11 +143,38 @@ button{
 		<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span>杭州</span>
 	</div>
-	<button id="btn" onclick="facebook_add_friend()">添加好友</button>
-	<button id="btn" onclick="facebook_send_message()">打招呼</button>
-	<input type="hidden" id="userId" value=""></div>
+	<button id="btn">打招呼</button>
+</div>	
+</div>
+
+<div id="buy_page">
+	<div id="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×3</span></div>
+	<div id="gold"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num">×100</span></div>
+	<div id="tab">
+		<div class="active" href="#exchange">兑换</div>
+		<div href="#buy">购买</div>
+		<div>免费</div>
+	</div>
+<div id="tab-buy">
+<div id="exchange">
+	<div><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num1">×3</span></div>
+	<div class="tab-right"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num1 text-orange">30金币</span></div>
+	<div><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num1">×10</span></div>
+	<div class="tab-right"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num1 text-orange">100金币</span></div>
+	<div ><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num1">×50</span></div>
+	<div class="tab-right"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num1 text-orange">500金币</span></div>
+</div>
+
+<div id="buy" style="display: none;">
+	<ul>
+		<li><img src="{{STATIC_URL}}img/拼图-19.png" style="margin: 0 30px 0 21px;"><span class="text-orange num2">60金币</span><span class="text-orange num2" style="margin-left: 50px;">¥6.00</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='buyCoins(60)'>buy</a></li>
+		<li><img src="{{STATIC_URL}}img/拼图-20.png" style="margin-right: 9px;"><span class="text-orange num2">300金币</span><span class="text-orange num2" style="margin-left: 41px;">¥30.00</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='buyCoins(300)'>buy</a></li>
+		<li><img src="{{STATIC_URL}}img/拼图-21.png"><span class="text-orange num2">500金币</span><span class="text-orange num2">¥50.00</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='buyCoins(500)'>buy</a></li>
+	</ul>
+</div>
+</div>
+</div>
 <script type="text/javascript">
-var appId='400350543428768'
 var selectedPieces = new Array(),
 	piecesArray=new Array();
 var pieces = 8,
@@ -117,11 +183,6 @@ var pieces = 8,
 	
 var color = new Array("#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff");
 var position = new Array({X:add,Y:size/2+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size/2+add,Y:add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size+add,Y:size/2+add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:size/2+add,Y:size+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:add,Y:size/2+add});
-
-function Trim(str){
-    return str.replace(/(^\s*)|(\s*$)/g, ""); 
-}
-     
 function loadStage() {
     var stage = new Kinetic.Stage({
 		container: "container",
@@ -156,63 +217,46 @@ function loadStage() {
   		layer.batchDraw();
          }); 
         layer.add(piecesArray[i].shape);
+
 	}
 	stage.add(layer);
+
         }
 
        var index=0,           //当前亮区位置
        prevIndex=0,          //前一位置
-       Speed=300,           //初始速度
+       Speed=200,           //初始速度
        Time,               //定义对象
        EndIndex=0,        //决定在哪一格变慢
        cycle=0,          //转动圈数   
        EndCycle=0,      //计算圈数
        flag=false,     //结束转动标志 
-       quick=0,     //加速
-       piece = [];
+       quick=0;       //加速
         
        function StartGame(){
 	     clearInterval(Time);
          cycle=0;
          flag=false;
+         EndIndex=Math.floor(Math.random()*7);
          //EndCycle=Math.floor(Math.random()*4);
-         EndCycle=3;
+         EndCycle=1;
          Time = setInterval(Star,Speed);
-         num = $('#num').val();
-         $.getJSON("/game/jigsaw/",{number:num,uid:{{uid}}},function(data) {
-				if(data['login']=='invalid'){window.location =data['redirectURL'];}
-		  		if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
-				if(data[0]=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
-				if(data[0]=='2'){
-					$('#card').find('#userId').val(data[2]['uid']);
-					$('#card').find('.img-circle').attr('src',data[2]['avatar']);
-				  	$('#card').find('strong').html(data[2]['username']);
-				  	$('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
-				}
-				clearInterval(Time);
-				piece = data[1];
-				EndIndex = piece[piece.length-1];
-				Time = setInterval(Star,Speed);
-				
-				$('#card').show('slow');
-				//$('#count').html('游戏次数:'+data['count']);
-				//$('#btn2').show();
-				//$('#btn1').hide();
-	 });
         }
-        function Star(NUM){
+       
+        function Star(num){
+            //跑马灯变速
             if(flag==false){
               //走五格开始加速
              if(quick==5){
                  clearInterval(Time);
-                 Speed=100;
+                 Speed=50;
                  Time=setInterval(Star,Speed);
              }
              //跑N圈减速
-             if(cycle==EndCycle+1){
+             if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
                  clearInterval(Time);
-                 Speed=300;
-                 flag=true;       //触发结束
+                 Speed=200;
+                 flag=true;       //触发结束			 
                  Time=setInterval(Star,Speed);
              }
             }
@@ -223,7 +267,8 @@ function loadStage() {
             }
             
            //结束转动并选中号码
-         if(flag==true && cycle==EndCycle+1 && index==parseInt(EndIndex)){ 
+		   //trim里改成数字就可以减速，变成Endindex的话就没有减速效果了
+         if(flag==true){ 
           quick=0;
           clearInterval(Time);
             }
@@ -233,34 +278,25 @@ function loadStage() {
                 prevIndex=piecesArray.length-1;
             }
             piecesArray[index].shape.opacity(1);
-				
-            if(cycle > EndCycle){
-              if(piece.concat(prevIndex).unique5().sort().toString()!=piece.sort().toString()){
+//          piecesArray[index].shape.stroke('#aeffae');
+            if(prevIndex!=3 &&  prevIndex!=6)
             	piecesArray[prevIndex].shape.opacity(0.5);
-               }
-            }else{
-            	piecesArray[prevIndex].shape.opacity(0.5);
-            }
-
+//          	piecesArray[prevIndex].shape.stroke('#fff')
             layer.batchDraw();
             index++;
             quick++;
         }
               
-       Array.prototype.unique5 = function() {
-	    var res = [], hash = {};
-	    for(var i=0, elem; (elem = this[i]) != null; i++)  {
-	        if (!hash[elem])
-	        {
-	            res.push(elem);
-	            hash[elem] = true;
-	        }
-	    }
-	    return res;
-	}       
+	function commit(){
+		for(i=0;i<pieces;i++){
+			if(piecesArray[i].shape.getOpacity()==1){
+				selectedPieces[piecesArray[i].shape.getId()]=piecesArray[i].shape.getId();
+				}
+			}
+	}
 	$(document).ready(function(){
 		$('#btn1').click(function(){
-			//$(this).hide();	
+			$(this).hide();	
 		});
 		
 		$('#btn2').click(function(){
@@ -268,10 +304,26 @@ function loadStage() {
 			$('#card').hide();
 			$('#btn1').show();
 		});
+		
+		$('#tab').find('div').click(function(){
+			$('#tab-buy').children().hide();
+			var id = $(this).attr('href');
+			$('#tab').find('div').removeClass('active');
+			$(this).addClass('active');
+			$(id).show();
+		});
 	});
-	
 </script>
-<script>
+ <style type="text/css">
+    .btn-red {
+    background: none repeat scroll 0 0 #FF3333;
+    color: #FFFFFF;
+    top: -18px;
+     position: relative;
+        margin-left: 10px;
+    }
+ </style>
+ <script>
 $(document).ready(function() {
 	   var appId='400350543428768'
 	  $.ajaxSetup({ cache: true });
@@ -282,6 +334,36 @@ $(document).ready(function() {
 	  });
 	});
 	
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '400350543428768',
+    status     : true,
+    cookie     : true,
+    xfbml      : true
+  });
+};
+function buyCoins(quantity) {
+	  FB.ui({
+	      method: 'pay',
+	      action: 'purchaseitem',
+	      product: 'www.pinpinlove.com/pay_app/icon/',
+	      quantity: quantity
+	    },
+	    function(data) {
+	        console.log(data);
+	      }
+	  );
+	}
+
+// Load the SDK Asynchronously
+(function(d){
+  var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+  if (d.getElementById(id)) { return; }
+  js = d.createElement('script'); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js";
+  ref.parentNode.insertBefore(js, ref);
+}(document));
+
 //用facebook私信
 function facebook_send_message() {
 	var userId=$('#userId').val()
