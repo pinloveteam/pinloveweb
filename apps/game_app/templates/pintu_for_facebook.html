@@ -131,7 +131,7 @@ button{
 	<button id="btn1"  onclick="StartGame();" style="left: 700px;">开始匹配</button>
 	<button id="btn1"  onclick="inivteF();" style="left: 650px;">pin</button>
 	<button id="btn1"  onclick="inivteFriends();" style="left: 550px;">邀请好友</button>
-	<button id="btn2" style="display: none;" onclick="loadStage();"style="left: 600px;">在玩一次</button>
+	<button id="btn2" style="display: none;" onclick="loadStage();" style="left: 700px;">在玩一次</button>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
 <div class="card">
 	<div class="head head_girl">
@@ -176,110 +176,108 @@ button{
 </div>
 </div>
 <script type="text/javascript">
-var appId='400350543428768'
 var selectedPieces = new Array(),
-piecesArray=new Array();
+	piecesArray=new Array();
 var pieces = 8,
-size = 500,
-add = 4;
-
+	size = 500,
+	add = 4;
+	
 var color = new Array("#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff");
 var position = new Array({X:add,Y:size/2+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size/2+add,Y:add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size+add,Y:size/2+add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:size/2+add,Y:size+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:add,Y:size/2+add});
-
-function Trim(str){
-    return str.replace(/(^\s*)|(\s*$)/g, "");
-}
-     
 function loadStage() {
     var stage = new Kinetic.Stage({
-container: "container",
-width: 508,
-height: 508
+		container: "container",
+		width: 508,
+		height: 508
         });
     layer = new Kinetic.Layer();
-for(i=0;i<pieces;i++){
-piecesArray[i] = new Object();
-piecesArray[i].shape=new Kinetic.Shape({
+	for(i=0;i<pieces;i++){
+		piecesArray[i] = new Object();
+		piecesArray[i].shape=new Kinetic.Shape({
             drawFunc: function(i){
                 return function(context) {
-context.beginPath();
-context.moveTo(position[i].X,position[i].Y);
-context.arc(size/2+4,size/2+4,size/2,Math.PI+Math.PI/4*i,Math.PI+Math.PI/4*(i+1));
-context.lineTo(size/2+4,size/2+4);
-context.lineTo(position[i].X,position[i].Y);
-context.fillStrokeShape(this);
+					context.beginPath();
+					context.moveTo(position[i].X,position[i].Y);
+					context.arc(size/2+4,size/2+4,size/2,Math.PI+Math.PI/4*i,Math.PI+Math.PI/4*(i+1));
+					context.lineTo(size/2+4,size/2+4);
+					context.lineTo(position[i].X,position[i].Y);
+					context.fillStrokeShape(this);
                     }
                  }(i),
-fill: color[i],
-id:i,
-opacity:0.5,
-stroke: "#ffffff",
-strokeWidth: 4,
-draggable: false
+					fill: color[i],
+					id:i,
+					opacity:0.5,
+					stroke: "#ffffff",
+					strokeWidth: 4,
+					draggable: false
                     });
-// piecesArray[i].shape.disableStroke();
-   piecesArray[i].shape.on("mousedown", function(){
-   this.setOpacity(0.5/this.getOpacity());
-// this.setStrokeEnabled(!this.getStrokeEnabled());
-   layer.batchDraw();
-         });
+//		piecesArray[i].shape.disableStroke();
+  		piecesArray[i].shape.on("mousedown", function(){
+  		this.setOpacity(0.5/this.getOpacity());
+//		this.setStrokeEnabled(!this.getStrokeEnabled());
+  		layer.batchDraw();
+         }); 
         layer.add(piecesArray[i].shape);
-}
-stage.add(layer);
+
+	}
+	stage.add(layer);
+
         }
 
-       var index=0, //当前亮区位置
-       prevIndex=0, //前一位置
-       Speed=300, //初始速度
-       Time, //定义对象
-       EndIndex=0, //决定在哪一格变慢
-       cycle=0, //转动圈数
-       EndCycle=0, //计算圈数
-       flag=false, //结束转动标志
-       quick=0, //加速
-       piece = [];
+       var index=0,           //当前亮区位置
+       prevIndex=0,          //前一位置
+       Speed=200,           //初始速度
+       Time,               //定义对象
+       EndIndex=0,        //决定在哪一格变慢
+       cycle=0,          //转动圈数   
+       EndCycle=0,      //计算圈数
+       flag=false,     //结束转动标志 
+       quick=0;       //加速
         
        function StartGame(){
-clearInterval(Time);
+	     clearInterval(Time);
          cycle=0;
          flag=false;
+         EndIndex=Math.floor(Math.random()*7);
          //EndCycle=Math.floor(Math.random()*4);
-         EndCycle=3;
+         EndCycle=1;
          Time = setInterval(Star,Speed);
-         $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
-if(data['login']=='invalid'){window.location =data['redirectURL'];}
-if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
-if(data[0]=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
-if(data[0]=='2'){
-$('#card').find('#userId').val(data[2]['uid']);
-$('#card').find('.img-circle').attr('src',data[2]['avatar']);
-$('#card').find('strong').html(data[2]['username']);
-$('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
-}
-clearInterval(Time);
-piece = data[1];
-EndIndex = piece[piece.length-1];
-Time = setInterval(Star,Speed);
-
-$('#card').show('slow');
-//$('#count').html('游戏次数:'+data['count']);
-//$('#btn2').show();
-//$('#btn1').hide();
-});
         }
-        function Star(NUM){
+       
+        function Star(num){
+            //跑马灯变速
             if(flag==false){
               //走五格开始加速
              if(quick==5){
                  clearInterval(Time);
-                 Speed=100;
+                 Speed=50;
                  Time=setInterval(Star,Speed);
+                 $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
+                	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
+                	 if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
+                	 if(data[0]=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
+                	 if(data[0]=='2'){
+                	 $('#card').find('#userId').val(data[2]['uid']);
+                	 $('#card').find('.img-circle').attr('src',data[2]['avatar']);
+                	 $('#card').find('strong').html(data[2]['username']);
+                	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
+                	 }
+                	 clearInterval(Time);
+                	 piece = data[1];
+                	 EndIndex = piece[piece.length-1];
+                	 Time = setInterval(Star,Speed);
+
+                	 $('#card').show('slow');
+                	 //$('#count').html('游戏次数:'+data['count']);
+                	 $('#btn2').show();
+                	 $('#btn1').hide();
+                	 });
              }
              //跑N圈减速
-             if(cycle==EndCycle+1){
+             if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
                  clearInterval(Time);
-                 Speed=300;
-                 flag=true; //触发结束
+                 Speed=200;
+                 flag=true;       //触发结束			 
                  Time=setInterval(Star,Speed);
              }
             }
@@ -290,7 +288,8 @@ $('#card').show('slow');
             }
             
            //结束转动并选中号码
-         if(flag==true && cycle==EndCycle+1 && index==parseInt(EndIndex)){
+		   //trim里改成数字就可以减速，变成Endindex的话就没有减速效果了
+         if(flag==true){ 
           quick=0;
           clearInterval(Time);
             }
@@ -300,42 +299,41 @@ $('#card').show('slow');
                 prevIndex=piecesArray.length-1;
             }
             piecesArray[index].shape.opacity(1);
-
-            if(cycle > EndCycle){
-              if(piece.concat(prevIndex).unique5().sort().toString()!=piece.sort().toString()){
-             piecesArray[prevIndex].shape.opacity(0.5);
-               }
-            }else{
-             piecesArray[prevIndex].shape.opacity(0.5);
-            }
-
+//          piecesArray[index].shape.stroke('#aeffae');
+            if(prevIndex!=3 &&  prevIndex!=6)
+            	piecesArray[prevIndex].shape.opacity(0.5);
+//          	piecesArray[prevIndex].shape.stroke('#fff')
             layer.batchDraw();
             index++;
             quick++;
         }
               
-       Array.prototype.unique5 = function() {
-var res = [], hash = {};
-for(var i=0, elem; (elem = this[i]) != null; i++) {
-if (!hash[elem])
-{
-res.push(elem);
-hash[elem] = true;
-}
-}
-return res;
-}
-$(document).ready(function(){
-$('#btn1').click(function(){
-//$(this).hide();
-});
-
-$('#btn2').click(function(){
-$(this).hide();
-$('#card').hide();
-$('#btn1').show();
-});
-});
+	function commit(){
+		for(i=0;i<pieces;i++){
+			if(piecesArray[i].shape.getOpacity()==1){
+				selectedPieces[piecesArray[i].shape.getId()]=piecesArray[i].shape.getId();
+				}
+			}
+	}
+	$(document).ready(function(){
+		$('#btn1').click(function(){
+			$(this).hide();	
+		});
+		
+		$('#btn2').click(function(){
+			$(this).hide();
+			$('#card').hide();
+			$('#btn1').show();
+		});
+		
+		$('#tab').find('div').click(function(){
+			$('#tab-buy').children().hide();
+			var id = $(this).attr('href');
+			$('#tab').find('div').removeClass('active');
+			$(this).addClass('active');
+			$(id).show();
+		});
+	});
 </script>
  <style type="text/css">
     .btn-red {
@@ -469,17 +467,17 @@ function inivteFriends(){
 		}, function(data){
 			console.log(data);
 		});
-}
+};
+
 //邀请好友test
 function inivteF(){
 	FB.ui({method: 'apprequests',
 		  message: 'pinlove',
-		  to: {'100007247470289'}
+		  to: '100007247470289'
 		}, function(data){
 			console.log(data);
 		});
-}
-}
+};
 </script>
 </body>
 </html>
