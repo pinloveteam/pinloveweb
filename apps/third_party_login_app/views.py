@@ -339,5 +339,10 @@ def pintu_for_facebook(request):
         if not  avatar is None:
             facebookUser.avatar=avatar.get('url')
         facebookUser.save()
-    return render(request, 'pintu_for_facebook.html',{'usermame':me.get('name'),'uid':uid})
+        price=0
+    #获取游戏次数
+    user= FacebookUser.objects.get(uid=uid)
+    from apps.game_app.models import get_count
+    count=get_count(user.username)
+    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count})
         

@@ -92,13 +92,17 @@ class Yuanfenjigsaw:
             temp.add(int(base[i])%7)
         return  temp
 
-def get_count(request):
-    current_username = request.user.username
+def get_count(current_username):
     user_game_count = cache.get('USER_GAME_COUNT')
     if user_game_count.get(current_username) == None :
         user_game_count[current_username] = cache.get('GAME_TIMES')
         cache.set('USER_GAME_COUNT',user_game_count)
     return cache.get('USER_GAME_COUNT').get(current_username)
+
+def set_count(current_username,gameCount):
+    user_game_count = cache.get('USER_GAME_COUNT')
+    user_game_count[current_username] = gameCount+user_game_count[current_username] 
+    cache.set('USER_GAME_COUNT',user_game_count)
 
 def reset_game():
     cache.set('TODAY',datetime.date.today())

@@ -13,7 +13,9 @@ def jigsaw(request):
     return HttpResponse(json, mimetype='application/javascript')
 
 def pintu(request):
-    count = get_count(request)
+    from apps.third_party_login_app.models import FacebookUser
+    username=FacebookUser.objects.get(uid=request.facebook.uid).username
+    count = get_count(username)
     return render(request, 'pintu.html',{'count':count})
 
 
