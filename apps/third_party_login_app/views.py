@@ -27,7 +27,6 @@ from .setting import (
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from apps.third_party_login_app.models import FacebookRequest
 log=logging.getLogger('customapp.engine')
 
 ##########three paerty login######
