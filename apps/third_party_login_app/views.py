@@ -346,5 +346,14 @@ def pintu_for_facebook(request):
     count=get_count(user.username)
      #获取好友发来的生命请求
     data=request.facebook.graph.get_object('me/apprequests',)
-    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':data})
+    users=[]
+    for apprequest in data.get('data'):
+        if apprequest.get('to').get('id')==uid and apprequest.get('application').get('id')==FaceBookAppID:
+            requestId=apprequest.get('id')
+            uid=apprequest.get('from').get('id')
+            username=apprequest.get('from').get('name')
+            if not uid in users:
+                users.append({'uid':uid,'username':username})
+#             request.facebook.graph.delete_object(requestId)
+    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':users})
         
