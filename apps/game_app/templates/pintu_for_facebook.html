@@ -464,23 +464,11 @@ FB.ui(
 
 //邀请好友
 function inivteFriends(){
-	/**
 	FB.ui({method: 'apprequests',
 		  message: 'pinlove'
 		}, function(data){
 			console.log(data);
-			$.getJSON('/game/request_life/',{'data':data},function(data){
-				if(data['result']='success'){
-					alert('调用成功')
-				}
-			}):
 		});
-	**/
-	$.getJSON('/game/request_life/',{'request':"1405447636374632",'to':["100007247470289","100007247470283"]},function(data){
-		if(data['result']='success'){
-			alert('调用成功');
-		}
-	});
 };
 
 //邀请好友test
