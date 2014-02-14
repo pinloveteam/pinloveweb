@@ -350,10 +350,10 @@ def pintu_for_facebook(request):
     for apprequest in data.get('data'):
         if apprequest.get('to').get('id')==uid and apprequest.get('application').get('id')==FaceBookAppID:
             requestId=apprequest.get('id')
-            uid=apprequest.get('from').get('id')
+            userId=apprequest.get('from').get('id')
             username=apprequest.get('from').get('name')
             if not uid in users:
-                users.append({'uid':uid,'username':username})
+                users.append({'uid':userId,'username':username})
             request.facebook.graph.delete_object(requestId)
     return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':users})
         
