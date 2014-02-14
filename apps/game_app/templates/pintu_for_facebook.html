@@ -129,7 +129,7 @@ button{
 		<li><input type="text"/></li>
 	</ul>
 	<button id="btn1"  onclick="StartGame();" style="left: 700px;">开始匹配</button>
-	<button id="btn1"  onclick="inivteF();" style="left: 650px;">pin</button>
+	<button id="btn1"  onclick="deleteRequest();" style="left: 650px;">pin</button>
 	<button id="btn1"  onclick="inivteFriends();" style="left: 550px;">邀请好友</button>
 	<button id="btn2" style="display: none;" onclick="loadStage();" style="left: 700px;">在玩一次</button>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
@@ -353,6 +353,7 @@ $(document).ready(function() {
 	      appId:appId,
 	    });     
 	  });
+	  
 	});
 window.fbAsyncInit = function() {
   FB.init({
@@ -462,11 +463,23 @@ FB.ui(
 
 //邀请好友
 function inivteFriends(){
+	/**
 	FB.ui({method: 'apprequests',
 		  message: 'pinlove'
 		}, function(data){
 			console.log(data);
+			$.getJSON('/game/request_life/',{'data':data},function(data){
+				if(data['result']='success'){
+					alert('调用成功')
+				}
+			}):
 		});
+	**/
+	$.getJSON('/game/request_life/',{'request':"1405447636374632",'to':["100007247470289","100007247470283"]},function(data){
+		if(data['result']='success'){
+			alert('调用成功');
+		}
+	});
 };
 
 //邀请好友test
@@ -478,6 +491,40 @@ function inivteF(){
 			console.log(data);
 		});
 };
+//接收生命请求
+function renderMFS() {
+
+	 // First get the list of friends for this user with the Graph API
+	 FB.api('/me/friends', function(response) {
+	   var container = document.getElementById('mfs');
+	   var mfsForm = document.createElement('form');
+	   mfsForm.id = 'mfsForm';
+
+	   // Iterate through the array of friends object and create a checkbox for each one.
+	   for(var i = 0; i < Math.min(response.data.length, 10); i++) {
+	     var friendItem = document.createElement('div');
+	     friendItem.id = 'friend_' + response.data[i].id;
+	     friendItem.innerHTML = '<input type="checkbox" name="friends" value="'
+	       + response.data[i].id
+	       + '" />' + response.data[i].name;
+	       mfsForm.appendChild(friendItem);
+	     }
+	     container.appendChild(mfsForm);
+
+	     // Create a button to send the Request(s)
+	     var sendButton = document.createElement('input');
+	     sendButton.type = 'button';
+	     sendButton.value = 'Send Request';
+	     sendButton.onclick = sendRequest;
+	     mfsForm.appendChild(sendButton);
+	   });
+	 }
+    function deleteRequest() {
+      requestId=$('.list-inline').children().children().val()
+	  FB.api(requestId, 'delete', function(response) {
+	    console.log(response);
+	  });
+	}
 </script>
 </body>
 </html>
