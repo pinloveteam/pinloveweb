@@ -11,7 +11,9 @@ body{
 }
 
 .kineticjs-content{
-	margin: 100px;
+	position: absolute;
+	top:200px;
+	left:100px;
 	background-color:#fff;
 	border-radius: 50%;
 	filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
@@ -19,18 +21,22 @@ body{
 	-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
 	box-shadow:2px 2px 10px #909090;/*opera或ie9*/
 }
-.card{
-	height:260px;
-	width:200px;
-	border: 1px solid rgba(255, 255, 255, 0.6);
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.3);
+
+#card{
+	height:400px;
+	width:300px;
+	border: solid 2px #000000;
+	background-color: #fff9d9;
 }
 
 .head{
 	width: 104px;
 	height: 104px;
-	border-radius: 50%;
 	margin-left:45px;
+}
+
+.img-circle,.head{
+	border-radius: 50%;
 }
 
 button{
@@ -46,64 +52,77 @@ button{
 
 #buy_page{
 	position: absolute; 
-	left: 860px; 
+	left: 560px; 
 	top: 20px; 
-	width: 377px;
-	height: 500px;
-	background-color: #E5E3E9;
+	width: 450px;
+	height: 600px;
+	background-color: #f7ffc6;
+	border: solid 2px #000000;
 }
 
-.num{
+.num,.num1{
 	position: absolute; 
-	top: 15px; 
+	top: 30px; 
+	font-size:20px;
+	margin-left: 18px;
 }
-
 .num1{
-	position: absolute; 
-	top: 33px;
-	left:105px; 
+	top: 20px;
+	margin-left: 8px;
 }
 
 .num2{
 	position:relative;
 	top: -18px;
-	margin-left: 40px;
+	margin-left: 0px;
+}
+
+.button_type_1{
+	position:absolute;
+	padding: 15px 15px 15px 20px;
+	display: inline-block;
+	top: -5px;
+	left: 280px;
+	width: 40px;
+	height: 20px;
+	background-image: url({{STATIC_URL}}img/按钮-16.png);
+	cursor: pointer;
+}
+
+#close{
+	position:absolute;
+	top: -10px;
+	left:430px;
+	width: 32px;
+	height: 32px;
+	background-image: url({{STATIC_URL}}img/拼图-61.png);
+	cursor: pointer;
 }
 
 #tab{
 	margin-top: 30px;
-}
-
-#tab div{
-	display: table-cell;
-	width: 126px;
-	height: 45px;
-	padding-top: 10px;
+	width: 390px;
+	height: 40px;
+	padding-top: 5px;
+	margin-left: 28px;
 	color: #ff5a39;
 	font-size:26px;
 	text-align:center;
-	border-bottom: solid 4px #ffdd71;
-	cursor: pointer;
-}
-
-#exchange div{
-	position: relative;	
-	padding:  20px 65px 20px 20px;
-	display: inline-block;
+	background-color: #ffdd71;
 }
 
 .text-orange{
 	color: #ff641f;
 }
 
-.active{
+.count{
+	margin: 10px;
+	padding: 10px;
+	width: 100px;
+	height: 40px;
 	background-color: #ffdd71;
-	color: #FFFFFF !important;
-}
-
-#count,#gold{
-	margin-right: 30px;
-	display: inline-block;
+	border: solid 1px #ef3638;
+	border-radius: 15px;
 }
 .head_girl{
 	border:2px solid rgba(255, 102, 51, 0.6);
@@ -114,8 +133,30 @@ button{
 }
 
 #buy li {
+	position: relative;
 	list-style-type:none;
-	margin-top: 40px;
+	margin-top: 30px;
+}
+
+#push{
+	cursor: pointer;
+}
+
+#game_name{
+	position:absolute;
+	top:20px;
+	left:30px;
+	border:2px dashed #000;
+	width: 500px;
+	height: 60px;
+	background-color: #ffd6b8;
+}
+
+#buy_button{
+	position:absolute;
+	top:15px;
+	left:130px;
+	cursor: pointer;
 }
 </style>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
@@ -123,17 +164,17 @@ button{
 
 </head>
 <body onload="loadStage()">
-{{data}}
     <div id="container"></div>
-    <ul class="list-inline" style="position: absolute; left: 600px; top: 100px; float: left;">
-		<li>请输入你的幸运数字:</li>
-		<li><input type="text"/></li>
-	</ul>
-	<button id="btn1"  onclick="StartGame();" style="left: 700px;">开始匹配</button>
-	<button id="btn1"  onclick="getRequest();" style="left: 650px;">pin</button>
-	<button id="btn1"  onclick="inivteFriends();" style="left: 550px;">邀请好友</button>
-	<button id="btn2" style="display: none;" onclick="loadStage();" style="left: 700px;">在玩一次</button>
-<div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
+    <img onclick="StartGame();" id="push" style="position: absolute;left: 240px; top: 340px;" src="{{STATIC_URL}}img/push-57.png"/>
+    <div id="game_name"></div>
+    <div class="count" style="position: absolute;top:100px;left: 80px; width: 150px;">
+    	<img src="{{STATIC_URL}}img/拼图-18.png"/>
+    	<span class="num1">×3</span>
+    	<img id="buy_button" src="{{STATIC_URL}}img/拼图-62.png"/>
+    </div>
+    <!--<button id="buy_button" style="left: 800px;">buy</button>-->
+	<button id="btn2" style="display: none;" onclick="loadStage();">在玩一次</button>
+<div id="card" style="position: absolute;left: 220px; top: 150px;display: none;">
 <div class="card">
 	<div class="head head_girl">
 		<img src=".\img\image1.jpeg" class="img-circle">
@@ -148,48 +189,33 @@ button{
 	<button id="btn">打招呼</button>
 </div>	
 </div>
-
-<div id="buy_page">
-	<div id="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×{{count}}</span></div>
-	<div id="gold"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num">×{{price}}</span></div>
-	<div id="tab">
-		<div class="active" href="#exchange">兑换</div>
-		<div href="#buy">购买</div>
-		<div>免费</div>
-	</div>
-<div id="tab-buy">
-<div id="exchange">
-	<div><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num1">×3</span></div>
-	<div class="tab-right" style="padding: 20px 15px 20px 0px;"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num2 text-orange">30金币</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='exchange(3,30)'>exchange</a></div>
-	<div><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num1">×10</span></div>
-	<div class="tab-right" style="padding: 20px 15px 20px 0px;"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num2 text-orange">100金币</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='exchange(10,100)'>exchange</a></div>
-	<div ><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num1">×50</span></div>
-	<div class="tab-right" style="padding: 20px 15px 20px 0px;"><img src="{{STATIC_URL}}img/拼图-19.png"><span class="num2 text-orange">500金币</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='buyCoins(50,500)'>exchange</a></div>
-</div>
-
-<div id="buy" style="display: none;">
+<div id="buy_page" style="">
+	<div class="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×3</span></div>
+	<div id="tab">购买</div>
+	<div id="close"></div>
+<div id="buy">
 	<ul>
-		<li><img src="{{STATIC_URL}}img/拼图-19.png" style="margin: 0 30px 0 21px;"><span class="text-orange num2">60金币</span><span class="text-orange num2" style="margin-left: 50px;">¥6.00</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='buyCoins(60)'>buy</a></li>
-		<li><img src="{{STATIC_URL}}img/拼图-20.png" style="margin-right: 9px;"><span class="text-orange num2">300金币</span><span class="text-orange num2" style="margin-left: 41px;">¥30.00</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='buyCoins(300)'>buy</a></li>
-		<li><img src="{{STATIC_URL}}img/拼图-21.png"><span class="text-orange num2">500金币</span><span class="text-orange num2">¥50.00</span><a class='btn-red text-orange '  href="javascript:void(0)" onclick='buyCoins(500)'>buy</a></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">¥6.00</span><div class="button_type_1"><a onclick='buyCoins()'>购买</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×10</span><span class="text-orange num2" style="margin-left: 41px;">¥30.00</span><div class="button_type_1"><a onclick='buyCoins()'>购买</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×50</span><span class="text-orange num2" style="margin-left: 41px;">¥50.00</span><div class="button_type_1"><a onclick='buyCoins()'>购买</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 50px;">向好友索要</span><div id="requestFriends" class="button_type_1"><a onclick='inivteFriends()'>索要</a></div></li>
 	</ul>
-</div>
 </div>
 </div>
 <script type="text/javascript">
 var selectedPieces = new Array(),
 	piecesArray=new Array();
 var pieces = 8,
-	size = 500,
+	size = 400,
 	add = 4;
 	
-var color = new Array("#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff","#aeffae","#a292ff");
+var color = new Array("#5fe1ff","#feee8e");
 var position = new Array({X:add,Y:size/2+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size/2+add,Y:add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size+add,Y:size/2+add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:size/2+add,Y:size+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:add,Y:size/2+add});
 function loadStage() {
     var stage = new Kinetic.Stage({
 		container: "container",
-		width: 508,
-		height: 508
+		width: 408,
+		height: 408
         });
     layer = new Kinetic.Layer();
 	for(i=0;i<pieces;i++){
@@ -205,7 +231,7 @@ function loadStage() {
 					context.fillStrokeShape(this);
                     }
                  }(i),
-					fill: color[i],
+					fill: color[i%2],
 					id:i,
 					opacity:0.5,
 					stroke: "#ffffff",
@@ -241,8 +267,35 @@ function loadStage() {
          flag=false;
          EndIndex=Math.floor(Math.random()*7);
          //EndCycle=Math.floor(Math.random()*4);
-         EndCycle=1;
+         EndCycle=5;
          Time = setInterval(Star,Speed);
+         $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
+        	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
+        	 if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
+        	 if(data[0]=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
+        	 if(data[0]=='2'){
+        	 $('#card').find('#userId').val(data[2]['uid']);
+        	 $('#card').find('.img-circle').attr('src',data[2]['avatar']);
+        	 $('#card').find('strong').html(data[2]['username']);
+        	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
+        	 }
+        	 clearInterval(Time);
+        	 piece = data[1];
+        	 EndIndex = piece[piece.length-1];
+        	 Time = setInterval(Star,Speed);
+
+        	 $('#card').show('slow');
+        	 //$('#count').html('游戏次数:'+data['count']);
+        	 $('#btn2').show();
+        	 $('#btn1').hide();
+        	 });
+     }
+     //跑N圈减速
+     if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
+         clearInterval(Time);
+         Speed=200;
+         flag=true;       //触发结束			 
+         Time=setInterval(Star,Speed);
         }
        
         function Star(num){
@@ -253,26 +306,6 @@ function loadStage() {
                  clearInterval(Time);
                  Speed=50;
                  Time=setInterval(Star,Speed);
-                 $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
-                	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
-                	 if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
-                	 if(data[0]=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
-                	 if(data[0]=='2'){
-                	 $('#card').find('#userId').val(data[2]['uid']);
-                	 $('#card').find('.img-circle').attr('src',data[2]['avatar']);
-                	 $('#card').find('strong').html(data[2]['username']);
-                	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
-                	 }
-                	 clearInterval(Time);
-                	 piece = data[1];
-                	 EndIndex = piece[piece.length-1];
-                	 Time = setInterval(Star,Speed);
-
-                	 $('#card').show('slow');
-                	 //$('#count').html('游戏次数:'+data['count']);
-                	 $('#btn2').show();
-                	 $('#btn1').hide();
-                	 });
              }
              //跑N圈减速
              if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
@@ -281,8 +314,7 @@ function loadStage() {
                  flag=true;       //触发结束			 
                  Time=setInterval(Star,Speed);
              }
-            }
-            
+            }         
             if(index>=piecesArray.length){
                 index=0;
                 cycle++;
@@ -326,25 +358,21 @@ function loadStage() {
 			$('#card').hide();
 			$('#btn1').show();
 		});
+				
+		$('#close').click(function(){
+			$('#buy_page').hide('slow');
+		});
 		
-		$('#tab').find('div').click(function(){
-			$('#tab-buy').children().hide();
-			var id = $(this).attr('href');
-			$('#tab').find('div').removeClass('active');
-			$(this).addClass('active');
-			$(id).show();
+		$('#buy_button').click(function(){
+			$('#buy_page').show('slow');
+		});
+		//请求好友给命
+		$('#button_type_1').click(function(){
+			inivteFriends()
 		});
 	});
+	
 </script>
- <style type="text/css">
-    .btn-red {
-    background: none repeat scroll 0 0 #FF3333;
-    color: #FFFFFF;
-    top: -18px;
-     position: relative;
-        margin-left: 10px;
-    }
- </style>
  <script>
 $(document).ready(function() {
 	   var appId='400350543428768'
@@ -471,7 +499,7 @@ function inivteFriends(){
 		});
 };
 
-//邀请好友test
+//邀请好友
 function inivteF(){
 	FB.ui({method: 'apprequests',
 		  message: 'pinlove',
