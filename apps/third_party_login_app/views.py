@@ -354,6 +354,6 @@ def pintu_for_facebook(request):
             username=apprequest.get('from').get('name')
             if not uid in users:
                 users.append({'uid':uid,'username':username})
-#             request.facebook.graph.delete_object(requestId)
+            request.facebook.graph.delete_object(requestId)
     return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':users})
         
