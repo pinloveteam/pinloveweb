@@ -27,6 +27,7 @@ from .setting import (
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from apps.third_party_login_app.models import FacebookRequest
 log=logging.getLogger('customapp.engine')
 
 ##########three paerty login######
@@ -344,5 +345,7 @@ def pintu_for_facebook(request):
     user= FacebookUser.objects.get(uid=uid)
     from apps.game_app.models import get_count
     count=get_count(user.username)
-    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count})
+     #获取好友发来的生命请求
+    data=request.facebook.graph.get_object('me/apprequests',)
+    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':data})
         
