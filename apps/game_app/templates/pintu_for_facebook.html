@@ -129,7 +129,7 @@ button{
 		<li><input type="text"/></li>
 	</ul>
 	<button id="btn1"  onclick="StartGame();" style="left: 700px;">开始匹配</button>
-	<button id="btn1"  onclick="deleteRequest();" style="left: 650px;">pin</button>
+	<button id="btn1"  onclick="getRequest();" style="left: 650px;">pin</button>
 	<button id="btn1"  onclick="inivteFriends();" style="left: 550px;">邀请好友</button>
 	<button id="btn2" style="display: none;" onclick="loadStage();" style="left: 700px;">在玩一次</button>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display:none;">
@@ -525,6 +525,15 @@ function renderMFS() {
 	    console.log(response);
 	  });
 	}
+    
+    function getRequest(){
+    	FB.api(
+    		    "/me/apprequests",
+    		    function (response) {
+    		    	  console.log(response);
+    		    }
+    		);
+    }
 </script>
 </body>
 </html>
