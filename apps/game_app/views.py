@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
 from apps.game_app.models import Yuanfenjigsaw, get_count
+from apps.third_party_login_app.models import FacebookRequest
 
 
 @csrf_exempt
@@ -18,4 +19,38 @@ def pintu(request):
     count = get_count(username)
     return render(request, 'pintu.html',{'count':count})
 
-
+'''
+邀请好友确认，奖励
+'''
+def confirm_request_life(request,offset):
+    args={}
+    try:
+        freinds=int(offset)
+    except Exception:
+        args['result']='error'
+        args['errorMessage']='转换失败！'
+        json=simplejson.dumps(args)
+        return HttpResponse(json, mimetype='application/javascript')
+    userUid=request.session['apprequest']
+    if offset in userUid:
+        from apps.game_app.models import get_game_count_forever,set_game_count_forever
+        uid=request.facebook.uid
+        from apps.game_app.models import get_invite_count,set_invite_count
+        invite_count=get_invite_count(uid)+1
+        from django.core.cache import cache
+        if (invite_count-cache.get('INVITE_TIME_A_LIFE'))>=0:
+            set_invite_count(uid,invite_count-3)
+            set_game_count_forever(uid,get_game_count_forever(uid)+1)
+        else:
+            set_invite_count(uid,invite_count)
+        userUid.remove(offset)
+        request.session['apprequest']=userUid
+        args['result']='success'
+        from apps.third_party_login_app.models import FacebookUser
+        username=FacebookUser.objects.get(uid=uid).username
+        args['count']=get_count(username)+get_game_count_forever(uid)
+    else:
+        args['result']='error'
+    json=simplejson.dumps(args)
+    return HttpResponse(json, mimetype='application/javascript')
+        
