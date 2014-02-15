@@ -354,7 +354,7 @@ def pintu_for_facebook(request):
             userId=apprequest.get('from').get('id')
             username=apprequest.get('from').get('name')
             if not userId in users:
-                userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80)
+                userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar})
 #             request.facebook.graph.delete_object(requestId)
