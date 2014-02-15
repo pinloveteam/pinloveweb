@@ -354,7 +354,7 @@ def pintu_for_facebook(request):
             userId=apprequest.get('from').get('id')
             username=apprequest.get('from').get('name')
             if not userId in users:
-                userAvatar=request.facebook.graph.get_object('userId/picture',height=80,width=80)
+                userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80)
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar})
 #             request.facebook.graph.delete_object(requestId)
@@ -367,5 +367,5 @@ def pintu_for_facebook(request):
 #     request.session['apprequest']=['100007203789389','100007563789389','100007203789332']
 #     users=[{'uid':'100007203789389','username':'Jin Snail'},{'uid':'100007563789389','username':'Jin sd'},{'uid':'100007203789332','username':'Jin er'}]
 #     return render(request, 'pintu_for_facebook.html',{'uid':user.uid,'price':user.price,'count':count,'data':users,'userCount':len(users)})
-    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':users})
+    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':users,'userCount':len(users)})
         
