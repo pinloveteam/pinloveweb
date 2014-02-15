@@ -94,7 +94,7 @@ button{
 	left: 240px;
 	width: 40px;
 	height: 20px;
-	background-image: url(img/按钮-16.png);
+	background-image: url({{STATIC_URL}}img/按钮-16.png);
 	cursor: pointer;
 }
 
@@ -513,7 +513,7 @@ function buyCoins(quantity) {
 	    },
 	    function(data) {
 	        console.log(data);
-	        if (data.status=='complete'){
+	        if (data.status=='completed'){
 	        	quantity=data.quantity
 		        updateCoins(parseInt(quantity),'add')
 	        }else{
