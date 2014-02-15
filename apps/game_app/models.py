@@ -110,4 +110,26 @@ def reset_game():
     cache.set('BOYS',{})
     cache.set('USER_GAME_COUNT',{})
     
+#############facebook###########
+def get_invite_count(uid):
+    invite_count = cache.get('INVITE_COUNT')
+    if invite_count.get(uid) == None :
+        invite_count[uid] = 0
+        cache.set('INVITE_COUNT',invite_count)
+    return cache.get('INVITE_COUNT').get(uid)
+def set_invite_count(uid,count):
+    invite_count = cache.get('INVITE_COUNT')
+    invite_count[uid]=count
+    cache.set('INVITE_COUNT',invite_count)
+    
+def get_game_count_forever(uid):
+    user_game_count_forever = cache.get('USER_GAME_COUNT_FOREVE')
+    if user_game_count_forever.get(uid) == None :
+        user_game_count_forever[uid] = 0
+        cache.set('USER_GAME_COUNT_FOREVE',user_game_count_forever)
+    return cache.get('USER_GAME_COUNT_FOREVE').get(uid)
+def set_game_count_forever(uid,count):
+    game_count_forever=cache.get('USER_GAME_COUNT_FOREVE')
+    game_count_forever[uid]=count
+    cache.set('USER_GAME_COUNT_FOREVE',game_count_forever)
 

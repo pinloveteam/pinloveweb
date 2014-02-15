@@ -12,7 +12,7 @@ body{
 
 .kineticjs-content{
 	position: absolute;
-	top:200px;
+	top:100px;
 	left:100px;
 	background-color:#fff;
 	border-radius: 50%;
@@ -30,9 +30,10 @@ body{
 }
 
 .head{
-	width: 104px;
-	height: 104px;
+	width: 80px;
+	height: 80px;
 	margin-left:45px;
+	display: inline-block;
 }
 
 .img-circle,.head{
@@ -54,13 +55,13 @@ button{
 	position: absolute; 
 	left: 560px; 
 	top: 20px; 
-	width: 450px;
-	height: 600px;
+	width: 400px;
+	height: 500px;
 	background-color: #f7ffc6;
 	border: solid 2px #000000;
 }
 
-.num,.num1{
+.num,.num1,.num3{
 	position: absolute; 
 	top: 30px; 
 	font-size:20px;
@@ -77,22 +78,36 @@ button{
 	margin-left: 0px;
 }
 
-.button_type_1{
+.num3{
+	top:50px;
+	left:30px;
+	font-size:35px;
+	color: #ff0000;
+	font-weight:bold;
+}
+
+.button_type_1,.button_type_2{
 	position:absolute;
 	padding: 15px 15px 15px 20px;
 	display: inline-block;
 	top: -5px;
-	left: 280px;
+	left: 240px;
 	width: 40px;
 	height: 20px;
-	background-image: url({{STATIC_URL}}img/按钮-16.png);
+	background-image: url(img/按钮-16.png);
 	cursor: pointer;
 }
 
-#close{
+.button_type_2{
+	top: 15px;
+	left: 220px;
+	background-image: url({{STATIC_URL}}img/按钮-14.png);
+}
+
+.close{
 	position:absolute;
-	top: -10px;
-	left:430px;
+	top: -3%;
+	left:96%;
 	width: 32px;
 	height: 32px;
 	background-image: url({{STATIC_URL}}img/拼图-61.png);
@@ -101,7 +116,7 @@ button{
 
 #tab{
 	margin-top: 30px;
-	width: 390px;
+	width: 340px;
 	height: 40px;
 	padding-top: 5px;
 	margin-left: 28px;
@@ -125,11 +140,38 @@ button{
 	border-radius: 15px;
 }
 .head_girl{
-	border:2px solid rgba(255, 102, 51, 0.6);
+	border:2px solid #f79421;
+}
+
+.head_boy{
+	border:2px solid #2afeef;
 }
 
 .tag,.name{
 	text-align:center;
+}
+
+.name_girl,.name_boy{
+	position:absolute;
+	font-size:16px;
+	color: #f79421;
+	top: 30px; 
+	left: 150px;
+}
+
+.name_boy{
+	color: #2afeef;
+}
+.users{
+	position: relative;	
+	top:110px;
+}
+
+.user{
+	position: relative;	
+	display: inline-block;
+	margin-right: 150px;
+	margin-top: 20px;
 }
 
 #buy li {
@@ -140,16 +182,15 @@ button{
 
 #push{
 	cursor: pointer;
+	position: absolute;
+	left: 240px; 
+	top: 240px;
 }
 
 #game_name{
 	position:absolute;
 	top:20px;
 	left:30px;
-	border:2px dashed #000;
-	width: 500px;
-	height: 60px;
-	background-color: #ffd6b8;
 }
 
 #buy_button{
@@ -158,6 +199,18 @@ button{
 	left:130px;
 	cursor: pointer;
 }
+
+#invite{
+	height: 440px;
+	width: 641px;
+	position:absolute;
+	top:100px;
+	left:230px;
+	background-image: url({{STATIC_URL}}img/接受邀请-59.jpg);
+	opacity: 0.8;
+
+}
+</style>
 </style>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
@@ -165,11 +218,11 @@ button{
 </head>
 <body onload="loadStage()">
     <div id="container"></div>
-    <img onclick="StartGame();" id="push" style="position: absolute;left: 240px; top: 340px;" src="{{STATIC_URL}}img/push-57.png"/>
-    <div id="game_name">{{data}}</div>
-    <div class="count" style="position: absolute;top:100px;left: 80px; width: 150px;">
+    <img onclick="StartGame();" id="push" src="{{STATIC_URL}}img/push-57.png"/>
+    <img id="game_name" src="{{STATIC_URL}}img/destiny-63.png"/>
+    <div class="count" style="position: absolute;top:10px;left: 280px; width: 150px;">
     	<img src="{{STATIC_URL}}img/拼图-18.png"/>
-    	<span class="num1">×3</span>
+    	<span class="num1" >×{{count}}</span>
     	<img id="buy_button" src="{{STATIC_URL}}img/拼图-62.png"/>
     </div>
     <!--<button id="buy_button" style="left: 800px;">buy</button>-->
@@ -190,17 +243,34 @@ button{
 </div>	
 </div>
 <div id="buy_page" style="">
-	<div class="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×3</span></div>
+	<div class="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×{{count}}</span></div>
 	<div id="tab">购买</div>
-	<div id="close"></div>
+	<div class="close"></div>
 <div id="buy">
 	<ul>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">¥6.00</span><div class="button_type_1"><a onclick='buyCoins(3)'>购买</a></div></li>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×10</span><span class="text-orange num2" style="margin-left: 41px;">¥30.00</span><div class="button_type_1"><a onclick='buyCoins(10)'>购买</a></div></li>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×50</span><span class="text-orange num2" style="margin-left: 41px;">¥50.00</span><div class="button_type_1"><a onclick='buyCoins(50)'>购买</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 50px;">向好友索要</span><div id="requestFriends" class="button_type_1"><a onclick='inivteFriends()'>索要</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="{{STATIC_URL}}img/">×1</span><span class="text-orange num2" style="margin-left: 50px;">向好友索要</span><div id="requestFriends" class="button_type_1"><a onclick='inivteFriends()'>索要</a></div></li>
 	</ul>
 </div>
+</div>
+
+<div id="invite" style="">
+	<div class="close"></div>
+	<span class="num3">{{userCount}}</span>
+	<img src="{{STATIC_URL}}img/接受邀请-60.png" style="position: absolute;top:42px;left: 60px;"/>
+	<div class="users">
+	{%if data%}
+	{%for user in data%}
+		<div class="user">
+			<div class="head head_girl"><img src="{{user.avatar}}" class="img-circle"></div>
+			<span class="name_girl">{{user.username}}</span>
+			<a id='send' href="javascript:void(0)" onclick="renderMFS({{user.uid}});"><div class="button_type_2">send<span style="color:#FF0000">♥</span></div></a>
+		</div>
+    {%endfor%}
+    {%endif%}
+	</div>
 </div>
 <script type="text/javascript">
 var selectedPieces = new Array(),
@@ -359,8 +429,8 @@ function loadStage() {
 			$('#btn1').show();
 		});
 				
-		$('#close').click(function(){
-			$('#buy_page').hide('slow');
+		$('.close').click(function(){
+			$(this).parent().hide('slow');
 		});
 		
 		$('#buy_button').click(function(){
@@ -394,7 +464,8 @@ window.fbAsyncInit = function() {
 };
 //更新拼爱币
 function updateCoins(quantity,operation){
-	gold= $('#gold').find('.num')
+	
+	gold=$('.count').find('.num1')
 	price=(gold.html()).substring(1)
 	if(operation=='add'){
 		price=parseInt(price)+quantity
@@ -403,8 +474,8 @@ function updateCoins(quantity,operation){
 	}else{
 		return;
 	}
-	
-	gold.html('x'+price.toString())
+	$('.count').find('.num1').html('x'+price.toString())
+	$('.count').find('.num').html('x'+data['count'])
 }
 //更新游戏次数
 function updateGameCount(count,operation){
@@ -509,32 +580,17 @@ function inivteF(){
 		});
 };
 //接收生命请求
-function renderMFS() {
-
-	 // First get the list of friends for this user with the Graph API
-	 FB.api('/me/friends', function(response) {
-	   var container = document.getElementById('mfs');
-	   var mfsForm = document.createElement('form');
-	   mfsForm.id = 'mfsForm';
-
-	   // Iterate through the array of friends object and create a checkbox for each one.
-	   for(var i = 0; i < Math.min(response.data.length, 10); i++) {
-	     var friendItem = document.createElement('div');
-	     friendItem.id = 'friend_' + response.data[i].id;
-	     friendItem.innerHTML = '<input type="checkbox" name="friends" value="'
-	       + response.data[i].id
-	       + '" />' + response.data[i].name;
-	       mfsForm.appendChild(friendItem);
-	     }
-	     container.appendChild(mfsForm);
-
-	     // Create a button to send the Request(s)
-	     var sendButton = document.createElement('input');
-	     sendButton.type = 'button';
-	     sendButton.value = 'Send Request';
-	     sendButton.onclick = sendRequest;
-	     mfsForm.appendChild(sendButton);
-	   });
+function renderMFS(uid) {
+	$.getJSON('/game/confirm_request_life/'+uid,{},function(data){
+		if (data['result']=='success'){
+			$('.count').find('.num1').html('x'+data['count'])
+			 $('.count').find('.num').html('x'+data['count'])
+			alert('发送成功！')
+			$('#send').parent().remove();
+		}else{
+			alert('类型错误！')
+		}
+	});
 	 }
     function deleteRequest() {
       requestId=$('.list-inline').children().children().val()

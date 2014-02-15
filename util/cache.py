@@ -31,6 +31,9 @@ def init_yuanfenpintu_cache():
     cache.set('GIRLS',{})
     cache.set('BOYS',{})
     cache.set('USER_GAME_COUNT',{})
+    cache.set('USER_GAME_COUNT_FOREVE',{})
+    cache.set('INVITE_COUNT',{})
+    cache.set('INVITE_TIME_A_LIFE',3)
 
 '''
 插入可以值，如果值为None，则创建
