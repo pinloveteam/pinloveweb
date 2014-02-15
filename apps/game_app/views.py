@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
 from apps.game_app.models import Yuanfenjigsaw, get_count
-from apps.third_party_login_app.models import FacebookRequest
 
 
 @csrf_exempt

@@ -353,7 +353,7 @@ def pintu_for_facebook(request):
             requestId=apprequest.get('id')
             userId=apprequest.get('from').get('id')
             username=apprequest.get('from').get('name')
-            if not userId in users:
+            if not userId in userUid:
                 userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar})
