@@ -166,7 +166,7 @@ button{
 <body onload="loadStage()">
     <div id="container"></div>
     <img onclick="StartGame();" id="push" style="position: absolute;left: 240px; top: 340px;" src="{{STATIC_URL}}img/push-57.png"/>
-    <div id="game_name"></div>
+    <div id="game_name">{{data}}</div>
     <div class="count" style="position: absolute;top:100px;left: 80px; width: 150px;">
     	<img src="{{STATIC_URL}}img/拼图-18.png"/>
     	<span class="num1">×3</span>
@@ -195,9 +195,9 @@ button{
 	<div id="close"></div>
 <div id="buy">
 	<ul>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">¥6.00</span><div class="button_type_1"><a onclick='buyCoins()'>购买</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×10</span><span class="text-orange num2" style="margin-left: 41px;">¥30.00</span><div class="button_type_1"><a onclick='buyCoins()'>购买</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×50</span><span class="text-orange num2" style="margin-left: 41px;">¥50.00</span><div class="button_type_1"><a onclick='buyCoins()'>购买</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">¥6.00</span><div class="button_type_1"><a onclick='buyCoins(3)'>购买</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×10</span><span class="text-orange num2" style="margin-left: 41px;">¥30.00</span><div class="button_type_1"><a onclick='buyCoins(10)'>购买</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×50</span><span class="text-orange num2" style="margin-left: 41px;">¥50.00</span><div class="button_type_1"><a onclick='buyCoins(50)'>购买</a></div></li>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 50px;">向好友索要</span><div id="requestFriends" class="button_type_1"><a onclick='inivteFriends()'>索要</a></div></li>
 	</ul>
 </div>
