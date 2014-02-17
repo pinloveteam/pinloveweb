@@ -444,16 +444,7 @@ function loadStage() {
 	
 </script>
  <script>
-$(document).ready(function() {
-	   var appId='400350543428768'
-	  $.ajaxSetup({ cache: true });
-	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
-	    FB.init({
-	      appId:appId,
-	    });     
-	  });
-	  
-	});
+
 window.fbAsyncInit = function() {
   FB.init({
     appId      : '400350543428768',
@@ -462,6 +453,13 @@ window.fbAsyncInit = function() {
     xfbml      : true
   });
 };
+(function() {
+    var e = document.createElement('script');
+    e.type = 'text/javascript';
+    e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+    e.async = true;
+    document.getElementById('fb-root').appendChild(e);
+}());
 //更新拼爱币
 function updateCoins(quantity,operation){
 	
