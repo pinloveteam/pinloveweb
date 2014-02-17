@@ -294,6 +294,8 @@ class GraphAPI(object):
             file = urllib2.urlopen("https://graph.facebook.com/" + path + "?" +
                                    urllib.urlencode(args),
                                    post_data, timeout=self.timeout)
+            print "https://graph.facebook.com/" + path + "?" +urllib.urlencode(args)
+            print post_data
         except urllib2.HTTPError, e:
             response = _parse_json(e.read())
             raise GraphAPIError(response)
@@ -562,7 +564,9 @@ def get_access_token_from_code(code, redirect_uri, app_id, app_secret):
     }
     # We would use GraphAPI.request() here, except for that the fact
     # that the response is a key-value pair, and not JSON.
+    logging.error('%s%s' %("https://graph.facebook.com/oauth/access_token?" ,urllib.urlencode(args)))
     response = urllib2.urlopen("https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args)).read()
+    logging.error('%s%s' % ('==================',response))
     query_str = parse_qs(response)
     if "access_token" in query_str:
         result = {"access_token": query_str["access_token"][0]}
