@@ -40,7 +40,7 @@ class FacebookDebugCookieMiddleware(object):
 
     """
     def process_request(self, request):
-        cookie_name = "fbs_" + settings.FACEBOOK_APP_ID
+        cookie_name = "fbsr_" + settings.FACEBOOK_APP_ID
         request.COOKIES[cookie_name] = settings.FACEBOOK_DEBUG_COOKIE
         return None
 

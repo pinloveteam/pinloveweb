@@ -32,9 +32,8 @@ def confirm_request_life(request,offset):
         return HttpResponse(json, mimetype='application/javascript')
     userUid=request.session['apprequest']
     if offset in userUid:
-        from apps.game_app.models import get_game_count_forever,set_game_count_forever
+        from apps.game_app.models import get_game_count_forever,set_game_count_forever,get_invite_count,set_invite_count
         uid=request.facebook.uid
-        from apps.game_app.models import get_invite_count,set_invite_count
         invite_count=get_invite_count(uid)+1
         from django.core.cache import cache
         if (invite_count-cache.get('INVITE_TIME_A_LIFE'))>=0:

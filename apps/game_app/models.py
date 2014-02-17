@@ -77,7 +77,7 @@ class Yuanfenjigsaw:
             return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,
                                                        'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.current_username)}]
         else :  
-            return [cache.get('NO_MATCHING_USER'),pieces,cache.get('USER_GAME_COUNT').get(self.current_username)]
+            return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.current_username)}]
         
     def generate_pieces(self):
         year = int(str(datetime.date.today()).split("-")[0])

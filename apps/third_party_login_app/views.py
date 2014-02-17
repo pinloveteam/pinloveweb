@@ -342,10 +342,33 @@ def pintu_for_facebook(request):
         price=0
     #获取游戏次数
     user= FacebookUser.objects.get(uid=uid)
-    from apps.game_app.models import get_count
-    from apps.game_app.models import get_game_count_forever
+    from apps.game_app.models import get_count,get_game_count_forever
     count=get_count(user.username)+get_game_count_forever(uid)
-     #获取好友发来的生命请求
+    apprequset=get_apprequset(request,uid)
+#             request.facebook.graph.delete_object(requestId)
+    request.session['apprequest']=apprequset['userUid']
+    users=apprequset['users']
+    #===========================================================================
+    #用作测试
+    # from test.facebook import apprequest_test
+    # return apprequest_test(request)
+    #===========================================================================
+    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'count':count,'data':users,'userCount':len(users)})
+    
+def debug_pintu_cache(request):   
+    from django.core.cache import cache
+    girls=cache.cache.get('GIRLS')
+    boys=cache.cache.get('BOYS')
+    return render(request,'/game/debug_pintu_cache.html',{'girls':girls,'boys':boys})
+   
+def debug_add_user(request):
+    from django.core.cache import cache
+    girls=cache.cache.get('GIRLS')
+    boys=cache.cache.get('BOYS')
+    return render(request,'debug_pintu_cache.html',{'girls':girls,'boys':boys})
+ 
+def get_apprequset(request,uid):
+    #获取好友发来的生命请求
     data=request.facebook.graph.get_object('me/apprequests',)
     users,userUid=[],[]
     for apprequest in data.get('data'):
@@ -356,16 +379,5 @@ def pintu_for_facebook(request):
             if not userId in userUid:
                 userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
                 userUid.append(userId)
-                users.append({'uid':userId,'username':username,'avatar':userAvatar})
-#             request.facebook.graph.delete_object(requestId)
-    request.session['apprequest']=userUid
-#     from apps.third_party_login_app.models import FacebookUser
-#     user= FacebookUser.objects.get(uid='100007247470289')
-#     from apps.game_app.models import get_count
-#     from apps.game_app.models import get_game_count_forever
-#     count=get_count(user.username)+get_game_count_forever('100007247470289')
-#     request.session['apprequest']=['100007203789389','100007563789389','100007203789332']
-#     users=[{'uid':'100007203789389','username':'Jin Snail'},{'uid':'100007563789389','username':'Jin sd'},{'uid':'100007203789332','username':'Jin er'}]
-#     return render(request, 'pintu_for_facebook.html',{'uid':user.uid,'price':user.price,'count':count,'data':users,'userCount':len(users)})
-    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'price':user.price,'count':count,'data':users,'userCount':len(users)})
-        
+                users.append({'uid':userId,'username':username,'avatar':userAvatar})    
+    return {'users':users,'userUid':userUid}

@@ -83,6 +83,7 @@ MIDDLEWARE_CLASSES = (
     #登录拦截     
      'middleware.filter_middleware.AuthenticationMiddleware',
      #facebook
+#     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCookieMiddleware',
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
      'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
     # Uncomment the next line for simple clickjacking protection:
@@ -317,56 +318,56 @@ CACHES = {
 from util.cache import init_cache
 init_cache()
 # 本地环境
-# DATABASES = {
-#                
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'django',                      # Or path to database file if using sqlite3.
-#                                                 # The following settings are not used with sqlite3:
-#         'USER': 'root',                         #pinloveteam
-#         'PASSWORD': 'jin521436',                       #redyellowblue123#
-#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#         'PORT': '',      
-#                                                 # Set to empty string for default.
-#     }
-# }
-# MEDIA_URL = '/media/'
-# STATIC_URL = '/static/'
-# MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
-# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-# UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
-# UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
-# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+DATABASES = {
+                
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'django',                      # Or path to database file if using sqlite3.
+                                                # The following settings are not used with sqlite3:
+        'USER': 'root',                         #pinloveteam
+        'PASSWORD': 'jin521436',                       #redyellowblue123#
+        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',      
+                                                # Set to empty string for default.
+    }
+}
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
+UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 
 
 
 #---服务器环境-----
-DATABASES = {
-                 
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
-                                                # The following settings are not used with sqlite3:
-        'USER': 'pinloveteam',
-        'PASSWORD': 'redyellowblue#123',
-        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                             # Set to empty string for default.
-    }
-}
-#upload 上传地址
-MEDIA_URL = '/update/'
-MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
-#静态文件地址
-STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
-STATIC_URL = '/static/'
-#头像上传地址
-UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
-UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-#grappelli
-UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
+# DATABASES = {
+#                  
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
+#                                                 # The following settings are not used with sqlite3:
+#         'USER': 'pinloveteam',
+#         'PASSWORD': 'redyellowblue#123',
+#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#         'PORT': '',                             # Set to empty string for default.
+#     }
+# }
+# #upload 上传地址
+# MEDIA_URL = '/update/'
+# MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/pinloveweb/update'
+# #静态文件地址
+# STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+# STATIC_URL = '/static/'
+# #头像上传地址
+# UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/pinloveweb/update/user_img'
+# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+# #grappelli
+# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+# ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 
 ###################for tests##########
 # import djcelery
@@ -399,7 +400,7 @@ FACEBOOK_SCOPE = ['publish_stream',]
 
 
 # And for local debugging, use one of the debug middlewares and set:
-FACEBOOK_DEBUG_TOKEN = 'CAACEdEose0cBALZCmDqbone22aDeggskZC8mVdK16uhiVsHuwQa23G6QfprLLWV0xDXuzPx4U9JkGfhJup6tMGru7yDJXXPQkMAvM04CTchs9ZCiIPIrPVYY5cOfkWBbbHmJyCzRNl7XhYZCIW3XlpnuAvsCdXPZA9g4UNZBwf6Jo54EPWAzGwqqqwU7H9i0CjbxZC7yGZCDFQZDZD'
+FACEBOOK_DEBUG_TOKEN = 'CAACEdEose0cBAKqdbQGZAjVZCqAmTQgtxZC7MzYZAI0EpibGvx1PwE0PWb1Knxy20FVpZAUr9RMUdgZBbxAmQSXrB9v6Ta2Cb25WL0DQPxQ6cL0pLZBcI8DqbJJPkSbjE6ZCcPO58QS1D7T5ElMJknLYFa3xhjmkjQkYLJA8PHjWuiZCotsTXiLOShiZBi09oIMW4wAm2A9I8KngZDZD'
 FACEBOOK_DEBUG_UID = '100007203789389'
-FACEBOOK_DEBUG_COOKIE = ''
-FACEBOOK_DEBUG_SIGNEDREQ = '    Bg8ojSyM_w2PvLHy48txltQDpTdmft780NFT5_cTEpM.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTA2Mjk2MDAsImlzc3VlZF9hdCI6MTM5MDYyMjg5NSwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFBWkFsRE94VWpBNWFRZ3d0SWV3dEN6NFhXZHdLeTZBWkNDa2hETVpBMjRScVM0cUtQbjhPelByMHQ1eWdWcVVnRE90VEFHS2JUY09aQ0J3QnlGR0NXc1drUDlram1iNFpCYTJoRlpBMHc3V1pDb01MVHA2VGtyenJjSWZhR2NOaHRNSldwaGdFQ3daQklqYzA2S2g0d0VPekdwQ3pKWkNKS1B0TFFORENNclA4UnpVWFdLNWJDa3I5bHlEZm12R0I0d1pEWkQiLCJ1c2VyIjp7ImNvdW50cnkiOiJ1cyIsImxvY2FsZSI6ImVuX1VTIiwiYWdlIjp7Im1pbiI6MTMsIm1heCI6MTd9fSwidXNlcl9pZCI6IjEwMDAwNzI0NzQ3MDI4OSJ9'
+FACEBOOK_DEBUG_COOKIE ='AzIUY1rpSMWthv3CUdBFebFV8Z_clRlDazXq1sHPzjQ.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImNvZGUiOiJBUUJ2WnFSSXp5YnEzX0JCZngyYUdyLXB0S0VZZk5xQ2dNOHg2MXd3QVF3U3dvMkdJRUlwSi1MLW13bEtHbHhzbkd6Y2JveV8teFdhb1NHZEhwUzIxTmo0azU2WHJNSmdnSmZhdHI5VVhWRlRuZUxWelV5eURYYnNIV2dzM0h5QjVkTnI2ajI2ckhxbDQxV3lmMFIyRl9INkZQTEdNdXBpS3VKMm14TzhGUXBlQ0tvNGRlQzBjSlN3Slo1RmFhMDZsNmhCZ1A1OEMxQ2NLQlJEUktzVWJ4aFNCcVdqN0xjMkhZZUM3WHRQZGF4WWhUU2Nkby11cThWVzlQdkszOUdWMjlnc1daMnFNbEFkWEQ3Y0ROQjk2S1lEZ2tWbkk4S00wSW9QMnNyU1NsNXU4ODZONGR0LUVYS05NOER6dTdiQng3QXlPeU9nVWZLTWpmTk5Id1l0VW43RSIsImlzc3VlZF9hdCI6MTM5MjYxODc2NCwidXNlcl9pZCI6IjEwMDAwNzIwMzc4OTM4OSJ9'
+FACEBOOK_DEBUG_SIGNEDREQ ='    DVvrLnNjajeejv43ocgsELAIFChvUxz0V68WTQgkkLk.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTI2NTY0MDAsImlzc3VlZF9hdCI6MTM5MjY1MDE1Mywib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFGQmNIUzJ5SjJxOHlaQzY5THlIb0h1Q1JlUktLSllPSkM4cEVaQWdRSkt6MktsNTN3eHVFSzYyWkJxRTBKc3hsejBsZEs4WEEyd3JQQnlVczJIUFMzUWU2TUZSWWVIb1NjcEpFNWpmT0QxWThSSWxKUEpJSXBmQm5GT0FrQmFGWkE4NzlMREhzNjdISGg0bGtnV3hsWER1cW1yYVpBb3RJSUxyWXg0alhoZ0VSVXZyenVaQVY2MUVmSk92M01wZ1pEWkQiLCJ1c2VyIjp7ImNvdW50cnkiOiJqcCIsImxvY2FsZSI6InpoX0NOIiwiYWdlIjp7Im1pbiI6MjF9fSwidXNlcl9pZCI6IjEwMDAwNzIwMzc4OTM4OSJ9'

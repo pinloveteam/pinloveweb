@@ -7,5 +7,6 @@ urlpatterns=patterns('apps.game_app.views',
     
 )
 urlpatterns += patterns('apps.third_party_login_app.views',
-url(r'^pintu_for_facebook/$','pintu_for_facebook')
+url(r'^pintu_for_facebook/$','pintu_for_facebook'),
+url(r'^debug_pintu_cache/$','debug_pintu_cache')
 )

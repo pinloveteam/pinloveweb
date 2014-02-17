@@ -349,6 +349,8 @@ function loadStage() {
         	 $('#card').find('strong').html(data[2]['username']);
         	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
         	 }
+        	 $('.count').find('.num1').html('x'+data[2]['game_count'].toString())
+        	 $('.count').find('.num').html('x'+data[2]['game_count'].toString())
         	 clearInterval(Time);
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
@@ -445,21 +447,23 @@ function loadStage() {
 </script>
  <script>
 
-window.fbAsyncInit = function() {
-  FB.init({
-    appId      : '400350543428768',
-    status     : true,
-    cookie     : true,
-    xfbml      : true
-  });
-};
-(function() {
-    var e = document.createElement('script');
-    e.type = 'text/javascript';
-    e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-    e.async = true;
-    document.getElementById('fb-root').appendChild(e);
-}());
+ window.fbAsyncInit = function() {
+	  FB.init({
+	    appId : '400350543428768',
+	    status : true,
+	    cookie : true,
+	    xfbml : true
+	  });
+	};
+	// Load the SDK Asynchronously
+	(function(d){
+	  var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	  if (d.getElementById(id)) { return; }
+	  js = d.createElement('script'); js.id = id; js.async = true;
+	  js.src = "//connect.facebook.net/en_US/all.js";
+	  ref.parentNode.insertBefore(js, ref);
+	}(document));
+	
 //更新拼爱币
 function updateCoins(quantity,operation){
 	
@@ -523,14 +527,7 @@ function buyCoins(quantity) {
 	  );
 	}
   
-// Load the SDK Asynchronously
-(function(d){
-  var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-  if (d.getElementById(id)) { return; }
-  js = d.createElement('script'); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js";
-  ref.parentNode.insertBefore(js, ref);
-}(document));
+
 //用facebook私信
 function facebook_send_message() {
 	var userId=$('#userId').val()
