@@ -14179,3 +14179,37 @@ WARNING 2014-02-17 23:18:59 E:\python\lib\site-packages\django\core\handlers\bas
 WARNING 2014-02-17 23:19:00 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
 WARNING 2014-02-17 23:19:24 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
 WARNING 2014-02-17 23:19:24 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-17 23:39:54 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-17 23:39:55 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-17 23:40:54 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-17 23:40:54 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+ERROR 2014-02-17 23:44:31 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 347, in pintu_for_facebook
+    apprequset=get_apprequset(request,uid)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 372, in get_apprequset
+    data=request.facebook.graph.get_object('me/apprequests',)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 296, in request
+    post_data, timeout=self.timeout)
+  File "E:\python\lib\urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+  File "E:\python\lib\urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "E:\python\lib\urllib2.py", line 422, in _open
+    '_open', req)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 1222, in https_open
+    return self.do_open(httplib.HTTPSConnection, req)
+  File "E:\python\lib\urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 11004] getaddrinfo failed>
+WARNING 2014-02-17 23:44:32 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404

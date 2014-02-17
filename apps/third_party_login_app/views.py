@@ -353,7 +353,7 @@ def pintu_for_facebook(request):
     # from test.facebook import apprequest_test
     # return apprequest_test(request)
     #===========================================================================
-    return render(request, 'pintu_for_facebook.html',{'uid':me.get('uid'),'count':count,'data':users,'userCount':len(users)})
+    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':users,'userCount':len(users)})
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
