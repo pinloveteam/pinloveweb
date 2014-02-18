@@ -347,6 +347,7 @@ def pintu_for_facebook(request):
     apprequset=get_apprequset(request,uid)
 #             request.facebook.graph.delete_object(requestId)
     request.session['apprequest']=apprequset['userUid']
+    request.session['uid']=uid
     users=apprequset['users']
     #===========================================================================
     #用作测试

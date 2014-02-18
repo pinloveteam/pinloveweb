@@ -77,7 +77,7 @@ class Yuanfenjigsaw:
         
     def generate_pieces(self):
         import random
-        number = random.random(1,100)
+        number = random.randint(1,100)
         year = int(str(datetime.date.today()).split("-")[0])
         month = int(str(datetime.date.today()).split("-")[1])
         day = int(str(datetime.date.today()).split("-")[2])
