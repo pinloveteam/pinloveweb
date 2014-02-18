@@ -225,10 +225,10 @@ button{
     	<span class="num1" >×{{count}}</span>
     	<img id="buy_button" src="{{STATIC_URL}}img/拼图-62.png"/>
     </div>
-    <!--<button id="buy_button" style="left: 800px;">buy</button>-->
 	<button id="btn2" style="display: none;" onclick="loadStage();">在玩一次</button>
 <div id="card" style="position: absolute;left: 220px; top: 150px;display: none;">
 <div class="card">
+	<div class="close"></div>
 	<div class="head head_girl">
 		<img src=".\img\image1.jpeg" class="img-circle">
 	</div>
@@ -326,7 +326,8 @@ function loadStage() {
        Speed=200,           //初始速度
        Time,               //定义对象
        EndIndex=0,        //决定在哪一格变慢
-       cycle=0,          //转动圈数   
+       cycle=0,          //转动圈数 
+       StartCycle=0,  
        EndCycle=0,      //计算圈数
        flag=false,     //结束转动标志 
        quick=0;       //加速
@@ -334,10 +335,8 @@ function loadStage() {
        function StartGame(){
 	     clearInterval(Time);
          cycle=0;
+         StartCycle=2;
          flag=false;
-         EndIndex=Math.floor(Math.random()*7);
-         //EndCycle=Math.floor(Math.random()*4);
-         EndCycle=5;
          Time = setInterval(Star,Speed);
          $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
@@ -349,26 +348,16 @@ function loadStage() {
         	 $('#card').find('strong').html(data[2]['username']);
         	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
         	 }
-        	 $('.count').find('.num1').html('x'+data[2]['game_count'].toString())
-        	 $('.count').find('.num').html('x'+data[2]['game_count'].toString())
         	 clearInterval(Time);
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
-        	 Time = setInterval(Star,Speed);
+        	 EndCycle=StartCycle+piece.length;
+        	 //Time = setInterval(Star,Speed);
 
         	 $('#card').show('slow');
         	 //$('#count').html('游戏次数:'+data['count']);
-        	 $('#btn2').show();
-        	 $('#btn1').hide();
         	 });
      }
-     //跑N圈减速
-     if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
-         clearInterval(Time);
-         Speed=200;
-         flag=true;       //触发结束			 
-         Time=setInterval(Star,Speed);
-        }
        
         function Star(num){
             //跑马灯变速
@@ -376,24 +365,33 @@ function loadStage() {
               //走五格开始加速
              if(quick==5){
                  clearInterval(Time);
-                 Speed=50;
+                 Speed=100;
                  Time=setInterval(Star,Speed);
              }
              //跑N圈减速
-             if(cycle==EndCycle+1 && index==parseInt(EndIndex)){
+             if(cycle==EndCycle && index==parseInt(EndIndex)){
                  clearInterval(Time);
-                 Speed=200;
                  flag=true;       //触发结束			 
                  Time=setInterval(Star,Speed);
              }
-            }         
+             
+             if(cycle >= StartCycle && cycle <= EndCycle){
+             	selectedPieces.push(piece[cycle-StartCycle-1]);
+             }
+             
+             if(cycle==EndCycle){
+             	clearInterval(Time);
+             	Speed=300;
+             	Time=setInterval(Star,Speed);
+             }
+            }  
+                   
             if(index>=piecesArray.length){
                 index=0;
                 cycle++;
             }
             
            //结束转动并选中号码
-		   //trim里改成数字就可以减速，变成Endindex的话就没有减速效果了
          if(flag==true){ 
           quick=0;
           clearInterval(Time);
@@ -405,31 +403,15 @@ function loadStage() {
             }
             piecesArray[index].shape.opacity(1);
 //          piecesArray[index].shape.stroke('#aeffae');
-            if(prevIndex!=3 &&  prevIndex!=6)
+            if($.inArray(prevIndex, selectedPieces) < 0)
             	piecesArray[prevIndex].shape.opacity(0.5);
 //          	piecesArray[prevIndex].shape.stroke('#fff')
             layer.batchDraw();
             index++;
             quick++;
         }
-              
-	function commit(){
-		for(i=0;i<pieces;i++){
-			if(piecesArray[i].shape.getOpacity()==1){
-				selectedPieces[piecesArray[i].shape.getId()]=piecesArray[i].shape.getId();
-				}
-			}
-	}
+
 	$(document).ready(function(){
-		$('#btn1').click(function(){
-			$(this).hide();	
-		});
-		
-		$('#btn2').click(function(){
-			$(this).hide();
-			$('#card').hide();
-			$('#btn1').show();
-		});
 				
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
@@ -446,16 +428,24 @@ function loadStage() {
 	
 </script>
  <script>
-
- window.fbAsyncInit = function() {
-	  FB.init({
-	    appId : '400350543428768',
-	    status : true,
-	    cookie : true,
-	    xfbml : true,
+$(document).ready(function() {
+	   var appId='400350543428768'
+	  $.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+	    FB.init({
+	      appId:appId,
+	    });     
 	  });
-	};
-	
+	  
+	});
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '400350543428768',
+    status     : true,
+    cookie     : true,
+    xfbml      : true
+  });
+};
 //更新拼爱币
 function updateCoins(quantity,operation){
 	
@@ -519,7 +509,7 @@ function buyCoins(quantity) {
 	  );
 	}
   
-//Load the SDK Asynchronously
+// Load the SDK Asynchronously
 (function(d){
   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
   if (d.getElementById(id)) { return; }
