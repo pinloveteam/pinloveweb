@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from apps.user_app.models import UserProfile
 import datetime
 
-from django.contrib.auth.models import User
 from django.core.cache import cache
 from apps.third_party_login_app.models import FacebookUser
 
@@ -10,17 +8,15 @@ class Yuanfenjigsaw:
 #     selected_pieces_str = ''
     pieces = set()
     matching_pieces = set()
-    current_username = ''
+    uid = ''
     gender = ''
-    number = 0; 
     def __init__(self,request):
         if cache.get('TODAY') != datetime.date.today():
             reset_game()
             get_count(request)
-        uid=request.GET.get('uid')
-        facebookUser=FacebookUser.objects.get(uid=uid)
-        self.current_username = facebookUser.username
-        self.number=int(request.GET.get("number",''))
+        self.uid = request.GET.get('uid')
+        facebookUser=FacebookUser.objects.get(uid=self.uid)
+        
 #         self.pieces = set([int(i) for i in self.selected_pieces_str.split("-") if i])#用户提交的集合
         self.pieces = self.generate_pieces()
         self.matching_pieces = self.pieces#与之互补的集合
@@ -30,28 +26,28 @@ class Yuanfenjigsaw:
 #         return  self.pieces - cache.get('ALL_PIECE') != set([]) or self.matching_pieces ==  cache.get('ALL_PIECE') or self.matching_pieces == set([])
     
     def achieve_game_times(self):
-        return  cache.get('USER_GAME_COUNT').get(self.current_username) == 0
+        return  cache.get('USER_GAME_COUNT').get(self.uid) == 0
     
     def get_matching_user(self):
         user_game_count = cache.get('USER_GAME_COUNT')
-        if user_game_count.get(self.current_username)==None:
-            user_game_count[self.current_username] =9
+        if user_game_count.get(self.uid)==None:
+            user_game_count[self.uid] =9
         else:
-            user_game_count[self.current_username] = user_game_count.get(self.current_username) - 1
+            user_game_count[self.uid] = user_game_count.get(self.uid) - 1
         cache.set('USER_GAME_COUNT',user_game_count)
         if  self.gender == 'M':
             boys = cache.get('BOYS')
-            boys[str(self.pieces)] = self.current_username#如果位男性，则将其存入JIGSW_BOYS
-            matching_username = cache.get('GIRLS').get(str(self.matching_pieces))#从JIGSW_GIRLS中寻找与之互补的异性
+            boys[str(self.pieces)] = self.uid#如果位男性，则将其存入JIGSW_BOYS
+            matching_uid = cache.get('GIRLS').get(str(self.matching_pieces))#从JIGSW_GIRLS中寻找与之互补的异性
             cache.set('BOYS',boys)
         else :
             girls = cache.get('GIRLS')
-            girls[str(self.pieces)] = self.current_username
-            matching_username =  cache.get('BOYS').get(str(self.matching_pieces))
+            girls[str(self.pieces)] = self.uid
+            matching_uid =  cache.get('BOYS').get(str(self.matching_pieces))
             cache.set('GIRLS',girls)
             
-        if matching_username != None:
-            matching_user =FacebookUser.objects.filter(username=matching_username)
+        if matching_uid != None:
+            matching_user =FacebookUser.objects.get(uid=matching_uid)
         else :
             return None
         return matching_user
@@ -72,21 +68,23 @@ class Yuanfenjigsaw:
             city = 'ttt'
             age = '22'
             avatar = matching_user[0].avatar
-#             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.current_username)}
-#             return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar,cache.get('USER_GAME_COUNT').get(self.current_username)]
+#             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.uid)}
+#             return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar,cache.get('USER_GAME_COUNT').get(self.uid)]
             return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,
-                                                       'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.current_username)}]
+                                                       'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)}]
         else :  
-            return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.current_username)}]
+            return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)}]
         
     def generate_pieces(self):
+        import random
+        number = random.random(1,100)
         year = int(str(datetime.date.today()).split("-")[0])
         month = int(str(datetime.date.today()).split("-")[1])
         day = int(str(datetime.date.today()).split("-")[2])
-        size = day*self.number%7
+        size = day*number%7
         if size == 0:
             size = 6
-        base = str(year*year*month*day*self.number)
+        base = str(year*year*month*day*number)
         temp = set()
         for i in range(0,size):
             temp.add(int(base[i])%7)
