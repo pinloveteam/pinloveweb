@@ -453,9 +453,21 @@ function loadStage() {
 	    status : true,
 	    cookie : true,
 	    xfbml : true,
-	    oauth:true
 	  });
 	};
+	FB.getLoginStatus(function(response) {
+	    onStatus(response);
+	});
+
+	function onStatus(response) {
+	    if (response.session) {
+	        var timestamp = new Date().getTime();
+	        var expires = response['session']['expires'] * 1000;
+	        if(expires - timestamp >= 0){
+	            setTimeout(function(){window.location.reload();}, expires - timestamp);
+	        }
+	    }
+	}
 	
 //更新拼爱币
 function updateCoins(quantity,operation){
@@ -520,6 +532,14 @@ function buyCoins(quantity) {
 	  );
 	}
   
+//Load the SDK Asynchronously
+(function(d){
+  var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+  if (d.getElementById(id)) { return; }
+  js = d.createElement('script'); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js";
+  ref.parentNode.insertBefore(js, ref);
+}(document));
 //用facebook私信
 function facebook_send_message() {
 	var userId=$('#userId').val()
