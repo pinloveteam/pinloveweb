@@ -354,7 +354,7 @@ function loadStage() {
         	 EndCycle=StartCycle+piece.length;
         	 Time = setInterval(Star,Speed);
 
-        	 $('#card').show('slow');
+        	 
         	 //$('#count').html('游戏次数:'+data['count']);
         	 });
      }
@@ -395,6 +395,7 @@ function loadStage() {
          if(flag==true){ 
           quick=0;
           clearInterval(Time);
+          $('#card').show('slow');
             }
             if(index>0)
                 prevIndex=index-1;
