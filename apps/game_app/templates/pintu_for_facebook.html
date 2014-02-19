@@ -512,7 +512,7 @@ function exchange(gameCount,price){
 
 //购买拼爱币
 function buyCoins(quantity) {
-	 /*  FB.ui({
+	     FB.ui({
 	      method: 'pay',
 	      action: 'purchaseitem',
 	      product: 'www.pinpinlove.com/pay/icon/',
@@ -520,17 +520,17 @@ function buyCoins(quantity) {
 	    },
 	    function(data) {
 	        console.log(data);
-	        $.getJSON('pay/pay_detail/',{'data'},function(){
-	        	if (data['result']=='success'){
-	        		quantity=data.quantity
-			        updateCoins(parseInt(quantity),'add')
-	        	}else{
-	        		alert('支付失败！')
-	        	}
-	        })
+	        $.getJSON('/pay/pay_detail/',{data:JSON.stringify(data)},function(data){
+	  		  if (data['result']=='success'){
+	  	      		quantity=data.quantity
+	  			        updateCoins(parseInt(quantity),'add')
+	  	      	}else{
+	  	      		alert('支付失败！')
+	  	      	}
+	  	});
 	      }
-	  ); */
-	  var data={
+	  ); 
+	  /* var data={
 		  payment_id: "495869257196092",
 		  amount: "5.00",
 		  currency: "USD",
@@ -545,8 +545,8 @@ function buyCoins(quantity) {
 			        updateCoins(parseInt(quantity),'add')
 	      	}else{
 	      		alert('支付失败！')
-	      	}
-	});
+	      	} 
+	});*/
 }
 // Load the SDK Asynchronously
 (function(d){
