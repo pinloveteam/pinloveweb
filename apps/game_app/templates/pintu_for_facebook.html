@@ -522,7 +522,7 @@ function buyCoins(quantity) {
 	        console.log(data);
 	        $.getJSON('/pay/pay_detail/',{data:JSON.stringify(data)},function(data){
 	  		  if (data['result']=='success'){
-	  			        updateCoins(data['get_count'],'add')
+	  			        updateCoins(data['game_count'],'add')
 	  	      	}else{
 	  	      		alert('支付失败！')
 	  	      	}
