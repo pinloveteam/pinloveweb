@@ -272,7 +272,7 @@ button{
 	</ul>
 </div>
 </div>
-
+{% ifequal userCount 0%}
 <div id="invite" style="">
 	<div class="close"></div>
 	<span class="num3">{{userCount}}</span>
@@ -289,6 +289,7 @@ button{
     {%endif%}
 	</div>
 </div>
+{% endifequal %}
 <div id="information" style="display: none;" class='information'>
 <span class="msg"></span>
 </div>
