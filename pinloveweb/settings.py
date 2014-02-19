@@ -84,7 +84,7 @@ MIDDLEWARE_CLASSES = (
      'middleware.filter_middleware.AuthenticationMiddleware',
      #facebook
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCookieMiddleware',
-    'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
+#     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
      'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
