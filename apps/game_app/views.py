@@ -35,20 +35,19 @@ def confirm_request_life(request,offset):
         from apps.game_app.models import get_game_count_forever,set_game_count_forever,get_invite_count,set_invite_count
         import logging
         logging.error('%s' % (request.facebook))
-        uid=request.session['uid']
-        invite_count=get_invite_count(uid)+1
+        invite_count=get_invite_count(offset)+1
         from django.core.cache import cache
         if (invite_count-cache.get('INVITE_TIME_A_LIFE'))>=0:
-            set_invite_count(uid,invite_count-3)
-            set_game_count_forever(uid,get_game_count_forever(uid)+1)
+            set_invite_count(offset,invite_count-3)
+            set_game_count_forever(offset,get_game_count_forever(offset)+1)
         else:
-            set_invite_count(uid,invite_count)
+            set_invite_count(offset,invite_count)
         userUid.remove(offset)
         request.session['apprequest']=userUid
         args['result']='success'
         from apps.third_party_login_app.models import FacebookUser
-        username=FacebookUser.objects.get(uid=uid).username
-        args['count']=get_count(username)+get_game_count_forever(uid)
+#         username=FacebookUser.objects.get(uid=uid).username
+#         args['count']=get_count(username)+get_game_count_forever(uid)
     else:
         args['result']='error'
     json=simplejson.dumps(args)

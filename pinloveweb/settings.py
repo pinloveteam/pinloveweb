@@ -84,7 +84,7 @@ MIDDLEWARE_CLASSES = (
      'middleware.filter_middleware.AuthenticationMiddleware',
      #facebook
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCookieMiddleware',
-#     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
+    'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
      'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -306,7 +306,7 @@ EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 
 #set the session paramter session的控制
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE=1000
+SESSION_COOKIE_AGE=60*60*12
 #缓存
 CACHES = {
     'default': {
@@ -319,7 +319,7 @@ from util.cache import init_cache
 init_cache()
 # 本地环境
 # DATABASES = {
-#                 
+#                  
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -344,7 +344,7 @@ init_cache()
 
 #---服务器环境-----
 DATABASES = {
-                  
+                   
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -403,4 +403,4 @@ FACEBOOK_SCOPE = ['publish_stream',]
 FACEBOOK_DEBUG_TOKEN = 'CAACEdEose0cBAKqdbQGZAjVZCqAmTQgtxZC7MzYZAI0EpibGvx1PwE0PWb1Knxy20FVpZAUr9RMUdgZBbxAmQSXrB9v6Ta2Cb25WL0DQPxQ6cL0pLZBcI8DqbJJPkSbjE6ZCcPO58QS1D7T5ElMJknLYFa3xhjmkjQkYLJA8PHjWuiZCotsTXiLOShiZBi09oIMW4wAm2A9I8KngZDZD'
 FACEBOOK_DEBUG_UID = '100007203789389'
 FACEBOOK_DEBUG_COOKIE ='AzIUY1rpSMWthv3CUdBFebFV8Z_clRlDazXq1sHPzjQ.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImNvZGUiOiJBUUJ2WnFSSXp5YnEzX0JCZngyYUdyLXB0S0VZZk5xQ2dNOHg2MXd3QVF3U3dvMkdJRUlwSi1MLW13bEtHbHhzbkd6Y2JveV8teFdhb1NHZEhwUzIxTmo0azU2WHJNSmdnSmZhdHI5VVhWRlRuZUxWelV5eURYYnNIV2dzM0h5QjVkTnI2ajI2ckhxbDQxV3lmMFIyRl9INkZQTEdNdXBpS3VKMm14TzhGUXBlQ0tvNGRlQzBjSlN3Slo1RmFhMDZsNmhCZ1A1OEMxQ2NLQlJEUktzVWJ4aFNCcVdqN0xjMkhZZUM3WHRQZGF4WWhUU2Nkby11cThWVzlQdkszOUdWMjlnc1daMnFNbEFkWEQ3Y0ROQjk2S1lEZ2tWbkk4S00wSW9QMnNyU1NsNXU4ODZONGR0LUVYS05NOER6dTdiQng3QXlPeU9nVWZLTWpmTk5Id1l0VW43RSIsImlzc3VlZF9hdCI6MTM5MjYxODc2NCwidXNlcl9pZCI6IjEwMDAwNzIwMzc4OTM4OSJ9'
-FACEBOOK_DEBUG_SIGNEDREQ ='    DVvrLnNjajeejv43ocgsELAIFChvUxz0V68WTQgkkLk.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTI2NTY0MDAsImlzc3VlZF9hdCI6MTM5MjY1MDE1Mywib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFGQmNIUzJ5SjJxOHlaQzY5THlIb0h1Q1JlUktLSllPSkM4cEVaQWdRSkt6MktsNTN3eHVFSzYyWkJxRTBKc3hsejBsZEs4WEEyd3JQQnlVczJIUFMzUWU2TUZSWWVIb1NjcEpFNWpmT0QxWThSSWxKUEpJSXBmQm5GT0FrQmFGWkE4NzlMREhzNjdISGg0bGtnV3hsWER1cW1yYVpBb3RJSUxyWXg0alhoZ0VSVXZyenVaQVY2MUVmSk92M01wZ1pEWkQiLCJ1c2VyIjp7ImNvdW50cnkiOiJqcCIsImxvY2FsZSI6InpoX0NOIiwiYWdlIjp7Im1pbiI6MjF9fSwidXNlcl9pZCI6IjEwMDAwNzIwMzc4OTM4OSJ9'
+FACEBOOK_DEBUG_SIGNEDREQ ='ZVV74zuW0_coGTwM-be-jsthg7TJS2pN5FPZIuCeM_Q.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTI3ODk2MDAsImlzc3VlZF9hdCI6MTM5Mjc4NDY1OCwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFQUE1FVnFvMExpUVcyZ3FYaGFvSnE2V3lsY2s5Z3JuQVhzNHhaQWhXRkJyZTVnTU52R1JRS1lHQ3R4Z1JFcnpld3NnSXhPRFpDTzlJcHh6c1lmOXNUaHdwWkN6WkFtMnQwTWpLMlMxQ2hITUFBT0hNWEtBUjdobXE2NkJZQndZRWRrSmZjMDB1VzI1UkJyTUw0d3NmMzB1eDlrQkJYZGZ5ZVdXNnpnUkg1RG9QdFZUTkZLWTJQWU5wSDg5NmdaRFpEIiwidXNlciI6eyJjb3VudHJ5IjoianAiLCJsb2NhbGUiOiJlbl9VUyIsImFnZSI6eyJtaW4iOjEzLCJtYXgiOjE3fX0sInVzZXJfaWQiOiIxMDAwMDcyNDc0NzAyODkifQ'

@@ -14253,3 +14253,146 @@ Traceback (most recent call last):
   File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 301, in request
     raise GraphAPIError(response)
 GraphAPIError: Error validating access token: Session has expired on 2014年2月17日 9:00. The current time is 2014年2月17日 9:46.
+WARNING 2014-02-18 15:43:08 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2014-02-18 15:43:08 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2014-02-18 15:43:08 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2014-02-18 15:44:15 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-18 15:44:17 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-18 16:15:06 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-18 16:15:07 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-18 16:15:56 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+ERROR 2014-02-19 10:51:30 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 346, in pintu_for_facebook
+    count=get_count(user.username)+get_game_count_forever(uid)
+  File "E:\eclipse_64\code\pinloveweb\apps\game_app\models.py", line 96, in get_count
+    if user_game_count.get(current_username) == None :
+AttributeError: 'NoneType' object has no attribute 'get'
+WARNING 2014-02-19 10:51:33 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2014-02-19 10:51:33 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico status_code:404
+WARNING 2014-02-19 10:52:44 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 10:57:52 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 10:58:27 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 10:59:18 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 10:59:19 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 10:59:48 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 11:02:49 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+ERROR 2014-02-19 11:04:26 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /pay/pay_detail/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 133, in get_response
+    raise ValueError("The view %s.%s didn't return an HttpResponse object." % (callback.__module__, view_name))
+ValueError: The view apps.pay_app.views.pay_detail didn't return an HttpResponse object.
+WARNING 2014-02-19 11:31:26 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 11:31:26 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+ERROR 2014-02-19 12:26:16 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/confirm_request_life/100007247470289/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\game_app\views.py", line 33, in confirm_request_life
+    userUid=request.session['apprequest']
+  File "E:\python\lib\site-packages\django\contrib\sessions\backends\base.py", line 46, in __getitem__
+    return self._session[key]
+KeyError: 'apprequest'
+ERROR 2014-02-19 12:26:38 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/confirm_request_life/100007247470289/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\game_app\views.py", line 33, in confirm_request_life
+    userUid=request.session['apprequest']
+  File "E:\python\lib\site-packages\django\contrib\sessions\backends\base.py", line 46, in __getitem__
+    return self._session[key]
+KeyError: 'apprequest'
+ERROR 2014-02-19 12:26:48 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 347, in pintu_for_facebook
+    apprequset=get_apprequset(request,uid)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 373, in get_apprequset
+    data=request.facebook.graph.get_object('me/apprequests',)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 301, in request
+    raise GraphAPIError(response)
+GraphAPIError: Error validating access token: Session has expired on 2014年2月18日 20:00. The current time is 2014年2月18日 20:26.
+WARNING 2014-02-19 12:30:06 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+ERROR 2014-02-19 12:32:54 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /pay/pay_detail/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\pay_app\views.py", line 24, in pay_detail
+    paymentId=data.payment_id
+AttributeError: 'dict' object has no attribute 'payment_id'
+WARNING 2014-02-19 12:33:46 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+ERROR 2014-02-19 12:34:27 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /pay/pay_detail/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\pay_app\views.py", line 24, in pay_detail
+    paymentId=data['payment_id']
+AttributeError: 'dict' object has no attribute 'payment_id'
+WARNING 2014-02-19 12:37:19 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 12:37:39 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 12:37:41 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 12:41:59 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 12:42:00 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+ERROR 2014-02-19 12:44:30 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /game/pintu_for_facebook/ status_code:500
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\python\lib\site-packages\django\views\decorators\csrf.py", line 77, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\django_facebook\decorators.py", line 64, in _view
+    return view_func(request, *args, **kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 347, in pintu_for_facebook
+    apprequset=get_apprequset(request,uid)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\views.py", line 381, in get_apprequset
+    userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 100, in get_object
+    return self.request(id, args)
+  File "E:\eclipse_64\code\pinloveweb\apps\third_party_login_app\facebook.py", line 296, in request
+    post_data, timeout=self.timeout)
+  File "E:\python\lib\urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+  File "E:\python\lib\urllib2.py", line 410, in open
+    response = meth(req, response)
+  File "E:\python\lib\urllib2.py", line 523, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "E:\python\lib\urllib2.py", line 442, in error
+    result = self._call_chain(*args)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 629, in http_error_302
+    return self.parent.open(new, timeout=req.timeout)
+  File "E:\python\lib\urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "E:\python\lib\urllib2.py", line 422, in _open
+    '_open', req)
+  File "E:\python\lib\urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "E:\python\lib\urllib2.py", line 1222, in https_open
+    return self.do_open(httplib.HTTPSConnection, req)
+  File "E:\python\lib\urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 11004] getaddrinfo failed>
+WARNING 2014-02-19 12:44:41 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 12:46:56 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 12:46:57 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:46:01 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:47:04 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:47:50 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:47:51 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:52:50 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:53:35 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:53:36 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404
+WARNING 2014-02-19 13:54:54 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /game/pintu_for_facebook/.\img\image1.jpeg status_code:404

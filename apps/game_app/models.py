@@ -29,12 +29,7 @@ class Yuanfenjigsaw:
         return  cache.get('USER_GAME_COUNT').get(self.uid) == 0
     
     def get_matching_user(self):
-        user_game_count = cache.get('USER_GAME_COUNT')
-        if user_game_count.get(self.uid)==None:
-            user_game_count[self.uid] =9
-        else:
-            user_game_count[self.uid] = user_game_count.get(self.uid) - 1
-        cache.set('USER_GAME_COUNT',user_game_count)
+        
         if  self.gender == 'M':
             boys = cache.get('BOYS')
             boys[str(self.pieces)] = self.uid#如果位男性，则将其存入JIGSW_BOYS
@@ -45,7 +40,13 @@ class Yuanfenjigsaw:
             girls[str(self.pieces)] = self.uid
             matching_uid =  cache.get('BOYS').get(str(self.matching_pieces))
             cache.set('GIRLS',girls)
-            
+        user_game_count = cache.get('USER_GAME_COUNT')
+        if user_game_count.get(self.uid)==None:
+            user_game_count[self.uid] =9
+        else:
+            if matching_uid != None:
+                user_game_count[self.uid] = user_game_count.get(self.uid) - 1
+        cache.set('USER_GAME_COUNT',user_game_count)
         if matching_uid != None:
             matching_user =FacebookUser.objects.get(uid=matching_uid)
         else :

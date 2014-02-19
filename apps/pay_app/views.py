@@ -16,18 +16,27 @@ def get_icon(request):
 facebook 交易结果记录
 '''
 def pay_detail(request):
-    paymentId=request.REQUEST.get('payment_id',False)
-    amount=float(request.REQUEST.get('amount',False))
-    currency=request.REQUEST.get('currency',False)
-    quantity=int(request.REQUEST.get('quantity',False))
-    signed_request=request.REQUEST.get('signed_request',False)
-    status=request.REQUEST.get('completed',False)
-    FacebookPayDetail(id=paymentId,amount=amount,currency=currency,quantity=quantity,status=status,signed_request=signed_request)
-    if status=='compelet':
-        uid=request.user.uid
-        price=FacebookUser.objects.get(uid=uid).price
-        price=price+quantity
-        FacebookUser.objects.filter(uid=uid).update(price=price)
+    args={}
+    data=request.REQUEST.get('data',False)
+    data=simplejson.loads(data)
+    uid=request.session['uid']
+    if data:
+        paymentId=data['payment_id']
+        amount=float(data['amount'])
+        currency=data['currency']
+        quantity=int(data['quantity'])
+        signed_request=data['signed_request']
+        status=data['status']
+        FacebookPayDetail(id=paymentId,amount=amount,currency=currency,quantity=quantity,status=status,signed_request=signed_request).save()
+        if status=='completed':
+            from apps.game_app.models import get_game_count_forever,set_game_count_forever
+            set_game_count_forever(uid,get_game_count_forever(uid)+quantity)
+        args['result']='success'
+    else:
+        args['result']='error'
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
+    
 
     
     

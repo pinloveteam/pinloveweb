@@ -86,7 +86,7 @@ button{
 	font-weight:bold;
 }
 
-.button_type_1,.button_type_2{
+.button_type_1,.button_type_2,.button_type_3{
 	position:absolute;
 	padding: 15px 15px 15px 20px;
 	display: inline-block;
@@ -210,6 +210,22 @@ button{
 	opacity: 0.8;
 
 }
+.information {
+    border: 2px solid #AFF0FF;
+	background-color: #FFFFFF;
+    height: 50px;
+    left: 560px;
+    position: absolute;
+    top: 200px;
+    width: 100px;
+}
+.msg{
+  display:block;
+ font-size: 17px;
+ text-align:center;
+  padding:10px 0 ;  
+  color:#6FD1EF
+}
 </style>
 </style>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
@@ -226,7 +242,7 @@ button{
     	<img id="buy_button" src="{{STATIC_URL}}img/拼图-62.png"/>
     </div>
 	<button id="btn2" style="display: none;" onclick="loadStage();">在玩一次</button>
-<div id="card" style="position: absolute;left: 220px; top: 150px;display: none;">
+<div id="card" style="position: absolute;left: 180px; top: 100px;display: none;">
 <div class="close"></div>
 <div class="card">
 	<div class="head head_girl">
@@ -239,7 +255,8 @@ button{
 		<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span>杭州</span>
 	</div>
-	<button id="btn">打招呼</button>
+	<a  href="javascript:void(0)" onclick="facebook_add_friend();"><div id="hi" class="button_type_3">Hi!</div></a>
+	<a  href="javascript:void(0)" onclick="facebook_send_message();"><div id="friend" class="button_type_3">+</div></a>
 </div>	
 </div>
 <div id="buy_page" style="">
@@ -271,6 +288,9 @@ button{
     {%endfor%}
     {%endif%}
 	</div>
+</div>
+<div id="information" style="display: none;" class='information'>
+<span class="msg"></span>
 </div>
 <script type="text/javascript">
 var selectedPieces = new Array(),
@@ -348,6 +368,8 @@ function loadStage() {
         	 $('#card').find('strong').html(data[2]['username']);
         	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
         	 }
+        	 $('.count').find('.num1').html('x'+data[2]['game_count'].toString())
+        	 $('.count').find('.num').html('x'+data[2]['game_count'].toString())
         	 clearInterval(Time);
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
@@ -490,26 +512,42 @@ function exchange(gameCount,price){
 
 //购买拼爱币
 function buyCoins(quantity) {
-	  FB.ui({
+	 /*  FB.ui({
 	      method: 'pay',
 	      action: 'purchaseitem',
-	      product: 'www.pinpinlove.com/pay_app/icon/',
+	      product: 'www.pinpinlove.com/pay/icon/',
 	      quantity: quantity
 	    },
 	    function(data) {
 	        console.log(data);
-	        if (data.status=='completed'){
-	        	quantity=data.quantity
-		        updateCoins(parseInt(quantity),'add')
-	        }else{
-	        	alert('支付失败！')
-	        }
-	        
-	        
+	        $.getJSON('pay/pay_detail/',{'data'},function(){
+	        	if (data['result']=='success'){
+	        		quantity=data.quantity
+			        updateCoins(parseInt(quantity),'add')
+	        	}else{
+	        		alert('支付失败！')
+	        	}
+	        })
 	      }
-	  );
-	}
-  
+	  ); */
+	  var data={
+		  payment_id: "495869257196092",
+		  amount: "5.00",
+		  currency: "USD",
+		  quantity: "1", 
+		  request_id: "60046727",
+		  status: "completed", 
+		  signed_request: "7QYHzKqKByA7fjiqJUh2bxFvEdqdvn0n_y1zYiyN6tg.eyJhbGCJxdWFudGl0eSI6IjEiLCJzdGF0dXMiOiJjb21wbGV0ZWQifQ"
+		}
+	  $.getJSON('/pay/pay_detail/',{data:JSON.stringify(data)},function(data){
+		  if (data['result']=='success'){
+	      		quantity=data.quantity
+			        updateCoins(parseInt(quantity),'add')
+	      	}else{
+	      		alert('支付失败！')
+	      	}
+	});
+}
 // Load the SDK Asynchronously
 (function(d){
   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
@@ -568,12 +606,12 @@ function inivteF(){
 function renderMFS(uid) {
 	$.getJSON('/game/confirm_request_life/'+uid,{},function(data){
 		if (data['result']=='success'){
-			$('.count').find('.num1').html('x'+data['count'])
-			 $('.count').find('.num').html('x'+data['count'])
-			alert('发送成功！')
+			/* $('.count').find('.num1').html('x'+data['count'])
+			 $('.count').find('.num').html('x'+data['count']) */
+			 notify('发送成功！')
 			$('#send').parent().remove();
 		}else{
-			alert('类型错误！')
+			 notify('类型错误！')
 		}
 	});
 	 }
@@ -591,6 +629,12 @@ function renderMFS(uid) {
     		    	  console.log(response);
     		    }
     		);
+    }
+    function notify(text){
+    	$('.information').show()
+ 	   $('.information').children().html(text)
+ 	  // $('.information').show(300).delay(3000).hide(300)
+ 	  $('.information').hide(2300)
     }
 </script>
 </body>
