@@ -345,7 +345,6 @@ def pintu_for_facebook(request):
     from apps.game_app.models import get_count,get_game_count_forever
     count=get_count(user.username)+get_game_count_forever(uid)
     apprequset=get_apprequset(request,uid)
-#             request.facebook.graph.delete_object(requestId)
     request.session['apprequest']=apprequset['userUid']
     request.session['uid']=uid
     users=apprequset['users']
@@ -380,5 +379,6 @@ def get_apprequset(request,uid):
             if not userId in userUid:
                 userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
                 userUid.append(userId)
-                users.append({'uid':userId,'username':username,'avatar':userAvatar})    
+                users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
+            request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
