@@ -72,9 +72,9 @@ class Yuanfenjigsaw:
 #             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.uid)}
 #             return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar,cache.get('USER_GAME_COUNT').get(self.uid)]
             return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,
-                                                       'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)}]
+                                                       'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
         else :  
-            return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)}]
+            return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
         
     def generate_pieces(self):
         import random
@@ -91,12 +91,12 @@ class Yuanfenjigsaw:
             temp.add(int(base[i])%7)
         return  temp
 
-def get_count(current_username):
+def get_count(uid):
     user_game_count = cache.get('USER_GAME_COUNT')
-    if user_game_count.get(current_username) == None :
-        user_game_count[current_username] = cache.get('GAME_TIMES')
+    if user_game_count.get(uid) == None :
+        user_game_count[uid] = cache.get('GAME_TIMES')
         cache.set('USER_GAME_COUNT',user_game_count)
-    return cache.get('USER_GAME_COUNT').get(current_username)
+    return cache.get('USER_GAME_COUNT').get(uid)
 
 def set_count(current_username,gameCount):
     user_game_count = cache.get('USER_GAME_COUNT')

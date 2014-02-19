@@ -32,6 +32,8 @@ def pay_detail(request):
             from apps.game_app.models import get_game_count_forever,set_game_count_forever
             set_game_count_forever(uid,get_game_count_forever(uid)+quantity)
         args['result']='success'
+        from apps.game_app.models import get_count
+        args['game_count']=get_count(uid)+get_game_count_forever(uid)
     else:
         args['result']='error'
     json=simplejson.dumps(args)
