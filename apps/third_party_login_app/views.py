@@ -330,9 +330,9 @@ def pintu_for_facebook(request):
         avatar= request.facebook.graph.get_object('me/picture',height=110,width=110)
         updateTime=datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000')
         if me.get('gender')==u'male':
-            gender='F'
-        else:
             gender='M'
+        else:
+            gender='F'
         facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime)
         if 'location' in me.keys():
             facebookUser.location=me.get('location').get('name')
