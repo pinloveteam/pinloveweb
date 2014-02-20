@@ -54,9 +54,9 @@ button{
 #buy_page{
 	position: absolute; 
 	left: 560px; 
-	top: 20px; 
+	top: 100px; 
 	width: 400px;
-	height: 500px;
+	height: 400px;
 	background-color: #f7ffc6;
 	border: solid 2px #000000;
 }
@@ -206,13 +206,6 @@ button{
 	left:30px;
 }
 
-#buy_button{
-	position:absolute;
-	top:15px;
-	left:130px;
-	cursor: pointer;
-}
-
 #invite{
 	height: 440px;
 	width: 641px;
@@ -220,8 +213,6 @@ button{
 	top:100px;
 	left:230px;
 	background-image: url({{STATIC_URL}}img/接受邀请-59.jpg);
-	opacity: 0.8;
-
 }
 .information {
     border: 2px solid #AFF0FF;
@@ -249,13 +240,7 @@ button{
     <div id="container"></div>
     <img onclick="StartGame();" id="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
-    <div class="count" style="position: absolute;top:10px;left: 280px; width: 150px;">
-    	<img src="{{STATIC_URL}}img/拼图-18.png"/>
-    	<span class="num1" >×{{count}}</span>
-    	<img id="buy_button" src="{{STATIC_URL}}img/拼图-62.png"/>
-    </div>
-	<button id="btn2" style="display: none;" onclick="loadStage();">在玩一次</button>
-<div id="card" style="position: absolute;left: 180px; top: 100px;display: none;">
+<div id="card" style="position: absolute;left: 180px; top: 100px;display:none;">
 <div class="close"></div>
 <div class="card">
     <input type="hidden" id='userId'/>
@@ -273,16 +258,13 @@ button{
 	<a  href="javascript:void(0)" onclick="facebook_add_friend();"><div id="friend" class="button_type_3">+</div></a>
 </div>	
 </div>
-<div id="buy_page" style="">
+<div id="buy_page">
 	<div class="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×{{count}}</span></div>
 	<div id="tab">BUY</div>
-	<div class="close"></div>
 <div id="buy">
 	<ul>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">$0.99</span><div class="button_type_1"><a onclick='buyCoins(3)'>buy</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×10</span><span class="text-orange num2" style="margin-left: 41px;">$3.3</span><div class="button_type_1"><a onclick='buyCoins(10)'>buy</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×50</span><span class="text-orange num2" style="margin-left: 41px;">$18</span><div class="button_type_1"><a onclick='buyCoins(50)'>buy</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="{{STATIC_URL}}img/">×1</span><span class="text-orange num2" style="margin-left: 50px;">ask friends</span><div id="requestFriends" class="button_type_1"><a onclick='inivteFriends()'>索要</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 41px;">Ask friend</span><div class="button_type_1"><a onclick='buyCoins(10)'>request</a></div></li>
 	</ul>
 </div>
 </div>
@@ -369,11 +351,14 @@ function loadStage() {
        quick=0;       //加速
         
        function StartGame(){
+    	   for(var i=0;i<pieces;i++){
+            	piecesArray[i].shape.opacity(0.5)
+            }
 	     clearInterval(Time);
          cycle=0;
          StartCycle=2;
          flag=false;
-         Time = setInterval(Star,Speed);
+         //Time = setInterval(Star,Speed);
          $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
         	 if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
@@ -384,8 +369,6 @@ function loadStage() {
         	 $('#card').find('strong').html(data[2]['username']);
         	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
         	 }
-        	 $('.count').find('.num1').html('x'+data[2]['game_count'].toString())
-        	 $('.count').find('.num').html('x'+data[2]['game_count'].toString())
         	 clearInterval(Time);
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
@@ -434,6 +417,7 @@ function loadStage() {
           quick=0;
           clearInterval(Time);
           $('#card').show('slow');
+          set_game_count(data[2]['game_count'].toString())
             }
             if(index>0)
                 prevIndex=index-1;
@@ -464,7 +448,9 @@ function loadStage() {
 			inivteFriends()
 		});
 	});
-	
+	function set_game_count(count){
+		$('.count').find('.num').html('x'+count)
+	}
 </script>
  <script>
 $(document).ready(function() {
@@ -538,8 +524,7 @@ function buyCoins(quantity) {
 	        console.log(data);
 	        $.getJSON('/pay/pay_detail/',{data:JSON.stringify(data)},function(data){
 	  		  if (data['result']=='success'){
-	  			         $('.count').find('.num1').html('x'+data['game_count'].toString())
-        	             $('.count').find('.num').html('x'+data['game_count'].toString())
+        	             set_game_count(data['game_count'].toString())
 	  	      	}else{
 	  	      		alert('支付失败！')
 	  	      	}

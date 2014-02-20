@@ -28,6 +28,7 @@ def init_yuanfenpintu_cache():
     cache.set('GAME_TIMES_REACH_THE_LIMIT',"1")
     cache.set('MATCH_SUCCESS',"2")
     cache.set('TODAY',datetime.date.today())
+    cache.set('CONFIRM_INVITE',{})
     NAMES=['GIRLS','BOYS','USER_GAME_COUNT','USER_GAME_COUNT','USER_GAME_COUNT_FOREVE','INVITE_COUNT']
     for name in NAMES:
         if cache.get(name)==None:

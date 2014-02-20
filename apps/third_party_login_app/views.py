@@ -326,22 +326,7 @@ def pintu_for_facebook(request):
     if FacebookUser.objects.filter(uid=uid).exists():
         me=request.facebook.user
     else:
-        me = request.facebook.graph.get_object(uid)
-        avatar= request.facebook.graph.get_object('me/picture',height=110,width=110)
-        updateTime=datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000')
-        gender=u'F'
-        if me.get('gender')==u'male':
-            gender='M'
-        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime)
-        if 'location' in me.keys():
-            facebookUser.location=me.get('location').get('name')
-        if 'birthday' in me.keys():
-            facebookUser.birthday=datetime.datetime.strptime(me.get('birthday'),'%m/%d/%Y')
-            from datetime import date
-            facebookUser.age=(date.today().year + 1)-facebookUser.birthday.year
-        if not  avatar is None:
-            facebookUser.avatar=avatar.get('url')
-        facebookUser.save()
+     
     #获取游戏次数
     from apps.game_app.models import get_count,get_game_count_forever
     count=get_count(uid)+get_game_count_forever(uid)
@@ -383,3 +368,26 @@ def get_apprequset(request,uid):
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
             request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
+
+def facebook_save(request,uid):
+        me = request.facebook.graph.get_object(uid)
+        friends =request.facebook.graph.get_object(uid+'/friends').get('data')[0]
+        friendList=[]
+        for friend in friends:
+            friendList.append(friend.get('id'))
+        friendList=simplejson.dumps(friendList)
+        avatar= request.facebook.graph.get_object('me/picture',height=110,width=110)
+        updateTime=datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000')
+        gender=u'F'
+        if me.get('gender')==u'male':
+            gender='M'
+        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime,recommendList=friendList)
+        if 'location' in me.keys():
+            facebookUser.location=me.get('location').get('name')
+        if 'birthday' in me.keys():
+            facebookUser.birthday=datetime.datetime.strptime(me.get('birthday'),'%m/%d/%Y')
+            from datetime import date
+            facebookUser.age=(date.today().year + 1)-facebookUser.birthday.year
+        if not  avatar is None:
+            facebookUser.avatar=avatar.get('url')
+        facebookUser.save()

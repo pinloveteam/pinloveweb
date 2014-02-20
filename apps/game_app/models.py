@@ -3,6 +3,7 @@ import datetime
 
 from django.core.cache import cache
 from apps.third_party_login_app.models import FacebookUser
+import simplejson
 
 class Yuanfenjigsaw:
 #     selected_pieces_str = ''
@@ -26,7 +27,7 @@ class Yuanfenjigsaw:
 #         return  self.pieces - cache.get('ALL_PIECE') != set([]) or self.matching_pieces ==  cache.get('ALL_PIECE') or self.matching_pieces == set([])
     
     def achieve_game_times(self):
-        return  cache.get('USER_GAME_COUNT').get(self.uid) == 0
+        return  cache.get('USER_GAME_COUNT').get(self.uid) + get_game_count_forever(self.uid)== 0
     
     def get_matching_user(self):
         
@@ -45,7 +46,10 @@ class Yuanfenjigsaw:
             user_game_count[self.uid] =9
         else:
             if matching_uid != None:
-                user_game_count[self.uid] = user_game_count.get(self.uid) - 1
+                if  user_game_count.get(self.uid)==0:
+                    set_game_count_forever(get_game_count_forever(self.uid)-1)
+                else:
+                    user_game_count[self.uid] = user_game_count.get(self.uid) - 1
         cache.set('USER_GAME_COUNT',user_game_count)
         if matching_uid != None:
             matching_user =FacebookUser.objects.get(uid=matching_uid)
@@ -109,7 +113,49 @@ def reset_game():
     cache.set('GIRLS',{})
     cache.set('BOYS',{})
     cache.set('USER_GAME_COUNT',{})
-    
+
+'''
+判断是否被邀请过
+''' 
+def has_invited(uid,firendId):
+    inviteConfirm= cache.get('CONFIRM_INVITE')
+    if inviteConfirm.get(uid) == None :
+        return False
+    inviteFriends=inviteConfirm.get(uid)
+    if firendId in inviteFriends:
+        return True
+    else:
+        return False
+'''
+接受索要命的好友
+'''
+def add_invite_confirm(uid,firendId):
+    inviteConfirm= cache.get('CONFIRM_INVITE')
+    if inviteConfirm.get(uid) == None :
+        inviteConfirm[uid]=simplejson.dumps([firendId,])
+    else:
+        inviteConfirmFriends=simplejson.loads(inviteConfirm.get(uid))
+        inviteConfirmFriends.add(firendId)
+        inviteConfirm[uid]=simplejson.dumps(inviteConfirmFriends)
+    cache.set('CONFIRM_INVITE',inviteConfirm)
+'''
+清空接受索要命的好友列表
+'''        
+def clear_invite_confirm(uid):
+    inviteConfirm= cache.get('CONFIRM_INVITE')
+    inviteConfirm[uid]=simplejson.dumps([])
+    cache.set('CONFIRM_INVITE',inviteConfirm)
+'''
+获取接受索要命的好友列表
+'''
+def get_invite_confirm_list(uid):
+    inviteConfirm= cache.get('CONFIRM_INVITE')
+    if not uid in inviteConfirm.keys():
+        inviteConfirm[uid]=simplejson.dumps([])
+        cache.set('CONFIRM_INVITE',inviteConfirm)
+        return []
+    else:
+        return simplejson.loads(inviteConfirm.get(uid))
 #############facebook###########
 def get_invite_count(uid):
     invite_count = cache.get('INVITE_COUNT')
