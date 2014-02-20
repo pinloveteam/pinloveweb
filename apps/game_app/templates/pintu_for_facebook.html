@@ -258,6 +258,7 @@ button{
 <div id="card" style="position: absolute;left: 180px; top: 100px;display: none;">
 <div class="close"></div>
 <div class="card">
+    <input type="hidden" id='userId'/>
 	<div class="head head_girl">
 		<img src=".\img\image1.jpeg" class="img-circle">
 	</div>
@@ -268,8 +269,8 @@ button{
 		<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span>杭州</span>
 	</div>
-	<a  href="javascript:void(0)" onclick="facebook_add_friend();"><div id="hi" class="button_type_3">Hi!</div></a>
-	<a  href="javascript:void(0)" onclick="facebook_send_message();"><div id="friend" class="button_type_3">+</div></a>
+	<a  href="javascript:void(0)" onclick="facebook_send_message();"><div id="hi" class="button_type_3">Hi!</div></a>
+	<a  href="javascript:void(0)" onclick="facebook_add_friend();"><div id="friend" class="button_type_3">+</div></a>
 </div>	
 </div>
 <div id="buy_page" style="">
@@ -575,7 +576,7 @@ function buyCoins(quantity) {
 function facebook_send_message() {
 	var userId=$('#userId').val()
     FB.ui({
-        app_id:appId,
+        app_id:'400350543428768',
         method: 'send',
         name: "拼爱 ",
         link: 'https://apps.facebook.com/pinloveloveweb/',
