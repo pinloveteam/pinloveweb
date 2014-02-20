@@ -47,7 +47,7 @@ class Yuanfenjigsaw:
         else:
             if matching_uid != None:
                 if  user_game_count.get(self.uid)==0:
-                    set_game_count_forever(get_game_count_forever(self.uid)-1)
+                    set_game_count_forever(self.uid,get_game_count_forever(self.uid)-1)
                 else:
                     user_game_count[self.uid] = user_game_count.get(self.uid) - 1
         cache.set('USER_GAME_COUNT',user_game_count)
