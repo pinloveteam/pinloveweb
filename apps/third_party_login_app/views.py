@@ -329,17 +329,15 @@ def pintu_for_facebook(request):
         me = request.facebook.graph.get_object(uid)
         avatar= request.facebook.graph.get_object('me/picture',height=110,width=110)
         updateTime=datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000')
+        gender=u'F'
         if me.get('gender')==u'male':
             gender='M'
-        else:
-            gender='F'
         facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime)
         if 'location' in me.keys():
             facebookUser.location=me.get('location').get('name')
         if not  avatar is None:
             facebookUser.avatar=avatar.get('url')
         facebookUser.save()
-        price=0
     #获取游戏次数
     user= FacebookUser.objects.get(uid=uid)
     from apps.game_app.models import get_count,get_game_count_forever
