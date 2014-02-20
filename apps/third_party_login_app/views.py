@@ -326,7 +326,7 @@ def pintu_for_facebook(request):
     if FacebookUser.objects.filter(uid=uid).exists():
         me=request.facebook.user
     else:
-     
+        facebook_save(request,uid)
     #获取游戏次数
     from apps.game_app.models import get_count,get_game_count_forever
     count=get_count(uid)+get_game_count_forever(uid)
