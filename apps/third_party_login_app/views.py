@@ -335,6 +335,10 @@ def pintu_for_facebook(request):
         facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime)
         if 'location' in me.keys():
             facebookUser.location=me.get('location').get('name')
+        if 'birthday' in me.keys():
+            facebookUser.birthday=datetime.datetime.strptime(me.get('birthday'),'%m/%d/%Y')
+            from datetime import date
+            facebookUser.age=(date.today().year + 1)-facebookUser.birthday.year
         if not  avatar is None:
             facebookUser.avatar=avatar.get('url')
         facebookUser.save()

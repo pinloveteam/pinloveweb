@@ -31,6 +31,8 @@ class FacebookUser(models.Model):
     gender=models.CharField(verbose_name=u'性别',max_length='1',choices=GENDER_CHOISE)
     avatar=models.CharField(verbose_name=u'头像',max_length=255,null=True,blank=True,)
     location=models.CharField(verbose_name=u'地址',max_length=125,null=True,blank=True,)
+    birthday=models.DateTimeField(verbose_name=u'生日',null=True,blank=True,)
+    age=models.SmallIntegerField(verbose_name=u'年龄',null=True,blank=True,)
     recommendList=models.TextField(verbose_name=u'已经推荐列表',null=True,blank=True,)
     updateTime=models.DateTimeField(verbose_name='最后更新时间')
     

@@ -47,42 +47,6 @@ html,body{
 	text-align:center; 
 }
 
-/* .hoverbox*/
-.hoverbox
-{
-	margin-top: 10px;
-	width:203px;
-	height:48px;
-	cursor: default;
-	list-style: none;
-}
 
-.hoverbox a
-{
-	cursor: default;
-}
-
-.hoverbox a .preview
-{
-	display: none;
-}
-
-
-.hoverbox img
-{
-    height: 50px;
-    vertical-align: top;
-    width: 50px;
-	max-width: 150px;
-}
-
-.hoverbox li
-{
-	color: inherit;
-	display: inline;
-	float: left;
-	margin: 1px;
-	position: relative;
-}
 
 
