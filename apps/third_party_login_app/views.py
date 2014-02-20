@@ -357,15 +357,15 @@ def pintu_for_facebook(request):
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
-    girls=cache.cache.get('GIRLS')
-    boys=cache.cache.get('BOYS')
-    return render(request,'/game/debug_pintu_cache.html',{'girls':girls,'boys':boys})
+    girls=cache.get('GIRLS')
+    boys=cache.get('BOYS')
+    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
    
 def debug_add_user(request):
     from django.core.cache import cache
     girls=cache.cache.get('GIRLS')
     boys=cache.cache.get('BOYS')
-    return render(request,'debug_pintu_cache.html',{'girls':girls,'boys':boys})
+    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
  
 def get_apprequset(request,uid):
     #获取好友发来的生命请求

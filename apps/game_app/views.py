@@ -52,4 +52,13 @@ def confirm_request_life(request,offset):
         args['result']='error'
     json=simplejson.dumps(args)
     return HttpResponse(json, mimetype='application/javascript')
-        
+'''
+重置缓存数据
+'''       
+def reset_game_cache(request):
+    from apps.game_app.models import reset_game
+    reset_game()
+    from django.core.cache import cache
+    girls=cache.get('GIRLS')
+    boys=cache.get('BOYS')
+    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
