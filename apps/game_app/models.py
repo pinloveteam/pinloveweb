@@ -99,9 +99,9 @@ def get_count(uid):
         cache.set('USER_GAME_COUNT',user_game_count)
     return cache.get('USER_GAME_COUNT').get(uid)
 
-def set_count(current_username,gameCount):
+def set_count(uid,gameCount):
     user_game_count = cache.get('USER_GAME_COUNT')
-    user_game_count[current_username] = gameCount+user_game_count[current_username] 
+    user_game_count[uid] = gameCount+user_game_count[uid] 
     cache.set('USER_GAME_COUNT',user_game_count)
 
 def reset_game():

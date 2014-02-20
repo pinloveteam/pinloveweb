@@ -343,9 +343,8 @@ def pintu_for_facebook(request):
             facebookUser.avatar=avatar.get('url')
         facebookUser.save()
     #获取游戏次数
-    user= FacebookUser.objects.get(uid=uid)
     from apps.game_app.models import get_count,get_game_count_forever
-    count=get_count(user.username)+get_game_count_forever(uid)
+    count=get_count(uid)+get_game_count_forever(uid)
     apprequset=get_apprequset(request,uid)
     request.session['apprequest']=apprequset['userUid']
     request.session['uid']=uid
