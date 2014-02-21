@@ -334,12 +334,16 @@ def pintu_for_facebook(request):
     request.session['apprequest']=apprequset['userUid']
     request.session['uid']=uid
     users=apprequset['users']
+    from apps.game_app.models import get_invite_confirm_list,clear_invite_confirm
+    inviteNonfirmList=get_invite_confirm_list(uid)
+    if not len(inviteNonfirmList)==0:
+        clear_invite_confirm(uid)
     #===========================================================================
     #用作测试
     # from test.facebook import apprequest_test
     # return apprequest_test(request)
     #===========================================================================
-    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':users,'userCount':len(users)})
+    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':users,'userCount':len(users),'inviteNonfirmList':inviteNonfirmList})
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
@@ -349,8 +353,19 @@ def debug_pintu_cache(request):
    
 def debug_add_user(request):
     from django.core.cache import cache
-    girls=cache.cache.get('GIRLS')
-    boys=cache.cache.get('BOYS')
+    girls=cache.get('GIRLS')
+    boys=cache.get('BOYS')
+    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
+
+def debug_update(request):
+    from django.core.cache import cache
+#     type=int(request.GET.get('type'))
+#     if type==1:
+    girls=cache.get('GIRLS')
+    girls['set([0, 1, 5])']= [u'100007247470289',u'1232143242']
+    cache.set('GIRLS',girls)
+    girls=cache.get('GIRLS',girls)
+    boys=cache.get('BOYS')
     return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
  
 def get_apprequset(request,uid):
@@ -371,7 +386,7 @@ def get_apprequset(request,uid):
 
 def facebook_save(request,uid):
         me = request.facebook.graph.get_object(uid)
-        friends =request.facebook.graph.get_object(uid+'/friends').get('data')[0]
+        friends =request.facebook.graph.get_object(uid+'/friends').get('data')
         friendList=[]
         for friend in friends:
             friendList.append(friend.get('id'))

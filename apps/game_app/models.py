@@ -22,6 +22,7 @@ class Yuanfenjigsaw:
         self.pieces = self.generate_pieces()
         self.matching_pieces = self.pieces#与之互补的集合
         self.gender = facebookUser.gender
+        self.recommendList=simplejson.loads(facebookUser.recommendList)
         
 #     def data_unavailable(self):
 #         return  self.pieces - cache.get('ALL_PIECE') != set([]) or self.matching_pieces ==  cache.get('ALL_PIECE') or self.matching_pieces == set([])
@@ -29,18 +30,43 @@ class Yuanfenjigsaw:
     def achieve_game_times(self):
         return  cache.get('USER_GAME_COUNT').get(self.uid) + get_game_count_forever(self.uid)== 0
     
+    def match_uid(self,gender,match_gender):
+        matching_uid=None
+        persons = cache.get(gender)
+        if not  str(self.pieces) in persons.keys():
+            persons[str(self.pieces)]=[self.uid,]
+        else:
+            if not self.uid in  persons[str(self.pieces)]:
+                persons[str(self.pieces)].append(self.uid)
+        cache.set(gender,persons)
+        if cache.get(match_gender).get(str(self.matching_pieces))==None:
+            return None
+        matching_uid_list=cache.get(match_gender).get(str(self.matching_pieces))
+        for uid in matching_uid_list:
+            if not uid in self.recommendList: 
+                matching_uid=uid
+                self.recommendList.append(uid)
+                FacebookUser.objects.filter(uid=self.uid).update(recommendList=simplejson.dumps(self.recommendList))
+        return matching_uid
+    
     def get_matching_user(self):
         
+#         if  self.gender == 'M':
+#             boys = cache.get('BOYS')
+#             boys[str(self.pieces)] = self.uid#如果位男性，则将其存入JIGSW_BOYS
+#             matching_uid = cache.get('GIRLS').get(str(self.matching_pieces))#从JIGSW_GIRLS中寻找与之互补的异性
+#             cache.set('BOYS',boys)
+#         else :
+#             girls = cache.get('GIRLS')
+#             girls[str(self.pieces)] = self.uid
+#             matching_uid =  cache.get('BOYS').get(str(self.matching_pieces))
+#             cache.set('GIRLS',girls)
+            
         if  self.gender == 'M':
-            boys = cache.get('BOYS')
-            boys[str(self.pieces)] = self.uid#如果位男性，则将其存入JIGSW_BOYS
-            matching_uid = cache.get('GIRLS').get(str(self.matching_pieces))#从JIGSW_GIRLS中寻找与之互补的异性
-            cache.set('BOYS',boys)
-        else :
-            girls = cache.get('GIRLS')
-            girls[str(self.pieces)] = self.uid
-            matching_uid =  cache.get('BOYS').get(str(self.matching_pieces))
-            cache.set('GIRLS',girls)
+            matching_uid=self.match_uid('BOYS','GIRLS')
+        else : 
+           matching_uid=self.match_uid('GIRLS','BOYS')
+           
         user_game_count = cache.get('USER_GAME_COUNT')
         if user_game_count.get(self.uid)==None:
             user_game_count[self.uid] =9
@@ -56,6 +82,7 @@ class Yuanfenjigsaw:
         else :
             return None
         return matching_user
+    
     
     def get_match_result(self):
 #         if self.data_unavailable() :
@@ -117,33 +144,33 @@ def reset_game():
 '''
 判断是否被邀请过
 ''' 
-def has_invited(uid,firendId):
+def has_invited(uid,username):
     inviteConfirm= cache.get('CONFIRM_INVITE')
     if inviteConfirm.get(uid) == None :
         return False
     inviteFriends=inviteConfirm.get(uid)
-    if firendId in inviteFriends:
+    if username in inviteFriends:
         return True
     else:
         return False
 '''
 接受索要命的好友
 '''
-def add_invite_confirm(uid,firendId):
+def add_invite_confirm(uid,username):
     inviteConfirm= cache.get('CONFIRM_INVITE')
     if inviteConfirm.get(uid) == None :
-        inviteConfirm[uid]=simplejson.dumps([firendId,])
+        inviteConfirm[uid]=[username,]
     else:
-        inviteConfirmFriends=simplejson.loads(inviteConfirm.get(uid))
-        inviteConfirmFriends.add(firendId)
-        inviteConfirm[uid]=simplejson.dumps(inviteConfirmFriends)
+        inviteConfirmFriends=inviteConfirm.get(uid)
+        inviteConfirmFriends.append(username)
+        inviteConfirm[uid]=inviteConfirmFriends
     cache.set('CONFIRM_INVITE',inviteConfirm)
 '''
 清空接受索要命的好友列表
 '''        
 def clear_invite_confirm(uid):
     inviteConfirm= cache.get('CONFIRM_INVITE')
-    inviteConfirm[uid]=simplejson.dumps([])
+    inviteConfirm[uid]=[]
     cache.set('CONFIRM_INVITE',inviteConfirm)
 '''
 获取接受索要命的好友列表
@@ -151,11 +178,9 @@ def clear_invite_confirm(uid):
 def get_invite_confirm_list(uid):
     inviteConfirm= cache.get('CONFIRM_INVITE')
     if not uid in inviteConfirm.keys():
-        inviteConfirm[uid]=simplejson.dumps([])
-        cache.set('CONFIRM_INVITE',inviteConfirm)
         return []
     else:
-        return simplejson.loads(inviteConfirm.get(uid))
+        return inviteConfirm.get(uid)
 #############facebook###########
 def get_invite_count(uid):
     invite_count = cache.get('INVITE_COUNT')

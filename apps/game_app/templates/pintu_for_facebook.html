@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html>
 <head>
+{{inviteNonfirmList}}
 <style type="text/css">
 
 body{
@@ -292,6 +293,7 @@ button{
 </div>
 <script type="text/javascript">
 var  game_count=null;
+var  type=false;
 var selectedPieces = new Array(),
 	piecesArray=new Array();
 var pieces = 8,
@@ -370,6 +372,7 @@ function loadStage() {
         	 $('#card').find('strong').html(data[2]['username']);
         	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
         	 game_count=data[2]['game_count'].toString()
+        	 type=true
         	 }
         	 clearInterval(Time);
         	 piece = data[1];
@@ -419,7 +422,10 @@ function loadStage() {
           quick=0;
           clearInterval(Time);
           $('#card').show('slow');
-          set_game_count(game_count)
+          if (type){
+        	  set_game_count(game_count)
+          }
+         
             }
             if(index>0)
                 prevIndex=index-1;
@@ -611,6 +617,13 @@ function renderMFS(uid) {
 		if (data['result']=='success'){
 			/* $('.count').find('.num1').html('x'+data['count'])
 			 $('.count').find('.num').html('x'+data['count']) */
+			 game_count=$('#invite').find('.num3')
+			 if (parseInt(game_count.html())-1==0){
+				 $('#invite').hide('slow');
+			 }else{
+				 game_count.html(parseInt(game_count.html())-1);
+			 }
+			 
 			 notify('发送成功！')
 			$('#send').parent().remove();
 		}else{
