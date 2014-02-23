@@ -309,7 +309,7 @@ button{
 			<img src=".\img" class="img-circle">
 		</div>
 		<span id="name"></span>
-		<a id='send' href="javascript:void(0)"><div class="button_type_2">send<span style="color:#FF0000">♥</span></div></a>
+		<a id='send' href="javascript:void(0)"><div class="button_type_3">send<span style="color:#FF0000">♥</span></div></a>
 	</div>	
 </div>
 </div>
@@ -584,7 +584,7 @@ function loadStage() {
 		
 		//接收生命请求
 		function renderMFS(uid) {
-			uid=$(this).parents().find('#uid').val()
+			uid=$(this).parent().parent().find('#uid').val()
 			$.getJSON('/game/confirm_request_life/'+uid,{},function(data){
 				if (data['result']=='success'){
 					/* $('.count').find('.num1').html('x'+data['count'])
@@ -605,7 +605,7 @@ function loadStage() {
 		
 		//邀请好友
 		function inivteF(){
-			uid=$(this).parents().find('#uid').val()
+			uid=$(this).parent().parent().find('#uid').val()
 			FB.ui({method: 'apprequests',
 				  message: 'pinlove',
 				  to: uid
