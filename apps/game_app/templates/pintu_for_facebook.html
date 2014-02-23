@@ -487,7 +487,7 @@ function loadStage() {
 			$('#next').show();
 			page-=4;
 			$('#users').html('');
-			new User(users,page);
+			new User(users,page,3);
 			if(page==0){
 				$(this).hide();
 			}
@@ -497,7 +497,7 @@ function loadStage() {
 			$('#pre').show();
 			page+=4;
 			$('#users').html('');
-			new User(users,page);
+			new User(users,page,3);
 			if(page+4>=users.length){
 				$(this).hide();
 			}
@@ -508,7 +508,7 @@ function loadStage() {
 			$('#next').hide();
 		}
 		if ({{userCount}}>0){
-		new User(users,page);
+		new User(users,page,1);
 		$('#invite').show('slow');
 		}
 		
@@ -529,7 +529,7 @@ function loadStage() {
 					user={'gender':'M','uid':data[i].uid ,'avatar':data[i]. pic_square,'username':data[i].name }
 					 users.push(user)
 				}
-				 new User(users,page);
+				 new User(users,page,2);
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
@@ -554,7 +554,7 @@ function loadStage() {
 		});
 	});
 	
-	window.User = function(Users,m){
+	window.User = function(Users,m,type){
 		for(i=m;i<(m+4>Users.length?Users.length:m+4);i++){
 			gender = Users[i].gender;
 			var template = $('#user').clone();
@@ -572,8 +572,15 @@ function loadStage() {
 			template.find('#uid').val(Users[i].uid)
 			$('#users').append(template.html());
 		}
+		if(type==1){
+			$('.button_type_2').unbind();
+			$('.button_type_2').on('click',renderMFS);
+		}
+		if(type==2){
+			$('.button_type_2').unbind();
+			$('.button_type_2').on('click',inivteF);
+		}
 		
-		$('.button_type_2').on('click',renderMFS);
 		
 		//接收生命请求
 		function renderMFS(uid) {
@@ -594,8 +601,18 @@ function loadStage() {
 				}else{
 					 notify('类型错误！')
 				}
-			});
-			 }
+			});}
+		
+		//邀请好友
+		function inivteF(){
+			uid=$(this).parents().find('#uid').val()
+			FB.ui({method: 'apprequests',
+				  message: 'pinlove',
+				  to: uid
+				}, function(data){
+					console.log(data);
+				});
+		};
 	
 	}
 	
@@ -745,15 +762,6 @@ function inivteFriends(){
 		});
 };
 
-//邀请好友
-function inivteF(){
-	FB.ui({method: 'apprequests',
-		  message: 'pinlove',
-		  to: '100007247470289'
-		}, function(data){
-			console.log(data);
-		});
-};
 
     function deleteRequest() {
       requestId=$('.list-inline').children().children().val()
