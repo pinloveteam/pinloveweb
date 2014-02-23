@@ -40,6 +40,10 @@ body{
 .img-circle,.head{
 	border-radius: 50%;
 }
+#request{
+	position: relative; 
+	left: -10px;
+}
 
 button{
 	margin-top:30px;
@@ -62,7 +66,7 @@ button{
 	border: solid 2px #000000;
 }
 
-.num,.num1,.num3{
+.num,.num1,.num3,.num4{
 	position: absolute; 
 	top: 30px; 
 	font-size:20px;
@@ -147,11 +151,11 @@ button{
 .count{
 	margin: 10px;
 	padding: 10px;
-	width: 100px;
+	width: 130px;
 	height: 40px;
 	background-color: #ffdd71;
 	border: solid 1px #ef3638;
-	border-radius: 15px;
+	border-radius: 50px;
 }
 .head_girl{
 	border:2px solid #f79421;
@@ -176,7 +180,7 @@ button{
 .name_boy{
 	color: #2afeef;
 }
-.users{
+#users{
 	position: relative;	
 	top:110px;
 }
@@ -197,8 +201,8 @@ button{
 #push{
 	cursor: pointer;
 	position: absolute;
-	left: 240px; 
-	top: 240px;
+	left: 245px; 
+	top: 255px;
 }
 
 #game_name{
@@ -215,6 +219,17 @@ button{
 	left:230px;
 	background-image: url({{STATIC_URL}}img/接受邀请-59.jpg);
 }
+
+#pre,#next{
+	position:absolute;
+	top:400px;
+	left:130px;
+	cursor: pointer;
+}
+
+#next{
+	left:430px;
+}
 .information {
     border: 2px solid #AFF0FF;
 	background-color: #FFFFFF;
@@ -230,6 +245,13 @@ button{
  text-align:center;
   padding:10px 0 ;  
   color:#6FD1EF
+}
+.num4{
+     top:50px;
+	left:120px;
+	font-size:35px;
+	color: #ff0000;
+	font-weight:bold;
 }
 </style>
 </style>
@@ -265,29 +287,33 @@ button{
 <div id="buy">
 	<ul>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">$0.99</span><div class="button_type_1"><a onclick='buyCoins(3)'>buy</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 41px;">Ask friend</span><div class="button_type_1"><a onclick='inivteFriends()'>request</a></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 41px;">Ask friend</span><div id='Ask'  class="button_type_1"><span id="request">Request</span></div></li>
 	</ul>
 </div>
 </div>
-{% ifequal userCount 0%}
-{% else %} 
-<div id="invite" style="">
+
+<div id="invite"style="display: none;" >
 	<div class="close"></div>
 	<span class="num3">{{userCount}}</span>
-	<img src="{{STATIC_URL}}img/接受邀请-60.png" style="position: absolute;top:42px;left: 60px;"/>
-	<div class="users">
-	{%if data%}
-	{%for user in data%}
-		<div class="user">
-			<div class="head head_girl"><img src="{{user.avatar}}" class="img-circle"></div>
-			<span class="name_girl">{{user.username}}</span>
-			<a id='send' href="javascript:void(0)" onclick="renderMFS({{user.uid}});"><div class="button_type_2">send<span style="color:#FF0000">♥</span></div></a>
-		</div>
-    {%endfor%}
-    {%endif%}
+	<img id='inviteImg' src="{{STATIC_URL}}img/接受邀请-60.png" style="position: absolute;top:42px;left: 60px;"/>
+	<div id="users">
+
 	</div>
+	<div id="sendALL" class="button_type_2" style="display: none;top: 310px;">sendALL<span style="color:#FF0000">♥</span></div>
+	<div id="pre">上一页</div>
+	<div id="next">下一页</div>
+ <div id="user" style="display: none;">
+	<div class="user">
+	  <input type='hidden' value='' id='uid'>
+		<div id="head" class="head">
+			<img src=".\img" class="img-circle">
+		</div>
+		<span id="name"></span>
+		<a id='send' href="javascript:void(0)"><div class="button_type_2">send<span style="color:#FF0000">♥</span></div></a>
+	</div>	
 </div>
-{% endifequal %}
+</div>
+
 <div id="information" style="display: none;" class='information'>
 <span class="msg"></span>
 </div>
@@ -443,7 +469,8 @@ function loadStage() {
         }
 
 	$(document).ready(function(){
-				
+		page = 0;	
+		$('#pre').hide();
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
 		});
@@ -455,7 +482,122 @@ function loadStage() {
 		$('#button_type_1').click(function(){
 			inivteFriends()
 		});
+		
+		$('#pre').click(function(){
+			$('#next').show();
+			page-=4;
+			$('#users').html('');
+			new User(users,page);
+			if(page==0){
+				$(this).hide();
+			}
+		});
+		
+		$('#next').click(function(){
+			$('#pre').show();
+			page+=4;
+			$('#users').html('');
+			new User(users,page);
+			if(page+4>=users.length){
+				$(this).hide();
+			}
+		});
+		
+		users ={{data|safe}}
+		if ({{userCount}}<4){
+			$('#next').hide();
+		}
+		if ({{userCount}}>0){
+		new User(users,page);
+		$('#invite').show('slow');
+		}
+		
+	     //邀请好友
+		$('#Ask').click(function(){
+		    page = 0;
+			$('#invite').find('.num3').html('ask your friends')
+			$('#invite').find('.num3').removeClass('num3').addClass('num4')
+			$('#inviteImg').remove()
+			$('#users').children().remove()
+			users= new Array();
+			FB.api({
+	                method: 'fql.query',
+	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
+			        },
+					function(data){
+				for(i=0;i<data.length;i++){
+					user={'gender':'M','uid':data[i].uid ,'avatar':data[i]. pic_square,'username':data[i].name }
+					 users.push(user)
+				}
+				 new User(users,page);
+					$('#invite').show('slow');
+				
+			});
+		   // users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
+		    
+		});
+		//发送所有
+		$('#sendALL').click(function(){
+		    var sendUIDs = '';
+		   for(i=0;i<users.length;i++){
+		    sendUIDs  =sendUIDs+users[i].uid+',';
+		   }
+		   // Use FB.ui to send the Request(s)
+		   FB.ui({method: 'apprequests',
+		     to: sendUIDs,
+		     title: 'My Great Invite for fate',
+		     message: 'Check out this fate App!',
+		   }, function(data){
+				console.log(data);
+			});
+		});
 	});
+	
+	window.User = function(Users,m){
+		for(i=m;i<(m+4>Users.length?Users.length:m+4);i++){
+			gender = Users[i].gender;
+			var template = $('#user').clone();
+			var head = template.find('#head');
+			var name = template.find('#name');
+			if(gender=='M'){
+				head.addClass('head_boy');
+				name.addClass('name_boy');
+			}else{
+				head.addClass('head_girl');
+				name.addClass('name_girl');
+			}
+			head.children().attr('src',Users[i].avatar);
+			name.html(Users[i].username);
+			template.find('#uid').val(Users[i].uid)
+			$('#users').append(template.html());
+		}
+		
+		$('.button_type_2').on('click',renderMFS);
+		
+		//接收生命请求
+		function renderMFS(uid) {
+			uid=$(this).parents().find('#uid').val()
+			$.getJSON('/game/confirm_request_life/'+uid,{},function(data){
+				if (data['result']=='success'){
+					/* $('.count').find('.num1').html('x'+data['count'])
+					 $('.count').find('.num').html('x'+data['count']) */
+					 game_count=$('#invite').find('.num3')
+					 if (parseInt(game_count.html())-1==0){
+						 $('#invite').hide('slow');
+					 }else{
+						 game_count.html(parseInt(game_count.html())-1);
+					 }
+					 
+					 notify('发送成功！')
+					$('#send').parent().remove();
+				}else{
+					 notify('类型错误！')
+				}
+			});
+			 }
+	
+	}
+	
 	function set_game_count(count){
 		$('.count').find('.num').html('x'+count)
 	}
@@ -611,26 +753,7 @@ function inivteF(){
 			console.log(data);
 		});
 };
-//接收生命请求
-function renderMFS(uid) {
-	$.getJSON('/game/confirm_request_life/'+uid,{},function(data){
-		if (data['result']=='success'){
-			/* $('.count').find('.num1').html('x'+data['count'])
-			 $('.count').find('.num').html('x'+data['count']) */
-			 game_count=$('#invite').find('.num3')
-			 if (parseInt(game_count.html())-1==0){
-				 $('#invite').hide('slow');
-			 }else{
-				 game_count.html(parseInt(game_count.html())-1);
-			 }
-			 
-			 notify('发送成功！')
-			$('#send').parent().remove();
-		}else{
-			 notify('类型错误！')
-		}
-	});
-	 }
+
     function deleteRequest() {
       requestId=$('.list-inline').children().children().val()
 	  FB.api(requestId, 'delete', function(response) {

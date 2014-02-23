@@ -343,7 +343,7 @@ def pintu_for_facebook(request):
     # from test.facebook import apprequest_test
     # return apprequest_test(request)
     #===========================================================================
-    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':users,'userCount':len(users),'inviteNonfirmList':inviteNonfirmList})
+    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList})
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
@@ -381,7 +381,7 @@ def get_apprequset(request,uid):
                 userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
-            request.facebook.graph.delete_object(requestId)
+#             request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
 
 def facebook_save(request,uid):
