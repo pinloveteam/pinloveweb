@@ -391,8 +391,8 @@ function loadStage() {
          //Time = setInterval(Star,Speed);
          $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
-        	 if(data[0]=='0'){$('#card').find('.card').html('没有匹配用户');}
-        	 if(data[0]=='1'){$('#card').find('.card').html('不能再玩来，明天再来');}
+        	 if(data[0]=='0'){$('#card').find('.card').html('There is no matching user!');}
+        	 if(data[0]=='1'){$('#card').find('.card').html('Number of exhausted, come back tomorrow!');}
         	 if(data[0]=='2'){
         	 $('#card').find('#userId').val(data[2]['uid']);
         	 $('#card').find('.img-circle').attr('src',data[2]['avatar']);
@@ -544,7 +544,7 @@ function loadStage() {
 		    var sendUIDs = '';
 		   for(i=0;i<users.length;i++){
 		    sendUIDs  =sendUIDs+users[i].uid+',';
-		    if ((i!=0) && (i%1==0)){
+		    if ((i!=0) && (i%49==0)){
 				// Use FB.ui to send the Request(s)
 				   FB.ui({method: 'apprequests',
 					     to: sendUIDs,
@@ -648,7 +648,8 @@ window.fbAsyncInit = function() {
     appId      : '400350543428768',
     status     : true,
     cookie     : true,
-    xfbml      : true
+    xfbml      : true,
+    frictionlessRequests : true
   });
 };
 //更新拼爱币
