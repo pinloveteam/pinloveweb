@@ -102,17 +102,13 @@ TEMPLATE_DIRS = (
      # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.="/static/img/logo.png"/></a></d
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PATH,'templates').replace('\\','/'), 
-    os.path.join(PATH,'apps/user_app/templates').replace('\\','/'), 
-    os.path.join(PATH,'apps/upload_avatar/templates').replace('\\','/'), 
-    os.path.join(PATH,'apps/recommend_app/templates').replace('\\','/'), 
-    os.path.join(PATH,'apps/game_app/templates').replace('\\','/'), 
-    os.path.join(PATH,'apps/verification_app/templates').replace('\\','/'),
-    os.path.join(PATH,'apps/message_app/templates').replace('\\','/'),
-    os.path.join(PATH,'apps/friend_dynamic_app/templates').replace('\\','/'), 
-    os.path.join(PATH,'apps/third_party_login_app/templates').replace('\\','/'), 
-    os.path.join(PATH,'apps/pay_app/templates').replace('\\','/'), 
 )
+templates=['templates','apps/user_app/templates','apps/upload_avatar/templates','apps/recommend_app/templates',
+               'apps/game_app/templates','apps/verification_app/templates','apps/message_app/templates','apps/friend_dynamic_app/templates',
+               'apps/pay_app/templates',]
+for template in templates:
+    TEMPLATE_DIRS += (os.path.join(PATH,template).replace('\\','/'),) 
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -319,7 +315,7 @@ from util.cache import init_cache
 init_cache()
 # 本地环境
 # DATABASES = {
-#                  
+#                   
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -344,7 +340,7 @@ init_cache()
 
 #---服务器环境-----
 DATABASES = {
-                   
+                    
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -397,11 +393,12 @@ FACEBOOK_SECRET_KEY = 'fafdcdabccd34c67311c41489de8dcc2'
 FACEBOOK_CANVAS_PAGE = 'https://apps.facebook.com/%s/' % FACEBOOK_APP_ID
 # Optionally set default permissions to request, e.g: ['email', 'user_about_me']
 # FACEBOOK_SCOPE = ['publish_stream','user_location']
-FACEBOOK_SCOPE = ['user_location','user_birthday']
+FACEBOOK_SCOPE = ['user_location','user_birthday','user_photos']
 
 
 # And for local debugging, use one of the debug middlewares and set:
 FACEBOOK_DEBUG_TOKEN = 'CAACEdEose0cBAKqdbQGZAjVZCqAmTQgtxZC7MzYZAI0EpibGvx1PwE0PWb1Knxy20FVpZAUr9RMUdgZBbxAmQSXrB9v6Ta2Cb25WL0DQPxQ6cL0pLZBcI8DqbJJPkSbjE6ZCcPO58QS1D7T5ElMJknLYFa3xhjmkjQkYLJA8PHjWuiZCotsTXiLOShiZBi09oIMW4wAm2A9I8KngZDZD'
 FACEBOOK_DEBUG_UID = '100007203789389'
 FACEBOOK_DEBUG_COOKIE ='AzIUY1rpSMWthv3CUdBFebFV8Z_clRlDazXq1sHPzjQ.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImNvZGUiOiJBUUJ2WnFSSXp5YnEzX0JCZngyYUdyLXB0S0VZZk5xQ2dNOHg2MXd3QVF3U3dvMkdJRUlwSi1MLW13bEtHbHhzbkd6Y2JveV8teFdhb1NHZEhwUzIxTmo0azU2WHJNSmdnSmZhdHI5VVhWRlRuZUxWelV5eURYYnNIV2dzM0h5QjVkTnI2ajI2ckhxbDQxV3lmMFIyRl9INkZQTEdNdXBpS3VKMm14TzhGUXBlQ0tvNGRlQzBjSlN3Slo1RmFhMDZsNmhCZ1A1OEMxQ2NLQlJEUktzVWJ4aFNCcVdqN0xjMkhZZUM3WHRQZGF4WWhUU2Nkby11cThWVzlQdkszOUdWMjlnc1daMnFNbEFkWEQ3Y0ROQjk2S1lEZ2tWbkk4S00wSW9QMnNyU1NsNXU4ODZONGR0LUVYS05NOER6dTdiQng3QXlPeU9nVWZLTWpmTk5Id1l0VW43RSIsImlzc3VlZF9hdCI6MTM5MjYxODc2NCwidXNlcl9pZCI6IjEwMDAwNzIwMzc4OTM4OSJ9'
-FACEBOOK_DEBUG_SIGNEDREQ ='XPn3m1CYQ5JRaF8HZvMYanetCQ9ki2ALuadFYyH0k8c.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTI4Njg4MDAsImlzc3VlZF9hdCI6MTM5Mjg2MzM4Nywib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFDUlljdHJxQVk1MURaQTdHNHl2S214akw1dlFPVk11R0pDSjV2RDFwOFlpa0VvRG5FMUZWSTlMaGhEZTQ0cFc0UU1BcXd1TVpDc2tjc1pDbE1JeWJVcldXSXNsM1pCdXZ0emc2WVJMNU1ZSEtpUUl2Z3ZZUlpDYUpwc01FTE5kakdhdjNjWW5XeWVqaEJTMFFKY2JaQ3pneUEweGdrdWVrSlhnZnQwZThsdE84TnBhQjZLRE9rcnlKeW5qSFNjd1pEWkQiLCJ1c2VyIjp7ImNvdW50cnkiOiJqcCIsImxvY2FsZSI6InpoX0NOIiwiYWdlIjp7Im1pbiI6MTgsIm1heCI6MjB9fSwidXNlcl9pZCI6IjEwMDAwNzQ4NTc5NDA2OCJ9'
+# FACEBOOK_DEBUG_SIGNEDREQ ='lJWoffyJ1jXfSQh1A-Ha8_w-eWl2EeFVOohbFO5RoCU.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTI5NjI0MDAsImlzc3VlZF9hdCI6MTM5Mjk1NTg3Nywib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFNVGplaXZWWW5neDJ1MTE5bGhOS2JSOFpDSHp3QnJkVGNxR3lmd0RhMTVVZmpycGdCSk56RFpBbmJmNUlsdG5hbVBDRHRSSWVSRWgwTWZnN1hTZkZZYzk5em9PWkNJSmhpNEV3b1FJdVFvZEhlanFjQlBQTjFWM1A1dkY4V3Jkck9BZnlrakFHaFpCOXJWT0lEN2k5bXVpcXFaQ2VrS29aQWJYaHRsMDhZMjVmMmdDRGl6WkFmYWtjYWlxcTBQMHdaRFpEIiwidXNlciI6eyJjb3VudHJ5IjoianAiLCJsb2NhbGUiOiJlbl9VUyIsImFnZSI6eyJtaW4iOjIxfX0sInVzZXJfaWQiOiIxMDAwMDcyMDM3ODkzODkifQ'
+FACEBOOK_DEBUG_SIGNEDREQ='    ARIUs8Je2W_w5JhhV-vKAJ2_DgHBllew5ha1ZQVZKNI.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTMyMzk2MDAsImlzc3VlZF9hdCI6MTM5MzIzMzM4Miwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFMR1ZaQWpqcld2R2dwWGM0SnV2M1JPTmRSd01aQWw1cmZXdHk5WDdIMU9OUWcxTU9nSnFTUHZnUXByMEVnM1pDbkNMQ0lUcXVWZ3ZpVjVYZTllWkNvbExOWGl1a1F3UHVFd2xrVGRSRHZqeWFWTnNybmVKWVlBTWVhWkFaQVpBeFdjSFVVVVhWZXJxbGhVN3JyMThTQUc3NVpDZkp5cjJBTnU1NGRkY2NydlBUeWpBRmtMakNGRlhIZmhqZkZucm9BWkRaRCIsInVzZXIiOnsiY291bnRyeSI6ImpwIiwibG9jYWxlIjoiemhfQ04iLCJhZ2UiOnsibWluIjoyMX19LCJ1c2VyX2lkIjoiMTAwMDA3MjAzNzg5Mzg5In0'
