@@ -557,7 +557,8 @@ function loadStage() {
 						});
 			    sendUIDs = '';  
 			   }
-		    if (sendUIDs != ''){
+		   }
+		   if (sendUIDs != ''){
 		    	// Use FB.ui to send the Request(s)
 				   FB.ui({method: 'apprequests',
 					     to: sendUIDs,
@@ -569,7 +570,6 @@ function loadStage() {
 							}
 						});
 		    }
-		   }
 		  
 		});
 	});
