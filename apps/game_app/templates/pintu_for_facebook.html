@@ -101,6 +101,7 @@ button{
 	height: 20px;
 	background-image: url({{STATIC_URL}}img/按钮-16.png);
 	cursor: pointer;
+	text-align: center
 }
 
 .button_type_2{
@@ -543,14 +544,21 @@ function loadStage() {
 		   for(i=0;i<users.length;i++){
 		    sendUIDs  =sendUIDs+users[i].uid+',';
 		   }
-		   // Use FB.ui to send the Request(s)
-		   FB.ui({method: 'apprequests',
-		     to: sendUIDs,
-		     title: 'My Great Invite for fate',
-		     message: 'Check out this fate App!',
-		   }, function(data){
-				console.log(data);
-			});
+		   if ((i!=0) && (i%1==0)){
+			// Use FB.ui to send the Request(s)
+			   FB.ui({method: 'apprequests',
+				     to: sendUIDs,
+				     title: 'My Great Invite for fate',
+				     message: 'Check out this fate App!',
+				   }, function(data){
+						console.log(data);
+						if (data.error_code==4201){
+							break;
+						}
+					});
+		    sendUIDs = '';  
+		   }
+		  
 		});
 	});
 	
