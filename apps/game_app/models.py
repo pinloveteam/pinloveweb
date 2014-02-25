@@ -2,7 +2,7 @@
 import datetime
 
 from django.core.cache import cache
-from apps.third_party_login_app.models import FacebookUser
+from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
 import simplejson
 
 class Yuanfenjigsaw:
@@ -45,8 +45,8 @@ class Yuanfenjigsaw:
         for uid in matching_uid_list:
             if not uid in self.recommendList: 
                 matching_uid=uid
-                self.recommendList.append(uid)
-                FacebookUser.objects.filter(uid=self.uid).update(recommendList=simplejson.dumps(self.recommendList))
+#                 self.recommendList.append(uid)
+#                 FacebookUser.objects.filter(uid=self.uid).update(recommendList=simplejson.dumps(self.recommendList))
         return matching_uid
     
     def get_matching_user(self):
@@ -94,15 +94,14 @@ class Yuanfenjigsaw:
         if matching_user != None :
             username = matching_user.username
             uid=matching_user.uid
-#             city = matching_user.city
-#             age = matching_user.age
-#             avatar_name = matching_user.avatar_name
             city = matching_user.location
             age = matching_user.age
             avatar = matching_user.avatar
-#             return {'status_code':jiglobal.MATCH_SUCCESS,'username':matching_user.user.username,'count':jiglobal.USER_GAME_COUNT.get(self.uid)}
-#             return [cache.get('MATCH_SUCCESS'),pieces,username,city,age,avatar,cache.get('USER_GAME_COUNT').get(self.uid)]
-            return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,
+            #获得照片
+            from django.core import serializers
+            facebookPhotoList = serializers.serialize("json", FacebookPhoto.objects.filter(user_id=uid)[:12])
+            
+            return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,'facebookPhotoList':facebookPhotoList,
                                                        'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
         else :  
             return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]

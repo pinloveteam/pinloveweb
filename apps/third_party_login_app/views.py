@@ -27,7 +27,9 @@ from .setting import (
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from apps.third_party_login_app.models import FacebookUser
+from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
+from djcelery.tests import req
+from apps.the_people_nearby.tt import request
 log=logging.getLogger('customapp.engine')
 
 ##########three paerty login######
@@ -338,6 +340,7 @@ def pintu_for_facebook(request):
     inviteNonfirmList=get_invite_confirm_list(uid)
     if not len(inviteNonfirmList)==0:
         clear_invite_confirm(uid)
+    
     #===========================================================================
     #用作测试
     # from test.facebook import apprequest_test
@@ -381,7 +384,7 @@ def get_apprequset(request,uid):
                 userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
-#             request.facebook.graph.delete_object(requestId)
+            request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
 
 def facebook_save(request,uid):
@@ -406,3 +409,22 @@ def facebook_save(request,uid):
         if not  avatar is None:
             facebookUser.avatar=avatar.get('url')
         facebookUser.save()
+        #保存图片
+        user_photos_save(request,uid)
+        
+        
+        
+        
+def user_photos_save(request,uid):
+    albums=request.facebook.graph.get_object('me/albums')
+    for album in albums.get('data'):
+        photos=request.facebook.graph.get_object('%s%s' %(album.get('id'),'/photos'))
+        for photo in photos.get('data') :
+             id=photo.get('id')
+             smailPhoto=photo.get('picture')
+             bigPhoto=photo.get('source')
+             if 'name' in photo.keys():
+                 description=photo.get('name')
+             else:
+                 description=''
+             FacebookPhoto(id=id,user_id=uid,smailPhoto=smailPhoto,bigPhoto=bigPhoto,description=description).save()

@@ -7,6 +7,7 @@ model ThirdPsartyLogin 第三方登录表
 '''
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import simplejson
 
 PROVIDER_CHOICE=(('0','QQ'),('1','新浪'),('2','facebook'),)
 class ThirdPsartyLogin(models.Model):
@@ -41,3 +42,14 @@ class FacebookUser(models.Model):
         verbose_name_plural = u'facebook用户表'
         db_table = "facebook_user" 
         
+        
+class FacebookPhoto(models.Model):
+    id=models.CharField(verbose_name=u'图片ID',primary_key=True,max_length=125)
+    user=models.ForeignKey(FacebookUser,related_name="user",verbose_name=u'facebook用户')
+    description=models.TextField(verbose_name='说明')
+    smailPhoto=models.CharField(verbose_name=u'缩略图',max_length=255)
+    bigPhoto=models.CharField(verbose_name=u'原图',max_length=255)
+    class Meta:
+        verbose_name = u'facebook照片' 
+        verbose_name_plural = u'facebook照片'
+        db_table = "facebook_photo" 

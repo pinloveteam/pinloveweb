@@ -2,6 +2,7 @@
 <html>
 <head>
 {{inviteNonfirmList}}
+<link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
 <style type="text/css">
 
 body{
@@ -123,17 +124,7 @@ button{
 	top:250px;	
 	left: 200px;
 }
-.close{
-	position:absolute;
-	top: -3%;
-	left:96%;
-	width: 32px;
-	height: 32px;
-	background-image: url({{STATIC_URL}}img/拼图-61.png);
-	cursor: pointer;
-}
-
-#tab{
+.buy{
 	margin-top: 30px;
 	width: 340px;
 	height: 40px;
@@ -144,6 +135,17 @@ button{
 	text-align:center;
 	background-color: #ffdd71;
 }
+.close{
+	position:absolute;
+	top: -3%;
+	left:96%;
+	width: 32px;
+	height: 32px;
+	background-image: url({{STATIC_URL}}img/拼图-61.png);
+	cursor: pointer;
+}
+
+
 
 .text-orange{
 	color: #ff641f;
@@ -181,9 +183,13 @@ button{
 .name_boy{
 	color: #2afeef;
 }
-#users{
-	position: relative;	
-	top:110px;
+
+#users {
+    height: 250px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: relative;
+    top: 110px;
 }
 
 .user{
@@ -254,19 +260,76 @@ button{
 	color: #ff0000;
 	font-weight:bold;
 }
-</style>
+
+/* photo tab */
+.hoverbox
+{
+	margin-top: 10px;
+	cursor: default;
+	list-style: none;
+}
+
+.hoverbox a
+{
+	cursor: default;
+}
+
+.hoverbox a .preview
+{
+	display: none;
+}
+
+
+.hoverbox img
+{
+    height: 70px;
+    vertical-align: top;
+    width: 70px;
+	max-width: 150px;
+}
+
+.hoverbox li
+{
+	color: inherit;
+	display: inline;
+	float: left;
+	margin: 1px;
+	position: relative;
+}
+
+.icon_profile,.icon_photo{
+	background: url("{{STATIC_URL}}img/profile.png") no-repeat;
+	margin-right:3px;
+	display: inline-block;
+    height: 32px;
+    width: 32px;
+}
+.icon_photo{
+	background-image: url("{{STATIC_URL}}img/photo.png");
+}
+
+#tab{
+	position: absolute;
+	top: 340px;
+	left: 20px;
+}
+
+#tab div{
+	display: inline-block;
+	margin-left: 60px;
+}
 </style>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
-
+<script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 </head>
 <body onload="loadStage()">
     <div id="container"></div>
     <img onclick="StartGame();" id="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
-<div id="card" style="position: absolute;left: 180px; top: 100px;display:none;">
+<div id="card" style="position: absolute;left: 180px; top: 100px;display:none;" >
 <div class="close"></div>
-<div class="card">
+<div id="info" class="card" >
     <input type="hidden" id='userId'/>
 	<div class="head head_girl">
 		<img src=".\img\image1.jpeg" class="img-circle">
@@ -281,10 +344,22 @@ button{
 	<a  href="javascript:void(0)" onclick="facebook_send_message();"><div id="hi" class="button_type_3">Hi!</div></a>
 	<a  href="javascript:void(0)" onclick="facebook_add_friend();"><div id="friend" class="button_type_3">+</div></a>
 </div>	
+<div id="photo" style="display:none;">
+	<div class="scroller">
+		<ul class="hoverbox">
+		
+		</ul>
+	</div>
+</div>
+
+<div id="tab">
+	<div class="active"><a href="#info" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></div>
+	<div><a href="#photo" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></div>
+</div>
 </div>
 <div id="buy_page">
 	<div class="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×{{count}}</span></div>
-	<div id="tab">BUY</div>
+	<div class="buy">BUY</div>
 <div id="buy">
 	<ul>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">$0.99</span><div class="button_type_1"><a onclick='buyCoins(3)'>buy</a></div></li>
@@ -300,7 +375,7 @@ button{
 	<div id="users">
 
 	</div>
-	<div id="sendALL" class="button_type_3" style="display: none;top: 310px;">sendALL<span style="color:#FF0000">♥</span></div>
+	<div id="sendALL" class="button_type_3" style="display: none;top: 360px;">sendALL<span style="color:#FF0000">♥</span></div>
 	<div id="pre">上一页</div>
 	<div id="next">下一页</div>
  <div id="user" style="display: none;">
@@ -400,7 +475,12 @@ function loadStage() {
         	 $('#card').find('.age').html(data[2]['age']).next().html(data[2]['city']);
         	 game_count=data[2]['game_count'].toString()
         	 type=true
+        	 facebookPhotoList=data[2]['facebookPhotoList']
+        	 facebookPhotoList=$.parseJSON(facebookPhotoList)
+        	 for(var i=0 ;i<facebookPhotoList.length;i++){
+        		 $('.hoverbox').append('<li><a id="firstlink" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.bigPhoto+' title='+facebookPhotoList[i].fields.description+'"><img alt="demo1" src='+facebookPhotoList[i].fields.smailPhoto+' title='+facebookPhotoList[i].fields.description+'></a></li>')
         	 }
+        	  }
         	 clearInterval(Time);
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
@@ -469,13 +549,35 @@ function loadStage() {
             quick++;
         }
 
+        function contains(obj,arry){
+        	var i = arry.length;
+        		while(i--){
+        			if(arry[i]===obj){
+        				return true;
+        			}
+        		}
+        	return false;	
+        }
+
+        function venobox(){
+        	$('.venobox').venobox({
+        		numeratio: true,
+        		border: '0'
+        	});
+        }
 	$(document).ready(function(){
 		page = 0;	
 		$('#pre').hide();
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
 		});
-		
+		$('#tab').children().click(function(){
+			$('#photo').hide();
+			$('#info').hide();
+			id = $(this).children().attr('href');
+			$(id).show();
+			
+		});
 		$('#buy_button').click(function(){
 			$('#buy_page').show('slow');
 		});
@@ -512,6 +614,7 @@ function loadStage() {
 		new User(users,page,1);
 		$('#invite').show('slow');
 		}
+		venobox();
 		
 	     //邀请好友
 		$('#Ask').click(function(){
@@ -535,8 +638,10 @@ function loadStage() {
 				$('#invite').show('slow');
 				
 			});
-		   // users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
-		    
+		    //users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
+		    new User(users,page,2);
+			 $('#sendALL').show()
+			$('#invite').show('slow');
 		});
 		//发送所有
 		$('#sendALL').click(function(){
@@ -555,9 +660,9 @@ function loadStage() {
 							}
 						});
 			    sendUIDs = '';  
-			   }
+			   } 
 		   }
-		   if (sendUIDs != ''){
+		  if (sendUIDs != ''){
 		    	// Use FB.ui to send the Request(s)
 				   FB.ui({method: 'apprequests',
 					     to: sendUIDs,
@@ -568,13 +673,12 @@ function loadStage() {
 							if (data.error_code==4201){
 							}
 						});
-		    }
-		  
+		    } 
 		});
 	});
 	
 	window.User = function(Users,m,type){
-		for(i=m;i<(m+4>Users.length?Users.length:m+4);i++){
+		for(i=0;i<Users.length;i++){
 			gender = Users[i].gender;
 			var template = $('#user').clone();
 			var head = template.find('#head');
