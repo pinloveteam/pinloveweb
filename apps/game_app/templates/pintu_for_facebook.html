@@ -467,7 +467,7 @@ function loadStage() {
          $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
         	 if(data[0]=='0'){$('#card').find('.card').html('There is no matching user!');}
-        	 if(data[0]=='1'){$('#card').find('.card').html('Number of exhausted, come back tomorrow!');}
+        	 if(data[0]=='1'){$('#card').find('.card').html('Number of exhausted, come back tomorrow!');return;}
         	 if(data[0]=='2'){
         	 $('#card').find('#userId').val(data[2]['uid']);
         	 $('#card').find('.img-circle').attr('src',data[2]['avatar']);
@@ -478,7 +478,7 @@ function loadStage() {
         	 facebookPhotoList=data[2]['facebookPhotoList']
         	 facebookPhotoList=$.parseJSON(facebookPhotoList)
         	 for(var i=0 ;i<facebookPhotoList.length;i++){
-        		 $('.hoverbox').append('<li><a id="firstlink" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.bigPhoto+' title='+facebookPhotoList[i].fields.description+'"><img alt="demo1" src='+facebookPhotoList[i].fields.smailPhoto+' title='+facebookPhotoList[i].fields.description+'></a></li>')
+        	      $('.hoverbox').append('<li><a id="firstlink" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.bigPhoto+' title='+facebookPhotoList[i].fields.description+'><img alt="demo1" src='+facebookPhotoList[i].fields.smailPhoto+' title='+facebookPhotoList[i].fields.description+'></a></li>')
         	 }
         	  }
         	 clearInterval(Time);
