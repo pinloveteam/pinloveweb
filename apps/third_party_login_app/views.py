@@ -28,8 +28,6 @@ from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
-from djcelery.tests import req
-from apps.the_people_nearby.tt import request
 log=logging.getLogger('customapp.engine')
 
 ##########three paerty login######
