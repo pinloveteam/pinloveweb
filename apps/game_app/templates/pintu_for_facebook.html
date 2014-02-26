@@ -924,8 +924,8 @@ function inivteFriends(){
     	$.getJSON('/game/recommend_history/',function(data){
     		str=''
     		for(var i=0;i<data.length;i++){
-    			str=str+'name：'+data.username+' ';
-    			str=str+'city：'+data.location+'\n';
+    			str=str+'name：'+data[i].username+' ';
+    			str=str+'city：'+data[i].location+'\n';
     		}
     		alert(str)
     	});
