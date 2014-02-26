@@ -330,20 +330,22 @@ button{
 <div id="card" style="position: absolute;left: 180px; top: 100px;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
-    <input type="hidden" id='userId'/>
+</div>	
+<div id="info_clone" style="display: none;">	
+   <input type="hidden" id='userId'/>
 	<div class="head head_girl">
 		<img src=".\img\image1.jpeg" class="img-circle">
 	</div>
 	<div class="name" title="22">
-		<h3><strong>王雪</strong></h3>
+		<h3><strong></strong></h3>
 	</div>
 	<div class="tag" >
-		<span class="age">24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span class="city">杭州</span>
+		<span class="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span class="city"></span>
 	</div>
 	<a  href="javascript:void(0)" onclick="facebook_send_message();"><div id="hi" class="button_type_3">Hi!</div></a>
 	<a  href="javascript:void(0)" onclick="facebook_add_friend();"><div id="friend" class="button_type_3">+</div></a>
-</div>	
+</div>
 <div id="photo" style="display:none;">
 	<div class="scroller">
 		<ul class="hoverbox">
@@ -469,16 +471,19 @@ function loadStage() {
         	 if(data[0]=='0'){$('#card').find('.card').html('There is no matching user!');}
         	 if(data[0]=='1'){$('#card').find('.card').html('Number of exhausted, come back tomorrow!');}
         	 if(data[0]=='2'){
-        	 $('#card').find('#userId').val(data[2]['uid']);
-        	 $('#card').find('.img-circle').attr('src',data[2]['avatar']);
-        	 $('#card').find('strong').html(data[2]['username']);
-        	 $('#card').find('.age').html(data[2]['age'].toString()+'岁');
-        	 $('#card').find('.city').html(data[2]['city'])
+        	 var template = $('#info_clone').clone();
+        	 template.find('#userId').val(data[2]['uid']);
+        	 template.find('.img-circle').attr('src',data[2]['avatar']);
+        	 template.find('strong').html(data[2]['username']);
+        	 template.find('.age').html(data[2]['age'].toString()+'岁');
+        	 template.find('.city').html(data[2]['city'])
+        	  $('#info').children().remove();
+        	 $('#info').append(template.children());
         	 game_count=data[2]['game_count'].toString()
         	 type=true
         	 facebookPhotoList=data[2]['facebookPhotoList']
         	 facebookPhotoList=$.parseJSON(facebookPhotoList)
-        	 $('.hoverbox').children()
+        	 $('.hoverbox').children().remove()
         	 for(var i=0 ;i<facebookPhotoList.length;i++){
         	      $('.hoverbox').append('<li><a id="firstlink" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.bigPhoto+' title='+facebookPhotoList[i].fields.description+'><img alt="demo1" src='+facebookPhotoList[i].fields.smailPhoto+' title='+facebookPhotoList[i].fields.description+'></a></li>')
         	 }
