@@ -28,7 +28,7 @@ class Yuanfenjigsaw:
 #         return  self.pieces - cache.get('ALL_PIECE') != set([]) or self.matching_pieces ==  cache.get('ALL_PIECE') or self.matching_pieces == set([])
     
     def achieve_game_times(self):
-        return  cache.get('USER_GAME_COUNT').get(self.uid) + get_game_count_forever(self.uid)== 0
+        return  get_count(self.uid) + get_game_count_forever(self.uid)== 0
     
     def match_uid(self,gender,match_gender):
         matching_uid=None
