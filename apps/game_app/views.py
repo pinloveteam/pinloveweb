@@ -72,8 +72,11 @@ def reset_game_cache(request):
 def recommend_history(request):
     uid=request.session['uid']
     recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
-    from django.core import serializers
-    json=serializers.serialize('json', FacebookUser.objects.filter(uid__in=recommendHistoryList), fields=('uid','username','avatar','location'))
+    facebookUserList=FacebookUser.objects.filter(uid__in=recommendHistoryList)
+    from util.util import model_to_dict
+    facebookUserListDcit=model_to_dict(facebookUserList, fields=['uid','username','avatar','location']) 
+    json=simplejson.dumps(facebookUserListDcit)
+#     from django.core import serializers
+#     json=serializers.serialize('json', FacebookUser.objects.filter(uid__in=recommendHistoryList), fields=('uid','username','avatar','location'))
     return HttpResponse(json, mimetype='application/javascript')
-
 
