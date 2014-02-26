@@ -477,7 +477,7 @@ function loadStage() {
         	 template.find('strong').html(data[2]['username']);
         	 template.find('.age').html(data[2]['age'].toString()+'岁');
         	 template.find('.city').html(data[2]['city'])
-        	  $('#info').children().remove();
+        	  $('#info').html('');
         	 $('#info').append(template.children());
         	 game_count=data[2]['game_count'].toString()
         	 type=true
