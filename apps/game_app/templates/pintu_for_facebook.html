@@ -923,7 +923,7 @@ function inivteFriends(){
     function recommend_hisotry(){
     	$.getJSON('/game/recommend_history/',function(data){
     		str=''
-    		for(var i=0;i<data.lenght;i++){
+    		for(var i=0;i<data.length;i++){
     			str=str+'name：'+data.username+' ';
     			str=str+'city：'+data.location+'\n';
     		}
