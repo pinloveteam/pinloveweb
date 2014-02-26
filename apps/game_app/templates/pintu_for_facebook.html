@@ -318,6 +318,11 @@ button{
 	display: inline-block;
 	margin-left: 60px;
 }
+.recommend_hisotry{
+    position:absolute;
+	top:20px;
+	right:30px;
+}
 </style>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
@@ -327,6 +332,7 @@ button{
     <div id="container"></div>
     <img onclick="StartGame();" id="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
+    <a class="recommend_hisotry" href="javascript:void(0);" onclick='recommend_hisotry()'>匹配记录</a>
 <div id="card" style="position: absolute;left: 180px; top: 100px;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
@@ -914,6 +920,16 @@ function inivteFriends(){
  	  // $('.information').show(300).delay(3000).hide(300)
  	  $('.information').hide(2300)
     }
+    function recommend_hisotry(){
+    	$.getJSON('/game/recommend_history/',function(data){
+    		str=''
+    		for(var i=0;i<data.lenght;i++){
+    			str=str+'name：'+data.username+' ';
+    			str=str+'city：'+data.location+'\n';
+    		}
+    		alert(str)
+    	});
+    	}
 </script>
 </body>
 </html>
