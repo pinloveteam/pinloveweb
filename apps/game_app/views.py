@@ -16,8 +16,8 @@ def jigsaw(request):
 def jigsaw_mobi(request):
     callback = request.GET.get('callback')
     match_result = Yuanfenjigsaw(request).get_match_result()
-    json=simplejson.dumps(match_result)
-    return callback + '('+json+')'
+    json=callback + '('+simplejson.dumps(match_result)+')'
+    return HttpResponse(json)
 def pintu(request):
     from apps.third_party_login_app.models import FacebookUser
     username=FacebookUser.objects.get(uid=request.facebook.uid).username
@@ -73,7 +73,7 @@ def recommend_history(request):
     uid=request.session['uid']
     recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
     from django.core import serializers
-    json=serializers.serialize('json', FacebookUser.objects.filter(uid__in=recommendHistoryList), fields=('uid','username','avatar','avatar'))
+    json=serializers.serialize('json', FacebookUser.objects.filter(uid__in=recommendHistoryList), fields=('uid','username','avatar','location'))
     return HttpResponse(json, mimetype='application/javascript')
 
 
