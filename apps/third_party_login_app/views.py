@@ -397,7 +397,7 @@ def facebook_save(request,uid):
         gender=u'F'
         if me.get('gender')==u'male':
             gender='M'
-        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime,recommendList=friendList)
+        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime,noRecommendList=friendList)
         if 'location' in me.keys():
             facebookUser.location=me.get('location').get('name')
         if 'birthday' in me.keys():

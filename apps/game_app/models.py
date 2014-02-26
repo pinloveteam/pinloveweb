@@ -4,6 +4,7 @@ import datetime
 from django.core.cache import cache
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
 import simplejson
+import logging
 
 class Yuanfenjigsaw:
 #     selected_pieces_str = ''
@@ -22,6 +23,7 @@ class Yuanfenjigsaw:
         self.pieces = self.generate_pieces()
         self.matching_pieces = self.pieces#与之互补的集合
         self.gender = facebookUser.gender
+        self.noRecommendList=simplejson.loads(facebookUser.noRecommendList)
         self.recommendList=simplejson.loads(facebookUser.recommendList)
         
 #     def data_unavailable(self):
@@ -43,10 +45,11 @@ class Yuanfenjigsaw:
             return None
         matching_uid_list=cache.get(match_gender).get(str(self.matching_pieces))
         for uid in matching_uid_list:
-            if not uid in self.recommendList: 
+            if not uid in self.noRecommendList: 
                 matching_uid=uid
-#                 self.recommendList.append(uid)
-#                 FacebookUser.objects.filter(uid=self.uid).update(recommendList=simplejson.dumps(self.recommendList))
+                self.recommendList.append(uid)
+                self.noRecommendList.append(uid)
+                FacebookUser.objects.filter(uid=self.uid).update(noRecommendList=simplejson.dumps(self.noRecommendList),recommendList=simplejson.dumps(self.recommendList))
         return matching_uid
     
     def get_matching_user(self):

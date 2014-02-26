@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
 from apps.game_app.models import Yuanfenjigsaw, get_count
+from apps.third_party_login_app.models import FacebookUser
 
 
 @csrf_exempt
@@ -12,6 +13,11 @@ def jigsaw(request):
     json=simplejson.dumps(match_result)
     return HttpResponse(json, mimetype='application/javascript')
 
+def jigsaw_mobi(request):
+    callback = request.GET.get('callback')
+    match_result = Yuanfenjigsaw(request).get_match_result()
+    json=simplejson.dumps(match_result)
+    return callback + '('+json+')'
 def pintu(request):
     from apps.third_party_login_app.models import FacebookUser
     username=FacebookUser.objects.get(uid=request.facebook.uid).username
@@ -62,3 +68,12 @@ def reset_game_cache(request):
     girls=cache.get('GIRLS')
     boys=cache.get('BOYS')
     return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
+
+def recommend_history(request):
+    uid=request.session['uid']
+    recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
+    from django.core import serializers
+    json=serializers.serialize('json', FacebookUser.objects.filter(uid__in=recommendHistoryList), fields=('uid','username','avatar','avatar'))
+    return HttpResponse(json, mimetype='application/javascript')
+
+

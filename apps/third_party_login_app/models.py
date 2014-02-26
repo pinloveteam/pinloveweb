@@ -34,7 +34,11 @@ class FacebookUser(models.Model):
     location=models.CharField(verbose_name=u'地址',max_length=125,null=True,blank=True,)
     birthday=models.DateTimeField(verbose_name=u'生日',null=True,blank=True,)
     age=models.SmallIntegerField(verbose_name=u'年龄',null=True,blank=True,)
-    recommendList=models.TextField(verbose_name=u'已经推荐列表',null=True,blank=True,)
+    list=simplejson.dumps([])
+    recommendList=models.TextField(verbose_name=u'已经推荐列表',null=True,blank=True,default=list)
+    link=models.CharField(verbose_name=u'主题链接',max_length=255,)
+    #不推荐列表，包括好友和推荐过的
+    noRecommendList=models.TextField(verbose_name=u'不推荐列表',null=True,blank=True,default=list)
     updateTime=models.DateTimeField(verbose_name='最后更新时间')
     
     class Meta:
