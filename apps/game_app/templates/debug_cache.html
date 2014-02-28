@@ -1,15 +1,51 @@
 ﻿<html>
 <head>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+<script>
+//更新用户
+function update(num){
+	var boyinput=null;
+	var pintu=$('#pintu').val()
+	if (num==1){
+		person=$('#boyinput').val()
+	}else{
+		person=$('#grilinput').val()
+	}
+	list=person.split(',');
+	$.getJSON('/game/debug_update/',{type:num,person:JSON.stringify(list),pintu:pintu},function(data){
+		if (num==1){
+			$('#boy').html(JSON.stringify(data['boys']))
+		}else{
+			$('#girl').html(JSON.stringify(data['girls']))
+		}
+	})
+}
+
+//清空
+function clean(){
+	$.getJSON('/game/reset_game/',function(data){
+		update_data(data['boys'],data['girls'])
+	});
+}
+function update_data( boy,girl){
+	$("#boy").html(boy);
+	$("#girl").html(boy);
+}
+</script>
 </head>
 <body>
 
 <table>
 <form action=''>
-  <tr><td>清空缓存</td><td><a href="/game/reset_game/">清空</a></td></tr>
-  <tr><td>男用户</td><td>{{ boys }}</td></tr>
-  <tr><td>添加男用户</td><td><input name="boy" value=""></td></tr>
-  <tr><td>女用户</td><td><pre>{{ girls}}</pre></td></tr>
-  <tr><td>添加女用户</td><td><input name="girls" value=""></td></tr>
+  <tr><td>清空缓存</td><td><a href="javascript:void" onclick="clean();">清空</a></td></tr>
+  <tr><td>模板块数</td><td><input id='pintu' name="boy" value=""></td></tr>
+  <tr><td>男用户</td><td><div id ='boy'>{{ boys }}</div></td></tr>
+  <tr><td>添加男用户</td><td><input id='boyinput' name="boy" value=""><a href="javascript:void(0)" onclick="update(1)">替换</a></td></tr>
+  <tr><td>女用户</td><td><div id ='girl'>{{ girls}}</div></td></tr>
+  <tr><td>添加女用户</td><td><input id='grilinput' name="girls" value=""><a href="javascript:void(0)" onclick="update(2)">update</a></td></tr>
+  <tr><td>确认邀请的次数</td><td><div id='invite_count' >{{invite_count}}</div></td></tr>
+  <tr><td>永久次数</td><td><div id='game_forever' >{{game_forever}}</div></td></tr>
+  
 </form>
 </table>
 

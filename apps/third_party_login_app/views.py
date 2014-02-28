@@ -350,24 +350,28 @@ def debug_pintu_cache(request):
     from django.core.cache import cache
     girls=cache.get('GIRLS')
     boys=cache.get('BOYS')
-    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
-   
-def debug_add_user(request):
-    from django.core.cache import cache
-    girls=cache.get('GIRLS')
-    boys=cache.get('BOYS')
-    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
+    from apps.game_app.models import get_game_count_forever
+    game_forever=get_game_count_forever(request.session['uid'])
+    from apps.game_app.models import get_invite_count
+    invite_count=get_invite_count(request.session['uid'])
+    return render(request,'debug_cache.html',{'girls':girls,'boys':boys,'invite_count':invite_count,'game_forever':game_forever})
 
 def debug_update(request):
     from django.core.cache import cache
-#     type=int(request.GET.get('type'))
-#     if type==1:
+    type=int(request.GET.get('type'))  
+    person=simplejson.loads(request.GET.get('person'))
+    pintu=request.GET.get('pintu')
+    if type==1:
+        type='BOYS'
+    else:
+        type='GIRLS'
+    data=cache.get(type)
+    data[pintu]= person
+    cache.set(type,data)
     girls=cache.get('GIRLS')
-    girls['set([0, 1, 5])']= [u'100007247470289',u'1232143242']
-    cache.set('GIRLS',girls)
-    girls=cache.get('GIRLS',girls)
     boys=cache.get('BOYS')
-    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
+    json=simplejson.dumps({'girls':girls,'boys':boys})
+    return HttpResponse(json)
  
 def get_apprequset(request,uid):
     #获取好友发来的生命请求

@@ -327,10 +327,11 @@ button{
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
+<script type="text/javascript"  src="{{STATIC_URL}}js/debounce-1.0.5.js"></script>
 </head>
 <body onload="loadStage()">
     <div id="container"></div>
-    <img onclick="StartGame();" id="push" src="{{STATIC_URL}}img/push-57.png"/>
+    <img  id="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
     <a class="recommend_hisotry" href="javascript:void(0);" onclick='recommend_hisotry()'>匹配记录</a>
 <div id="card" style="position: absolute;left: 180px; top: 100px;display:none;" >
@@ -599,7 +600,8 @@ function loadStage() {
 			  
 			  
 		page = 0;	
-		$('#pre').hide();
+		$('#push').click($.throttle(StartGame, 5000));
+
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
 		});
@@ -616,26 +618,6 @@ function loadStage() {
 		//请求好友给命
 		$('#button_type_1').click(function(){
 			inivteFriends()
-		});
-		
-		$('#pre').click(function(){
-			$('#next').show();
-			page-=4;
-			$('#users').html('');
-			new User(users,page,3);
-			if(page==0){
-				$(this).hide();
-			}
-		});
-		
-		$('#next').click(function(){
-			$('#pre').show();
-			page+=4;
-			$('#users').html('');
-			new User(users,page,3);
-			if(page+4>=users.length){
-				$(this).hide();
-			}
 		});
 		
 		users ={{data|safe}}
@@ -867,7 +849,7 @@ function facebook_send_message() {
     FB.ui({
         app_id:'400350543428768',
         method: 'send',
-        name: "拼爱 ",
+        name: "fate ",
         link: 'https://apps.facebook.com/400350543428768/',
         to:userId,
 
