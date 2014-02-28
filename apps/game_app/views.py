@@ -18,8 +18,8 @@ def jigsaw_mobi(request):
     match_result = Yuanfenjigsaw(request).get_match_result()
     json=callback + '('+simplejson.dumps(match_result)+')'
     return HttpResponse(json)
+
 def pintu(request):
-    from apps.third_party_login_app.models import FacebookUser
     username=FacebookUser.objects.get(uid=request.facebook.uid).username
     count = get_count(username)
     return render(request, 'pintu.html',{'count':count})
@@ -67,8 +67,12 @@ def reset_game_cache(request):
     from django.core.cache import cache
     girls=cache.get('GIRLS')
     boys=cache.get('BOYS')
-    return render(request,'debug_cache.html',{'girls':girls,'boys':boys})
+    json=simplejson.dumps({'boys':boys,'boys':girls})
+    return HttpResponse(json)
 
+'''
+匹配记录
+'''
 def recommend_history(request):
     uid=request.session['uid']
     recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
@@ -79,4 +83,14 @@ def recommend_history(request):
 #     from django.core import serializers
 #     json=serializers.serialize('json', FacebookUser.objects.filter(uid__in=recommendHistoryList), fields=('uid','username','avatar','location'))
     return HttpResponse(json, mimetype='application/javascript')
+
+'''
+备份拼图游戏
+'''
+def backup_pintu_cache(request):
+    from util.cache import backup_cache
+    backup_cache('PINTU')
+    json=simplejson.dumps({'result':'success'})
+    return HttpResponse(json, mimetype='application/javascript')
+
 
