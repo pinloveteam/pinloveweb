@@ -327,7 +327,6 @@ button{
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
-<script type="text/javascript"  src="{{STATIC_URL}}js/juery_debounce-1.0.5.js"></script>
 </head>
 <body onload="loadStage()">
     <div id="container"></div>
@@ -465,6 +464,7 @@ function loadStage() {
        quick=0;       //加速
         
        function StartGame(){
+    	   $('#push').unbind();
     	   for(var i=0;i<pieces;i++){
             	piecesArray[i].shape.opacity(0.5)
             }
@@ -472,6 +472,7 @@ function loadStage() {
          cycle=0;
          StartCycle=2;
          flag=false;
+         selectedPieces = new Array();
          //Time = setInterval(Star,Speed);
          $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
@@ -549,6 +550,7 @@ function loadStage() {
           $('#card').show('slow');
           $('#photo').hide();
 		  $('#info').show();
+		  $('#push').click(StartGame);
           if (type){
         	  set_game_count(game_count)
           }
@@ -599,7 +601,7 @@ function loadStage() {
 			  });
 			  
 		page = 0;	
-		$('#push').click($.throttle(StartGame, 5000));
+		$('#push').click(StartGame);
 
 		$('.close').click(function(){
 			$(this).parent().hide('slow');

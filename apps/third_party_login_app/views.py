@@ -350,10 +350,8 @@ def debug_pintu_cache(request):
     from django.core.cache import cache
     girls=cache.get('GIRLS')
     boys=cache.get('BOYS')
-    from apps.game_app.models import get_game_count_forever
-    game_forever=get_game_count_forever(request.session['uid'])
-    from apps.game_app.models import get_invite_count
-    invite_count=get_invite_count(request.session['uid'])
+    game_forever= cache.get('USER_GAME_COUNT_FOREVE')
+    invite_count=cache.get('INVITE_COUNT')
     return render(request,'debug_cache.html',{'girls':girls,'boys':boys,'invite_count':invite_count,'game_forever':game_forever})
 
 def debug_update(request):
