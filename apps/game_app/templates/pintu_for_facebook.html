@@ -329,6 +329,7 @@ button{
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 </head>
 <body onload="loadStage()">
+    <a  href="javascript:void(0)" onclick="feeds();">测试code</a>
     <div id="container"></div>
     <img  id="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
@@ -913,6 +914,17 @@ function inivteFriends(){
     		alert(str)
     	});
     	}
+    
+    function feeds(){
+    	FB.ui({
+    		  method: 'feed',
+    		  link: 'https://developers.facebook.com/docs/dialogs/',
+    		  app_id:'400350543428768',
+    		  caption: 'fate',
+    		  description: "an interesting game ",
+              picture: "http://www.pinlove.com/static/img/coin.png"
+    		}, function(response){});
+    }
 </script>
 </body>
 </html>

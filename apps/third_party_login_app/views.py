@@ -327,6 +327,7 @@ def pintu_for_facebook(request):
         me=request.facebook.user
     else:
         facebook_save(request,uid)
+        feed(request)
     #获取游戏次数
     from apps.game_app.models import get_count,get_game_count_forever
     count=get_count(uid)+get_game_count_forever(uid)
@@ -338,13 +339,13 @@ def pintu_for_facebook(request):
     inviteNonfirmList=get_invite_confirm_list(uid)
     if not len(inviteNonfirmList)==0:
         clear_invite_confirm(uid)
-    
+    friendsOnline=friends_online(request)
     #===========================================================================
     #用作测试
     # from test.facebook import apprequest_test
     # return apprequest_test(request)
     #===========================================================================
-    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList})
+    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList,'friendsOnline':friendsOnline})
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
@@ -412,9 +413,27 @@ def facebook_save(request,uid):
         #保存图片
         user_photos_save(request,uid)
         
-        
-        
-        
+def feed(request):
+     attachment={
+             "link": "https://apps.facebook.com/pinloveapp/",
+             "caption": "fate",
+             "description": "an interesting game ",
+             "picture": "http://www.pinlove.com/static/img/coin.png"}
+     message='Invite friends to play the game! fate--->https://apps.facebook.com/pinloveapp/'
+     request.facebook.graph.put_wall_post(message,attachment)       
+   
+def friends_online(request):
+    sql='''SELECT uid,name,online_presence FROM user WHERE
+          online_presence = 'active'
+          AND uid IN (
+            SELECT uid2 FROM friend where uid1 = me()
+          ) '''
+    data=request.facebook.graph.fql(sql)
+    return data
+         
+'''
+保存facebook图片
+'''        
 def user_photos_save(request,uid):
     albums=request.facebook.graph.get_object('me/albums')
     for album in albums.get('data'):
@@ -428,3 +447,8 @@ def user_photos_save(request,uid):
              else:
                  description=''
              FacebookPhoto(id=id,user_id=uid,smailPhoto=smailPhoto,bigPhoto=bigPhoto,description=description).save()
+            
+def test_get_code(request):
+    from apps.third_party_login_app.facebook import auth_url
+    url=auth_url(FaceBookAppID,None,['user_location','user_birthday','user_photos'])
+    return HttpResponseRedirect(url)
