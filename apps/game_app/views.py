@@ -45,7 +45,6 @@ def confirm_request_life(request):
             set_invite_count(offset,invite_count)
         userUid.remove(offset)
         request.session['apprequest']=userUid
-        args['result']='success'
         #添加确认邀请名单
         from apps.third_party_login_app.models import FacebookUser
         user=FacebookUser.objects.get(uid=request.session['uid'])
@@ -56,6 +55,7 @@ def confirm_request_life(request):
 #         from apps.third_party_login_app.models import FacebookUser
 #         username=FacebookUser.objects.get(uid=uid).username
 #         args['count']=get_count(username)+get_game_count_forever(uid)
+    args['result']='success'
     json=simplejson.dumps(args)
     return HttpResponse(json, mimetype='application/javascript')
 '''

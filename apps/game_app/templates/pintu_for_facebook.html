@@ -44,6 +44,12 @@ body{
 	display: inline-block;
 }
 
+.head_ask_friends{
+   width: 50px;
+	height: 50px;
+	margin-left:45px;
+	display: inline-block;
+}
 .img-circle,.head,.record-user{
 	border-radius: 50%;
 }
@@ -739,7 +745,7 @@ function loadStage() {
 			$('#inviteImg').remove()
 			$('#users').children().remove()
 			users= new Array();
-			/* FB.api({
+			FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -752,8 +758,8 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			}); */
-		    users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
+			});
+		    //users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
 		    new User(users,2);
 			 $('#sendALL').show()
 			$('#invite').show('slow');
@@ -828,6 +834,8 @@ function loadStage() {
 		if(type==2){
 			$('.button_type_2').unbind();
 			$('.button_type_2').on('click',inivteF);
+			head.removeClass('.head').addClass('.head_ask_friends')
+			
 		}
 		
 		
