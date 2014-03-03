@@ -815,6 +815,9 @@ function loadStage() {
 			var template = $('#user').clone();
 			var head = template.find('#head');
 			var name = template.find('#name');
+			if(type==1){
+				head.removeClass('.head').addClass('.head_ask_friends')
+			}
 			if(gender=='M'){
 				head.addClass('head_boy');
 				name.addClass('name_boy');
@@ -834,7 +837,6 @@ function loadStage() {
 		if(type==2){
 			$('.button_type_2').unbind();
 			$('.button_type_2').on('click',inivteF);
-			head.removeClass('.head').addClass('.head_ask_friends')
 			
 		}
 		
