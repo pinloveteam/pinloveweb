@@ -206,3 +206,12 @@ def set_game_count_forever(uid,count):
     game_count_forever[uid]=count
     cache.set('USER_GAME_COUNT_FOREVE',game_count_forever)
 
+'''
+获取历史记录返回字典列表
+'''
+def get_recommend_history(uid):
+    recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
+    facebookUserList=FacebookUser.objects.filter(uid__in=recommendHistoryList)
+    from util.util import model_to_dict
+    facebookUserListDcit=model_to_dict(facebookUserList, fields=['uid','username','avatar','location']) 
+    return facebookUserListDcit
