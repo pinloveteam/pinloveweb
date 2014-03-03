@@ -745,7 +745,7 @@ function loadStage() {
 			$('#inviteImg').remove()
 			$('#users').children().remove()
 			users= new Array();
-			FB.api({
+			/* FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -758,9 +758,13 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			});
-		    //users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
-		    new User(users,2);
+			}); */
+		    users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
+		    for (i=0;i<50;i++)
+		    	{
+		    	users.push({'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'})
+		    	}
+			new User(users,2);
 			 $('#sendALL').show()
 			$('#invite').show('slow');
 		});
@@ -874,12 +878,12 @@ function loadStage() {
 				uid=users.find('#uid').val();
 				uidList.push(uid)
 			}
+			var sendUIDs = '';
 			if (uidList.length>50){
-				var sendUIDs = '';
 				for(var i=0;i<50;i++){
-					i=Math.round(Math.random()*uidList.length)
-					sendUIDs  =sendUIDs+uidList[i]+',';
-					delete uidList[i]; 
+					n=Math.round(Math.random()*uidList.length-1)
+					sendUIDs  =sendUIDs+uidList[n]+',';
+					uidList.splice(n,1); 
 				}
 			}else{
 				for(var i=0;i<uidList.length;i++){
