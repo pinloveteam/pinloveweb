@@ -28,6 +28,7 @@ from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
+import urllib2
 log=logging.getLogger('customapp.engine')
 
 ##########three paerty login######
@@ -323,11 +324,12 @@ from apps.third_party_login_app.django_facebook.decorators import canvas_only
 @canvas_only
 def pintu_for_facebook(request):
     uid=request.facebook.user.get('uid')
+#     data=request.facebook.graph.extend_access_token( FaceBookAppID,FaceBookAppSecret)
     if FacebookUser.objects.filter(uid=uid).exists():
         me=request.facebook.user
     else:
         facebook_save(request,uid)
-        feed(request)
+#         feed(request)
     #获取游戏次数
     from apps.game_app.models import get_count,get_game_count_forever
     count=get_count(uid)+get_game_count_forever(uid)
@@ -339,13 +341,26 @@ def pintu_for_facebook(request):
     inviteNonfirmList=get_invite_confirm_list(uid)
     if not len(inviteNonfirmList)==0:
         clear_invite_confirm(uid)
-    friendsOnline=friends_online(request)
+    #获取匹配记录
+    from apps.game_app.models import get_recommend_history
+    facebookUserListDcit=get_recommend_history(uid)
+    #获取在线
+    friendsOnlineUid=friends_online(request)
+    facebookUserList=[]
+    for facebookUserDcit in facebookUserListDcit:
+        if  facebookUserDcit.get("uid") in friendsOnlineUid:
+            facebookUserDcit['online']=1
+        else:
+            facebookUserDcit['online']=0
+        facebookUserList.append(facebookUserDcit)   
+            
     #===========================================================================
     #用作测试
     # from test.facebook import apprequest_test
     # return apprequest_test(request)
     #===========================================================================
-    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList,'friendsOnline':friendsOnline})
+ 
+    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList,'facebookUserList':facebookUserList})
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
@@ -382,10 +397,10 @@ def get_apprequset(request,uid):
             userId=apprequest.get('from').get('id')
             username=apprequest.get('from').get('name')
             if not userId in userUid:
-                userAvatar=request.facebook.graph.get_object(userId+'/picture',height=80,width=80).get('url')
+                userAvatar=FacebookUser.objects.get(uid=uid).avatar
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
-            request.facebook.graph.delete_object(requestId)
+#             request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
 
 def facebook_save(request,uid):
@@ -395,7 +410,7 @@ def facebook_save(request,uid):
         for friend in friends:
             friendList.append(friend.get('id'))
         friendList=simplejson.dumps(friendList)
-        avatar= request.facebook.graph.get_object('me/picture',height=110,width=110)
+        avatar= request.facebook.graph.get_object('me/picture',height=80,width=80)
         updateTime=datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000')
         gender=u'F'
         if me.get('gender')==u'male':
@@ -423,13 +438,16 @@ def feed(request):
      request.facebook.graph.put_wall_post(message,attachment)       
    
 def friends_online(request):
-    sql='''SELECT uid,name,online_presence FROM user WHERE
+    sql='''SELECT uid FROM user WHERE
           online_presence = 'active'
           AND uid IN (
             SELECT uid2 FROM friend where uid1 = me()
           ) '''
-    data=request.facebook.graph.fql(sql)
-    return data
+    friends=request.facebook.graph.fql(sql)
+    friendList=[]
+    for friend in friends['data']:
+        friendList.append(str(friend.get('uid')))
+    return friendList
          
 '''
 保存facebook图片
@@ -450,5 +468,6 @@ def user_photos_save(request,uid):
             
 def test_get_code(request):
     from apps.third_party_login_app.facebook import auth_url
-    url=auth_url(FaceBookAppID,None,['user_location','user_birthday','user_photos'])
-    return HttpResponseRedirect(url)
+    url=auth_url('','https://apps.facebook.com/1435511770015401/',['user_location','user_birthday','user_photos'])
+    data=urllib2.urlopen(url)
+    return HttpResponse(data)

@@ -27,10 +27,12 @@ def pintu(request):
 '''
 邀请好友确认，奖励
 '''
-def confirm_request_life(request,offset):
+def confirm_request_life(request):
     args={}
     userUid=request.session['apprequest']
-    if offset in userUid:
+    uidList=simplejson.loads(request.REQUEST.get('uidList',None))
+    for offset in uidList:
+     if offset in userUid:
         from apps.game_app.models import get_game_count_forever,set_game_count_forever,get_invite_count,set_invite_count
         import logging
         logging.error('%s' % (request.facebook))
@@ -54,8 +56,6 @@ def confirm_request_life(request,offset):
 #         from apps.third_party_login_app.models import FacebookUser
 #         username=FacebookUser.objects.get(uid=uid).username
 #         args['count']=get_count(username)+get_game_count_forever(uid)
-    else:
-        args['result']='error'
     json=simplejson.dumps(args)
     return HttpResponse(json, mimetype='application/javascript')
 '''
@@ -75,13 +75,7 @@ def reset_game_cache(request):
 '''
 def recommend_history(request):
     uid=request.session['uid']
-    recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
-    facebookUserList=FacebookUser.objects.filter(uid__in=recommendHistoryList)
-    from util.util import model_to_dict
-    facebookUserListDcit=model_to_dict(facebookUserList, fields=['uid','username','avatar','location']) 
-    json=simplejson.dumps(facebookUserListDcit)
-#     from django.core import serializers
-#     json=serializers.serialize('json', FacebookUser.objects.filter(uid__in=recommendHistoryList), fields=('uid','username','avatar','location'))
+  
     return HttpResponse(json, mimetype='application/javascript')
 
 '''

@@ -24,11 +24,17 @@ body{
 	box-shadow:2px 2px 10px #909090;/*opera或ie9*/
 }
 
-#card{
-	height:400px;
-	width:300px;
-	border: solid 2px #000000;
-	background-color: #fff9d9;
+#card,#nouser{
+	background-color: #FFF9D9;
+    border: 2px solid #000000;
+    height: 400px;
+    left: 160px;
+    position: absolute;
+    top: 140px;
+    width: 300px;
+}
+#nouser{
+	text-align: center;
 }
 
 .head{
@@ -38,8 +44,15 @@ body{
 	display: inline-block;
 }
 
-.img-circle,.head{
+.img-circle,.head,.record-user{
 	border-radius: 50%;
+}
+.record-user{
+	width: 80px;
+	height: 80px;
+	margin-bottom: 20px;
+	position: relative;
+	left:-26px;
 }
 #request{
 	position: relative; 
@@ -85,14 +98,14 @@ button{
 }
 
 .num3{
-	top:50px;
+	top:15px;
 	left:30px;
 	font-size:35px;
 	color: #ff0000;
 	font-weight:bold;
 }
 
-.button_type_1,.button_type_2,.button_type_3{
+.button_type_1,.button_type_2,.button_type_3,.try_again{
 	position:absolute;
 	padding: 15px 15px 15px 20px;
 	display: inline-block;
@@ -105,16 +118,27 @@ button{
 	text-align: center
 }
 
-.button_type_2{
-	top: 15px;
-	left: 220px;
-	background-image: url({{STATIC_URL}}img/按钮-14.png);
+.button_type_2,.try_again{
+	top: 370px;
+	left: 360px;
+	width: 92px;
+	background-image: url({{STATIC_URL}}img/按钮-65.png);
 }
 
 .button_type_3{
 	background-image: url({{STATIC_URL}}img/按钮-15.png);
 }
+.checkbox,#checkbox1{
+	position:absolute;
+	top: 30px;
+	left: 200px;
+}
 
+#checkbox1{
+	top: 385px;
+	left: 60px;
+	cursor: pointer;
+}
 #hi{
 	top:250px;	
 	left: 20px;
@@ -185,27 +209,35 @@ button{
 }
 
 #users {
-    height: 250px;
+    height: 320px;
     overflow-x: hidden;
     overflow-y: scroll;
     position: relative;
-    top: 110px;
+    top: 50px;
 }
 
 .user{
+	width: 248px;
 	position: relative;	
 	display: inline-block;
-	margin-right: 150px;
+	margin-right: 30px;
+	margin-left: 30px;
 	margin-top: 20px;
+	background-color: #FFFFFF;
+	border: solid 1px #b3b3b3;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
+	-moz-box-shadow: 2px 2px 5px #909090;/*firefox*/
+	-webkit-box-shadow: 2px 2px 5px #909090;/*safari或chrome*/
+	box-shadow:2px 2px 5px #909090;/*opera或ie9*/
+	cursor: pointer;
 }
-
 #buy li {
 	position: relative;
 	list-style-type:none;
 	margin-top: 30px;
 }
 
-#push{
+.push{
 	cursor: pointer;
 	position: absolute;
 	left: 245px; 
@@ -215,7 +247,7 @@ button{
 #game_name{
 	position:absolute;
 	top:20px;
-	left:30px;
+	left:100px;
 }
 
 #invite{
@@ -314,6 +346,34 @@ button{
 	left: 20px;
 }
 
+#record{
+	position: absolute;
+	top:0px;
+	left:-90px;
+	width: 120px;
+	height: 100%;
+	background-color: #ffd2d4;
+	border: solid 1px #f4c696;
+	transition: 1s;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+#record-cover{
+	position: absolute;
+	top:0px;
+	left:10px;
+	width: 20px;
+	height: 100%;
+	background-color: #ffd2d4;
+	transition: 1s;
+}
+
+
+.record-user-list li{
+	list-style-type:none;
+}
+
 #tab div{
 	display: inline-block;
 	margin-left: 60px;
@@ -323,18 +383,24 @@ button{
 	top:20px;
 	right:30px;
 }
+.text-black{
+	position: relative;
+	top:30px;
+	margin-top: 20px;
+	font-size: 20px;
+	Line-height:50px;
+}
 </style>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 </head>
 <body onload="loadStage()">
-    <a  href="javascript:void(0)" onclick="feeds();">测试code</a>
+    <a  href="javascript:void(0)" onclick="test_get_code();">测试code</a>
     <div id="container"></div>
-    <img  id="push" src="{{STATIC_URL}}img/push-57.png"/>
+    <img  class="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
-    <a class="recommend_hisotry" href="javascript:void(0);" onclick='recommend_hisotry()'>匹配记录</a>
-<div id="card" style="position: absolute;left: 180px; top: 100px;display:none;" >
+<div id="card" style="position: absolute;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
 </div>	
@@ -366,6 +432,14 @@ button{
 	<div><a href="#photo" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></div>
 </div>
 </div>
+
+<div id="nouser" style="display: none;">
+	<div class="close"></div>
+	<span class="text-black" id='pair_message'>Sorry,Pairing failed!</span><br />
+	<span class="text-black free_chance">You still have<span style="color: red;"> 1 </span>free chance</span>
+	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
+	<div class="push try_again " style="left:90px; top: 320px;">Play again</div>
+</div>
 <div id="buy_page">
 	<div class="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×{{count}}</span></div>
 	<div class="buy">BUY</div>
@@ -377,28 +451,36 @@ button{
 </div>
 </div>
 
-<div id="invite"style="display: none;" >
+<div id="invite" style="display: none;">
 	<div class="close"></div>
 	<span class="num3">{{userCount}}</span>
-	<img id='inviteImg' src="{{STATIC_URL}}img/接受邀请-60.png" style="position: absolute;top:42px;left: 60px;"/>
+	<img id="inviteImg" src="{{STATIC_URL}}img/接受邀请-60.png" style="position: absolute;top:5px;left: 60px;"/>
 	<div id="users">
 
 	</div>
-	<div id="sendALL" class="button_type_3" style="display: none;top: 360px;">sendALL<span style="color:#FF0000">♥</span></div>
-	<div id="pre">上一页</div>
-	<div id="next">下一页</div>
- <div id="user" style="display: none;">
+<div id="user" style="display: none;">
 	<div class="user">
-	  <input type='hidden' value='' id='uid'>
+	    <input id="uid" type="hidden">
 		<div id="head" class="head">
 			<img src=".\img" class="img-circle">
 		</div>
 		<span id="name"></span>
-		<a id='send' href="javascript:void(0)"><div class="button_type_2">send<span style="color:#FF0000">♥</span></div></a>
+		<input class="checkbox" type="checkbox" name="checkbox1" value="checkbox" > 
 	</div>	
 </div>
+<div id="checkbox1"><input type="checkbox" value="checkbox" ><span style="font-size:20px;color: red;">sellect all</div>
+<div class="button_type_2">send<span style="color:#FF0000">♥</span></div>
 </div>
-
+<div id="record">
+	<span style="color:#8c43c4;font-size: 20px; margin-left: 10px;">record</span>
+	<ul class="record-user-list">
+	    {% for facebookUser in facebookUserList %}
+	       <li><div class="record-user head_boy"><img src="{{facebookUser.avatar}}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.location}}"></div></li>
+	    {% endfor %}
+	</ul>
+</div>
+<div class="record-user head_boy record-user-clone"  style="display: none;"><img src="{" class="img-circle" title=""></div>
+<div id="record-cover"></div>
 <div id="information" style="display: none;" class='information'>
 <span class="msg"></span>
 </div>
@@ -411,7 +493,7 @@ var pieces = 8,
 	size = 400,
 	add = 4;
 	
-var color = new Array("#5fe1ff","#feee8e");
+var color = new Array("#ffd62c","#9164ff");
 var position = new Array({X:add,Y:size/2+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size/2+add,Y:add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2-size/4*Math.sqrt(2)+add},{X:size+add,Y:size/2+add},{X:size/2+size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:size/2+add,Y:size+add},{X:size/2-size/4*Math.sqrt(2)+add,Y:size/2+size/4*Math.sqrt(2)+add},{X:add,Y:size/2+add});
 function loadStage() {
     var stage = new Kinetic.Stage({
@@ -465,7 +547,8 @@ function loadStage() {
        quick=0;       //加速
         
        function StartGame(){
-    	   $('#push').unbind();
+    	   $('#nouser').hide('slow');
+    	   $('.push').unbind();
     	   for(var i=0;i<pieces;i++){
             	piecesArray[i].shape.opacity(0.5)
             }
@@ -477,8 +560,16 @@ function loadStage() {
          //Time = setInterval(Star,Speed);
          $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
-        	 if(data[0]=='0'){$('#card').find('.card').html('There is no matching user!');}
-        	 if(data[0]=='1'){$('#card').find('.card').html('Number of exhausted, come back tomorrow!');}
+        	 if(data[0]=='0'){
+        		 $('#nouser').find('#pair_message').html('Sorry,Pairing failed!');
+        		 $('#nouser').find('.free_chance').show()
+        		  $('#tab').hide()
+        	 }
+        	 if(data[0]=='1'){
+        		 $('#nouser').find('#pair_message').html('Number of exhausted, come back tomorrow!');
+        		 $('#nouser').find('.free_chance').hide()
+        		  $('#tab').hide()
+        		 }
         	 if(data[0]=='2'){
         	 var template = $('#info_clone').clone();
         	 template.find('#userId').val(data[2]['uid']);
@@ -489,17 +580,24 @@ function loadStage() {
         	  $('#info').html('');
         	 $('#info').append(template.children());
         	 game_count=data[2]['game_count'].toString()
+        	 //添加匹配记录
+        	 var record_user=$('.record-user-clone').clone();
+        	 record_user.find('.img-circle').attr('src',data[2]['avatar']);
+        	 record_user.find('.img-circle').attr('title','username:'+data[2]['username']+' '+'location:'+data[2]['city']);
+        	 record_user.removeClass('record-user-clone')
+        	 $('.record-user-list').append("<li>").append(record_user).append('</li>');
         	 type=true
         	 facebookPhotoList=data[2]['facebookPhotoList']
         	 facebookPhotoList=$.parseJSON(facebookPhotoList)
         	 $('.hoverbox').children().remove()
+        	  $('#tab').show()
         	 for(var i=0 ;i<facebookPhotoList.length;i++){
         	      $('.hoverbox').append('<li><a id="firstlink" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.bigPhoto+' title='+facebookPhotoList[i].fields.description+'><img alt="demo1" src='+facebookPhotoList[i].fields.smailPhoto+' title='+facebookPhotoList[i].fields.description+'></a></li>')
         	 }
         	  }
         	 clearInterval(Time);
         	 if(data[0]=='1'){
-        		 $('#card').show('slow');
+        		 $('#nouser').show('slow')
         	 }
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
@@ -548,12 +646,14 @@ function loadStage() {
           quick=0;
           clearInterval(Time);
           venobox();
-          $('#card').show('slow');
-          $('#photo').hide();
-		  $('#info').show();
-		  $('#push').click(StartGame);
+		  $('.push').click(StartGame);
           if (type){
         	  set_game_count(game_count)
+        	  $('#card').show('slow');
+              $('#photo').hide();
+    		  $('#info').show();
+          }else{
+        	  $('#nouser').show('slow');
           }
          
             }
@@ -601,9 +701,11 @@ function loadStage() {
 			    });     
 			  });
 			  
-		page = 0;	
-		$('#push').click(StartGame);
-
+		$('.push').click(StartGame);
+		$('#checkbox1').click(
+				function(){
+					$('#users').find('.checkbox').attr('checked','checked');}
+		);
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
 		});
@@ -623,23 +725,21 @@ function loadStage() {
 		});
 		
 		users ={{data|safe}}
-		if ({{userCount}}<4){
-			$('#next').hide();
-		}
 		if ({{userCount}}>0){
-		new User(users,page,1);
+	    //users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
+		new User(users,1);
 		$('#invite').show('slow');
-		}
+		 } 
 		
 	     //邀请好友
 		$('#Ask').click(function(){
 		    page = 0;
 			$('#invite').find('.num3').html('ask your friends')
-			$('#invite').find('.num3').removeClass('num3').addClass('num4')
+			/* $('#invite').find('.num3').removeClass('num3').addClass('num4') */
 			$('#inviteImg').remove()
 			$('#users').children().remove()
 			users= new Array();
-			FB.api({
+			/* FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -648,16 +748,27 @@ function loadStage() {
 					user={'gender':'M','uid':data[i].uid ,'avatar':data[i]. pic_square,'username':data[i].name }
 					 users.push(user)
 				}
-				 new User(users,page,2);
+				 new User(users,2);
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			});
-		    //users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
-		    new User(users,page,2);
+			}); */
+		    users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
+		    new User(users,2);
 			 $('#sendALL').show()
 			$('#invite').show('slow');
 		});
+	     
+		$('[id^=record]').mouseover(function(){
+			$('#record-cover').animate({left:"102px"},0);
+			$('#record').animate({left:"0px"},0);
+		});
+		
+		$('[id^=record]').mouseout(function(){
+			$('#record-cover').animate({left:"10px"},0);
+			$('#record').animate({left:"-90px"},0);
+		});
+		
 		//发送所有
 		$('#sendALL').click(function(){
 		    var sendUIDs = '';
@@ -692,7 +803,7 @@ function loadStage() {
 		});
 	});
 	
-	window.User = function(Users,m,type){
+	window.User = function(Users,type){
 		for(i=0;i<Users.length;i++){
 			gender = Users[i].gender;
 			var template = $('#user').clone();
@@ -722,20 +833,21 @@ function loadStage() {
 		
 		//接收生命请求
 		function renderMFS(uid) {
-			uid=$(this).parent().parent().find('#uid').val()
-			$.getJSON('/game/confirm_request_life/'+uid,{},function(data){
+			var users=$('#users').find('input[type=checkbox]:checkbox:checked').parent();
+			if (users.length==0){
+				alert('Please choose!');return;
+			}
+			uidList=Array();
+			for(var i=0 ;i<users.length;i++){
+				uid=users.find('#uid').val();
+				uidList.push(uid)
+			}
+			$.getJSON('/game/confirm_request_life/',{uidList:JSON.stringify(uidList)},function(data){
 				if (data['result']=='success'){
 					/* $('.count').find('.num1').html('x'+data['count'])
 					 $('.count').find('.num').html('x'+data['count']) */
-					 game_count=$('#invite').find('.num3')
-					 if (parseInt(game_count.html())-1==0){
-						 $('#invite').hide('slow');
-					 }else{
-						 game_count.html(parseInt(game_count.html())-1);
-					 }
-					 
 					 notify('发送成功！')
-					$('#send').parent().remove();
+					 $('#invite').hide('slow');
 				}else{
 					 notify('类型错误！')
 				}
@@ -743,12 +855,35 @@ function loadStage() {
 		
 		//邀请好友
 		function inivteF(){
-			uid=$(this).parent().parent().find('#uid').val()
+			var users=$('#users').find('input[type=checkbox]:checkbox:checked').parent();
+			if (users.length==0){
+				alert('Please choose!');return;
+			}
+			uidList=Array();
+			for(var i=0 ;i<users.length;i++){
+				uid=users.find('#uid').val();
+				uidList.push(uid)
+			}
+			if (uidList.length>50){
+				var sendUIDs = '';
+				for(var i=0;i<50;i++){
+					i=Math.round(Math.random()*uidList.length)
+					sendUIDs  =sendUIDs+uidList[i]+',';
+					delete uidList[i]; 
+				}
+			}else{
+				for(var i=0;i<uidList.length;i++){
+					sendUIDs  =sendUIDs+uidList[i]+',';
+				}
+			}
 			FB.ui({method: 'apprequests',
-				  message: 'pinlove',
-				  to: uid
-				}, function(data){
+			     to: sendUIDs,
+			     title: 'My Great Invite for fate',
+			     message: 'Check out this fate App!',
+			   }, function(data){
 					console.log(data);
+					if (data.error_code==4201){
+					}
 				});
 		};
 	
@@ -924,6 +1059,11 @@ function inivteFriends(){
     		  description: "an interesting game ",
               picture: "http://www.pinlove.com/static/img/coin.png"
     		}, function(response){});
+    }
+    function test_get_code(){
+    	$.getJSON('/game/test_get_code',function(data){
+    		console.log(data)
+    	})
     }
 </script>
 </body>
