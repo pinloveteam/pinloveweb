@@ -878,6 +878,7 @@ function loadStage() {
 				uid=users.find('#uid').val();
 				uidList.push(uid)
 			}
+			alert(uidList)
 			var sendUIDs = '';
 			if (uidList.length>50){
 				for(var i=0;i<50;i++){
@@ -890,6 +891,7 @@ function loadStage() {
 					sendUIDs  =sendUIDs+uidList[i]+',';
 				}
 			}
+			alert('sendUIDs')
 			FB.ui({method: 'apprequests',
 			     to: sendUIDs,
 			     title: 'My Great Invite for fate',
