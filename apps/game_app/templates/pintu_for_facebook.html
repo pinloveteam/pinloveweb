@@ -474,7 +474,7 @@ button{
 		<input class="checkbox" type="checkbox" name="checkbox1" value="checkbox" > 
 	</div>	
 </div>
-<div id="checkbox1"><input type="checkbox" value="checkbox" ><span style="font-size:20px;color: red;">sellect all</div>
+<div id="checkbox1"><input id="send_all_box" type="checkbox" value="checkbox" ><span style="font-size:20px;color: red;">sellect all</div>
 <div class="button_type_2">send<span style="color:#FF0000">♥</span></div>
 </div>
 <div id="record">
@@ -708,9 +708,10 @@ function loadStage() {
 			  });
 			  
 		$('.push').click(StartGame);
-		$('#checkbox1').click(
+		$('#send_all_box').click(
+				/* if $('#send_all_box').attr('checked') */
 				function(){
-					$('#users').find('.checkbox').attr('checked','checked');}
+					$("[name='checkbox1']").attr('checked','true');}
 		);
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
@@ -759,11 +760,10 @@ function loadStage() {
 				$('#invite').show('slow');
 				
 			}); 
-		   // users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
-		   /*  for (i=0;i<50;i++)
+		   for (i=0;i<5;i++)
 		    	{
-		    	users.push({'gender':'M','uid':'sds','src':'.\img','username':'Hlk01'})
-		    	} */
+		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01'})
+		    	} 
 			new User(users,2);
 			 $('#sendALL').show()
 			$('#invite').show('slow');
@@ -847,13 +847,13 @@ function loadStage() {
 		
 		//接收生命请求
 		function renderMFS(uid) {
-			var users=$('#users').find('input[type=checkbox]:checkbox:checked').parent();
+			var uids=$('#users').find('input[type=checkbox]:checkbox:checked').parent().find('#uid');
 			if (users.length==0){
 				alert('Please choose!');return;
 			}
 			uidList=Array();
-			for(var i=0 ;i<users.length;i++){
-				uid=users.find('#uid').val();
+			for(var i=0 ;i<uids.length;i++){
+				uid=uids[i].value;
 				uidList.push(uid)
 			}
 			$.getJSON('/game/confirm_request_life/',{uidList:JSON.stringify(uidList)},function(data){
@@ -869,13 +869,13 @@ function loadStage() {
 		
 		//邀请好友
 		function inivteF(){
-			var users=$('#users').find('input[type=checkbox]:checkbox:checked').parent();
-			if (users.length==0){
+			var uids=$('#users').find('input[type=checkbox]:checkbox:checked').parent().find('#uid');
+			if (uids.length==0){
 				alert('Please choose!');return;
 			}
 			uidList=Array();
-			for(var i=0 ;i<users.length;i++){
-				uid=users.find('#uid').val();
+			for(var i=0 ;i<uids.length;i++){
+				uid=uids[i].value;
 				uidList.push(uid)
 			}
 			var sendUIDs = '';
@@ -890,7 +890,6 @@ function loadStage() {
 					sendUIDs  =sendUIDs+uidList[i]+',';
 				}
 			}
-			alert(sendUIDs)
 			// Use FB.ui to send the Request(s)
 				   FB.ui({method: 'apprequests',
 					     title: 'My Great Invite for fate',
