@@ -353,13 +353,15 @@ def pintu_for_facebook(request):
         else:
             facebookUserDcit['online']=0
         facebookUserList.append(facebookUserDcit)   
-            
-    #===========================================================================
-    #用作测试
-    # from test.facebook import apprequest_test
-    # return apprequest_test(request)
-    #===========================================================================
- 
+             
+#     facebookUserList=[{'username': u'Love  Pin', 'location': u'Hangzhou, China', 'online': 1, 'uid': u'100007247470289', 
+#      'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/t1/c28.0.80.80/p80x80/1476022_1382326562018913_1553944026_n.jpg'}]
+#     users=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
+#     inviteNonfirmList=[]
+#     return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList,'facebookUserList':facebookUserList})
+    
     return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList,'facebookUserList':facebookUserList})
     
 def debug_pintu_cache(request):   
@@ -400,7 +402,7 @@ def get_apprequset(request,uid):
                 userAvatar=FacebookUser.objects.get(uid=uid).avatar
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
-#             request.facebook.graph.delete_object(requestId)
+            request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
 
 def facebook_save(request,uid):

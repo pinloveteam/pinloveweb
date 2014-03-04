@@ -79,7 +79,7 @@ button{
 #buy_page{
 	position: absolute; 
 	left: 560px; 
-	top: 100px; 
+	top: 130px; 
 	width: 400px;
 	height: 400px;
 	background-color: #f7ffc6;
@@ -402,10 +402,11 @@ button{
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 </head>
 <body onload="loadStage()">
-    <a  href="javascript:void(0)" onclick="test_get_code();">测试code</a>
+    <!--  <a  href="javascript:void(0)" onclick="test_get_code();">测试code</a>-->
     <div id="container"></div>
     <img  class="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
+    <img src="{{STATIC_URL}}img/拼图-68.png" style="position: absolute;top:40px;left: 300px;"/>
 <div id="card" style="position: absolute;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
@@ -442,7 +443,7 @@ button{
 <div id="nouser" style="display: none;">
 	<div class="close"></div>
 	<span class="text-black" id='pair_message'>Sorry,Pairing failed!</span><br />
-	<span class="text-black free_chance">You still have<span style="color: red;"> 1 </span>free chance</span>
+	<span class="text-black free_chance">You still have<span id="user_count" style="color: red;"> {{count}} </span>free chance</span>
 	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
 	<div class="push try_again " style="left:90px; top: 320px;">Play again</div>
 </div>
@@ -906,6 +907,7 @@ function loadStage() {
 	
 	function set_game_count(count){
 		$('.count').find('.num').html('x'+count)
+		$('#user_count').html(count)
 	}
 </script>
  <script>
