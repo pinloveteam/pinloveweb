@@ -50,6 +50,7 @@ class Yuanfenjigsaw:
                 self.recommendList.append(uid)
                 self.noRecommendList.append(uid)
                 FacebookUser.objects.filter(uid=self.uid).update(noRecommendList=simplejson.dumps(self.noRecommendList),recommendList=simplejson.dumps(self.recommendList))
+                break;
         return matching_uid
     
     def get_matching_user(self):
