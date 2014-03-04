@@ -878,8 +878,6 @@ function loadStage() {
 				uid=users.find('#uid').val();
 				uidList.push(uid)
 			}
-			alert(uidList)
-			alert(uidList.length)
 			var sendUIDs = '';
 			if (uidList.length>50){
 				for(var i=0;i<50;i++){
@@ -894,7 +892,7 @@ function loadStage() {
 			}
 			alert(sendUIDs)
 			FB.ui({method: 'apprequests',
-			     to: sendUIDs,
+			     to: '1331861980,1331861980,1331861980,1331861980,1331861980,',
 			     title: 'My Great Invite for fate',
 			     message: 'Check out this fate App!',
 			   }, function(data){
