@@ -891,15 +891,16 @@ function loadStage() {
 				}
 			}
 			alert(sendUIDs)
-			FB.ui({method: 'apprequests',
-			     to: '1331861980,1331861980,1331861980,1331861980,1331861980',
-			     title: 'My Great Invite for fate',
-			     message: 'Check out this fate App!',
-			   }, function(data){
-					console.log(data);
-					if (data.error_code==4201){
-					}
-				});
+			// Use FB.ui to send the Request(s)
+				   FB.ui({method: 'apprequests',
+					     title: 'My Great Invite for fate',
+					     message: 'Check out this fate App!',
+					     to: sendUIDs
+					   }, function(data){
+							console.log(data);
+							if (data.error_code==4201){
+							}
+						});
 		};
 	
 	}
