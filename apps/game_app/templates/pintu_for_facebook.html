@@ -406,7 +406,7 @@ button{
     <div id="container"></div>
     <img  class="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
-    <img src="{{STATIC_URL}}img/拼图-68.png" style="position: absolute;top:40px;left: 300px;"/>
+    <img src="{{STATIC_URL}}img/拼图-68.png" style="position: absolute;top:40px;left: 280px;"/>
 <div id="card" style="position: absolute;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
@@ -571,11 +571,13 @@ function loadStage() {
         		 $('#nouser').find('#pair_message').html('Sorry,Pairing failed!');
         		 $('#nouser').find('.free_chance').show()
         		  $('#tab').hide()
+        		  type=false;
         	 }
         	 if(data[0]=='1'){
         		 $('#nouser').find('#pair_message').html('Number of exhausted, come back tomorrow!');
         		 $('#nouser').find('.free_chance').hide()
         		  $('#tab').hide()
+        		  type=false;
         		 }
         	 if(data[0]=='2'){
         	 var template = $('#info_clone').clone();
@@ -592,6 +594,7 @@ function loadStage() {
         	 record_user.find('.img-circle').attr('src',data[2]['avatar']);
         	 record_user.find('.img-circle').attr('title','username:'+data[2]['username']+' '+'location:'+data[2]['city']);
         	 record_user.removeClass('record-user-clone')
+        	 record_user.show()
         	 $('.record-user-list').append("<li>").append(record_user).append('</li>');
         	 type=true
         	 facebookPhotoList=data[2]['facebookPhotoList']
