@@ -1,7 +1,6 @@
 ﻿<!DOCTYPE HTML>
 <html>
 <head>
-{{inviteNonfirmList}}
 <link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
 <style type="text/css">
 
@@ -111,7 +110,7 @@ button{
 	font-weight:bold;
 }
 
-.button_type_1,.button_type_2,.button_type_3,.try_again{
+.button_type_1,.button_type_2,.button_type_3,.try_again,.share{
 	position:absolute;
 	padding: 15px 15px 15px 20px;
 	display: inline-block;
@@ -124,7 +123,7 @@ button{
 	text-align: center
 }
 
-.button_type_2,.try_again{
+.button_type_2,.share,.try_again{
 	top: 370px;
 	left: 360px;
 	width: 92px;
@@ -165,7 +164,7 @@ button{
 	text-align:center;
 	background-color: #ffdd71;
 }
-.close{
+.close,.recevie_close{
 	position:absolute;
 	top: -3%;
 	left:96%;
@@ -214,7 +213,7 @@ button{
 	color: #2afeef;
 }
 
-#users {
+#users,#recevie_users{
     height: 320px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -256,7 +255,7 @@ button{
 	left:100px;
 }
 
-#invite{
+#invite,#recevie{
 	height: 440px;
 	width: 641px;
 	position:absolute;
@@ -458,6 +457,16 @@ button{
 </div>
 </div>
 
+<div id="recevie" style="display: none;">
+	<div class="recevie_close"></div>
+	<img id="inviteImg" src="{{STATIC_URL}}img/拼图-71.png" style="position: absolute;top:20px;left: 150px;"/>
+	<div id="recevie_users">
+
+	</div>
+	
+<div class="share" style="position: absolute;left: 230px;">thanks&share<span style="color:#FF0000">♥</span></div>
+</div>
+
 <div id="invite" style="display: none;">
 	<div class="close"></div>
 	<span class="num3">{{userCount}}</span>
@@ -584,8 +593,12 @@ function loadStage() {
         	 template.find('#userId').val(data[2]['uid']);
         	 template.find('.img-circle').attr('src',data[2]['avatar']);
         	 template.find('strong').html(data[2]['username']);
-        	 template.find('.age').html(data[2]['age'].toString()+'岁');
-        	 template.find('.city').html(data[2]['city'])
+        	 if (data[2]['age']!=null){
+        		 template.find('.age').html(data[2]['age'].toString()+'岁');
+        	 }
+        	 if (data[2]['age']!=null){
+        		 template.find('.city').html(data[2]['city'])
+        	 }
         	  $('#info').html('');
         	 $('#info').append(template.children());
         	 game_count=data[2]['game_count'].toString()
@@ -720,6 +733,13 @@ function loadStage() {
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
 		});
+		$('.recevie_close').click(function(){
+			$(this).parent().hide('slow');
+			if ({{userCount}}>0){
+				$('#invite').show('slow');
+			}
+		});
+		
 		$('#tab').children().click(function(){
 			$('#photo').hide();
 			$('#info').hide();
@@ -735,12 +755,22 @@ function loadStage() {
 			inivteFriends()
 		});
 		
+		//送你心的好友
+		receiveUsers={{inviteNonfirmList|safe}}
+		if (receiveUsers.length>0){
+			new User(receiveUsers,3);
+			$('#recevie').show('slow');
+		}
+		
+		//请求送心的好友
 		users ={{data|safe}}
 		if ({{userCount}}>0){
 	    //users = [{'gender':'M','uid':'sds','src':'.\img','name':'Hlk01'},{'gender':'M','uid':'22','src':'.\img','name':'Hlk11'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk21'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk3'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk4'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk5'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk6'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'},{'gender':'M','uid':'sds','src':'.\img','name':'Hlk7'}];
 		new User(users,1);
-		$('#invite').show('slow');
-		 } 
+		if (receiveUsers.length<=0){
+			$('#invite').show('slow');
+		  }
+		} 
 		
 	     //邀请好友
 		$('#Ask').click(function(){
@@ -750,7 +780,7 @@ function loadStage() {
 			$('#inviteImg').remove()
 			$('#users').children().remove()
 			users= new Array();
-			FB.api({
+			/* FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -763,11 +793,11 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			}); 
-		   /* for (i=0;i<5;i++)
+			});  */
+		   for (i=0;i<500;i++)
 		    	{
 		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01'})
-		    	}  */
+		    	}  
 			new User(users,2);
 			 $('#sendALL').show()
 			$('#invite').show('slow');
@@ -836,7 +866,13 @@ function loadStage() {
 			head.children().attr('src',Users[i].avatar);
 			name.html(Users[i].username);
 			template.find('#uid').val(Users[i].uid)
-			$('#users').append(template.html());
+			if(type==3){
+				template.find('.checkbox').remove();
+				$('#recevie_users').append(template.html());
+			}else{
+				$('#users').append(template.html());
+			}
+			
 		}
 		if(type==1){
 			$('.button_type_2').unbind();
@@ -846,6 +882,9 @@ function loadStage() {
 			$('.button_type_2').unbind();
 			$('.button_type_2').on('click',inivteF);
 			
+		}
+		if(type==3){
+			$('.share').on('click',share);
 		}
 		
 		
@@ -864,10 +903,10 @@ function loadStage() {
 				if (data['result']=='success'){
 					/* $('.count').find('.num1').html('x'+data['count'])
 					 $('.count').find('.num').html('x'+data['count']) */
-					 notify('发送成功！')
+					 notify('send success!')
 					 $('#invite').hide('slow');
 				}else{
-					 notify('类型错误！')
+					 notify('error type!')
 				}
 			});}
 		
@@ -911,6 +950,19 @@ function loadStage() {
 	function set_game_count(count){
 		$('.count').find('.num').html('x'+count)
 		$('#user_count').html(count)
+	}
+	
+	
+	function share(){
+		$.getJSON('/game/feed_on_wall/',function(data){
+		 if (data['result']=='success'){
+			 notify('share success!');
+		 }else if(data['result']=='nopermission'){
+			 FB.login(function(response) {
+				 console.log(response)
+				 }, {scope: 'publish_action'});
+		 };
+		});
 	}
 </script>
  <script>

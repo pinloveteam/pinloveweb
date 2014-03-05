@@ -30,6 +30,7 @@ def pintu(request):
 def confirm_request_life(request):
     args={}
     userUid=request.session['apprequest']
+    uid=request.session['uid']
     uidList=simplejson.loads(request.REQUEST.get('uidList',None))
     for offset in uidList:
      if offset in userUid:
@@ -47,10 +48,9 @@ def confirm_request_life(request):
         request.session['apprequest']=userUid
         #添加确认邀请名单
         from apps.third_party_login_app.models import FacebookUser
-        user=FacebookUser.objects.get(uid=request.session['uid'])
         from apps.game_app.models import has_invited,add_invite_confirm
-        if not has_invited(offset,user.username):
-            add_invite_confirm(offset,user.username)
+        if not has_invited(offset,uid):
+            add_invite_confirm(offset,uid)
         inviteConfirm= cache.get('CONFIRM_INVITE')
 #         from apps.third_party_login_app.models import FacebookUser
 #         username=FacebookUser.objects.get(uid=uid).username

@@ -158,14 +158,16 @@ def has_invited(uid,username):
         return False
 '''
 接受索要命的好友
+uid  
+confirmUid 给你送心的好友Uid
 '''
-def add_invite_confirm(uid,username):
+def add_invite_confirm(uid,confirmUid):
     inviteConfirm= cache.get('CONFIRM_INVITE')
     if inviteConfirm.get(uid) == None :
-        inviteConfirm[uid]=[username,]
+        inviteConfirm[uid]=[confirmUid,]
     else:
         inviteConfirmFriends=inviteConfirm.get(uid)
-        inviteConfirmFriends.append(username)
+        inviteConfirmFriends.append(confirmUid)
         inviteConfirm[uid]=inviteConfirmFriends
     cache.set('CONFIRM_INVITE',inviteConfirm)
 '''
@@ -183,7 +185,11 @@ def get_invite_confirm_list(uid):
     if not uid in inviteConfirm.keys():
         return []
     else:
-        return inviteConfirm.get(uid)
+        inviteConfirmList=inviteConfirm.get(uid)
+        facebookUserList=FacebookUser.objects.filter(uid__in=inviteConfirmList)
+        from util.util import model_to_dict
+        return model_to_dict(facebookUserList,fields=['uid','username','avatar','gender','location','age'])
+            
 #############facebook###########
 def get_invite_count(uid):
     invite_count = cache.get('INVITE_COUNT')

@@ -13,4 +13,6 @@ url(r'^pintu_for_facebook/$','pintu_for_facebook'),
 url(r'^debug_pintu_cache/$','debug_pintu_cache'),
 url(r'^debug_update/$','debug_update'),
 url(r'^test_get_code/$','test_get_code'),
+url(r'^feed_on_wall/$','feed'),
+
 )

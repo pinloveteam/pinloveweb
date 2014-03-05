@@ -324,6 +324,7 @@ from apps.third_party_login_app.django_facebook.decorators import canvas_only
 @canvas_only
 def pintu_for_facebook(request):
     uid=request.facebook.user.get('uid')
+    request.session['graph']=request.facebook.graph
 #     data=request.facebook.graph.extend_access_token( FaceBookAppID,FaceBookAppSecret)
     if FacebookUser.objects.filter(uid=uid).exists():
         me=request.facebook.user
@@ -359,10 +360,17 @@ def pintu_for_facebook(request):
 #     users=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
 #            {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
 #            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
-#     inviteNonfirmList=[]
-#     return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList,'facebookUserList':facebookUserList})
+#     inviteNonfirmList=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                       { 'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
+#     return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
     
-    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':inviteNonfirmList,'facebookUserList':facebookUserList})
+    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
@@ -370,7 +378,8 @@ def debug_pintu_cache(request):
     boys=cache.get('BOYS')
     game_forever= cache.get('USER_GAME_COUNT_FOREVE')
     invite_count=cache.get('INVITE_COUNT')
-    return render(request,'debug_cache.html',{'girls':girls,'boys':boys,'invite_count':invite_count,'game_forever':game_forever})
+    confirm_invite=cache.get('CONFIRM_INVITE')
+    return render(request,'debug_cache.html',{'girls':girls,'boys':boys,'invite_count':invite_count,'game_forever':game_forever,'confirm_invite':confirm_invite})
 
 def debug_update(request):
     from django.core.cache import cache
@@ -402,7 +411,7 @@ def get_apprequset(request,uid):
                 userAvatar=FacebookUser.objects.get(uid=uid).avatar
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
-            request.facebook.graph.delete_object(requestId)
+#             request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
 
 def facebook_save(request,uid):
@@ -433,11 +442,19 @@ def facebook_save(request,uid):
 def feed(request):
      attachment={
              "link": "https://apps.facebook.com/pinloveapp/",
+             'name':"fate",
              "caption": "fate",
              "description": "an interesting game ",
              "picture": "http://www.pinlove.com/static/img/coin.png"}
      message='Invite friends to play the game! fate--->https://apps.facebook.com/pinloveapp/'
-     request.facebook.graph.put_wall_post(message,attachment)       
+     graph=request.session['graph']
+     permissions=graph.permissions()
+     if permissions.get('publish_actions',False):
+         graph.put_wall_post(message,attachment)   
+         json=simplejson.dumps({'result':'success'}) 
+     else:
+         json=simplejson.dumps({'result':'nopermission'}) 
+     return HttpResponse(json)   
    
 def friends_online(request):
     sql='''SELECT uid FROM user WHERE
