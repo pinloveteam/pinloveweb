@@ -29,6 +29,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
 import urllib2
+from django.utils import simplejson
 log=logging.getLogger('customapp.engine')
 
 ##########three paerty login######
@@ -447,6 +448,12 @@ def feed(request):
              "description": "an interesting game ",
              "picture": "http://www.pinlove.com/static/img/coin.png"}
      message='Invite friends to play the game! fate--->https://apps.facebook.com/pinloveapp/'
+     authResponse=request.REQUEST.get('authResponse',False)
+     if authResponse:
+        authResponse=simplejson.loads(authResponse)
+        from apps.third_party_login_app.facebook import GraphAPI
+        graph=GraphAPI(access_token=authResponse.accessToken, timeout=authResponse.expiresIn)
+        request.session['graph']=graph
      graph=request.session['graph']
      permissions=graph.permissions()
      if permissions.get('publish_actions',False):
