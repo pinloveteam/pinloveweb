@@ -780,7 +780,7 @@ function loadStage() {
 			$('#inviteImg').remove()
 			$('#users').children().remove()
 			users= new Array();
-			/* FB.api({
+		    FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -793,13 +793,12 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			});  */
-		   for (i=0;i<500;i++)
+			});
+		   /* for (i=0;i<500;i++)
 		    	{
 		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01'})
-		    	}  
+		    	}   */
 			new User(users,2);
-			 $('#sendALL').show()
 			$('#invite').show('slow');
 		});
 	     
