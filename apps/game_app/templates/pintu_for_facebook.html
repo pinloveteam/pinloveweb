@@ -961,16 +961,15 @@ function loadStage() {
 			 FB.login(function(response) {
 				 console.log(response)
 				 if(response["status"]=="connected"){
-					 $.getJSON('/game/feed_on_wall/'{authResponse:JSON.stringify(response['authResponse'])},function(data){
+					 $.getJSON('/game/feed_on_wall/',{authResponse:JSON.stringify(response['authResponse'])},function(data){
 						 if (data['result']=='success'){
 							 notify('share success!');
-						 }
 					 }
 					 $('.recevie_close').click();
-				 }
-				 }, {scope: 'publish_actions'});
-		 };
-		});
+				 })
+				 }}, {scope: 'publish_actions'});
+	}
+	})
 	}
 </script>
  <script>
