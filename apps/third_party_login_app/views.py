@@ -452,7 +452,7 @@ def feed(request):
      if authResponse:
         authResponse=simplejson.loads(authResponse)
         from apps.third_party_login_app.facebook import GraphAPI
-        graph=GraphAPI(access_token=authResponse.accessToken, timeout=authResponse.expiresIn)
+        graph=GraphAPI(access_token=authResponse.get('accessToken'), timeout=authResponse.get('expiresIn'))
         request.session['graph']=graph
      graph=request.session['graph']
      permissions=graph.permissions()
