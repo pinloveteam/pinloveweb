@@ -595,6 +595,8 @@ function loadStage() {
         	 if (data[2]['username'].length>26){
         		 var username=data[2]['username'].substring(0,26)
         		 template.find('strong').html(username+'...');
+        	 }else{
+        		 template.find('strong').html(data[2]['username']);
         	 }
         	 template.find('strong').attr('title',data[2]['username'])
         	 if (data[2]['age']!=null){
