@@ -960,7 +960,7 @@ function loadStage() {
 		 }else if(data['result']=='nopermission'){
 			 FB.login(function(response) {
 				 console.log(response)
-				 }, {scope: 'publish_action'});
+				 }, {scope: 'publish_actions'});
 		 };
 		});
 	}
