@@ -9,7 +9,7 @@ class DjangoFacebook(object):
     def __init__(self, user):
         self.user = user
         self.uid = user['uid']
-        self.graph = facebook.GraphAPI(user['access_token'])
+        self.graph = facebook.GraphAPI(user['access_token'],user['expires'])
 
 
 class FacebookDebugCanvasMiddleware(object):
@@ -100,6 +100,7 @@ class FacebookMiddleware(object):
                 fb_user['method'] = 'canvas'
                 fb_user['uid'] = data['user_id']
                 fb_user['access_token'] = data['oauth_token']
+                fb_user['expires']=data['expires']
         return fb_user
 
     def get_fb_user(self, request):

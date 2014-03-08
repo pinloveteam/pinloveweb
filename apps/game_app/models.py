@@ -101,12 +101,13 @@ class Yuanfenjigsaw:
             city = matching_user.location
             age = matching_user.age
             avatar = matching_user.avatar
+            smallAvatar=matching_user.smallAvatar
             #获得照片
             from django.core import serializers
             facebookPhotoList = serializers.serialize("json", FacebookPhoto.objects.filter(user_id=uid)[:12])
             
             return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,'facebookPhotoList':facebookPhotoList,
-                                                       'avatar':avatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
+                                                       'avatar':avatar,'smallAvatar':smallAvatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
         else :  
             return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
         
@@ -143,6 +144,7 @@ def reset_game():
     cache.set('GIRLS',{})
     cache.set('BOYS',{})
     cache.set('USER_GAME_COUNT',{})
+    cache.set('INVITE_IN_DAY',{})
 
 '''
 判断是否被邀请过
@@ -189,7 +191,26 @@ def get_invite_confirm_list(uid):
         facebookUserList=FacebookUser.objects.filter(uid__in=inviteConfirmList)
         from util.util import model_to_dict
         return model_to_dict(facebookUserList,fields=['uid','username','avatar','gender','location','age'])
-            
+'''
+一天之内受过邀请的好友uid
+'''   
+def get_invite_in_day(uid):
+    inviteInDay=cache.get('INVITE_IN_DAY')
+    if not uid in inviteInDay.keys():
+        return []
+    else:
+        inviteInDayList=inviteInDay.get(uid)
+        return inviteInDayList
+
+def add_invite_in_day(uid,inviteUid):         
+    inviteInDay= cache.get('INVITE_IN_DAY')
+    if inviteInDay.get(uid) == None :
+        inviteInDay[uid]=[inviteUid,]
+    else:
+        inviteInDays=inviteInDay.get(uid)
+        inviteInDays.append(inviteUid)
+        inviteInDay[uid]=inviteInDays
+    cache.set('INVITE_IN_DAY',inviteInDay)
 #############facebook###########
 def get_invite_count(uid):
     invite_count = cache.get('INVITE_COUNT')
@@ -220,5 +241,5 @@ def get_recommend_history(uid):
     recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
     facebookUserList=FacebookUser.objects.filter(uid__in=recommendHistoryList)
     from util.util import model_to_dict
-    facebookUserListDcit=model_to_dict(facebookUserList, fields=['uid','username','avatar','location']) 
+    facebookUserListDcit=model_to_dict(facebookUserList, fields=['uid','username','smallAvatar','location','age','link']) 
     return facebookUserListDcit

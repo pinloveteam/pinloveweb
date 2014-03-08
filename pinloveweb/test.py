@@ -4,6 +4,7 @@ import datetime
 import re
 import logging
 from pinloveweb.settings import PATH
+from apps.third_party_login_app.models import FacebookPhoto
 
 
 
@@ -58,5 +59,7 @@ from pinloveweb.settings import PATH
 #         logger.warn("test error")
 #         logging.exception('Got exception on main handler')
 # >>>>>>> Stashed changes 1386963224.48
-from django.core.cache import cache
-cache.set(1, [1,])
+from apps.third_party_login_app.models import FacebookPhotoEncoder
+facebookPhotoList=FacebookPhoto.objects.filter(user_id="100007571047423")[:12]
+from django.utils import simplejson
+facebookPhotoList=simplejson.dumps(facebookPhotoList,cls=FacebookPhotoEncoder)

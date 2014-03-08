@@ -357,7 +357,7 @@ def pintu_for_facebook(request):
         facebookUserList.append(facebookUserDcit)   
              
 #     facebookUserList=[{'username': u'Love  Pin', 'location': u'Hangzhou, China', 'online': 1, 'uid': u'100007247470289', 
-#      'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/t1/c28.0.80.80/p80x80/1476022_1382326562018913_1553944026_n.jpg'}]
+#      'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/t1/c28.0.80.80/p80x80/1476022_1382326562018913_1553944026_n.jpg','smallAvatar':'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t5/211329_100007247470289_259768164_q.jpg'}]
 #     users=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
 #            {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
 #            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
@@ -380,7 +380,12 @@ def debug_pintu_cache(request):
     game_forever= cache.get('USER_GAME_COUNT_FOREVE')
     invite_count=cache.get('INVITE_COUNT')
     confirm_invite=cache.get('CONFIRM_INVITE')
-    return render(request,'debug_cache.html',{'girls':girls,'boys':boys,'invite_count':invite_count,'game_forever':game_forever,'confirm_invite':confirm_invite})
+    from apps.common_app.models import BackupCache
+    backupCaches=BackupCache.objects.all().order_by('-backupTime')
+    import calendar
+    backupTimes= [backupCache.backupTime.strftime('%Y-%m-%d:%H:%M:%S') for backupCache in backupCaches]
+    invite_in_day=cache.get('INVITE_IN_DAY')
+    return render(request,'debug_cache.html',{'girls':girls,'boys':boys,'invite_count':invite_count,'game_forever':game_forever,'confirm_invite':confirm_invite,'backupTimes':backupTimes,'invite_in_day':invite_in_day})
 
 def debug_update(request):
     from django.core.cache import cache
@@ -408,11 +413,14 @@ def get_apprequset(request,uid):
             requestId=apprequest.get('id')
             userId=apprequest.get('from').get('id')
             username=apprequest.get('from').get('name')
-            if not userId in userUid:
+            from apps.game_app.models import get_invite_in_day,add_invite_in_day
+            if (not userId in userUid) and userId not in get_invite_in_day(uid):
                 userAvatar=FacebookUser.objects.get(uid=uid).avatar
+                #添加到今天推荐过的Uid
+                add_invite_in_day(uid,userId)
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
-#             request.facebook.graph.delete_object(requestId)
+            request.facebook.graph.delete_object(requestId)
     return {'users':users,'userUid':userUid}
 
 def facebook_save(request,uid):
@@ -427,7 +435,7 @@ def facebook_save(request,uid):
         gender=u'F'
         if me.get('gender')==u'male':
             gender='M'
-        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime,noRecommendList=friendList)
+        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime,noRecommendList=friendList,link=me.get('link'))
         if 'location' in me.keys():
             facebookUser.location=me.get('location').get('name')
         if 'birthday' in me.keys():

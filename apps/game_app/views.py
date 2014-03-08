@@ -71,14 +71,6 @@ def reset_game_cache(request):
     return HttpResponse(json)
 
 '''
-匹配记录
-'''
-def recommend_history(request):
-    uid=request.session['uid']
-  
-    return HttpResponse(json, mimetype='application/javascript')
-
-'''
 备份拼图游戏
 '''
 def backup_pintu_cache(request):
@@ -87,4 +79,9 @@ def backup_pintu_cache(request):
     json=simplejson.dumps({'result':'success'})
     return HttpResponse(json, mimetype='application/javascript')
 
-
+def restore_backup_pintu_cache(request):
+    time=request.GET.get('time')
+    from util.cache import restore_backup_cache
+    restore_backup_cache('PINTU',time)
+    json=simplejson.dumps({'result':'success'})
+    return HttpResponse(json, mimetype='application/javascript')

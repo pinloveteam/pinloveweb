@@ -23,7 +23,7 @@ body{
 	box-shadow:2px 2px 10px #909090;/*opera或ie9*/
 }
 
-#card,#nouser{
+#card,#nouser,#game_count_end{
 	background-color: #FFF9D9;
     border: 2px solid #000000;
     height: 400px;
@@ -32,7 +32,7 @@ body{
     top: 140px;
     width: 300px;
 }
-#nouser{
+#nouser,#game_count_end{
 	text-align: center;
 }
 
@@ -53,8 +53,8 @@ body{
 	border-radius: 50%;
 }
 .record-user{
-	width: 80px;
-	height: 80px;
+	width: 50px;
+	height: 50px;
 	margin-bottom: 20px;
 	position: relative;
 	left:-26px;
@@ -110,7 +110,7 @@ button{
 	font-weight:bold;
 }
 
-.button_type_1,.button_type_2,.button_type_3,.try_again,.share{
+.button_type_1,.button_type_2,.try_again,.share{
 	position:absolute;
 	padding: 15px 15px 15px 20px;
 	display: inline-block;
@@ -131,7 +131,12 @@ button{
 }
 
 .button_type_3{
-	background-image: url({{STATIC_URL}}img/按钮-15.png);
+	position:absolute;
+	width: 55px;
+	height: 55px;
+	display: inline-block;
+	cursor: pointer;
+	text-align: center
 }
 .checkbox,#checkbox1{
 	position:absolute;
@@ -174,7 +179,19 @@ button{
 	cursor: pointer;
 }
 
-
+.online,.outline{
+    position:absolute;
+	top: 70%;
+	left:73%;
+	width: 32px;
+	height: 32px;
+	cursor: pointer;
+	background-image: url({{STATIC_URL}}img/拼图-76.png);
+	background-repeat:no-repeat;
+}
+.outline{
+background-image: url({{STATIC_URL}}img/拼图-77.png);
+}
 
 .text-orange{
 	color: #ff641f;
@@ -214,11 +231,11 @@ button{
 }
 
 #users,#recevie_users{
-    height: 320px;
+    height: 300px;
     overflow-x: hidden;
     overflow-y: scroll;
     position: relative;
-    top: 50px;
+    top: 70px;
 }
 
 .user{
@@ -251,7 +268,7 @@ button{
 
 #game_name{
 	position:absolute;
-	top:20px;
+	top:15px;
 	left:100px;
 }
 
@@ -354,8 +371,8 @@ button{
 #record{
 	position: absolute;
 	top:0px;
-	left:-90px;
-	width: 120px;
+	left:-70px;
+	width: 100px;
 	height: 100%;
 	background-color: #ffd2d4;
 	border: solid 1px #f4c696;
@@ -405,7 +422,7 @@ button{
     <div id="container"></div>
     <img  class="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
-    <img src="{{STATIC_URL}}img/拼图-68.png" style="position: absolute;top:40px;left: 280px;"/>
+    <img src="{{STATIC_URL}}img/拼图-68.png" style="position: absolute;top:30px;left: 280px;"/>
 <div id="card" style="position: absolute;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
@@ -413,7 +430,7 @@ button{
 <div id="info_clone" style="display: none;">	
    <input type="hidden" id='userId'/>
 	<div class="head head_girl">
-		<img src=".\img\image1.jpeg" class="img-circle">
+		<a id="head_url" target="_blank" href=""><img src=".\img\image1.jpeg" class="img-circle"></a>
 	</div>
 	<div class="name">
 		<h3 ><strong></strong></h3>
@@ -422,8 +439,8 @@ button{
 		<span class="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span class="city"></span>
 	</div>
-	<a  href="javascript:void(0)" onclick="facebook_send_message();"><div id="hi" class="button_type_3">Hi!</div></a>
-	<a  href="javascript:void(0)" onclick="facebook_add_friend();"><div id="friend" class="button_type_3">+</div></a>
+	<img src='{{STATIC_URL}}img/add_friend.png' title="send message" class="button_type_3" style="top:250px;left: 70px;" onclick="facebook_send_message();">
+	<img src='{{STATIC_URL}}img/message.png' title="add friend" class="button_type_3" style="top:250px;left: 180px;" onclick="facebook_add_friend();">
 </div>
 <div id="photo" style="display:none;">
 	<div class="scroller">
@@ -446,13 +463,21 @@ button{
 	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
 	<div class="push try_again " style="left:90px; top: 320px;">Play again</div>
 </div>
+<div id="game_count_end" style="display: none;">
+	<div class="close"></div>
+	<span class="text-black" style="line-height:18px;">Number of exhausted, come back tomorrow!</span><br />
+	<span class="text-black" style="font-size:15px">you can get <img src="/static/img/coin.png" height="25px" width="30px"/> by asking friends or buying</span><br />
+	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
+	<div id="buy" class="try_again" style="left:50px; top: 320px;width:50px;background-image: url('/static/img/按钮-66.png');background-repeat:no-repeat;">buy</div>
+	<div class="try_again ask_friends" style="left:170px; top: 320px;background-image: url('/static/img/按钮-66.png');background-repeat:no-repeat;width:50px;" >help</div>
+</div>
 <div id="buy_page">
 	<div class="count"><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num">×{{count}}</span></div>
 	<div class="buy">BUY</div>
 <div id="buy">
 	<ul>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">$0.99</span><div class="button_type_1"><a onclick='buyCoins(3)'>buy</a></div></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 41px;">Ask friend</span><div id='Ask'  class="button_type_1"><span id="request">Request</span></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">$0.99</span><a onclick='buyCoins(3)'><div class="button_type_1" style="background-image:url({{STATIC_URL}}img/buy.png);" ></div></a></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 41px;">Ask friends to play</span><div class="button_type_1 ask_friends" style="background-image:url({{STATIC_URL}}img/ask_friend.png);"></div></li>
 	</ul>
 </div>
 </div>
@@ -491,11 +516,11 @@ button{
 	<span style="color:#8c43c4;font-size: 20px; margin-left: 10px;">record</span>
 	<ul class="record-user-list">
 	    {% for facebookUser in facebookUserList %}
-	       <li><div class="record-user head_boy"><img src="{{facebookUser.avatar}}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.location}}"></div></li>
+	       <li><div class="record-user head_boy "><a target="_blank" href="https://www.facebook.com/{{facebookUser.uid}}" ><img src="{{facebookUser.smallAvatar}}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.location}} age:{{facebookUser.age}}"><div  class=" {% ifequal facebookUser.online 1%}online{%else%}outline{%endifequal %}"></div></a></div></li>
 	    {% endfor %}
 	</ul>
 </div>
-<div class="record-user head_boy record-user-clone"  style="display: none;"><img src="{" class="img-circle" title=""></div>
+<div class="record-user head_boy record-user-clone"  style="display: none;"><a target="_blank" href="" ><img src="" class="img-circle" title="" ></a></div>
 <div id="record-cover"></div>
 <div id="information" style="display: none;" class='information'>
 <span class="msg"></span>
@@ -572,26 +597,24 @@ function loadStage() {
          cycle=0;
          StartCycle=2;
          flag=false;
+         type=10;
          selectedPieces = new Array();
-         //Time = setInterval(Star,Speed);
+        Time = setInterval(Star,Speed);
          $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
         	 if(data[0]=='0'){
-        		 $('#nouser').find('#pair_message').html('Sorry,Pairing failed!');
-        		 $('#nouser').find('.free_chance').show()
         		  $('#tab').hide()
-        		  type=false;
+        		  type=0;
         	 }
         	 if(data[0]=='1'){
-        		 $('#nouser').find('#pair_message').html('Number of exhausted, come back tomorrow!');
-        		 $('#nouser').find('.free_chance').hide()
         		  $('#tab').hide()
-        		  type=false;
+        		  type=1;
         		 }
         	 if(data[0]=='2'){
         	 var template = $('#info_clone').clone();
         	 template.find('#userId').val(data[2]['uid']);
         	 template.find('.img-circle').attr('src',data[2]['avatar']);
+        	 template.find('#head_url').attr('href',"https://www.facebook.com/"+data[2]['uid'])
         	 if (data[2]['username'].length>26){
         		 var username=data[2]['username'].substring(0,26)
         		 template.find('strong').html(username+'...');
@@ -610,12 +633,13 @@ function loadStage() {
         	 game_count=data[2]['game_count'].toString()
         	 //添加匹配记录
         	 var record_user=$('.record-user-clone').clone();
-        	 record_user.find('.img-circle').attr('src',data[2]['avatar']);
+        	 record_user.find('.img-circle').attr('src',data[2]['smallAvatar']);
         	 record_user.find('.img-circle').attr('title','username:'+data[2]['username']+' '+'location:'+data[2]['city']);
+        	 record_user.find('a').attr('href',"https://www.facebook.com/"+data[2]['uid']);
         	 record_user.removeClass('record-user-clone')
         	 record_user.show()
         	 $('.record-user-list').append("<li>").append(record_user).append('</li>');
-        	 type=true
+        	 type=2
         	 facebookPhotoList=data[2]['facebookPhotoList']
         	 facebookPhotoList=$.parseJSON(facebookPhotoList)
         	 $('.hoverbox').children().remove()
@@ -625,13 +649,15 @@ function loadStage() {
         	 }
         	  }
         	 clearInterval(Time);
-        	 if(data[0]=='1'){
-        		 $('#nouser').show('slow')
-        	 }
+        	 if(type==1){
+        	  $('.push').click(StartGame);
+           	  $('#game_count_end').show('slow');
+           	  return;
+             }
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
         	 EndCycle=StartCycle+piece.length;
-        	 Time = setInterval(Star,Speed);
+        	  Time = setInterval(Star,Speed); 
 
         	 
         	 //$('#count').html('游戏次数:'+data['count']);
@@ -648,7 +674,7 @@ function loadStage() {
                  Time=setInterval(Star,Speed);
              }
              //跑N圈减速
-             if(cycle==EndCycle && index==parseInt(EndIndex)){
+             if(cycle>=EndCycle && index==parseInt(EndIndex) && type<4){
                  clearInterval(Time);
                  flag=true;       //触发结束			 
                  Time=setInterval(Star,Speed);
@@ -676,13 +702,15 @@ function loadStage() {
           clearInterval(Time);
           venobox();
 		  $('.push').click(StartGame);
-          if (type){
+          if (type==2){
         	  set_game_count(game_count)
         	  $('#card').show('slow');
               $('#photo').hide();
     		  $('#info').show();
-          }else{
+          }else if(type==0){
         	  $('#nouser').show('slow');
+          }else if(type==1){
+        	  $('#game_count_end').show('slow');
           }
          
             }
@@ -731,6 +759,7 @@ function loadStage() {
 			  });
 			  
 		$('.push').click(StartGame);
+		$('#buy').click(function(){buyCoins(3)});
 		$('#send_all_box').click(
 				/* if $('#send_all_box').attr('checked') */
 				function(){
@@ -756,10 +785,20 @@ function loadStage() {
 		$('#buy_button').click(function(){
 			$('#buy_page').show('slow');
 		});
-		//请求好友给命
-		$('#button_type_1').click(function(){
-			inivteFriends()
-		});
+		
+		$('.button_type_1').mouseover(function(){
+			if (this.style.backgroundImage=='url("/static/img/buy.png")'){
+			   this.style.backgroundImage='url("/static/img/buy2.png")';
+			   }else if(this.style.backgroundImage=='url("/static/img/ask_friend.png")'){
+			   this.style.backgroundImage='url("/static/img/ask_friend2.png")';
+			   }
+			}).mouseleave(function(){
+			 if (this.style.backgroundImage=='url("/static/img/buy2.png")'){
+			   this.style.backgroundImage='url("/static/img/buy.png")';
+			   }else if(this.style.backgroundImage=='url("/static/img/ask_friend2.png")'){
+			   this.style.backgroundImage='url("/static/img/ask_friend.png")';
+			   }
+			})
 		
 		//送你心的好友
 		receiveUsers={{inviteNonfirmList|safe}}
@@ -779,14 +818,16 @@ function loadStage() {
 		} 
 		
 	     //邀请好友
-		$('#Ask').click(function(){
+		$('.ask_friends').click(function(){
 		    page = 0;
-			$('#invite').find('.num3').html('ask your friends')
-			$('#invite').find('.num3').removeClass('num3').addClass('num4')
-		    $('#invite').find('#inviteImg').remove();
+		    $('#invite').find('#inviteImg').attr('src','{{STATIC_URL}}img/拼图-83.png')
+		    $('#invite').find('.num3').remove()
+			/* $('#invite').find('.num3').html('ask your friends')
+			$('#invite').find('.num3').removeClass('num3').addClass('num4') 
+		    $('#invite').find('#inviteImg').remove();*/
 			$('#users').children().remove()
 			users= new Array();
-		    FB.api({
+		   /*  FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -799,22 +840,22 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			}); 
-		   /*  for (i=0;i<500;i++)
+			});  */
+		     for (i=0;i<500;i++)
 		    	{
 		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01'})
-		    	}    */
+		    	}    
 			new User(users,2);
 			$('#invite').show('slow');
 		});
 	     
 		$('[id^=record]').mouseover(function(){
-			$('#record-cover').animate({left:"102px"},0);
+			$('#record-cover').animate({left:"82px"},0);
 			$('#record').animate({left:"0px"},0);
 		});
 		
 		$('[id^=record]').mouseout(function(){
-			$('#record-cover').animate({left:"10px"},0);
+			$('#record-cover').animate({left:"-10px"},0);
 			$('#record').animate({left:"-90px"},0);
 		});
 		

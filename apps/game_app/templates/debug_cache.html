@@ -31,12 +31,37 @@ function update_data( boy,girl){
 	$("#boy").html(boy);
 	$("#girl").html(boy);
 }
+//备份backup
+function backup(){
+	$.getJSON('/game/backup_pintu_cache/',function(data){
+		if(data['result']=='success'){
+			alert('备份成功!')
+		}
+	});
+}
+function restore_backup(){
+	time=$("#select1").val()
+	$.getJSON('/game/restore_backup_pintu_cache/',{time:time},function(data){
+		if(data['result']=='success'){
+			alert('还原成功!')
+		}
+	});
+}
 </script>
 </head>
 <body>
 <table>
 <form action=''>
-  <tr><td>清空缓存</td><td><a href="javascript:void" onclick="clean();">清空</a></td></tr>
+  <tr><td>清空缓存</td><td><a href="javascript:void(0)" onclick="clean();">清空</a></td></tr>
+  <tr><td>备份cache</td><td><a href="javascript:void(0)" onclick="backup();">备份cache</a></td></tr>
+   <tr><td>还原cache备份</td><td>   
+     时间
+    <select id='select1'>  
+     {% for backupTime in backupTimes%}
+      <option value ="{{backupTime}}">{{backupTime}}</option> 
+      {% endfor%} 
+    </select>  
+    <a href="javascript:void(0)" onclick="restore_backup();">还原cache备份</a></td></tr>
   <tr><td>模板块数</td><td><input id='pintu' name="boy" value=""></td></tr>
   <tr><td>男用户</td><td><div id ='boy'>{{ boys }}</div></td></tr>
   <tr><td>添加男用户</td><td><input id='boyinput' name="boy" value=""><a href="javascript:void(0)" onclick="update(1)">替换</a></td></tr>
@@ -45,7 +70,7 @@ function update_data( boy,girl){
   <tr><td>确认邀请的次数</td><td><div id='invite_count' >{{invite_count}}</div></td></tr>
   <tr><td>永久次数</td><td><div id='game_forever' >{{game_forever}}</div></td></tr>
   <tr><td>确认用户</td><td><div id=' confirm_invite' >{{ confirm_invite}}</div></td></tr>
- 
+  <tr><td>今天推荐过的好友</td><td><div id=' invite_in_day' >{{invite_in_day}}</div></td></tr>
 </form>
 </table>
 

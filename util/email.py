@@ -4,7 +4,6 @@ Created on 2014年1月8日
 
 @author: jin
 '''
-from util import random_str
 from django.core.mail import send_mail
 from util_settings import domain_name
 '''
