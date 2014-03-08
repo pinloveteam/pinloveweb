@@ -150,12 +150,12 @@ button{
 	cursor: pointer;
 }
 #hi{
-	top:250px;	
+	top:350px;	
 	left: 20px;
 }
 
 #friend{
-	top:250px;	
+	top:350px;	
 	left: 200px;
 }
 .buy{
@@ -371,7 +371,7 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 #record{
 	position: absolute;
 	top:0px;
-	left:-70px;
+	left:-45px;
 	width: 100px;
 	height: 100%;
 	background-color: #ffd2d4;
@@ -384,7 +384,7 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 #record-cover{
 	position: absolute;
 	top:0px;
-	left:10px;
+	left:38px;
 	width: 20px;
 	height: 100%;
 	background-color: #ffd2d4;
@@ -439,20 +439,15 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 		<span class="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<span class="city"></span>
 	</div>
-	<img src='{{STATIC_URL}}img/add_friend.png' title="send message" class="button_type_3" style="top:250px;left: 70px;" onclick="facebook_send_message();">
-	<img src='{{STATIC_URL}}img/message.png' title="add friend" class="button_type_3" style="top:250px;left: 180px;" onclick="facebook_add_friend();">
+	<img src='{{STATIC_URL}}img/add_friend.png' title="send message" class="button_type_3" style="top:330px;left: 70px;" onclick="facebook_send_message();">
+	<img src='{{STATIC_URL}}img/message.png' title="add friend" class="button_type_3" style="top:330px;left: 180px;" onclick="facebook_add_friend();">
 </div>
-<div id="photo" style="display:none;">
+<div id="photo">
 	<div class="scroller">
 		<ul class="hoverbox">
 		
 		</ul>
 	</div>
-</div>
-
-<div id="tab">
-	<div class="active"><a href="#info" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></div>
-	<div><a href="#photo" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></div>
 </div>
 </div>
 
@@ -647,6 +642,7 @@ function loadStage() {
         	 for(var i=0 ;i<facebookPhotoList.length;i++){
         	      $('.hoverbox').append('<li><a id="firstlink" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.bigPhoto+' title='+facebookPhotoList[i].fields.description+'><img alt="demo1" src='+facebookPhotoList[i].fields.smailPhoto+' title='+facebookPhotoList[i].fields.description+'></a></li>')
         	 }
+        	 $('.hoverbox').append('<li><a id="firstlink" class="venobox" style="display:none;" data-gall="gall1" href='+facebookPhotoList[0].fields.bigPhoto+' title='+facebookPhotoList[0].fields.description+'><img alt="demo1" src='+facebookPhotoList[0].fields.smailPhoto+' title='+facebookPhotoList[0].fields.description+'></a></li>')
         	  }
         	 clearInterval(Time);
         	 if(type==1){
@@ -705,8 +701,6 @@ function loadStage() {
           if (type==2){
         	  set_game_count(game_count)
         	  $('#card').show('slow');
-              $('#photo').hide();
-    		  $('#info').show();
           }else if(type==0){
         	  $('#nouser').show('slow');
           }else if(type==1){
@@ -774,14 +768,7 @@ function loadStage() {
 				$('#invite').show('slow');
 			}
 		});
-		
-		$('#tab').children().click(function(){
-			$('#photo').hide();
-			$('#info').hide();
-			id = $(this).children().attr('href');
-			$(id).show();
-			
-		});
+
 		$('#buy_button').click(function(){
 			$('#buy_page').show('slow');
 		});
@@ -827,7 +814,7 @@ function loadStage() {
 		    $('#invite').find('#inviteImg').remove();*/
 			$('#users').children().remove()
 			users= new Array();
-		   /*  FB.api({
+		    FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -840,7 +827,7 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			});  */
+			}); 
 		     for (i=0;i<500;i++)
 		    	{
 		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01'})
@@ -855,8 +842,8 @@ function loadStage() {
 		});
 		
 		$('[id^=record]').mouseout(function(){
-			$('#record-cover').animate({left:"-10px"},0);
-			$('#record').animate({left:"-90px"},0);
+			$('#record-cover').animate({left:"42px"},0);
+			$('#record').animate({left:"-40px"},0);
 		});
 		
 		//发送所有
