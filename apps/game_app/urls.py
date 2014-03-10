@@ -15,6 +15,8 @@ urlpatterns=patterns('apps.game_app.views',
 )
 urlpatterns += patterns('apps.third_party_login_app.views',
 url(r'^pintu_for_facebook/$','pintu_for_facebook'),
+url(r'^pintu_for_facebook_android/$','pintu_for_facebook_android'),
+
 url(r'^debug_pintu_cache/$','debug_pintu_cache'),
 url(r'^debug_update/$','debug_update'),
 url(r'^test_get_code/$','test_get_code'),

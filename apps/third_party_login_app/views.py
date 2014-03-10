@@ -30,7 +30,7 @@ from django.views.decorators.csrf import csrf_exempt
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
 import urllib2
 from django.utils import simplejson
-log=logging.getLogger('customapp.engine')
+log=logging.getLogger(__name__)
 
 ##########three paerty login######
 '''
@@ -48,7 +48,7 @@ def get_qq_login_url(request):
 def qq_login(request):
     from apps.third_party_login_app.openqqpy import OpenQQClient
     client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL,scope='')
-    log.error(request.GET.get('code'))
+#     log.error(request.GET.get('code'))
     access=client.request_access_token(request.GET.get('code')) #返回access_token,expires_in
     access_token=access['access_token']
     expires_in=access['expires_in']
@@ -84,7 +84,7 @@ def sina_login_url(request):
     from apps.third_party_login_app.weibo import APIClient
     client = APIClient(app_key=SinaAppKey, app_secret=SinaAppSercet, redirect_uri=SINA_CALLBACK_URL)
     url = client.get_authorize_url()
-    log.error('%s%s' %('url====',url))
+#     log.error('%s%s' %('url====',url))
     return HttpResponseRedirect(url)
 
 '''
@@ -138,7 +138,7 @@ def sina_login(request):
 def facebook_login_url(request):
     from apps.third_party_login_app.facebook import auth_url
     url=auth_url(FaceBookAppID,FACEBOOK_CALLBACK_URL)
-    log.error('%s%s' %('url====',url))
+#     log.error('%s%s' %('url====',url))
     return HttpResponseRedirect(url)
 
 def facebook_login(request):
@@ -231,7 +231,7 @@ def login(request,username,password):
      log.error(username+'   '+password)
      if user is not None and user.is_active : 
          auth.login(request, user)
-         log.error("login success"+request.user.username+'fcsdfsf')
+#          log.error("login success"+request.user.username+'fcsdfsf')
      from apps.the_people_nearby.views import GetLocation
      if not GetLocation(request)==None:
          UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
@@ -326,36 +326,9 @@ from apps.third_party_login_app.django_facebook.decorators import canvas_only
 def pintu_for_facebook(request):
     uid=request.facebook.user.get('uid')
     request.session['graph']=request.facebook.graph
-#     data=request.facebook.graph.extend_access_token( FaceBookAppID,FaceBookAppSecret)
-    if FacebookUser.objects.filter(uid=uid).exists():
-        me=request.facebook.user
-    else:
-        facebook_save(request,uid)
-#         feed(request)
-    #获取游戏次数
-    from apps.game_app.models import get_count,get_game_count_forever
-    count=get_count(uid)+get_game_count_forever(uid)
-    apprequset=get_apprequset(request,uid)
-    request.session['apprequest']=apprequset['userUid']
-    request.session['uid']=uid
-    users=apprequset['users']
-    from apps.game_app.models import get_invite_confirm_list,clear_invite_confirm
-    inviteNonfirmList=get_invite_confirm_list(uid)
-    if not len(inviteNonfirmList)==0:
-        clear_invite_confirm(uid)
-    #获取匹配记录
-    from apps.game_app.models import get_recommend_history
-    facebookUserListDcit=get_recommend_history(uid)
-    #获取在线
-    friendsOnlineUid=friends_online(request)
-    facebookUserList=[]
-    for facebookUserDcit in facebookUserListDcit:
-        if  facebookUserDcit.get("uid") in friendsOnlineUid:
-            facebookUserDcit['online']=1
-        else:
-            facebookUserDcit['online']=0
-        facebookUserList.append(facebookUserDcit)   
-             
+    args=init_pintu(request,uid)
+    for field in ['data','inviteNonfirmList']:
+        args[field]=simplejson.dumps(args[field])
 #     facebookUserList=[{'username': u'Love  Pin', 'location': u'Hangzhou, China', 'online': 1, 'uid': u'100007247470289', 
 #      'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/t1/c28.0.80.80/p80x80/1476022_1382326562018913_1553944026_n.jpg','smallAvatar':'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t5/211329_100007247470289_259768164_q.jpg'}]
 #     users=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
@@ -371,8 +344,69 @@ def pintu_for_facebook(request):
 #                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
 #     return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
     
-    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
-    
+    return render(request, 'pintu_for_facebook.html',args)
+
+'''
+ 初始化页面
+''' 
+def pintu_for_facebook_android(request):
+    try:
+        callback = request.GET.get('callback')
+        uid=request.GET.get('uid',False)
+        expiresIn=request.GET.get('expiresIn',False)
+        accessToken=request.GET.get('accessToken',False)
+        if not (uid and expiresIn and expiresIn):
+            json=callback + '('+simplejson.dumps({'result':'error'})+')'
+            return HttpResponse(json)
+    except Exception:
+        log.error('android 登录取参数出错！')
+        json=callback + '('+simplejson.dumps({'result':'error'})+')'
+        return HttpResponse(json)
+    from apps.third_party_login_app import facebook
+    request.session['graph']=facebook.GraphAPI(accessToken)
+    args=init_pintu(request,uid)
+    args['result']='success'
+    json=callback + '('+simplejson.dumps(args)+')'
+    return HttpResponse(json)
+def init_pintu(request,uid):
+    args={}
+    args['uid']=uid
+#     data=request.facebook.graph.extend_access_token( FaceBookAppID,FaceBookAppSecret)
+    if FacebookUser.objects.filter(uid=uid).exists():
+        me=request.facebook.user
+    else:
+        facebook_save(request,uid)
+#         feed(request)
+    #获取游戏次数
+    from apps.game_app.models import get_count,get_game_count_forever
+    count=get_count(uid)+get_game_count_forever(uid)
+    args['count']=count
+    apprequset=get_apprequset(request,uid)
+    request.session['apprequest']=apprequset['userUid']
+    request.session['uid']=uid
+    users=apprequset['users']
+    args['data']=users
+    args['userCount']=len(users)
+    from apps.game_app.models import get_invite_confirm_list,clear_invite_confirm
+    inviteNonfirmList=get_invite_confirm_list(uid)
+    if not len(inviteNonfirmList)==0:
+        clear_invite_confirm(uid)
+    args['inviteNonfirmList']=inviteNonfirmList
+    #获取匹配记录
+    from apps.game_app.models import get_recommend_history
+    facebookUserListDcit=get_recommend_history(uid)
+    #获取在线
+    friendsOnlineUid=friends_online(request)
+    facebookUserList=[]
+    for facebookUserDcit in facebookUserListDcit:
+        if  facebookUserDcit.get("uid") in friendsOnlineUid:
+            facebookUserDcit['online']=1
+        else:
+            facebookUserDcit['online']=0
+        facebookUserList.append(facebookUserDcit)    
+    args['facebookUserList']=facebookUserList
+    return args
+       
 def debug_pintu_cache(request):   
     from django.core.cache import cache
     girls=cache.get('GIRLS')
