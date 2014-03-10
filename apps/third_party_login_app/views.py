@@ -324,54 +324,54 @@ from apps.third_party_login_app.django_facebook.decorators import canvas_only
 @csrf_exempt
 @canvas_only
 def pintu_for_facebook(request):
-#     uid=request.facebook.user.get('uid')
-#     request.session['graph']=request.facebook.graph
-# #     data=request.facebook.graph.extend_access_token( FaceBookAppID,FaceBookAppSecret)
-#     if FacebookUser.objects.filter(uid=uid).exists():
-#         me=request.facebook.user
-#     else:
-#         facebook_save(request,uid)
-# #         feed(request)
-#     #获取游戏次数
-#     from apps.game_app.models import get_count,get_game_count_forever
-#     count=get_count(uid)+get_game_count_forever(uid)
-#     apprequset=get_apprequset(request,uid)
-#     request.session['apprequest']=apprequset['userUid']
-#     request.session['uid']=uid
-#     users=apprequset['users']
-#     from apps.game_app.models import get_invite_confirm_list,clear_invite_confirm
-#     inviteNonfirmList=get_invite_confirm_list(uid)
-#     if not len(inviteNonfirmList)==0:
-#         clear_invite_confirm(uid)
-#     #获取匹配记录
-#     from apps.game_app.models import get_recommend_history
-#     facebookUserListDcit=get_recommend_history(uid)
-#     #获取在线
-#     friendsOnlineUid=friends_online(request)
-#     facebookUserList=[]
-#     for facebookUserDcit in facebookUserListDcit:
-#         if  facebookUserDcit.get("uid") in friendsOnlineUid:
-#             facebookUserDcit['online']=1
-#         else:
-#             facebookUserDcit['online']=0
-#         facebookUserList.append(facebookUserDcit)   
+    uid=request.facebook.user.get('uid')
+    request.session['graph']=request.facebook.graph
+#     data=request.facebook.graph.extend_access_token( FaceBookAppID,FaceBookAppSecret)
+    if FacebookUser.objects.filter(uid=uid).exists():
+        me=request.facebook.user
+    else:
+        facebook_save(request,uid)
+#         feed(request)
+    #获取游戏次数
+    from apps.game_app.models import get_count,get_game_count_forever
+    count=get_count(uid)+get_game_count_forever(uid)
+    apprequset=get_apprequset(request,uid)
+    request.session['apprequest']=apprequset['userUid']
+    request.session['uid']=uid
+    users=apprequset['users']
+    from apps.game_app.models import get_invite_confirm_list,clear_invite_confirm
+    inviteNonfirmList=get_invite_confirm_list(uid)
+    if not len(inviteNonfirmList)==0:
+        clear_invite_confirm(uid)
+    #获取匹配记录
+    from apps.game_app.models import get_recommend_history
+    facebookUserListDcit=get_recommend_history(uid)
+    #获取在线
+    friendsOnlineUid=friends_online(request)
+    facebookUserList=[]
+    for facebookUserDcit in facebookUserListDcit:
+        if  facebookUserDcit.get("uid") in friendsOnlineUid:
+            facebookUserDcit['online']=1
+        else:
+            facebookUserDcit['online']=0
+        facebookUserList.append(facebookUserDcit)   
              
-    facebookUserList=[{'username': u'Love  Pin', 'location': u'Hangzhou, China', 'online': 1, 'uid': u'100007247470289', 
-     'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/t1/c28.0.80.80/p80x80/1476022_1382326562018913_1553944026_n.jpg','smallAvatar':'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t5/211329_100007247470289_259768164_q.jpg'}]
-    users=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-           {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-           {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
-    inviteNonfirmList=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-           {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-           {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-           {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-                      { 'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-                       {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-                       {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
-                       {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
-    return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
+#     facebookUserList=[{'username': u'Love  Pin', 'location': u'Hangzhou, China', 'online': 1, 'uid': u'100007247470289', 
+#      'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/t1/c28.0.80.80/p80x80/1476022_1382326562018913_1553944026_n.jpg','smallAvatar':'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t5/211329_100007247470289_259768164_q.jpg'}]
+#     users=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
+#     inviteNonfirmList=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#            {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                       { 'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
+#                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
+#     return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
     
-#     return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
+    return render(request, 'pintu_for_facebook.html',{'uid':uid,'count':count,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
     
 def debug_pintu_cache(request):   
     from django.core.cache import cache
@@ -431,12 +431,12 @@ def facebook_save(request,uid):
             friendList.append(friend.get('id'))
         friendList=simplejson.dumps(friendList)
         avatar= request.facebook.graph.get_object('me/picture',height=80,width=80)
-        smallAvatar= request.facebook.graph.get_object('me/picture',height=80,width=80)
+        smallAvatar= request.facebook.graph.get_object('me/picture',height=50,width=50)
         updateTime=datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000')
         gender=u'F'
         if me.get('gender')==u'male':
             gender='M'
-        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime,noRecommendList=friendList,link=me.get('link'),smallAvatar=smallAvatar)
+        facebookUser=FacebookUser(uid=me.get('id'),username=me.get('name'),gender=gender,updateTime=updateTime,noRecommendList=friendList,link=me.get('link'))
         if 'location' in me.keys():
             facebookUser.location=me.get('location').get('name')
         if 'birthday' in me.keys():
@@ -445,6 +445,8 @@ def facebook_save(request,uid):
             facebookUser.age=(date.today().year + 1)-facebookUser.birthday.year
         if not  avatar is None:
             facebookUser.avatar=avatar.get('url')
+        if not smallAvatar is None:
+            facebookUser.smallAvatar=smallAvatar.get('url')
         facebookUser.save()
         #保存图片
         user_photos_save(request,uid)
