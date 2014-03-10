@@ -829,7 +829,10 @@ function loadStage() {
 			var username=$('#search').val();
 			match='.username:not([value*="'+username+'"])'
 			$('#users ').children().show()
-			$('#users ').find(match).parent().hide('slow')
+			if (username.trim()!=""){
+				$('#users ').find(match).parent().hide('slow')
+			}
+			
 		});
 
 		$('#buy_button').click(function(){
