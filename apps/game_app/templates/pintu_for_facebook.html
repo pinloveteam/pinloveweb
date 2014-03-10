@@ -680,7 +680,6 @@ function loadStage() {
         	 record_user.find('.img-circle').attr('title','username:'+data[2]['username']+' '+'location:'+data[2]['city']);
         	 record_user.find('a').attr('href',"https://www.facebook.com/"+data[2]['uid']);
         	 record_user.removeClass('record-user-clone')
-        	 record_user.show()
         	 $('.record-user-list').append("<li>").append(record_user).append('</li>');
         	 type=2
         	 facebookPhotoList=data[2]['facebookPhotoList']
@@ -753,6 +752,7 @@ function loadStage() {
 		  $('.push').click(StartGame);
           if (type==2){
         	  set_game_count(game_count)
+        	  record_user.show()
         	  $('#card').show('slow');
           }else if(type==0){
         	  $('#nouser').show('slow');
