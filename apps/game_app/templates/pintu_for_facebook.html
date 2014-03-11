@@ -539,7 +539,7 @@ removecloud();
 	<div class="close"></div>
 	<span class="num3">{{userCount}}</span>
 	<img id="inviteImg" src="{{STATIC_URL}}img/接受邀请-60.png" style="position: absolute;top:5px;left: 60px;"/>
-	<span style="left: 160px;position: absolute;top: 80px;">搜索：</span><input type="text" id='search' maxlength="20" style="left: 200px;position: absolute;top: 80px;">
+	<span style="left: 120px;position: absolute;top: 80px;">search：</span><input type="text" id='search'  style="left: 200px;position: absolute;top: 80px;width:300px;">
 	<div id="users">
 
 	</div>
@@ -813,7 +813,7 @@ function loadStage() {
 		$('#send_all_box').click(
 				/* if $('#send_all_box').attr('checked') */
 				function(){
-					$("[name='checkbox1']").attr('checked','true');}
+					$("[name='checkbox1']::visible").attr('checked','true');}
 		);
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
@@ -881,11 +881,11 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			});
-		    /* for (i=0;i<5;i++)
+			}); 
+		   /*   for (i=0;i<5;i++)
 		    	{
 		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01 '+i.toString()})
-		    	}      */
+		    	}  */    
 			new User(users,2);
 			$('#invite').show('slow');
 		});
