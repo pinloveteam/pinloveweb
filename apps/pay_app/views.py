@@ -40,6 +40,10 @@ def pay_detail(request):
     return HttpResponse(json)
     
 
-    
+def pay_test(request):
+    mode=request.GET.get('hub.mode')
+    challenge=request.GET.get('hub.challenge')
+    verify_token=request.GET.get('hub.verify_token')
+    return HttpResponse(challenge)
     
     
