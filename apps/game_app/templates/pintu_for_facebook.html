@@ -502,15 +502,15 @@ removecloud();
 
 <div id="nouser" style="display: none;">
 	<div class="close"></div>
-	<span class="text-black" id='pair_message'>Sorry,Pairing failed!</span><br />
+	<span class="text-black" id='pair_message'>Oooooops, please try again!</span><br />
 	<span class="text-black free_chance">You still have<span id="user_count" style="color: red;"> {{count}} </span>free chance</span>
 	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
 	<div class="push try_again " style="left:90px; top: 320px;">Play again</div>
 </div>
 <div id="game_count_end" style="display: none;">
 	<div class="close"></div>
-	<span class="text-black" style="line-height:18px;">Number of exhausted, come back tomorrow!</span><br />
-	<span class="text-black" style="font-size:15px">you can get <img src="/static/img/coin.png" height="25px" width="30px"/> by asking friends or buying</span><br />
+	<span class="text-black" style="line-height:18px;">No more lives today, please come back tomorrow!</span><br />
+	<span class="text-black" style="font-size:15px">You can get <img src="/static/img/coin.png" height="25px" width="30px"/> instantly by asking your friends or buying</span><br />
 	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
 	<div id="buy" class="try_again" style="left:50px; top: 320px;width:50px;background-image: url('/static/img/按钮-66.png');background-repeat:no-repeat;">buy</div>
 	<div class="try_again ask_friends" style="left:170px; top: 320px;background-image: url('/static/img/按钮-66.png');background-repeat:no-repeat;width:50px;" >help</div>
@@ -520,7 +520,7 @@ removecloud();
 <div id="buy">
 	<ul>
 		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×3</span><span class="text-orange num2" style="margin-left: 50px;">$0.99</span><a onclick='buyCoins(3)'><div class="button_type_1" style="background-image:url({{STATIC_URL}}img/buy.png);height:40px" ></div></a></li>
-		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 41px;">Ask friends to play</span><div class="button_type_1 ask_friends" style="background-image:url({{STATIC_URL}}img/ask_friend.png);height:40px"></div></li>
+		<li><img src="{{STATIC_URL}}img/拼图-18.png"><span class="num2">×1</span><span class="text-orange num2" style="margin-left: 41px;">ask friends</span><div class="button_type_1 ask_friends" style="background-image:url({{STATIC_URL}}img/ask_friend.png);height:40px"></div></li>
 	</ul>
 </div>
 </div>
@@ -558,8 +558,8 @@ removecloud();
 <div class="button_type_2">send<span style="color:#FF0000">♥</span></div>
 </div>
 <div id="record">
-	<span style="color:#8c43c4;font-size: 20px; margin-left: 10px;">record</span>
-	<ul class="record-user-list">
+	<span style="color:#8c43c4;line-height:19px;font-size: 20px; margin-left: 55px;word-wrap: break-word;letter-spacing: 20px; width: 5px; float:left; ">record</span>
+	<ul class="record-user-list"  style="float: left;">
 	    {% for facebookUser in facebookUserList %}
 	       <li><div class="record-user head_boy "><a target="_blank" href="https://www.facebook.com/{{facebookUser.uid}}" ><img src="{{facebookUser.smallAvatar}}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.location}} age:{{facebookUser.age}}"><div  class=" {% ifequal facebookUser.online 1%}online{%else%}outline{%endifequal %}"></div></a></div></li>
 	    {% endfor %}
