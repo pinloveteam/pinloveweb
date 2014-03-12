@@ -15,6 +15,9 @@ urlpatterns=patterns('apps.game_app.views',
      #加游戏次数
      url(r'^add_user_count/$','add_user_count'),
      
+     #########test##############
+     url(r'^tset_match/$','tset_match'),
+     
 )
 urlpatterns += patterns('apps.third_party_login_app.views',
 url(r'^pintu_for_facebook/$','pintu_for_facebook'),
