@@ -238,7 +238,7 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
     overflow-x: hidden;
     overflow-y: scroll;
     position: relative;
-    top: 90px;
+    top: 100px;
 }
 
 .user{
@@ -880,7 +880,7 @@ function loadStage() {
 		    $('#invite').find('#inviteImg').remove();*/
 			$('#users').children().remove()
 			users= new Array();
-		/*     FB.api({
+	       FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -893,12 +893,12 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			});  */
-		     for (i=0;i<200;i++)
+			});  
+		    /*  for (i=0;i<200;i++)
 		    	{
 		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01 '+i.toString()})
 		    	}    
-			  users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Jin '+i.toString()})
+			  users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Jin '+i.toString()}) */
 			new User(users,2);
 			$('#invite').show('slow');
 		});
