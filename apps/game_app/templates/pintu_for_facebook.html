@@ -826,14 +826,26 @@ function loadStage() {
 		});
 		
 		$('#search').keyup(function(){
-			var username=$('#search').val();
-			match='.username:not([value*="'+username+'"])'
-			$('#users ').children().show()
-			if (username.trim()!=""){
-				$('#users ').find(match).parent().hide('slow')
-			}
+			delay(function(){
+				var username=$('#search').val().toLowerCase();
+				match='.username:not([value*="'+username+'"])'
+				$('#users ').children().show()
+				if (username.trim()!=""){
+					 var choice=$('#users '+match+'').parent()
+					 choice.hide('slow')
+				}
+			},800)
+			
 			
 		});
+		
+		 var delay = (function(){
+			  var timer = 0;
+			  return function(callback, ms){
+			    clearTimeout (timer);
+			    timer = setTimeout(callback, ms);
+			  };
+			})();
 
 		$('#buy_button').click(function(){
 			$('#buy_page').show('slow');
@@ -868,7 +880,7 @@ function loadStage() {
 		    $('#invite').find('#inviteImg').remove();*/
 			$('#users').children().remove()
 			users= new Array();
-		    FB.api({
+		/*     FB.api({
 	                method: 'fql.query',
 	                query:'SELECT uid, name, is_app_user, pic_square FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) '
 			        },
@@ -881,11 +893,12 @@ function loadStage() {
 				 $('#sendALL').show()
 				$('#invite').show('slow');
 				
-			}); 
-		   /*   for (i=0;i<5;i++)
+			});  */
+		     for (i=0;i<200;i++)
 		    	{
 		    	users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Hlk01 '+i.toString()})
-		    	}  */    
+		    	}    
+			  users.push({'gender':'M','uid':133186198+i,'avatar':'.\img','username':'Jin '+i.toString()})
 			new User(users,2);
 			$('#invite').show('slow');
 		});
@@ -962,7 +975,7 @@ function loadStage() {
 			head.children().attr('src',Users[i].avatar);
 			name.html(Users[i].username);
 			template.find('#uid').val(Users[i].uid)
-			template.find('.username').val(Users[i].username)
+			template.find('.username').val(Users[i].username.toLowerCase())
 			if(type==3){
 				template.find('.checkbox').remove();
 				$('#recevie_users').append(template.html());

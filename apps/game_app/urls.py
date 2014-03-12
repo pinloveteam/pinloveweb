@@ -12,6 +12,9 @@ urlpatterns=patterns('apps.game_app.views',
     url(r'^backup_pintu_cache/$','backup_pintu_cache'),
     #还原拼图的cache
      url(r'^restore_backup_pintu_cache/$','restore_backup_pintu_cache'),
+     #加游戏次数
+     url(r'^add_user_count/$','add_user_count'),
+     
 )
 urlpatterns += patterns('apps.third_party_login_app.views',
 url(r'^pintu_for_facebook/$','pintu_for_facebook'),

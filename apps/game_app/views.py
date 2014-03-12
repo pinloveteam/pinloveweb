@@ -85,3 +85,11 @@ def restore_backup_pintu_cache(request):
     restore_backup_cache('PINTU',time)
     json=simplejson.dumps({'result':'success'})
     return HttpResponse(json, mimetype='application/javascript')
+
+def add_user_count(request):
+    count=int(request.GET.get('count'))
+    userid=request.GET.get('userid')
+    from apps.game_app.models import set_count
+    set_count(userid,count)
+    json=simplejson.dumps({'result':'success'})
+    return HttpResponse(json, mimetype='application/javascript')

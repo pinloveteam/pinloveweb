@@ -21,6 +21,14 @@ function update(num){
 	})
 }
 
+function add_user_count(){
+	var count=$('#count').val()
+	var userid=$('#userid').val()
+	$.getJSON('/game/add_user_count/',{count:count,userid:userid},function(data){
+		alert('添加成功')
+	})
+	
+}
 //清空
 function clean(){
 	$.getJSON('/game/reset_game/',function(data){
@@ -62,6 +70,7 @@ function restore_backup(){
       {% endfor%} 
     </select>  
     <a href="javascript:void(0)" onclick="restore_backup();">还原cache备份</a></td></tr>
+  <tr><td>添加生命</td><td>uid：<input id='userid' name="userid" value=""><br>count:<input id='count' name="count" value=""><a href="javascript:void(0)" onclick="add_user_count()">添加</a></td></tr>
   <tr><td>模板块数</td><td><input id='pintu' name="boy" value=""></td></tr>
   <tr><td>男用户</td><td><div id ='boy'>{{ boys }}</div></td></tr>
   <tr><td>添加男用户</td><td><input id='boyinput' name="boy" value=""><a href="javascript:void(0)" onclick="update(1)">替换</a></td></tr>
