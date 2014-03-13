@@ -6,9 +6,11 @@ Created on Sep 8, 2013
 '''
 from django.shortcuts import render
 from apps.pay_app.models import FacebookPayDetail
-from apps.third_party_login_app.models import FacebookUser
 from django.utils import simplejson
 from django.http.response import HttpResponse
+import logging
+from django.views.decorators.csrf import csrf_exempt
+logger=logging.getLogger(__name__)
 def get_icon(request):
     return render(request,'icon.html')
 
@@ -39,11 +41,18 @@ def pay_detail(request):
     json=simplejson.dumps(args)
     return HttpResponse(json)
     
-
+@csrf_exempt
 def pay_test(request):
     mode=request.GET.get('hub.mode')
     challenge=request.GET.get('hub.challenge')
     verify_token=request.GET.get('hub.verify_token')
+    logging.error("pay_test")
+    logging.error(simplejson.dumps(request.GET))
+    logging.error(simplejson.dumps(request.POST))
     return HttpResponse(challenge)
-    
+
+
+def pay_test2(request):
+     logging.error("pay_test2")
+     return HttpResponse('sdfs')
     

@@ -9,4 +9,6 @@ urlpatterns=patterns('apps.pay_app.views',
     url(r'^icon/$', 'get_icon'),
     url(r'^pay_detail/$', 'pay_detail'),
      url(r'^pay_test/$', 'pay_test'),
+     url(r'^pay_test2/$', 'pay_test2'),
+     
 )
