@@ -1175,8 +1175,11 @@ function facebook_send_message() {
 	var userId=$('#userId').val()
     FB.ui({
         method: 'send',
-        link: 'https://apps.facebook.com/pinloveapp/',
-        to:userId,
+        name:'fate',
+        description:'Find your everyday friend on facebook!',
+        picture:'http://www.pinlove.com/static/img/coin.png',
+        link: 'apps.facebook.com/pinloveapp/?fb_source=bookmark_apps&ref=bookmarks&count=0&fb_bmpos=3_0',
+        to:userId
 
     });
 }
