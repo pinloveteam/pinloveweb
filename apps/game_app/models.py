@@ -13,9 +13,9 @@ class Yuanfenjigsaw:
     uid = ''
     gender = ''
     def __init__(self,request):
-        if cache.get('TODAY') != datetime.date.today():
-            reset_game()
-            get_count(request)
+#         if cache.get('TODAY') != datetime.date.today():
+            #reset_game()
+#             get_count(request)
         self.uid = request.GET.get('uid')
         facebookUser=FacebookUser.objects.get(uid=self.uid)
         
@@ -104,7 +104,7 @@ class Yuanfenjigsaw:
             smallAvatar=matching_user.smallAvatar
             #获得照片
             from django.core import serializers
-            facebookPhotoList = serializers.serialize("json", FacebookPhoto.objects.filter(user_id=uid)[:12])
+            facebookPhotoList = serializers.serialize("json", FacebookPhoto.objects.filter(user_id=uid))
             
             return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,'facebookPhotoList':facebookPhotoList,
                                                        'avatar':avatar,'smallAvatar':smallAvatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
@@ -113,8 +113,7 @@ class Yuanfenjigsaw:
         
     def generate_pieces(self):
         import random
-        number = random.randint(1,100)
-        number=3
+        number = random.randint(1,3)
         year = int(str(datetime.date.today()).split("-")[0])
         month = int(str(datetime.date.today()).split("-")[1])
         day = int(str(datetime.date.today()).split("-")[2])

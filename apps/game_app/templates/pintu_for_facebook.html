@@ -503,7 +503,7 @@ removecloud();
 <div id="nouser" style="display: none;">
 	<div class="close"></div>
 	<span class="text-black" id='pair_message'>Oooooops, please try again!</span><br />
-	<span class="text-black free_chance">You still have<span id="user_count" style="color: red;"> {{count}} </span>free chance</span>
+	<span class="text-black free_chance">You still have <span id="user_count" style="color: red;"> {{count}} </span>  free chances</span>
 	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
 	<div class="push try_again " style="left:90px; top: 320px;">Play again</div>
 </div>
@@ -824,6 +824,20 @@ function loadStage() {
 				$('#invite').show('slow');
 			}
 		});
+		
+		$('.button_type_1').mouseover(function(){
+			if (this.style.backgroundImage=='url("/static/img/buy.png")' ||this.style.backgroundImage=="url(http://127.0.0.1/static/img/buy.png)"){
+			   this.style.backgroundImage='url("/static/img/buy2.png")';
+			   }else if(this.style.backgroundImage=='url("/static/img/ask_friend.png")' ||this.style.backgroundImage=="url(http://127.0.0.1/static/img/ask_friend.png)"){
+			   this.style.backgroundImage='url("/static/img/ask_friend2.png")';
+			   }
+			}).mouseleave(function(){
+			 if (this.style.backgroundImage=='url("/static/img/buy2.png")' ||this.style.backgroundImage=="url(http://127.0.0.1/static/img/buy2.png)"){
+			   this.style.backgroundImage='url("/static/img/buy.png")';
+			   }else if(this.style.backgroundImage=='url("/static/img/ask_friend2.png")' ||this.style.backgroundImage=="url(http://127.0.0.1/static/img/ask_friend2.png)"){
+			   this.style.backgroundImage='url("/static/img/ask_friend.png")';
+			   }
+			});
 		
 		$('#search').keyup(function(){
 			delay(function(){
