@@ -683,7 +683,8 @@ function loadStage() {
         	 record_user.find('.img-circle').attr('title','username:'+data[2]['username']+' '+'location:'+data[2]['city']);
         	 record_user.find('a').attr('href',"https://www.facebook.com/"+data[2]['uid']);
         	 record_user.removeClass('record-user-clone')
-        	 $('.record-user-list').prepend("<li>").append(record_user).append('</li>');
+        	 $('.record-user-list').prepend("<li>");
+        	 $('.record-user-list').children().first().append(record_user)
         	 type=2
         	 facebookPhotoList=data[2]['facebookPhotoList']
         	 facebookPhotoList=$.parseJSON(facebookPhotoList)
