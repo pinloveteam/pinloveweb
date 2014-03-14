@@ -560,7 +560,7 @@ removecloud();
 <div id="record">
 	<span style="color:#8c43c4;line-height:19px;font-size: 20px; margin-left: 55px;word-wrap: break-word;letter-spacing: 20px; width: 5px; float:left; ">record</span>
 	<ul class="record-user-list"  style="float: left;">
-	    {% for facebookUser in facebookUserList %}
+	    {% for facebookUser in facebookUserRecordList %}
 	       <li><div class="record-user head_boy "><a target="_blank" href="https://www.facebook.com/{{facebookUser.uid}}" ><img src="{{facebookUser.smallAvatar}}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.location}} age:{{facebookUser.age}}"><div  class=" {% ifequal facebookUser.online 1%}online{%else%}outline{%endifequal %}"></div></a></div></li>
 	    {% endfor %}
 	</ul>

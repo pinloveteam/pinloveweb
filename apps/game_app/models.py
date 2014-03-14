@@ -13,9 +13,9 @@ class Yuanfenjigsaw:
     uid = ''
     gender = ''
     def __init__(self,request):
-#         if cache.get('TODAY') != datetime.date.today():
-            #reset_game()
-#             get_count(request)
+        if cache.get('TODAY') != datetime.date.today():
+            reset_game()
+            get_count(request)
         self.uid = request.GET.get('uid')
         facebookUser=FacebookUser.objects.get(uid=self.uid)
         
@@ -140,8 +140,8 @@ def set_count(uid,gameCount):
 
 def reset_game():
     cache.set('TODAY',datetime.date.today())
-    cache.set('GIRLS',{})
-    cache.set('BOYS',{})
+#     cache.set('GIRLS',{})
+#     cache.set('BOYS',{})
     cache.set('USER_GAME_COUNT',{})
     cache.set('INVITE_IN_DAY',{})
 
@@ -240,5 +240,10 @@ def get_recommend_history(uid):
     recommendHistoryList=simplejson.loads(FacebookUser.objects.get(uid=uid).recommendList)
     facebookUserList=FacebookUser.objects.filter(uid__in=recommendHistoryList)
     from util.util import model_to_dict
-    facebookUserListDcit=model_to_dict(facebookUserList, fields=['uid','username','smallAvatar','location','age','link']) 
+    facebookUserListTemp=model_to_dict(facebookUserList, fields=['uid','username','smallAvatar','location','age','link'])
+    facebookUserListDcit=[]
+    for recommendUid in reversed(recommendHistoryList):
+        for user in facebookUserListTemp:
+            if user.get('uid')==recommendUid:
+                facebookUserListDcit.append(user)
     return facebookUserListDcit
