@@ -457,11 +457,9 @@ def get_apprequset(request,uid):
             requestId=apprequest.get('id')
             userId=apprequest.get('from').get('id')
             username=apprequest.get('from').get('name')
-            from apps.game_app.models import get_invite_in_day,add_invite_in_day
+            from apps.game_app.models import get_invite_in_day
             if (not userId in userUid) and userId not in get_invite_in_day(uid):
                 userAvatar=FacebookUser.objects.get(uid=userId).avatar
-                #添加到今天推荐过的Uid
-                add_invite_in_day(uid,userId)
                 userUid.append(userId)
                 users.append({'uid':userId,'username':username,'avatar':userAvatar}) 
             request.facebook.graph.delete_object(requestId)

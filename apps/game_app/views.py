@@ -35,9 +35,10 @@ def confirm_request_life(request):
     for offset in uidList:
      if offset in userUid:
         from apps.game_app.models import get_game_count_forever,set_game_count_forever,get_invite_count,set_invite_count
-        import logging
-        logging.error('%s' % (request.facebook))
         invite_count=get_invite_count(offset)+1
+        #添加到今天推荐过的Uid
+        from apps.game_app.models import add_invite_in_day
+        add_invite_in_day(uid,offset)
         from django.core.cache import cache
         if (invite_count-cache.get('INVITE_TIME_A_LIFE'))>=0:
             set_invite_count(offset,invite_count-3)
@@ -52,9 +53,6 @@ def confirm_request_life(request):
         if not has_invited(offset,uid):
             add_invite_confirm(offset,uid)
         inviteConfirm= cache.get('CONFIRM_INVITE')
-#         from apps.third_party_login_app.models import FacebookUser
-#         username=FacebookUser.objects.get(uid=uid).username
-#         args['count']=get_count(username)+get_game_count_forever(uid)
     args['result']='success'
     json=simplejson.dumps(args)
     return HttpResponse(json, mimetype='application/javascript')
