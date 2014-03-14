@@ -498,7 +498,7 @@ def feed(request):
              "link": "https://apps.facebook.com/pinloveapp/",
              'name':"fate",
              "caption": "fate",
-             "description": "an interesting game ",
+             "description": "Find your today's fated friend on facebook",
              "picture": "http://www.pinlove.com/static/img/coin.png"}
      message='Invite friends to play the game! fate--->https://apps.facebook.com/pinloveapp/'
      authResponse=request.REQUEST.get('authResponse',False)
