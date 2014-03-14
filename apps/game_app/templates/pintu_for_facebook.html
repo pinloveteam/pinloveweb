@@ -756,7 +756,7 @@ function loadStage() {
 		  $('.push').click(StartGame);
           if (type==2){
         	  set_game_count(game_count)
-        	  $('.record-user-list').children().last().show()
+        	  $('.record-user-list').children().first().children().show()
         	  $('#card').show('slow');
           }else if(type==0){
         	  $('#nouser').show('slow');
