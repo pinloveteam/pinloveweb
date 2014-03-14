@@ -55,6 +55,14 @@ function restore_backup(){
 		}
 	});
 }
+function clean_invite_in_day(){
+	var userId=$('#invite_in_day_uid').val()
+	$.getJSON('/game/invite_in_day/',{userId:userId},function(data){
+		if(data['result']=='success'){
+			alert('清空成功!')
+		}
+	});
+}
 </script>
 </head>
 <body>
@@ -79,7 +87,7 @@ function restore_backup(){
   <tr><td>确认邀请的次数</td><td><div id='invite_count' >{{invite_count}}</div></td></tr>
   <tr><td>永久次数</td><td><div id='game_forever' >{{game_forever}}</div></td></tr>
   <tr><td>确认用户</td><td><div id=' confirm_invite' >{{ confirm_invite}}</div></td></tr>
-  <tr><td>今天推荐过的好友</td><td><div id=' invite_in_day' >{{invite_in_day}}</div></td></tr>
+  <tr><td>今天推荐过的好友</td><td><div id=' invite_in_day' >{{invite_in_day}}<br>uid：<input id='invite_in_day_uid' name="userid" value=""><a href="javascript:void(0)" onclick="clean_invite_in_day()">清空</a></div></td></tr>
 </form>
 </table>
 

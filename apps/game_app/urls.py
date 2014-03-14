@@ -5,7 +5,10 @@ urlpatterns=patterns('apps.game_app.views',
     url(r'^jigsaw/$','jigsaw',name="jigsaw"),
     url(r'^jigsaw_mobi/$','jigsaw_mobi'),
     url(r'^confirm_request_life/$','confirm_request_life'),
-   # url(r'^pintu_for_facebook/$','pintu_for_facebook'),
+)
+#debug  facebook 拼图
+urlpatterns +=patterns('apps.game_app.views',
+                       
    url(r'^reset_game/$','reset_game_cache'),
     url(r'^recommend_history/$','recommend_history'),
     #备份拼图的cache
@@ -14,7 +17,7 @@ urlpatterns=patterns('apps.game_app.views',
      url(r'^restore_backup_pintu_cache/$','restore_backup_pintu_cache'),
      #加游戏次数
      url(r'^add_user_count/$','add_user_count'),
-     
+     url(r'^invite_in_day/$','invite_in_day'),
      #########test##############
      url(r'^tset_match/$','tset_match'),
      

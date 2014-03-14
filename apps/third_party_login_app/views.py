@@ -343,7 +343,9 @@ def pintu_for_facebook(request):
 #                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
 #                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
 #                        {'username': u'Lov  Pin', 'uid': u'1000072470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'}]
-#     return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserList':facebookUserList})
+#     from apps.game_app.models import get_recommend_history
+#     facebookUserRecordList=get_recommend_history('100007203789389')
+#     return render(request, 'pintu_for_facebook.html',{'uid':'100007203789389','count':10,'data':simplejson.dumps(users),'userCount':len(users),'inviteNonfirmList':simplejson.dumps(inviteNonfirmList),'facebookUserRecordList':facebookUserRecordList})
     
 '''
  初始化页面
@@ -405,14 +407,14 @@ def init_pintu(request,uid):
     facebookUserListDcit=get_recommend_history(uid)
     #获取在线
     friendsOnlineUid=friends_online(request)
-    facebookUserList=[]
+    facebookUserRecordList=[]
     for facebookUserDcit in facebookUserListDcit:
         if  facebookUserDcit.get("uid") in friendsOnlineUid:
             facebookUserDcit['online']=1
         else:
             facebookUserDcit['online']=0
-        facebookUserList.append(facebookUserDcit)    
-    args['facebookUserList']=facebookUserList
+        facebookUserRecordList.append(facebookUserDcit)    
+    args['facebookUserRecordList']=facebookUserRecordList
     return args
        
 def debug_pintu_cache(request):   
@@ -457,7 +459,7 @@ def get_apprequset(request,uid):
             username=apprequest.get('from').get('name')
             from apps.game_app.models import get_invite_in_day,add_invite_in_day
             if (not userId in userUid) and userId not in get_invite_in_day(uid):
-                userAvatar=FacebookUser.objects.get(uid=uid).avatar
+                userAvatar=FacebookUser.objects.get(uid=userId).avatar
                 #添加到今天推荐过的Uid
                 add_invite_in_day(uid,userId)
                 userUid.append(userId)
