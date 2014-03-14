@@ -38,7 +38,7 @@ def confirm_request_life(request):
         invite_count=get_invite_count(offset)+1
         #添加到今天推荐过的Uid
         from apps.game_app.models import add_invite_in_day
-        add_invite_in_day(offset,uid)
+        add_invite_in_day(uid,offset)
         from django.core.cache import cache
         if (invite_count-cache.get('INVITE_TIME_A_LIFE'))>=0:
             set_invite_count(offset,invite_count-3)
