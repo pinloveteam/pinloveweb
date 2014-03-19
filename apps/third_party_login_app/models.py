@@ -58,3 +58,16 @@ class FacebookPhoto(models.Model):
         verbose_name = u'facebook照片' 
         verbose_name_plural = u'facebook照片'
         db_table = "facebook_photo" 
+'''
+现用于用户学历历史和工作历史
+type=[school,employer]
+'''
+class FacebookUserInfo(models.Model):
+    user=models.ForeignKey(FacebookUser,related_name="userInfo",verbose_name=u'facebook用户')
+    typeId=models.CharField(verbose_name=u'type_id',max_length=125,)
+    type=models.CharField(verbose_name=u'类型',max_length=125,null=True,blank=True,)
+    name=models.CharField(verbose_name=u'名字',max_length=255,null=True,blank=True,)
+    class Meta:
+        verbose_name = u'facebook 用户的详细信息' 
+        verbose_name_plural = u'facebook用户的详细信息'
+        db_table = "facebook_user_info" 

@@ -2,9 +2,12 @@
 import datetime
 
 from django.core.cache import cache
-from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
+from apps.third_party_login_app.models import FacebookUser, FacebookPhoto,\
+    FacebookUserInfo
 import simplejson
 import logging
+
+
 
 class Yuanfenjigsaw:
 #     selected_pieces_str = ''
@@ -23,8 +26,11 @@ class Yuanfenjigsaw:
         self.pieces = self.generate_pieces()
         self.matching_pieces = self.pieces#与之互补的集合
         self.gender = facebookUser.gender
+        self.age=facebookUser.age
+        self.location=facebookUser.location
         self.noRecommendList=simplejson.loads(facebookUser.noRecommendList)
         self.recommendList=simplejson.loads(facebookUser.recommendList)
+        self.filter=request.GET.get('filter')
         
 #     def data_unavailable(self):
 #         return  self.pieces - cache.get('ALL_PIECE') != set([]) or self.matching_pieces ==  cache.get('ALL_PIECE') or self.matching_pieces == set([])
@@ -44,15 +50,97 @@ class Yuanfenjigsaw:
         if cache.get(match_gender).get(str(self.matching_pieces))==None:
             return None
         matching_uid_list=cache.get(match_gender).get(str(self.matching_pieces))
-        for uid in matching_uid_list:
-            if not uid in self.noRecommendList: 
-                matching_uid=uid
-                self.recommendList.append(uid)
-                self.noRecommendList.append(uid)
-                FacebookUser.objects.filter(uid=self.uid).update(noRecommendList=simplejson.dumps(self.noRecommendList),recommendList=simplejson.dumps(self.recommendList))
-                break;
+        matching_uid=self.get_match_user_uid(matching_uid_list)
         return matching_uid
-    
+      
+        
+    '''
+    根据cache 中的信息匹配用户数据
+    '''
+    def get_match_user_uid(self,matching_uid_list):
+        matching_uid=None
+        filter=False
+       
+        if self.filter!=None:
+          uids=self.noRecommendList
+          uids.append(self.uid)
+          uidsstr=','.join(uids)
+          matching_uid_str=','.join(matching_uid_list)
+          if self.filter=='age' or self.filter=='location':
+              if self.filter=='age':
+                facebookUser=FacebookUser.objects.filter(age=getattr(self,self.filter),uid__in=matching_uid_list).exclude(uid__in=uids)
+              if self.filter=='location':
+                 facebookUser=FacebookUser.objects.filter(location=getattr(self,self.filter),uid__in=matching_uid_list).exclude(uid__in=uids)
+              if len(facebookUser)<=0:
+                  filter=False
+              else:
+                  self.update_norecommend_list(facebookUser[0].uid)
+                  return facebookUser[0].uid
+          elif self.filter=='work' or self.filter=='school':
+              #获取学历和工作，并将分别存储的数组中
+              facebookUserInfoList=FacebookUserInfo.objects.filter(user_id=self.uid)
+              shoolList=[]
+              employerList=[]
+              for facebookUserInfo in facebookUserInfoList:
+                  if facebookUserInfo.type=='school':
+                      shoolList.append(facebookUserInfo.name)
+                  if  facebookUserInfo.type=='employer':
+                      employerList.append(facebookUserInfo.name)
+              if self.filter=='work':
+                  employerStr=''
+                  for employer in employerList:
+                      employerStr+=u" name = '"+employer+u"' or"
+                  if len(shoolList)>0:
+                      employerStr=  '%s%s%s' % (u'and (',employerStr[:len(employerStr)-2],u')')
+                      sql='''
+          SELECT  distinct u1.user_id as shool_user_id  from facebook_user_info u1 where type=%s '''+employerStr+''' and u1.user_id in( %s ) and u1.user_id not in (%s)
+group by u1.user_id
+ORDER BY  count(u1.user_id) DESC
+LIMIT 0,1
+'''            
+                      from util.connection_db import connection_to_db
+                      user_id=connection_to_db(sql,('employer',matching_uid_str,uidsstr))
+                      if len(user_id)>0:
+                          return user_id[0][0]
+                      else:
+                          filter=False
+                  else:
+                      filter=False
+              if self.filter=='school':
+                  shoolStr=''
+                  for shool in shoolList:
+                      shoolStr+=u" name ='"+shool+u"' or"
+                  if len(shoolList)>0:
+                      shoolStr= '%s%s%s' % (u'and (',shoolStr[:len(shoolStr)-2],u')')
+                      sql='''
+          SELECT  distinct u1.user_id as shool_user_id  from facebook_user_info u1 where type=%s '''+shoolStr+''' and u1.user_id in( %s ) and u1.user_id not in (%s)
+group by u1.user_id
+ORDER BY  count(u1.user_id) DESC
+LIMIT 0,1
+'''               
+                      from util.connection_db import connection_to_db
+                      user_id=connection_to_db(sql,('school',matching_uid_str,uidsstr))
+                      if len(user_id)>0:
+                          return user_id[0][0]
+                      else:
+                           filter=False
+                          
+                  else:
+                      filter=False
+                      
+        if not filter:
+            for uid in matching_uid_list:
+                if not uid in self.noRecommendList: 
+                    matching_uid=uid
+                    self.update_norecommend_list(uid)
+                    break;
+            return matching_uid
+  
+    def update_norecommend_list(self,uid):
+        self.recommendList.append(uid)
+        self.noRecommendList.append(uid)
+        FacebookUser.objects.filter(uid=self.uid).update(noRecommendList=simplejson.dumps(self.noRecommendList),recommendList=simplejson.dumps(self.recommendList))
+        
     def get_matching_user(self):
         
 #         if  self.gender == 'M':
@@ -89,8 +177,18 @@ class Yuanfenjigsaw:
     
     
     def get_match_result(self):
+         
 #         if self.data_unavailable() :
 #             return {'status_code':cache.get('DATA_UNAVAILABLE')}
+        #判断筛选条件是否存在
+        if self.filter=='age' and self.age==None:
+                return [4,'age']
+        if self.filter=='location' and self.age==None:
+                return [4,'location']
+        if self.filter=='school' and (not FacebookUserInfo.objects.filter(user_id='100007247470289',type='school').exists()):
+                return [4,'education']
+        if self.filter=='employer' and  (not FacebookUserInfo.objects.filter(user_id=self.uid,type='employer').exists()) :
+                return [4,'employer']
         if self.achieve_game_times() :
             return [cache.get('GAME_TIMES_REACH_THE_LIMIT')]
         matching_user = self.get_matching_user()

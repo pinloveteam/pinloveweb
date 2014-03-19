@@ -27,7 +27,8 @@ from .setting import (
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from apps.third_party_login_app.models import FacebookUser, FacebookPhoto
+from apps.third_party_login_app.models import FacebookUser, FacebookPhoto,\
+    FacebookUserInfo
 import urllib2
 from django.utils import simplejson
 log=logging.getLogger(__name__)
@@ -330,7 +331,7 @@ def pintu_for_facebook(request):
     for field in ['data','inviteNonfirmList']:
         args[field]=simplejson.dumps(args[field])
     return render(request, 'pintu_for_facebook.html',args)
-#     facebookUserList=[{'username': u'Love  Pin', 'location': u'Hangzhou, China', 'online': 1, 'uid': u'100007247470289', 
+#     facebookUserRecordList=[{'username': u'Love  Pin', 'location': u'Hangzhou, China', 'online': 1, 'uid': u'100007247470289', 
 #      'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash2/t1/c28.0.80.80/p80x80/1476022_1382326562018913_1553944026_n.jpg','smallAvatar':'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t5/211329_100007247470289_259768164_q.jpg'}]
 #     users=[{'username': u'Love  Pin', 'uid': u'100007247470289', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
 #            {'username': u'Love  n', 'uid': u'100007247470234', 'avatar': u'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1/c0.0.80.80/p80x80/1622000_1401716753411771_999418056_a.jpg'},
@@ -383,7 +384,9 @@ def init_pintu(request,uid):
     args['uid']=uid
 #     data=request.facebook.graph.extend_access_token( FaceBookAppID,FaceBookAppSecret)
     if FacebookUser.objects.filter(uid=uid).exists():
-        me=request.facebook.user
+        me=FacebookUser.objects.get(uid=uid)
+        #判断信息是否更新
+        check_info_update(request,me)
     else:
         facebook_save(request,uid)
 #         feed(request)
@@ -466,7 +469,8 @@ def get_apprequset(request,uid):
     return {'users':users,'userUid':userUid}
 
 def facebook_save(request,uid):
-        me = request.facebook.graph.get_object(uid)
+        me = request.facebook.graph.get_object(uid,fields='id,name,updated_time,gender,link,birthday,location,education,work')
+      
         friends =request.facebook.graph.get_object(uid+'/friends').get('data')
         friendList=[]
         for friend in friends:
@@ -490,9 +494,59 @@ def facebook_save(request,uid):
         if not smallAvatar is None:
             facebookUser.smallAvatar=smallAvatar.get('url')
         facebookUser.save()
+        #保存工作和学校
+        facebook_save_as_work_education(uid,me.get('work'),me.get('education'))
         #保存图片
         user_photos_save(request,uid)
+ 
+'''
+检查facebook信息是否更新
+'''        
+def check_info_update(request,user):
+    me = request.facebook.graph.get_object(user.uid,fields='updated_time,gender,birthday,location,education,work')
+    if datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000').replace(tzinfo=None)>=user.updateTime.replace(tzinfo=None):
+        flag=False;
+        if 'birthday' in me.keys():
+            birthday=datetime.datetime.strptime(me.get('birthday'),'%m/%d/%Y')
+            from datetime import date
+            age=(date.today().year + 1)-birthday.year 
+            if age!=user.age:
+                user.age=age
+                flag=True;
+        if 'location' in me.keys():
+            location=me.get('location').get('name')
+            if  location!=user.location:
+                user.location=location
+                flag=True;
+        if flag:
+            me.save()
+        facebookUserInfoList=FacebookUserInfo.objects.filter(user_id=user.uid)    
+        schoolList=[]
+        employerList=[]
+        for facebookUserInfo in facebookUserInfoList:
+            if facebookUserInfo.type=='school':
+                schoolList.append(facebookUserInfo.typeId)
+            if  facebookUserInfo.type=='employer':
+                employerList.append(facebookUserInfo.typeId)
+        for workObj in me.get('work'):
+           employer=workObj.get('employer')
+           if employer.get('id') not in employerList:
+               FacebookUserInfo(user_id=user.uid,typeId=employer.get('id'),type='employer',name=employer.get('name')).save()
+        for educationObj in me.get('education'):
+            school=educationObj.get('school')
+            if school.get('id') not in schoolList:
+                FacebookUserInfo(user_id=user.uid,typeId=school.get('id'),type='school',name=school.get('name')).save()
         
+           
+def facebook_save_as_work_education(uid,work,education):
+    for educationObj in education:
+        school=educationObj.get('school')
+        FacebookUserInfo(user_id=uid,typeId=school.get('id'),type='school',name=school.get('name')).save()
+    for workObj in work:
+        employer=workObj.get('employer')
+        FacebookUserInfo(user_id=uid,typeId=employer.get('id'),type='employer',name=employer.get('name')).save()
+        
+      
 def feed(request):
      attachment={
              "link": "https://apps.facebook.com/pinloveapp/",

@@ -77,7 +77,7 @@ button{
 
 #buy_page{
 	position: absolute; 
-	left: 560px; 
+	left: 670px; 
 	top: 130px; 
 	width: 400px;
 	height: 400px;
@@ -378,7 +378,7 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 #record{
 	position: absolute;
 	top:0px;
-	left:-45px;
+	left:-105px;
 	width: 100px;
 	height: 100%;
 	background-color: #ffd2d4;
@@ -391,7 +391,7 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 #record-cover{
 	position: absolute;
 	top:0px;
-	left:38px;
+	left:-20px;
 	width: 20px;
 	height: 100%;
 	background-color: #ffd2d4;
@@ -419,6 +419,35 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 	font-size: 20px;
 	Line-height:50px;
 }
+.filter{
+  position: absolute;
+  left:50px;
+}
+
+#search_condition{
+	position: absolute; 
+	left: 520px; 
+	top: 130px; 
+	width: 120px;
+	height: 320px;	
+	background-color: #ffc7fa;
+	border: solid 8px #fff;
+	border-radius: 50px;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
+	-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+	-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
+	box-shadow:2px 2px 10px #909090;/*opera或ie9*/
+}
+
+#search_condition > input {
+	width: 22px;
+	margin-top: 40px;
+}
+
+#search_condition > span {
+	cursor: pointer
+}
+
 </style>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
@@ -473,6 +502,7 @@ removecloud();
     <img  class="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
     <img src="{{STATIC_URL}}img/拼图-68.png" style="position: absolute;top:30px;left: 280px;"/>
+     <a href="javascript:void(0)"><img id="record_icon"   src="{{STATIC_URL}}img/RECORD.png" style="position: absolute;top:10px;left: 0px;"></a>
 <div id="card" style="position: absolute;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
@@ -526,6 +556,14 @@ removecloud();
 </div>
 </div>
 
+<div id="search_condition">
+    <input type="radio" name="radiobutton" value="all" ><span>no choice</span>
+	<input type="radio" name="radiobutton" value="school" ><span>same school</span>
+	<input type="radio" name="radiobutton" value="work" ><span>same work</span>
+	<input type="radio" name="radiobutton" value="location" ><span>same city</span>
+	<input type="radio" name="radiobutton" value="age" ><span>same age</span>
+</div>
+
 <div id="recevie" style="display: none;">
 	<div class="recevie_close"></div>
 	<img id="inviteImg" src="{{STATIC_URL}}img/拼图-71.png" style="position: absolute;top:20px;left: 150px;"/>
@@ -559,7 +597,6 @@ removecloud();
 <div class="button_type_2">send<span style="color:#FF0000">♥</span></div>
 </div>
 <div id="record">
-	<span style="color:#8c43c4;line-height:19px;font-size: 20px; margin-left: 55px;word-wrap: break-word;letter-spacing: 20px; width: 5px; float:left; ">record</span>
 	<ul class="record-user-list"  style="float: left;">
 	    {% for facebookUser in facebookUserRecordList %}
 	       <li><div class="record-user head_boy "><a target="_blank" href="https://www.facebook.com/{{facebookUser.uid}}" ><img src="{{facebookUser.smallAvatar}}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.location}} age:{{facebookUser.age}}"><div  class=" {% ifequal facebookUser.online 1%}online{%else%}outline{%endifequal %}"></div></a></div></li>
@@ -634,6 +671,7 @@ function loadStage() {
        quick=0;       //加速
         
        function StartGame(){
+    	  try{
     	   $('#nouser').hide('slow');
     	   $('.push').unbind();
     	   for(var i=0;i<pieces;i++){
@@ -646,8 +684,13 @@ function loadStage() {
          type=10;
          selectedPieces = new Array();
         Time = setInterval(Star,Speed);
-         $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}}},function(data) {
+         var filter=$('#search_condition').find('input:radio:checked').val()
+         $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}},filter:filter},function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
+        	 if(data[0]=='4'){
+        		 alert('Please fill in your '+data[1]+' on facebook! Refresh the login!')
+        		 type=4
+        	 }
         	 if(data[0]=='0'){
         		  $('#tab').hide()
         		  type=0;
@@ -705,6 +748,9 @@ function loadStage() {
         	  $('.push').click(StartGame);
            	  $('#game_count_end').show('slow');
            	  return;
+             }else if(type==4){
+            	 $('.push').click(StartGame);
+            	 return;
              }
         	 piece = data[1];
         	 EndIndex = piece[piece.length-1];
@@ -714,6 +760,15 @@ function loadStage() {
         	 
         	 //$('#count').html('游戏次数:'+data['count']);
         	 });
+    	  }catch(error){
+    		  console.log(error)
+    		  $('.push').click(StartGame);
+    		  clearInterval(Time);
+              flag=true;       //触发结束			 
+              Time=setInterval(Star,Speed);
+    		  alert('There is a problem,Please try again!')
+         	   return;
+    	  }
      }
        
         function Star(num){
@@ -833,9 +888,9 @@ function loadStage() {
 		});
 		
 		$('.button_type_1').mouseover(function(){
-			if (this.style.backgroundImage=='url("/static/img/buy.png")' ||this.style.backgroundImage=="url(http://127.0.0.1/static/img/buy.png)"){
+			if (this.style.backgroundImage=='url("/static/img/buy.png")' ||this.style.backgroundImage=="url(http://www.pinlove.com/static/img/buy.png)"){
 			   this.style.backgroundImage='url("/static/img/buy2.png")';
-			   }else if(this.style.backgroundImage=='url("/static/img/ask_friend.png")' ||this.style.backgroundImage=="url(http://127.0.0.1/static/img/ask_friend.png)"){
+			   }else if(this.style.backgroundImage=='url("/static/img/ask_friend.png")' ||this.style.backgroundImage=="url(http://www.pinlove.com/static/img/ask_friend.png)"){
 			   this.style.backgroundImage='url("/static/img/ask_friend2.png")';
 			   }
 			}).mouseleave(function(){
@@ -923,16 +978,22 @@ function loadStage() {
 			new User(users,2);
 			$('#invite').show('slow');
 		});
-	     
-		$('[id^=record]').mouseover(function(){
-			$('#record-cover').animate({left:"82px"},0);
-			$('#record').animate({left:"0px"},0);
+	    var mouseoverfinish=true;
+		$('#record_icon').click(function(){
+			if (mouseoverfinish){
+				$('#record-cover').animate({left:"82px"},0);
+				$('#record').animate({left:"0px"},0);
+				$('#record_icon').animate({left:"95px"},650);
+				mouseoverfinish=false;
+			}else{
+				$('#record-cover').animate({left:"-20px"},0);
+				$('#record').animate({left:"-105px"},0);
+				$('#record_icon').animate({left:"0px"},650);
+				mouseoverfinish=true;
+			}
+			
 		});
 		
-		$('[id^=record]').mouseout(function(){
-			$('#record-cover').animate({left:"42px"},0);
-			$('#record').animate({left:"-40px"},0);
-		});
 		
 		//发送所有
 		$('#sendALL').click(function(){
@@ -1200,7 +1261,7 @@ function facebook_send_message() {
         name:'fate',
         description:'Find your everyday friend on facebook!',
         picture:'http://www.pinlove.com/static/img/coin.png',
-        link: 'apps.facebook.com/pinloveapp/?fb_source=bookmark_apps&ref=bookmarks&count=0&fb_bmpos=3_0',
+        link: 'https://apps.facebook.com/pinloveapp/',
         to:userId
 
     });
