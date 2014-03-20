@@ -518,7 +518,7 @@ def check_info_update(request,user):
                 user.location=location
                 flag=True;
         if flag:
-            me.save()
+            user.save()
         facebookUserInfoList=FacebookUserInfo.objects.filter(user_id=user.uid)    
         schoolList=[]
         employerList=[]
