@@ -101,6 +101,7 @@ LIMIT 0,1
                       from util.connection_db import connection_to_db
                       user_id=connection_to_db(sql,('employer',matching_uid_str,uidsstr))
                       if len(user_id)>0:
+                          self.update_norecommend_list(user_id[0][0])
                           return user_id[0][0]
                       else:
                           filter=False
@@ -121,6 +122,7 @@ LIMIT 0,1
                       from util.connection_db import connection_to_db
                       user_id=connection_to_db(sql,('school',matching_uid_str,uidsstr))
                       if len(user_id)>0:
+                          self.update_norecommend_list(user_id[0][0])
                           return user_id[0][0]
                       else:
                            filter=False
