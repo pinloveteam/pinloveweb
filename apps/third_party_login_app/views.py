@@ -503,8 +503,7 @@ def facebook_save(request,uid):
 检查facebook信息是否更新
 '''        
 def check_info_update(request,user):
-    me = request.facebook.graph.get_object(user.uid,fields='updated_time,gender,birthday,location,education,work')
-    if datetime.datetime.strptime(me.get('updated_time'),'%Y-%m-%dT%H:%M:%S+0000').replace(tzinfo=None)>=user.updateTime.replace(tzinfo=None):
+        me = request.facebook.graph.get_object(user.uid,fields='updated_time,gender,birthday,location,education,work')
         flag=False;
         if 'birthday' in me.keys():
             birthday=datetime.datetime.strptime(me.get('birthday'),'%m/%d/%Y')
