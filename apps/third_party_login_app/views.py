@@ -528,11 +528,13 @@ def check_info_update(request,user):
                 schoolList.append(facebookUserInfo.typeId)
             if  facebookUserInfo.type=='employer':
                 employerList.append(facebookUserInfo.typeId)
-        for workObj in me.get('work'):
+        if 'work' in me.keys():
+         for workObj in me.get('work'):
            employer=workObj.get('employer')
            if employer.get('id') not in employerList:
                FacebookUserInfo(user_id=user.uid,typeId=employer.get('id'),type='employer',name=employer.get('name')).save()
-        for educationObj in me.get('education'):
+        if 'education' in me.keys():
+         for educationObj in me.get('education'):
             school=educationObj.get('school')
             if school.get('id') not in schoolList:
                 FacebookUserInfo(user_id=user.uid,typeId=school.get('id'),type='school',name=school.get('name')).save()
