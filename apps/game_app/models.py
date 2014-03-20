@@ -185,7 +185,7 @@ LIMIT 0,1
                 return [4,'age']
         if self.filter=='location' and self.age==None:
                 return [4,'location']
-        if self.filter=='school' and (not FacebookUserInfo.objects.filter(user_id='100007247470289',type='school').exists()):
+        if self.filter=='school' and (not FacebookUserInfo.objects.filter(user_id='self.uid',type='school').exists()):
                 return [4,'education']
         if self.filter=='employer' and  (not FacebookUserInfo.objects.filter(user_id=self.uid,type='employer').exists()) :
                 return [4,'employer']
