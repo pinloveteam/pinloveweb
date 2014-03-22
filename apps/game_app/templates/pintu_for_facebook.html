@@ -40,6 +40,7 @@ body{
 	width: 80px;
 	height: 80px;
 	margin-left:30px;
+	margin-top: 6px;
 	display: inline-block;
 }
 
@@ -428,7 +429,7 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 	position: absolute; 
 	left: 520px; 
 	top: 130px; 
-	width: 120px;
+	width: 124px;
 	height: 320px;	
 	background-color: #ffc7fa;
 	border: solid 8px #fff;
@@ -440,8 +441,8 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 }
 
 #search_condition > input {
-	width: 22px;
-	margin-top: 40px;
+	width: 15px;
+	margin-top: 48px;
 }
 
 #search_condition > span {
@@ -502,7 +503,7 @@ removecloud();
     <img  class="push" src="{{STATIC_URL}}img/push-57.png"/>
     <img id="game_name" src="{{STATIC_URL}}img/fate-63.png"/>
     <img src="{{STATIC_URL}}img/拼图-68.png" style="position: absolute;top:30px;left: 280px;"/>
-     <a href="javascript:void(0)"><img id="record_icon"   src="{{STATIC_URL}}img/RECORD.png" style="position: absolute;top:10px;left: 0px;"></a>
+     <a href="javascript:void(0)"><img id="record_icon"   src="{{STATIC_URL}}img/RECORD.png" style="position: absolute;top:10px;left: 0px;border:none;"></a>
 <div id="card" style="position: absolute;display:none;" >
 <div class="close"></div>
 <div id="info" class="card" >
@@ -512,6 +513,7 @@ removecloud();
 	<div class="head head_girl">
 		<a id="head_url" target="_blank" href=""><img src="" class="img-circle"></a>
 	</div>
+	<img id="filter_type" src="" style="position: absolute;margin-left: 30px;margin-top: 40px;display: none;">
 	<div class="name">
 		<h3 ><strong></strong></h3>
 	</div>
@@ -557,11 +559,10 @@ removecloud();
 </div>
 
 <div id="search_condition">
-    <input type="radio" name="radiobutton" value="all" ><span>no choice</span>
-	<input type="radio" name="radiobutton" value="school" ><span>same school</span>
-	<input type="radio" name="radiobutton" value="work" ><span>same work</span>
+    <input type="radio" name="radiobutton" value="all" ><span>random match</span><br>
+	<input type="radio" name="radiobutton" value="school" ><span>same school</span><br>
+	<input type="radio" name="radiobutton" value="work" ><span>same work</span><br>
 	<input type="radio" name="radiobutton" value="location" ><span>same city</span>
-	<input type="radio" name="radiobutton" value="age" ><span>same age</span>
 </div>
 
 <div id="recevie" style="display: none;">
@@ -703,6 +704,10 @@ function loadStage() {
         	 var template = $('#info_clone').clone();
         	 template.find('#userId').val(data[2]['uid']);
         	 template.find('.img-circle').attr('src',data[2]['avatar']);
+        	 if (data[2]['filter_pic']!=''){
+        		 template.find('#filter_type').attr('src',data[2]['filter_pic']).attr('title',data[2]['filter_match']);
+        		 template.find('#filter_type').show();
+        	 }
         	 template.find('#head_url').attr('href',"https://www.facebook.com/"+data[2]['uid'])
         	 if (data[2]['username'].length>26){
         		 var username=data[2]['username'].substring(0,26)

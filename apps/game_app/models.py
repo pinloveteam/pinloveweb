@@ -31,6 +31,8 @@ class Yuanfenjigsaw:
         self.noRecommendList=simplejson.loads(facebookUser.noRecommendList)
         self.recommendList=simplejson.loads(facebookUser.recommendList)
         self.filter=request.GET.get('filter')
+        #根据学校，学历，地点，匹配结果
+        self.filter_match=None
         
 #     def data_unavailable(self):
 #         return  self.pieces - cache.get('ALL_PIECE') != set([]) or self.matching_pieces ==  cache.get('ALL_PIECE') or self.matching_pieces == set([])
@@ -64,8 +66,8 @@ class Yuanfenjigsaw:
         if self.filter!=None:
           uids=self.noRecommendList
           uids.append(self.uid)
-          uidsstr=','.join(uids)
-          matching_uid_str=','.join(matching_uid_list)
+          uidsstr="','".join(uids)
+          matching_uid_str="','".join(matching_uid_list)
           if self.filter=='age' or self.filter=='location':
               if self.filter=='age':
                 facebookUser=FacebookUser.objects.filter(age=getattr(self,self.filter),uid__in=matching_uid_list).exclude(uid__in=uids)
@@ -75,6 +77,7 @@ class Yuanfenjigsaw:
                   filter=False
               else:
                   self.update_norecommend_list(facebookUser[0].uid)
+                  filter_match=facebookUser[0].location
                   return facebookUser[0].uid
           elif self.filter=='work' or self.filter=='school':
               #获取学历和工作，并将分别存储的数组中
@@ -86,6 +89,9 @@ class Yuanfenjigsaw:
                       shoolList.append(facebookUserInfo.name)
                   if  facebookUserInfo.type=='employer':
                       employerList.append(facebookUserInfo.name)
+              sql2='''
+                      SELECT DISTINCT name from facebook_user_info where user_id=%s
+                      '''    
               if self.filter=='work':
                   employerStr=''
                   for employer in employerList:
@@ -93,15 +99,18 @@ class Yuanfenjigsaw:
                   if len(shoolList)>0:
                       employerStr=  '%s%s%s' % (u'and (',employerStr[:len(employerStr)-2],u')')
                       sql='''
-          SELECT  distinct u1.user_id as shool_user_id  from facebook_user_info u1 where type=%s '''+employerStr+''' and u1.user_id in( %s ) and u1.user_id not in (%s)
+          SELECT  distinct u1.user_id as shool_user_id  from facebook_user_info u1 where type=%s '''+employerStr+''' and u1.user_id in( '''+"'"+matching_uid_str+"'"+''' ) and u1.user_id not in ('''+"'"+uidsstr+"'"+''')
 group by u1.user_id
 ORDER BY  count(u1.user_id) DESC
 LIMIT 0,1
-'''            
+'''      
+                      sql2+=employerStr
                       from util.connection_db import connection_to_db
-                      user_id=connection_to_db(sql,('employer',matching_uid_str,uidsstr))
+                      user_id=connection_to_db(sql,('employer',))
                       if len(user_id)>0:
                           self.update_norecommend_list(user_id[0][0])
+                          employers=[employer[0]for employer in connection_to_db(sql2,(user_id[0][0]))]
+                          self.filter_match=employers
                           return user_id[0][0]
                       else:
                           filter=False
@@ -114,15 +123,18 @@ LIMIT 0,1
                   if len(shoolList)>0:
                       shoolStr= '%s%s%s' % (u'and (',shoolStr[:len(shoolStr)-2],u')')
                       sql='''
-          SELECT  distinct u1.user_id as shool_user_id  from facebook_user_info u1 where type=%s '''+shoolStr+''' and u1.user_id in( %s ) and u1.user_id not in (%s)
+          SELECT  distinct u1.user_id as shool_user_id  from facebook_user_info u1 where type=%s '''+shoolStr+''' and u1.user_id in( '''+"'"+matching_uid_str+"'"+''' ) and u1.user_id not in ('''+"'"+uidsstr+"'"+''')
 group by u1.user_id
 ORDER BY  count(u1.user_id) DESC
 LIMIT 0,1
-'''               
+'''                    
+                      sql2+=shoolStr
                       from util.connection_db import connection_to_db
-                      user_id=connection_to_db(sql,('school',matching_uid_str,uidsstr))
+                      user_id=connection_to_db(sql,('school'))
                       if len(user_id)>0:
                           self.update_norecommend_list(user_id[0][0])
+                          shools=[shool[0] for shool in connection_to_db(sql2,(user_id[0][0]))]
+                          self.filter_match=shools
                           return user_id[0][0]
                       else:
                            filter=False
@@ -189,8 +201,8 @@ LIMIT 0,1
                 return [4,'location']
         if self.filter=='school' and (not FacebookUserInfo.objects.filter(user_id=self.uid,type='school').exists()):
                 return [4,'education']
-        if self.filter=='employer' and  (not FacebookUserInfo.objects.filter(user_id=self.uid,type='employer').exists()) :
-                return [4,'employer']
+        if self.filter=='work' and  (not FacebookUserInfo.objects.filter(user_id=self.uid,type='employer').exists()) :
+                return [4,'work']
         if self.achieve_game_times() :
             return [cache.get('GAME_TIMES_REACH_THE_LIMIT')]
         matching_user = self.get_matching_user()
@@ -205,9 +217,16 @@ LIMIT 0,1
             #获得照片
             from django.core import serializers
             facebookPhotoList = serializers.serialize("json", FacebookPhoto.objects.filter(user_id=uid))
-            
+            filter_pic='';
+            if self.filter=='location' and self.filter_match!=None:
+                filter_pic='/static/img/facebook_location.png'
+            if self.filter=='school' and self.filter_match!=None:
+                filter_pic='/static/img/facebook_school.png'
+            if self.filter=='work' and self.filter_match!=None:
+                filter_pic='/static/img/facebook_work.png'
             return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,'facebookPhotoList':facebookPhotoList,
-                                                       'avatar':avatar,'smallAvatar':smallAvatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
+                                                       'avatar':avatar,'smallAvatar':smallAvatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid),
+                                                       'filter_pic':filter_pic,'filter_match':self.filter_match}]
         else :  
             return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
         

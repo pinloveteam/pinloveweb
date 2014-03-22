@@ -10,7 +10,7 @@ urlpatterns=patterns('apps.game_app.views',
 urlpatterns +=patterns('apps.game_app.views',
                        
    url(r'^reset_game/$','reset_game_cache'),
-    url(r'^recommend_history/$','recommend_history'),
+#     url(r'^recommend_history/$','recommend_history'),
     #备份拼图的cache
     url(r'^backup_pintu_cache/$','backup_pintu_cache'),
     #还原拼图的cache

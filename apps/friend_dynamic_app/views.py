@@ -314,8 +314,8 @@ def dynamic(request):
         userProfile=UserProfile.objects.get(user_id=request.user.id)
         #关注
         myFollow=Follow.objects.filter(my=request.user).count()
-        fans=Follow.objects.filter(Follow=request.user).count()
-        sql="select my_id from user_app_friend where friend_id="+str(request.user.id)+" and my_id in (SELECT friend_id from user_app_friend where my_id="+str(request.user.id)+") "
+        fans=Follow.objects.filter(follow=request.user).count()
+        sql="select my_id from follow where follow_id="+str(request.user.id)+" and my_id in (SELECT follow_id from follow where my_id="+str(request.user.id)+") "
         cursor=connection.cursor();
         cursor.execute(sql)
         follow=cursor.fetchall()

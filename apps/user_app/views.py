@@ -131,7 +131,7 @@ def follow(request,type,ajax='false'):
         arg['pages']=cardList
         from pinloveweb.method import init_person_info_for_card_page
         arg.update(init_person_info_for_card_page(userProfile))
-        return render(request, 'card.html',arg )
+        return render(request, 'member/follow.html',arg )
     else:
         arg = {}
         arg.update(csrf(request))
@@ -188,12 +188,7 @@ def user_profile(request):
         #认证
         from apps.verification_app.views import verification
         args.update(verification(request))
-         
-        return render_to_response(
-         'member/user_profile.html',
-         args,
-         context_instance = RequestContext(request)
-         )
+        return render(request,'member/user_profile.html',args)
 '''
 修改个人信息
 '''
