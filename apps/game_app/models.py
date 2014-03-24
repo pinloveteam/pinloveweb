@@ -113,9 +113,9 @@ LIMIT 0,1
                           self.filter_match=employers
                           return user_id[0][0]
                       else:
-                          filter=False
+                          return matching_uid
                   else:
-                      filter=False
+                      return matching_uid
               if self.filter=='school':
                   shoolStr=''
                   for shool in shoolList:
@@ -137,10 +137,9 @@ LIMIT 0,1
                           self.filter_match=shools
                           return user_id[0][0]
                       else:
-                           filter=False
-                          
+                           return matching_uid
                   else:
-                      filter=False
+                      return matching_uid
                       
         if not filter:
             for uid in matching_uid_list:
@@ -228,7 +227,7 @@ LIMIT 0,1
                                                        'avatar':avatar,'smallAvatar':smallAvatar,'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid),
                                                        'filter_pic':filter_pic,'filter_match':self.filter_match}]
         else :  
-            return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid)}]
+            return [cache.get('NO_MATCHING_USER'),pieces,{'game_count':cache.get('USER_GAME_COUNT').get(self.uid)+get_game_count_forever(self.uid),'filter':self.filter}]
         
     def generate_pieces(self):
         import random

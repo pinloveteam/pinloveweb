@@ -513,7 +513,7 @@ removecloud();
 	<div class="head head_girl">
 		<a id="head_url" target="_blank" href=""><img src="" class="img-circle"></a>
 	</div>
-	<img id="filter_type" src="" style="position: absolute;margin-left: 30px;margin-top: 40px;display: none;">
+	<img id="filter_type" src="" style="position: absolute;margin-left: 30px;margin-top: 40px;display: none;width: 30px;height: 30px;">
 	<div class="name">
 		<h3 ><strong></strong></h3>
 	</div>
@@ -535,7 +535,7 @@ removecloud();
 
 <div id="nouser" style="display: none;">
 	<div class="close"></div>
-	<span class="text-black" id='pair_message'>Oooooops, please try again!</span><br />
+	<span class="text-black" id='pair_message' style="line-height: 40px;">Oooooops, please try again!</span><br />
 	<span class="text-black free_chance">You still have <span id="user_count" style="color: red;"> {{count}} </span>  free chances</span>
 	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
 	<div class="push try_again " style="left:90px; top: 320px;">Play again</div>
@@ -685,14 +685,33 @@ function loadStage() {
          type=10;
          selectedPieces = new Array();
         Time = setInterval(Star,Speed);
+        type[10]
          var filter=$('#search_condition').find('input:radio:checked').val()
-         $.getJSON("/game/jigsaw/",{number:{{count}},uid:{{uid}},filter:filter},function(data) {
+         $.ajax({type:"GET",
+        		 url:"/game/jigsaw/",
+        		 dataType:'json',
+        		 data:{number:{{count}},uid:{{uid}},filter:filter},
+        		 error:function(msg){
+        			console.log(msg)
+           		  $('.push').click(StartGame);
+           		  clearInterval(Time);
+                     flag=true;       //触发结束			 
+                     Time=setInterval(Star,Speed);
+           		  alert('There is a problem,Please try again!')
+                	   return;
+        		 },
+        		 success:function(data) {
         	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
         	 if(data[0]=='4'){
         		 alert('Please fill in your '+data[1]+' on facebook! Refresh the login!')
         		 type=4
         	 }
         	 if(data[0]=='0'){
+        		  if(data[2].filter=='all' || data[2].filter==null){
+        			  $('#pair_message').html("Oooooops, please try again!")
+        		  }else{
+        			  $('#pair_message').html("Oooooops,Don't find the same "+data[2].filter+". please try again!")
+        		  }
         		  $('#tab').hide()
         		  type=0;
         	 }
@@ -764,7 +783,7 @@ function loadStage() {
 
         	 
         	 //$('#count').html('游戏次数:'+data['count']);
-        	 });
+        	 }});
     	  }catch(error){
     		  console.log(error)
     		  $('.push').click(StartGame);
