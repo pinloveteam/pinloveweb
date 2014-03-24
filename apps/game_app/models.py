@@ -74,10 +74,10 @@ class Yuanfenjigsaw:
               if self.filter=='location':
                  facebookUser=FacebookUser.objects.filter(location=getattr(self,self.filter),uid__in=matching_uid_list).exclude(uid__in=uids)
               if len(facebookUser)<=0:
-                  filter=False
+                  filter=matching_uid
               else:
                   self.update_norecommend_list(facebookUser[0].uid)
-                  filter_match=facebookUser[0].location
+                  self.filter_match=facebookUser[0].location
                   return facebookUser[0].uid
           elif self.filter=='work' or self.filter=='school':
               #获取学历和工作，并将分别存储的数组中
