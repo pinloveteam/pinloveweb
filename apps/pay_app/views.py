@@ -43,16 +43,24 @@ def pay_detail(request):
     
 @csrf_exempt
 def pay_test(request):
-    mode=request.GET.get('hub.mode')
-    challenge=request.GET.get('hub.challenge')
-    verify_token=request.GET.get('hub.verify_token')
-    logging.error("pay_test")
-    logging.error(simplejson.dumps(request.GET))
-    logging.error(simplejson.dumps(request.POST))
-    return HttpResponse(challenge)
+    if request.method == 'GET' and request.GET.get('hub.mode') == 'subscribe':
+#         mode=request.GET.get('hub.mode')
+        challenge=request.GET.get('hub.challenge')
+        verify_token=request.GET.get('hub.verify_token')
+        return HttpResponse(challenge, content_type='text/plain')
+    elif request.method == 'POST':
+         post_body = simplejson.loads(request.body)
+         object_type = post_body.get('object')
+         entries = post_body.get('entry', [])
+         logging.error("pay_test")
+         logging.error(simplejson.dumps(object_type))
+         logging.error(simplejson.dumps(entries))
+         return HttpResponse()
 
-
+@csrf_exempt
 def pay_test2(request):
-     logging.error("pay_test2")
-     return HttpResponse('sdfs')
+#      logging.error("pay_test2")
+#      logging.error(simplejson.dumps(request.GET))
+#      logging.error(simplejson.dumps(request.POST))
+     return HttpResponse('222')
     
