@@ -191,6 +191,7 @@ def register_user(request) :
             user = User.objects.get(username=username)
             user.is_active = False 
             #user verification
+            from util.util import random_str
             user_code = random_str()
             verification = Verification()
             verification.username = username
@@ -217,12 +218,9 @@ def register_user(request) :
             except:
                 print u'邮件发送失败'
                 pass
+            auth.authenticate(username=username, password=user.password)
+            return HttpResponseRedirect('/account/loggedin/')
             
-            # login(request, user)
-            return render_to_response('register_email_verification.html',{'username':username, 'email': user.email})
-            
-            #return HttpResponseRedirect('/account/register_verify/')
-            # return HttpResponseRedirect('/account/register_success/') 
         else : 
             args['user_form'] = userForm
 

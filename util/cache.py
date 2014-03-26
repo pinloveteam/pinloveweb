@@ -7,11 +7,14 @@ Created on 2014年1月8日
 import datetime
 from django.core.cache import cache
 from django.utils import simplejson
+
 '''
 初始化缓存
 '''
 def init_cache():
     init_game_cache()
+    init_tag()
+    init_recommend()
 
 '''
 初始化游戏缓存
@@ -45,6 +48,78 @@ def init_yuanfenpintu_cache():
 #     cache.set('INVITE_COUNT',{})
     cache.set('INVITE_TIME_A_LIFE',3)
 
+'''
+初始化推荐
+HAS_RECOMMEND 是否需要做实时推荐
+'''
+def init_recommend():
+    NAMES=['HAS_RECOMMEND',]
+    for name in NAMES:
+        if cache.get(name)==None:
+            cache.set(name,{})
+'''
+ 获得各个数据表的推荐所需的数据完成情况
+ 如全部完成则返回true
+'''           
+def get_has_recommend(user_id):
+    recommend=cache.get('HAS_RECOMMEND')
+    if recommend.get(user_id)==None:
+        recommend[user_id]={'userProfile':False,'userExpect':False,'grade':False,'tag':False}
+        return False
+    else:
+         user=recommend.get(user_id)
+         if user.get('userProfile') and user.get('userExpect') and user.get('grade') and user.get('tag'):
+             return True
+         else:
+             return False
+
+'''
+用于判断各个数据表的推荐所需的数据是否填写完成
+'''
+def has_recommend(user_id,field):
+    recommend=cache.get('HAS_RECOMMEND')
+    if recommend.get(user_id)==None:
+        recommend[user_id]={'userProfile':False,'userExpect':False,'grade':False,'tag':False}
+    user=recommend.get(user_id)
+    if field =='userProfile':
+        from apps.user_app.models import UserProfile
+        from django.db.models.query_utils import Q
+        if UserProfile.objects.filter(user_id=user_id).filter(height__gt=-1,avatar_name_status=3,income__gt=-1).filter(Q(education__gt=-1)|Q(educationSchool__isnull=False)).exists():
+            user['userProfile']=True
+    elif field =='userExpect':
+        from apps.recommend_app.models import UserExpect
+        if not (UserExpect.objects.filter(user_id=user_id ,heighty1=0.00,heighty2=0.00,heighty3=0.00,heighty4=0.00,heighty5=0.00,heighty6=0.00,heighty7=0.00,heighty8=0.00).exists()):
+            user['userExpect']=True
+    elif field =='grade':
+        from apps.recommend_app.models import Grade
+        if Grade.objects.filter(user_id=user_id,heightweight__isnull=False,incomescore__isnull=False,incomeweight__isnull=False,educationscore__isnull=False,educationweight__isnull=False,appearancescore__isnull=False,appearanceweight__isnull=False).exists():
+            user['grade']=True
+    elif field=='tag':
+        from apps.user_app.models import UserTag
+        if UserTag.objects.filter(user_id=user_id,type=1).exists() and UserTag.objects.filter(user_id=user_id,type=0).exists():
+            user['tag']=True
+    recommend[user_id]=user
+    cache.set('HAS_RECOMMEND',recommend)
+'''
+ 用户标签
+'''
+def init_tag():
+    from apps.common_app.models import Tag
+    try:
+        tags=Tag.objects.filter(type='0')
+    except Exception as e:
+        print e
+    tagList=[]
+    tagList1=[]
+    i=0
+    for tag in tags:
+        if i%2==0:
+            tagList1.append((tag.id,tag.content,tag.opposition))
+        else:
+            tagList.append((tag.id,tag.content,tag.opposition))
+        i+=1
+    tagList.extend(tagList1)
+    cache.set('TAG',tuple(tagList))
 '''
 插入可以值，如果值为None，则创建
 '''
@@ -82,3 +157,5 @@ def restore_backup_cache(backupType,time):
     for menthod in menthods:
         data=getattr(backupCache,menthod)
         cache.set(menthod,simplejson.loads(data))
+
+

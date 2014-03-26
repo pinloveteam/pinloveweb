@@ -4,18 +4,86 @@ Created on Sep 3, 2013
 
 @author: jin
 '''
-from apps.user_app.models import UserProfile, Follow
+from apps.user_app.models import UserProfile, Follow, UserTag
 from apps.recommend_app.models import MatchResult, Grade, UserExpect
 from util.page import page
 from django.shortcuts import render
-from util.connection_db import connection_to_db
 from apps.upload_avatar import app_settings
 from apps.pojo.recommend import RecommendResult
-from apps.recommend_app.form import WeightForm, GradeForOther
+from apps.recommend_app.form import WeightForm
 from django.utils import simplejson
 from django.core.context_processors import csrf
 from django.http import HttpResponse
+import logging
+from django.views.decorators.csrf import csrf_exempt
+logger = logging.getLogger(__name__)  
+#######################################
+#1.0使用版本
+#######################################
+'''
+ 更新权重
+'''
+@csrf_exempt
+def update_weight(request):
+    args={}
+    flag=True
+    try:
+        height=float(request.POST.get('height',False))/100
+        income=float(request.POST.get('income',False))/100
+        appearance=float(request.POST.get('appearance',False))/100
+        education=float(request.POST.get('education',False))/100
+        character=float(request.POST.get('character',False))/100
+    except Exception as e:
+        flag=False
+        args['result']='error'
+        args['msg']='传输参类型错误！'
+        logger.error('传输参类型错误！',e)
+    if not( education and education and income and appearance and height):
+        flag=False
+        args['result']='error'
+        args['msg']='传输参数错误！'
+    if flag:
+        Grade.objects.create_update_grade(request.user.id,heightweight=height,\
+                                          incomeweight=income,educationweight=education,appearanceweight=appearance,characterweight=character)
+        #判断推荐条件是否完善
+        from apps.recommend_app.recommend_util import cal_recommend
+        cal_recommend(request.user.id,['grade'])
+        args['result']='success'
+    else:
+        args['result']='error'
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
 
+
+def grade_for_other(request):
+    args={}
+    if request.method=="POST":
+        flag=True
+        try:
+            result=request.POST.get('result',False)
+            tags=request.REQUEST.get('tagList',False)
+        except Exception as e:
+            flag=False
+            args['result']='error'
+            args['msg']='传输参类型错误！'
+            logger.error('传输参类型错误！',e)
+        if not( result and tags ):
+            flag=False
+            args['result']='error'
+            args['msg']='传输参数错误！'
+        if flag:
+            tagList=tags.split(',')
+            s=result.split(',')
+            UserExpect.objects.create_update_by_uid(user_id=request.user.id,heighty1=float(s[1]),heighty2=float(s[3]),heighty3=float(s[5]),heighty4=float(s[7]),heighty5=float(s[9]) ,heighty6=float(s[11]),heighty7=float(s[13]),heighty8=float(s[15]))
+            UserTag.objects.filter(user=request.user,type=1).delete()
+            UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagList)   
+            #判断推荐条件是否完善
+            from apps.recommend_app.recommend_util import cal_recommend
+            cal_recommend(request.user.id,['userExpect','tag'])     
+            args['result']='success'
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+##########################################
 def recommend(request):
     arg={}
     count=MatchResult.objects.filter(my_id=request.user.id).count()
@@ -182,7 +250,7 @@ def weight(request):
                 grade = weightForm.save(commit=False)
                 if count!=0:
                     Grade.objects.filter(user_id=request.user.id).update(heightweight=grade.heightweight,
-                                                                      incomeweight=grade.heightweight,edcationweight=grade.heightweight,appearanceweight=grade.heightweight,characterweight=grade.heightweight)
+                                                                      incomeweight=grade.heightweight,educationweight=grade.heightweight,appearanceweight=grade.heightweight,characterweight=grade.heightweight)
                 else:                                                    
                    grade.user=request.user
                    grade.save()
@@ -202,7 +270,7 @@ def weight(request):
 '''
 用户对另一半的打分
 '''
-def grade_for_other(request):
+def grade_for_other_1(request):
     arg={}
     if request.user.is_authenticated():
         count=UserExpect.objects.filter(user=request.user).count()

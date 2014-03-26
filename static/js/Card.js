@@ -192,7 +192,7 @@ window.Card = function(person){
 	//初始化详细信息href
 	this.template.find('.introBox').attr('href','/user/detailed_info/'+person.userId.toString());
 	 //初始化数组
-     dataArray[person.username]= [Math.random()*100,Math.random()*100,Math.random()*100,Math.random()*100,Math.random()*100,];
+     dataArray[person.username]= [person.heighScore,person.incomeScore,person.edcationScore,person.appearanceScore,person.characterScore,];
     //添加用户id
 	this.template.find('.card_panel').attr('id',person.userId);
 	//是否关注

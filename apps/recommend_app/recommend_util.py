@@ -50,9 +50,9 @@ def cal_education(user_education,school):
     #学校没填以学历为标准：分数表示：博士、硕士、本科、专科、专科以下
     schoolTupe=(85,75,60,40,30)
     educationMap={'master':5,'doctor':10}
-    if school.strip()=='' and user_education!=-1:
+    if school==None and user_education!=-1:
         return schoolTupe[4-user_education]
-    if  school.strip()!='':
+    if  school!=None:
         count=School.objects.filter(name=school).count()
         if count==0 :
             if user_education==-1:
@@ -79,15 +79,15 @@ def cal_user_vote(score,geadeInstance):
      
      return (geadeInstance.appearancescore*100+score*(geadeInstance.appearancesvote+1))/(100+geadeInstance.appearancesvote+1)
  
-def cal_recommend(userId):
-    from apps.user_app.models import UserProfile
-    if UserExpect.objects.filter(user_id=userId).exists() and  Grade.objects.filter(user_id=userId).exists(): 
-            if  not (UserProfile.objects.filter(user_id=userId).filter(height=-1).exists() )and not (UserExpect.objects.filter(user_id=userId).filter(heighty1=0.00).filter(heighty2=0.00).filter(heighty3=0.00).exclude(heighty4=0.00).filter(heighty5=0.00).filter(heighty6=0.00).filter(heighty7=0.00).filter(heighty8=0.00).exists()) and \
-           Grade.objects.filter(user_id=userId).exclude(heightweight__isnull=True).exclude(incomescore__isnull=True).exclude(incomeweight__isnull=True).exclude(edcationscore__isnull=True).exclude(edcationweight__isnull=True).exclude(appearancescore__isnull=True).exclude(appearanceweight__isnull=True).exists():
-               connection = MySQLdb.connect(user=settings.DATABASES['default']['USER'],
+def cal_recommend(userId,fields=[]):
+    from util.cache import get_has_recommend,has_recommend
+    for field in fields:
+        has_recommend(userId,field)
+    if get_has_recommend(userId): 
+        connection = MySQLdb.connect(user=settings.DATABASES['default']['USER'],
                                           db=settings.DATABASES['default']['NAME'], passwd=settings.DATABASES['default']['PASSWORD'], host=settings.DATABASES['default']['HOST'])
-               cursor=connection.cursor();
-               r=cursor.callproc('recommend',[userId,])
-               connection.commit()
-               cursor.close()
+        cursor=connection.cursor();
+        r=cursor.callproc('recommend',[userId,])
+        connection.commit()
+        cursor.close()
             

@@ -20,6 +20,7 @@ from apps.recommend_app.models import  MatchResult
 from apps.recommend_app.recommend_util import cal_recommend
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
 from util.singal import cal_recommend_user
+from apps.common_app.models import Tag
 
 class UserProfileManager(models.Manager):
     '''
@@ -238,6 +239,24 @@ class UserProfile(models.Model, UploadAvatarMixIn):
             return 'user_img/image'
         else:
             return self.avatar_name
+        
+    def save(self, *args, **kwargs):
+        from apps.recommend_app.models import Grade
+        if self.income!=None:
+            from apps.recommend_app.recommend_util import cal_income
+            incomes=cal_income(self.income)
+            if Grade.objects.filter(user=self.user).exists():
+                Grade.objects.filter(user=self.user).update(incomescore=incomes)
+            else:
+                Grade(user=self.user,incomescore=incomes).save()
+        if self.education!=None or self.educationSchool!=None:
+            from apps.recommend_app.recommend_util import cal_education
+            educationscore=cal_education(self.education,self.educationSchool)
+            if Grade.objects.filter(user=self.user).exists():
+                Grade.objects.filter(user=self.user).update(educationscore=educationscore)
+            else:
+                Grade(user=self.user,educationscore=educationscore).save()
+        super(UserProfile, self).save(*args, **kwargs)
     class Meta:
         verbose_name=u'用户基本信息'
         verbose_name_plural = u'用户基本信息'
@@ -323,32 +342,55 @@ class Follow(models.Model):
         verbose_name_plural = u'关注表'
         db_table = "follow" 
 
+        
 '''
-标签表
+用户标签表
 '''
-TAB_CHOICES=((u'外向',u'外向'),(u'内向',u'内向'),(u'不外不内',u'不外不内'),(u'急性子',u'急性子'),(u'慢性子',u'慢性子')
-             ,(u'节省',u'节省'),(u'花钱',u'花钱'),(u'责任心',u'责任心'),(u'幽默',u'幽默'),(u'一般',u'一般'),
-             (u'乐观主义',u'乐观主义'),(u'悲观主义',u'悲观主义'),(u'细心',u'细心'),(u'不拘小节',u'不拘小节'),
-             (u'稳重',u'稳重'),(u'冲动',u'冲动'),(u'神经大条',u'神经大条'),(u'多愁善感',u'多愁善感'),
-             (u'独立',u'独立'),(u'依赖',u'依赖')) 
 class TagManage(models.Manager):
     '''
-    获得自己的标签集合
+    根据类型获得标签集合
+    attribute：
+        type 
+            0：自己的个人标签
+            1.自己对另一半的期望标签
+        user_id    用户id
+    return
+       UserTag
     '''
-    def get_tags_by_myself(self,*args, **kwargs):   
-        return Tag.objects.filter(type=0,*args, **kwargs)    
-class Tag(models.Model):
+    def get_tags_by_myself(self,user_id=None,type=0,*args, **kwargs):   
+        return UserTag.objects.filter(user_id=user_id,type=type,*args, **kwargs) 
+    '''
+    批量插入用户标签表
+    '''   
+    def bulk_insert_user_tag(self,user_id,type,tagIdList):
+        from django.core.cache import cache
+        tagTupe=cache.get('TAG')
+        tagIds=[]
+        for tag in tagTupe:
+            tagIds.append(tag[0])
+        #保存tag信息
+        tags=[]
+        for tag in tagIdList:
+            try:
+                tag=int(tag)
+            except Exception as e:
+                print e
+            if not tag in tagIds:
+                pass
+            else:
+                tags.append(UserTag(user_id=user_id,tag_id=tag,type=type))
+        UserTag.objects.bulk_create(tags)
+class UserTag(models.Model):
     user=models.ForeignKey(User,related_name='tab_user',verbose_name=u'用户')
-    content=models.CharField(max_length=25,verbose_name=u'标签内容',choices=TAB_CHOICES)
+    tag=models.ForeignKey(Tag,related_name=u'tag',verbose_name=u'标签')
     TYPE_CHOICES=((0,u'自己的标签'),(1,u'对另一半的标签'))
     type=models.SmallIntegerField(verbose_name='类型',choices=TYPE_CHOICES)
     objects=TagManage()
     class Meta:
-        verbose_name = u'用户标签' 
-        verbose_name_plural = u'用户标签'
-        db_table = "tag" 
+        verbose_name = u'用户标签表' 
+        verbose_name_plural = u'用户标签表'
+        db_table = "user_tag" 
         
-
 
 class Dictionary(models.Model):
 
@@ -357,9 +399,6 @@ class Dictionary(models.Model):
     value=models.CharField(max_length=255)
 
 class Verification(models.Model):
-    def __init__(self,username,verification_code,*args,**kwargs):
-        self.username=username
-        self.verification_code=verification_code
         
     username = models.CharField(max_length=30)
     verification_code = models.CharField(max_length=50)
@@ -387,37 +426,37 @@ def _delete_crop_avatar_on_disk(sender, instance, *args, **kwargs):
             pass
 avatar_crop_done.connect(_delete_crop_avatar_on_disk,sender=UserProfile)
 
-@transaction.autocommit
-def basic_profile_callback(sender, userProfile,height,education,educationSchool,income,**kwargs):
-   profile=userProfile
-   if profile!=None :
-        flag=False
-        if profile.income!=-1 and userProfile.income!=income:
-            from apps.recommend_app.recommend_util import cal_income
-            incomes=cal_income(profile.income)
-            from apps.recommend_app.models import Grade
-            if Grade.objects.filter(user_id=profile.user.id).exists():
-               Grade.objects.filter(user_id=profile.user.id).update(incomescore=incomes)
-            else:
-               Grade(user_id=profile.user.id,incomescore=incomes).save()
-            flag=True
-        if (userProfile.education!=education or userProfile.educationSchool!=educationSchool):
-            from apps.recommend_app.recommend_util import cal_education
-            score=cal_education(profile.education,profile.educationSchool)
-            from apps.recommend_app.models import Grade
-            if Grade.objects.filter(user_id=profile.user.id).exists():
-               Grade.objects.filter(user_id=profile.user.id).update(edcationscore=score)
-            else:
-               Grade(user_id=profile.user.id,edcationscore=score).save()
-            flag=True
-        if height!=userProfile.height:
-             flag=True
-        #如果收入，学历，发生改变重新计算推荐
-        if flag:
-          cal_recommend(profile.user.id)
-
-"""
-signals 用于监听，触发事件
-"""
-# signals.post_save.connect(basic_profile_callbacke, sender=user_basic_profile)  
-cal_recommend_user.connect(basic_profile_callback, sender=None)
+# @transaction.autocommit
+# def basic_profile_callback(sender, userProfile,height,education,educationSchool,income,**kwargs):
+#    profile=userProfile
+#    if profile!=None :
+#         flag=False
+#         if profile.income!=-1 and userProfile.income!=income:
+#             from apps.recommend_app.recommend_util import cal_income
+#             incomes=cal_income(profile.income)
+#             from apps.recommend_app.models import Grade
+#             if Grade.objects.filter(user_id=profile.user.id).exists():
+#                Grade.objects.filter(user_id=profile.user.id).update(incomescore=incomes)
+#             else:
+#                Grade(user_id=profile.user.id,incomescore=incomes).save()
+#             flag=True
+#         if (userProfile.education!=education or userProfile.educationSchool!=educationSchool):
+#             from apps.recommend_app.recommend_util import cal_education
+#             score=cal_education(profile.education,profile.educationSchool)
+#             from apps.recommend_app.models import Grade
+#             if Grade.objects.filter(user_id=profile.user.id).exists():
+#                Grade.objects.filter(user_id=profile.user.id).update(edcationscore=score)
+#             else:
+#                Grade(user_id=profile.user.id,edcationscore=score).save()
+#             flag=True
+#         if height!=userProfile.height:
+#              flag=True
+#         #如果收入，学历，发生改变重新计算推荐
+#         if flag:
+#           cal_recommend(profile.user.id)
+# 
+# """
+# signals 用于监听，触发事件
+# """
+# # signals.post_save.connect(basic_profile_callbacke, sender=user_basic_profile)  
+# cal_recommend_user.connect(basic_profile_callback, sender=None)

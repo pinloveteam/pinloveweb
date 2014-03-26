@@ -1,0 +1,173 @@
+<style type="text/css">
+div.computerMove {
+	position: absolute;
+	top: -5px;
+	width: 30px;
+	height: 30px;
+	background-color: #00CCCC;
+	color: #FFFFFF;
+	cursor: pointer;
+	border-radius: 50%;
+}
+
+.progress {
+	position: relative;
+	margin-top: 50px;
+	overflow: visible;
+}
+</style>
+<SCRIPT>
+    $(document).ready(function(){
+    	      //提交权重
+
+			 $("#update_weight").submit(function(){
+				    
+				     try{
+	  				    var weightData=$(this).find('input')
+	  				    var sum=0;
+	  				    for (var i=0; i<weightData.length; i++){
+	  				    	sum+=parseInt(weightData[i].value)
+	  				    }
+	  				    if (sum<100){
+	  				    	alert("权重总和需为100%")
+	  				    	return false;
+	  				    }
+	  				 }catch(msg){
+	  				    	//alert('填写失误请重新填写！')
+	  				    	return false;
+	  				    }  
+					var data=$(this).serialize();
+					$.ajax({
+                       type:'post',
+                       url: "/recommend/update_weight/",
+                       data:data,
+                       success: function(data,textStatus){
+                    	   data=$.parseJSON(data)
+                    	   if(data.result== 'success'){
+                               alert('修改成功!')
+                           }else if(data.result == 'error'){
+                           	 alert(data.msg)
+                           }
+                       },
+                   
+                   });
+					  return false;
+				});
+		
+    	//进度条
+    	var progressWidth = $('.progress').css('width').split('p')[0];
+        var total = 0;
+        var $div = $("div.computerMove");
+        /* 绑定鼠标左键按住事件 */
+		$div.bind("mousedown",function(event){
+			total = 0;
+			var moveDiv = $(this);
+				
+			var progress = moveDiv.parent();
+			
+			$div.each(function(){
+				if(!$(this).is(moveDiv)){
+					total+=parseInt($(this).html().split('%')[0]);
+				}
+			});
+			//total = total - moveDiv.html().split('%')[0];
+			/* 获取需要拖动节点的坐标 */
+			var offset_x = moveDiv[0].offsetLeft;//x坐标
+			
+			/* 获取当前鼠标的坐标 */
+			var mouse_x = event.pageX;
+			
+
+			/* 绑定拖动事件 */
+			/* 由于拖动时，可能鼠标会移出元素，所以应该使用全局（document）元素 */
+			$(document).bind("mousemove",function(ev){
+				/* 计算鼠标移动了的位置 */
+				var _x = ev.pageX - mouse_x;
+				
+				/* 设置移动后的元素坐标 */
+				var now_x = Math.round((offset_x + _x)/progressWidth*100);
+				
+				/* 改变目标元素的位置 */
+				if(now_x>0 && (_x<-5 || (now_x<=100 && total+now_x<=100))){
+					moveDiv.css({
+						left:now_x + "%"
+					});
+					progress.css({
+						width:now_x + "%"
+					});
+					moveDiv.html(now_x+ "%");
+					moveDiv.parent().find('input').attr('value',now_x)
+					
+					$('#_x').html('剩余:'+(100-(total+now_x)) +'%');
+				}
+	
+			});
+		});
+		/* 当鼠标左键松开，接触事件绑定 */
+		$(document).bind("mouseup",function(){
+			$(this).unbind("mousemove");
+		});
+	init_x()	
+	})
+	//初始化剩余值
+	function init_x(){
+    	var count=0;
+    	var data=$('#update_weight').find('input');
+    	for (i=0;i<data.length;i++){
+    		count+=parseInt(data[i].value)
+    	}
+    	$('#_x').html('剩余:'+(100-(count)) +'%');
+    	
+    }
+</script>
+	<form id="update_weight" action="" menthod="post">
+		<div style="width: 500px; position: relative; left: 100px; height:100px;">
+		   <div id='_x' style="position: absolute;left:500px;"> 剩余:100%</div>
+			<span class='font'>身高</span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-success" role="progressbar"
+					aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
+					style="width: {{heightweight}}%">
+					<div class="computerMove" style="left: {{heightweight}}%;">{{heightweight}}%</div>
+					<input type="hidden" name="height" value="{{heightweight}}">
+				</div>
+			</div>
+			<span>收入</span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-info" role="progressbar"
+					aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+					style="width: {{incomeweight}}%">
+					<div class="computerMove" style="left: {{incomeweight}}%;">{{incomeweight}}%</div>
+					<input type="hidden" name="income" value="{{incomeweight}}">
+				</div>
+			</div>
+			<span>外貌</span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-warning" role="progressbar"
+					aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+					style="width: {{appearanceweight}}%">
+					<div class="computerMove" style="left: {{appearanceweight}}%;">{{appearanceweight}}%</div>
+					<input type="hidden" name="appearance" value="{{appearanceweight}}">
+				</div>
+			</div>
+			<span>学历</span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-danger" role="progressbar"
+					aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+					style="width: {{educationweight}}%">
+					<div class="computerMove" style="left: {{educationweight}}%;">{{educationweight}}%</div>
+					<input type="hidden" name="education" value="{{educationweight}}">
+				</div>
+			</div>
+			<span>性格</span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-danger" role="progressbar"
+					aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+					style="width: {{characterweight}}%">
+					<div class="computerMove" style="left: {{edcationweight}}%;">{{characterweight}}%</div>
+					<input type="hidden" name="character" value="{{characterweight}}">
+				</div>
+				<button class="btn btn-warning" style="position: relative; left: 550px;">保存</button>
+			</div>
+		</div>
+	</form>

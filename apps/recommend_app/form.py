@@ -17,8 +17,8 @@ class WeightForm(ModelForm):
             self.fields[key].required = False
     class Meta:
         model=Grade
-        fields=('heightweight','incomeweight','edcationweight','appearanceweight' ,'characterweight',)
-        exclude =('heightscore','incomescore','edcationscore','appearancescore','appearancesvote',)
+        fields=('heightweight','incomeweight','educationweight','appearanceweight' ,'characterweight',)
+        exclude =('heightscore','incomescore','educationscore','appearancescore','appearancesvote',)
 """
   对另一半打分
 """   

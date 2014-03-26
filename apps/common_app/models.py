@@ -19,6 +19,21 @@ class School(models.Model):
         verbose_name = u'学校' 
         verbose_name_plural = u'关注表'
         db_table = "school" 
+
+'''
+标签表
+'''
+class Tag(models.Model):
+    content=models.CharField(max_length=25,verbose_name=u'标签内容')
+    #用于区分一组对立性格，例如：内向外向的对立
+    opposition=models.SmallIntegerField(verbose_name=u'性格对立类型')
+    type=models.CharField(max_length=2,verbose_name=u'标签类型')
+    class Meta:
+        verbose_name = u'标签表' 
+        verbose_name_plural = u'标签表'
+        ordering = ['opposition']
+        db_table = "tag" 
+        
 '''
 缓存备份表
 '''        

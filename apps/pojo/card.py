@@ -13,7 +13,7 @@ from django.utils import simplejson
 '''
 empty_result_list=[-1,'N',None]
 class Card(object):
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,followStatus,isVote,city):
+    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore):
         self.user_id=userId
         self.username=username
         self.height=height
@@ -21,9 +21,11 @@ class Card(object):
         self.education=education
         self.income=income
         self.jobIndustry=jobIndustry
-        self.scoreOther=scoreOther
-        self.scoreMyself=scoreMyself
-        self.macthScore=macthScore
+        self.heighScore=heighScore
+        self.incomeScore=incomeScore
+        self.edcationScore=edcationScore
+        self.appearanceScore=appearanceScore
+        self.characterScore=characterScore
         '''
         关注情况
         0 未关注
@@ -65,9 +67,11 @@ class MyEncoder(simplejson.JSONEncoder):
 def matchResultList_to_CardList(matchResultList):
     recommendResultList=[]
     for matchResult in matchResultList:
-       scoreOther=matchResult.scoreOther
-       scoreMyself=matchResult.scoreMyself
-       macthScore=matchResult.macthScore
+       heighScore=(matchResult.heighMatchMy+matchResult.heighMatchOther)/2
+       incomeScore=(matchResult.incomeMatchMy+matchResult.incomeMatchOther)/2
+       edcationScore=(matchResult.edcationMatchMy+matchResult.edcationMatchOther)/2
+       appearanceScore=(matchResult.appearanceMatchMy+matchResult.appearanceMatchOther)/2
+       characterScore=(matchResult.characterMatchMy+matchResult.characterMatchOther)/2
        userBaiscProfile=matchResult.get_user_basic_profile()
        userId=matchResult.other_id
        username=matchResult.other.username
@@ -85,7 +89,7 @@ def matchResultList_to_CardList(matchResultList):
        else:
            avatar_name=default_iamge_name
            isVote=False
-       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,followStatus,isVote,city)
+       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
        recommendResultList.append(recommendResult)
     return recommendResultList
 '''
@@ -96,9 +100,11 @@ attribute：
 def userProfileList_to_CardList(userProfileList):
      recommendResultList=[]
      for userProfile in userProfileList:
-       scoreOther=u'需完善个人信息'
-       scoreMyself=u'需完善个人信息'
-       macthScore=u'需完善个人信息'
+       heighScore=0
+       incomeScore=0
+       edcationScore=0
+       appearanceScore=0
+       characterScore=0
        userId=userProfile.user_id
        username=userProfile.user.username
        height=userProfile.height
@@ -115,7 +121,7 @@ def userProfileList_to_CardList(userProfileList):
        else:
            avatar_name=default_iamge_name
            isVote=False
-       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,followStatus,isVote,city)
+       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
        recommendResultList.append(recommendResult)
      return recommendResultList
  
@@ -137,14 +143,18 @@ def fllowList_to_CardList(user,fllowList,type):
     for userProfile in userProfileList:
         #获取推荐分数
         if not MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id).exists():
-            scoreOther=u'需完善个人信息'
-            scoreMyself=u'需完善个人信息'
-            macthScore=u'需完善个人信息'
+            heighScore=0
+            incomeScore=0
+            edcationScore=0
+            appearanceScore=0
+            characterScore=0
         else:
-            marchResult=UserProfile.objects.get_march_result(user.id,userProfile.user_id)
-            scoreOther=marchResult.scoreOther
-            scoreMyself=marchResult.scoreMyself
-            macthScore=marchResult.macthScore
+            matchResult=UserProfile.objects.get_march_result(user.id,userProfile.user_id)
+            heighScore=(matchResult.heighMatchMy+matchResult.heighMatchOther)/2
+            incomeScore=(matchResult.incomeMatchMy+matchResult.incomeMatcOther)/2
+            edcationScore=(matchResult.edcationMatchMy+matchResult.edcationMatchOther)/2
+            appearanceScore=(matchResult.appearanceMatchMy+matchResult.appearanceMatchOther)/2
+            characterScore=(matchResult.characterMatchMy+matchResult.characterMatchOther)/2
         userId=userProfile.user_id
         username=userProfile.user.username
         height=userProfile.height
@@ -160,7 +170,7 @@ def fllowList_to_CardList(user,fllowList,type):
            avatar_name=default_iamge_name
            isVote=False
         city=userProfile.city
-        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,followStatus,isVote,city)
+        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
         recommendResultList.append(recommendResult)
     return recommendResultList
  

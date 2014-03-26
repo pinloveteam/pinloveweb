@@ -1,0 +1,204 @@
+
+    <script class="include" type="text/javascript" src="{{STATIC_URL}}js/jqplot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jqplot/shCore.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jqplot/shBrushJScript.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jqplot/shBrushXml.min.js"></script>
+    
+    <script class="include" type="text/javascript" src="{{STATIC_URL}}js/jqplot/jqplot.barRenderer.min.js"></script>
+    <script class="include" type="text/javascript" src="{{STATIC_URL}}js/jqplot/jqplot.categoryAxisRenderer.min.js"></script>
+    <script class="include" type="text/javascript" src="{{STATIC_URL}}js/jqplot/jqplot.cursor.min.js"></script>
+    <script class="include" type="text/javascript" src="{{STATIC_URL}}js/jqplot/jqplot.highlighter.min.js"></script>
+    <script class="include" type="text/javascript" src="{{STATIC_URL}}js/jqplot/jqplot.dragable.min.js"></script>
+   <style>
+   #chartdiv{
+    height:400px;
+    width:600px;
+    position:relative;
+    left:100px;
+   }
+   .grade_for_other_tag{
+   position:relative;
+  
+   }
+
+</style>
+   <script class="code" type="text/javascript">
+
+    $(document).ready(function () {
+        $.jqplot.config.enablePlugins = true;
+        //alert('sss')
+      {%ifequal grade_for_other False%}
+      s2=[['160',0],['165',0],['170',0],['175',0],['180',0],['185',0],['190',0],['195',0]];
+       {%else%}
+       s2=[['160',{{grade_for_other.heighty1}}],['165',{{grade_for_other.heighty2}}],['170',{{grade_for_other.heighty3}}],['175',{{grade_for_other.heighty4}}],['180',{{grade_for_other.heighty5}}],['185',{{grade_for_other.heighty6}}],['190',{{grade_for_other.heighty7}}],['195',{{grade_for_other.heighty8}}]]
+      {% endifequal %} 
+        $('#chartdiv').bind('jqplotDragStop',
+                function (seriesIndex, pointIndex, pixelposition, data) {
+                   // alert(plot1.series[0].data)
+                    
+                    	  $("#result").val(plot1.series[0].data)
+                   
+                   // CalculateAveragePercentage();
+                });
+
+        $("#result").val(s2)
+      
+      plot1 = $.jqplot('chartdiv',[s2],{
+         title: '身高分数',
+          axesDefaults: {
+              show: false,    //是否自动显示坐标轴。
+               min: null,     // 横(纵)轴最小刻度值
+                max: null,     //  横(纵)轴最大刻度值
+                pad: 1.2,       //横(纵)轴度值增涨因子
+                ticks: [],     //设置横（纵）坐标的刻度上的值，可为该ticks数组中的值
+                        numberTicks: undefined,//一个相除因子，用于设置横（纵）坐标刻度间隔，横（纵）坐标刻度间隔值=横（纵）坐标区间长度/(numberTicks-1)
+                        renderer: $.jqplot.LinearAxisRenderer,  // 设置横（纵）轴上数据加载的渲染器
+                        rendererOptions: {},   // 设置renderer的Option配置对象，线状图不需要设置
+                tickOptions: {
+                    mark: 'outside',    // 设置刻度在坐标轴上的显示方式：分为:坐标轴外显示，内显示，和穿过显示;其值分别为 'outside', 'inside' or 'cross'。
+                            showMark: true,     //设置是否显示刻度
+                            showGridline: true, // 是否在图表区域显示刻度值方向的网格
+                            markSize: 4,      // 每个刻度线顶点距刻度线在坐标轴上点距离（像素为单位)如果mark值为 'cross', 那么每个刻度线都有上顶点和下顶点，刻度线与坐标轴
+                          //  在刻度线中间交叉，那么这时这个距离×2
+                    show: true,         //是否显示刻度线，与刻度线同方向的网格线，以及坐标轴上的刻度值
+                            showLabel: true,    //是否显示刻度线以及坐标轴上的刻度值
+                            formatString: '',   //设置坐标轴上刻度值显示格式，eg:'%b %#d, %Y'表示格式"月 日，年"，"AUG 30,2008"
+                            fontSize:'10px',    //刻度值的字体大小
+                            fontFamily:'Tahoma', //刻度值上字体
+                            angle:40,           //刻度值与坐标轴夹角，角度为坐标轴正向顺时针方向
+                            fontWeight:'normal', //字体的粗细
+                            fontStretch:1//刻度值在所在方向（坐标轴外）上的伸展(拉伸)度
+                } ,
+                showTicks: true,        //是否显示刻度线以及坐标轴上的刻度值,
+                        showTickMarks: true,    // 设置是否显示刻度
+                        useSeriesColor: true   //如果有多个纵（横）坐标轴，通过该属性设置这些坐标轴是否以不同颜色显示
+            },
+         axes: {
+             xaxis: {
+
+				 min:160,
+				 max:195,
+				 numberTicks:8,
+                 tickOptions: {
+                     formatString:'%.2dmm'
+                 },
+
+             },
+             yaxis: {
+			     min:0.00,
+				 max:100.00,
+				 numberTicks:11,
+                 tickOptions: {
+                     formatString: '%.2d'
+                 }
+             }
+         },
+          // Cursor(光标)
+          // 鼠标移动到图中时，鼠标在图中显示形式，常与和高亮功能同时使用
+          //此外，通过设置该属性的zoom相关属性来对图中某个区域钻取（就选定区域放大）
+          //该配置对象直接在option下配置
+          cursor: {
+              style: 'crosshair',     //当鼠标移动到图片上时，鼠标的显示样式，该属性值为css类
+              show: true,              //是否显示光标
+              showTooltip: true,      // 是否显示提示信息栏
+              followMouse: false,     //光标的提示信息栏是否随光标（鼠标）一起移动
+              tooltipLocation: 'se', // 光标提示信息栏的位置设置。如果followMouse=true,那么该位置为
+              //提示信息栏相对于光标的位置。否则，为光标提示信息栏在图标中的位置
+              // 该属性可选值： n, ne, e, se, etc.
+              tooltipOffset: 6,     //提示信息栏距鼠标(followMouse=true)或坐标轴（followMouse=false）的位置
+              showTooltipGridPosition: false,//是否在信息提示栏中显示光标位置（取其据图标左和上边缘线像素距离）
+              showTooltipUnitPosition: true,// 是否显示提示光标所在位置（取其在横纵轴上数据值）的信息栏
+              //注：注意此处与showTooltipGridPosition值区别，前者显示坐标值，该处显示的是数据值
+              tooltipFormatString: '%.4P',    // 同Highlighter的tooltipFormatString
+              useAxesFormatters: true,        // 同Highlighter的tooltipFormatString
+              tooltipAxesGroups: [], // show only specified axes groups in tooltip. Would specify like:
+              // [['xaxis', 'yaxis'], ['xaxis', 'y2axis']]. By default, all axes
+              // combinations with for the series in the plot are shown.
+
+          },
+          // Dragable（拖动）
+          //该配置对象通过seriesDefaults和series配置对象进行配置
+          seriesDefaults: {
+              dragable: {
+                  color: undefined,       // 当拖动数据点是，拖动线与拖动数据点颜色
+                  constrainTo: 'y',    //设置拖动的的范围: 'x'（只能在横向上拖动）,
+                  // 'y'（只能在纵向上拖动）, or 'none'（无限制）.
+              },
+          },
+          // Highlighter（高亮）
+          //设置高亮动作option属性对象
+          //鼠标移动到某个数据点上时，该数据点增大并显示提示信息框
+          //该配置对象直接在option下配置
+          highlighter: {
+              sizeAdjust: 10,
+              tooltipLocation: 'n',
+              tooltipAxes: 'y',
+              tooltipFormatString: '<b><i><span style="color:red;">hello</span></i></b> %.2f',
+              useAxesFormatters: false
+          },
+      });
+//        $.jqplot.postDrawSeriesHooks.push(updatedSeries);
+//
+//        function updatedSeries(sctx, options) {
+//            console.log(plot1.series[0].data); //data for the series is here
+//        }
+
+
+        /* 提交事件 */
+        $("#grade_for_other").submit(function(){
+                            
+                            var data = $(this).serialize();
+                            var tagObj = new Array()
+                            var tag = $(this).find('.tag a');
+                        	tag.each(function(){
+                        		if($(this).css('opacity') == '1'){
+                        			tagObj.push($(this).attr('name'));
+                        		}
+                        	});
+                        	data=data+'&tagList='+tagObj.toString();
+                            $.ajax({
+                                type: $(this).attr('method'),
+                                url: "/recommend/grade_for_other/",
+                                data:data,
+                                beforeSend: function(XMLHttpRequest){
+                                },
+                                success: function(data, textStatus){
+                                	data=$.parseJSON(data)
+                                    if(data.result== 'success'){
+                                        alert('修改成功!')
+                                    }else if(data.result == 'error'){
+                                    	 alert(data.msg)
+                                    }
+                                },
+                                complete: function(XMLHttpRequest, textStatus){
+                                },
+                                error: function(response){
+                                    alert('网络异常！')
+                                }
+                            });
+                            return false;
+                        });
+        
+    
+    });
+    
+</script>
+<form id="grade_for_other" action="" method="POST">{% csrf_token %}
+ <input type="hidden" id="result" name="result" value="">
+<div id="chartdiv" ></div> 
+<div class="grade_for_other_tag">
+<table class="tag">
+        {% for tag in tagbeanForOtherList %}
+           {% ifequal forloop.counter0 tagOtherLengthMod2 %}
+             <tr>
+           {% endifequal%}
+            {%if tag.isChoice%}
+              <td><a class="tag-trigger {{tag.colorClass}} " style="opacity: 1;" href="javascript:void(0);" name="{{tag.id}}">{{tag.content}}</a></td>
+             {% else %}
+                <td><a class="tag-trigger {{tag.colorClass}} " href="javascript:void(0);"  name="{{tag.id}}">{{tag.content}}</a></td>
+             {% endif %}
+        {% endfor %}
+  </table>
+ </div>
+<button class="btn btn-warning" style="position: relative; left: 350px">保存</button>
+</form> 

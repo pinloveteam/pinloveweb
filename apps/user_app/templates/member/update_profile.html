@@ -7,10 +7,10 @@
                     
                     var data = $(this).serialize();
                     var tagObj = new Array()
-                    var tag = $('.tag').find('a');
+                    var tag = $(this).find('.tag a')
                 	tag.each(function(){
                 		if($(this).css('opacity') == '1'){
-                			tagObj.push($(this).html());
+                			tagObj.push($(this).attr('name'));
                 		}
                 	});
                 	data=data+'&tagList='+tagObj.toString();
@@ -20,11 +20,14 @@
                         data:data,
                         beforeSend: function(XMLHttpRequest){
                         },
-                        success: function(response){
-                            if(response == 'success'){
+                        success: function(data, textStatus){
+                           /*  if(response == 'success'){
                                 var content = $('#id_content');
                                 $('#answer-list').append('<p>'+content.val()+'</p>');
                                 content.val('');
+                            } */
+                            if(textStatus== 'success'){
+                                alert('修改成功!')
                             }
                         },
                         complete: function(XMLHttpRequest, textStatus){
@@ -127,24 +130,15 @@
         </table>
         <table class="tag">
         {% for tag in tagbeanList %}
-           {% ifequal forloop.counter0 10 %}
+           {% ifequal forloop.counter0 taglength_2 %}
              <tr>
            {% endifequal%}
-          {% if forloop.counter|greater_than:10 %}
             {%if tag.isChoice%}
-              <td><a class="tag-trigger tag-limeGreen " style="opacity: 1;" href="javascript:;">{{tag.content}}</a></td>
+              <td><a class="tag-trigger {{tag.colorClass}} " style="opacity: 1;" href="javascript:void(0);" name="{{tag.id}}">{{tag.content}}</a></td>
              {% else %}
-                <td><a class="tag-trigger tag-limeGreen " href="javascript:;">{{tag.content}}</a></td>
+                <td><a class="tag-trigger {{tag.colorClass}} " href="javascript:void(0);"  name="{{tag.id}}">{{tag.content}}</a></td>
              {% endif %}
-          {% else %}
-            {%if tag.isChoice%}
-               <td><a class="tag-trigger tag-softPink " style="opacity: 1;" href="javascript:;">{{tag.content}}</a></td>
-             {%else%}
-               <td><a class="tag-trigger tag-softPink " href="javascript:;">{{tag.content}}</a></td>
-             {% endif %}
-          {% endif %}
-      
         {% endfor %}
   </table>
-  <button class="btn btn-warning user-save" style="position: relative; left: 300px;">保存上传</button>
+  <button class="btn btn-warning user-save" style="position: relative; left: 300px;">保存</button>
 </form>

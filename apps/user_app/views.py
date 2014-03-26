@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
 from apps.user_app.models import UserProfile,UserContactLink,Follow,Verification,\
-    Tag
+    UserTag
 from apps.user_app.forms import UserBasicProfileForm, UserContactForm,UserAppearanceForm, UserStudyWorkForm, UserPersonalHabitForm,\
     UserFamilyInformationForm, UserProfileForm
 from django.core.context_processors import csrf 
@@ -19,14 +19,12 @@ from django.contrib.auth.decorators import login_required
 from PIL import ImageFile
 from apps.upload_avatar import get_uploadavatar_context
 from django.contrib import auth
-from apps.recommend_app.models import Grade
+from apps.recommend_app.models import Grade, UserExpect
 from util.page import page
 import logging
 from util.singal import cal_recommend_user
 from apps.pojo.card import MyEncoder
-from apps.the_people_nearby.tt import request
 from django.core import serializers
-from util.util_settings import INIT_TAGS
 from django.utils import simplejson
 log=logging.getLogger('django.db.backends')
 
@@ -176,10 +174,35 @@ def update_follow(request):
 def user_profile(request):
         args=get_uploadavatar_context()
         useBasicrProfile = UserProfile.objects.get(user_id=request.user.id)
-        #获取个人标签
-        tags=Tag.objects.get_tags_by_myself(user=request.user)
+        request.session['user_original_data']={'height':useBasicrProfile.height,'education':useBasicrProfile.education,'educationSchool':useBasicrProfile.educationSchool,'income':useBasicrProfile.income}
+        #获取自己个人标签
+        tags=UserTag.objects.get_tags_by_myself(user_id=request.user.id,type=0)
         from apps.pojo.tag import tag_to_tagbean
         tagbeanList=tag_to_tagbean(tags)
+        #获取对另一半期望标签
+        tagsForOther=UserTag.objects.get_tags_by_myself(user_id=request.user.id,type=1)
+        tagbeanForOtherList=tag_to_tagbean(tagsForOther)
+        args['tagOtherLengthMod2']=len(tagbeanForOtherList)/2
+        args['tagbeanForOtherList']=tagbeanForOtherList
+        #获取权重
+        grade=Grade.objects.filter(user_id=request.user.id)
+        if len(grade)==0:
+            for field in ['heightweight','incomeweight','educationweight','appearanceweight','characterweight']:
+                args[field]=0
+        else:
+            for field in ['heightweight','incomeweight','educationweight','appearanceweight','characterweight']:
+                value=getattr(grade[0],field)
+                if value==None:
+                    value=0;
+                args[field]=value*100
+        #获得另一半身高期望   
+        userExpect=UserExpect.objects.get_user_expect_by_uid(request.user.id)
+        if userExpect==None:
+            args['grade_for_other']=False
+        else:
+            args['grade_for_other']=userExpect
+        #一半的长度
+        args['taglength_2']=len(tagbeanList)/2
         args['tagbeanList']=tagbeanList
         args['user_profile_form'] = UserProfileForm(instance=useBasicrProfile) 
         args['country']=useBasicrProfile.country
@@ -209,19 +232,19 @@ def update_profile(request):
             userProfile.stateProvince=stateProvince
             userProfile.city=city
             userProfile.save()
-            #保存tag信息
-            tags=[]
-            Tag.objects.filter(user=request.user,type=0).delete()
-            for tag in tagList:
-                from util.util_settings import INIT_TAGS
-                if not tag in INIT_TAGS:
-                    return HttpResponse({'error':'选择表情错误'}, mimetype='application/json')
-                else:
-                    tags.append(Tag(user=request.user,content=tag,type=0))
-            Tag.objects.bulk_create(tags)
+            map=request.session['user_original_data']
+            cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),
+                                        education=map.get('education'),educationSchool=map.get('educationSchool'),income=map.get('income'))
+            #保存tag
+            UserTag.objects.filter(user=request.user,type=0).delete()
+            UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagList)
             data = serializers.serialize('json', [userProfile,])
+            #判断推荐条件是否完善
+            from apps.recommend_app.recommend_util import cal_recommend
+            cal_recommend(request.user.id,['userProfile','tag'])     
             return HttpResponse(data, mimetype='application/json')
  
+
 '''
 修改密码
 
@@ -643,6 +666,9 @@ def photo_check(request):
                     Grade.objects.filter(user_id=request.user.id).update(appearancescore=score)
             else:
                     Grade.objects.create(user_id=request.user.id,appearancescore=score)
+            #判断推荐条件是否完善
+            from apps.recommend_app.recommend_util import cal_recommend
+            cal_recommend(request.user.id,['userProfile','grade'])     
             return render(request,'member/update_profile_success.html',arg,)
         else:
              useBasicrProfile=UserProfile.objects.get(user_id=request.user.id)
