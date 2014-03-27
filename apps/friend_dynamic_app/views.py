@@ -130,6 +130,7 @@ def update_photo(request):
             parser.feed(chunk)  
         img = parser.close()
         from util import util_settings
+        from util.util import random_str
         pictureName='%s%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10),f.name[f.name.find('.'):])
         if 'images_path' in request.session.keys():
             list=simplejson.loads(request.session['images_path'])

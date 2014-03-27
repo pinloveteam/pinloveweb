@@ -1,4 +1,4 @@
-var labels = ["教育程度","性格","收入情况","样貌","身高"]
+var labels = ["身高","收入情况","教育程度","样貌","性格"]
 var datasets_self = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(0,151,36)",pointColor : "rgb(0,151,36)"}
 var datasets_other = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(241,23,25)",pointColor : "rgb(241,23,25)"}
 var comparable = false;
@@ -192,7 +192,7 @@ window.Card = function(person){
 	//初始化详细信息href
 	this.template.find('.introBox').attr('href','/user/detailed_info/'+person.userId.toString());
 	 //初始化数组
-     dataArray[person.username]= [person.heighScore,person.incomeScore,person.edcationScore,person.appearanceScore,person.characterScore,];
+	dataArray[person.username]= [person.heighScore,person.incomeScore,person.edcationScore,person.appearanceScore,person.characterScore,];
     //添加用户id
 	this.template.find('.card_panel').attr('id',person.userId);
 	//是否关注
@@ -233,12 +233,17 @@ window.Card = function(person){
 	$(".icon_msg").on('click',init_msg);
 }
 
-function Person(username,age,city,headImg,userId,isFriend){
+function Person(username,age,city,headImg,userId,isFriend,heighScore,incomeScore,edcationScore,appearanceScore,characterScore){
 	this.username = username;
 	this.age = age;
 	this.city = city;
 	this.headImg = headImg;
 	this.userId=userId;
 	this.isFriend=isFriend;
+	this.heighScore=heighScore;
+	this.incomeScore=incomeScore;
+	this.edcationScore=edcationScore;
+	this.appearanceScore=appearanceScore;
+	this.characterScore=characterScore;
 	
 }

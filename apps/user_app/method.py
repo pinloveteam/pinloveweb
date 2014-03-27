@@ -16,11 +16,11 @@ def user_info_card(userProfile):
             'username':userProfile.user.username,
             'height':userProfile.height,
             'age':userProfile.age,
-            'education':userProfile.education,
+            'education':userProfile.get_education_display(),
             'income':userProfile.income,
-            'jobIndustry':userProfile.jobIndustry,
+            'jobIndustry':userProfile.get_jobIndustry_display(),
             'city':userProfile.city,
-            'sunSign':userProfile.sunSign
+            'sunSign':userProfile.get_sunSign_display()
             }
     #判断信息是否未填
     for  key in data.keys():

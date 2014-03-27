@@ -896,11 +896,20 @@ function loadStage() {
 			$(this).attr('src','/static/img/push-57.png')
 		}); */
 		$('#buy').click(function(){buyCoins(3)});
-		$('#send_all_box').click(
-				/* if $('#send_all_box').attr('checked') */
-				function(){
-					$("[name='checkbox1']:visible").attr('checked','true');} 
-		);
+		$('#checkbox1 ').click(function(){
+			flag = $(this).children().prop("checked");
+			
+			$(this).children().prop("checked",!flag);
+			$("input[name='checkbox1']").each(function(){
+			   $(this).prop("checked",!flag);
+			  });  
+		});
+		
+		$('.user').click(function(){
+			flag = $(this).find('.checkbox').prop("checked");
+			
+			$(this).find('.checkbox').prop("checked",!flag);
+		});
 		$('.close').click(function(){
 			$(this).parent().hide('slow');
 		});

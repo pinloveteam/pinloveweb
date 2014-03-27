@@ -194,7 +194,7 @@ def user_profile(request):
                 value=getattr(grade[0],field)
                 if value==None:
                     value=0;
-                args[field]=value*100
+                args[field]=int(value*100)
         #获得另一半身高期望   
         userExpect=UserExpect.objects.get_user_expect_by_uid(request.user.id)
         if userExpect==None:

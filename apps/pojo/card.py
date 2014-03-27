@@ -13,7 +13,7 @@ from django.utils import simplejson
 '''
 empty_result_list=[-1,'N',None]
 class Card(object):
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore):
+    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore=0,incomeScore=0,edcationScore=0,appearanceScore=0,characterScore=0):
         self.user_id=userId
         self.username=username
         self.height=height
@@ -83,7 +83,7 @@ def matchResultList_to_CardList(matchResultList):
        city=userBaiscProfile.city
        followStatus=0
        #判断头像是否通过审核
-       if userBaiscProfile.avatar_name_status==3:
+       if userBaiscProfile.avatar_name_status=='3':
            avatar_name=userBaiscProfile.avatar_name
            isVote=True
        else:
@@ -142,19 +142,16 @@ def fllowList_to_CardList(user,fllowList,type):
     userProfileList=UserProfile.objects.select_related().filter(user_id__in=userList)
     for userProfile in userProfileList:
         #获取推荐分数
-        if not MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id).exists():
-            heighScore=0
-            incomeScore=0
-            edcationScore=0
-            appearanceScore=0
-            characterScore=0
-        else:
-            matchResult=UserProfile.objects.get_march_result(user.id,userProfile.user_id)
+        if  MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id).exists():
+            matchResult=MatchResult.objects.get(my_id=user.id,other_id=userProfile.user_id)
+            MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id)
             heighScore=(matchResult.heighMatchMy+matchResult.heighMatchOther)/2
-            incomeScore=(matchResult.incomeMatchMy+matchResult.incomeMatcOther)/2
+            incomeScore=(matchResult.incomeMatchMy+matchResult.incomeMatchOther)/2
             edcationScore=(matchResult.edcationMatchMy+matchResult.edcationMatchOther)/2
             appearanceScore=(matchResult.appearanceMatchMy+matchResult.appearanceMatchOther)/2
             characterScore=(matchResult.characterMatchMy+matchResult.characterMatchOther)/2
+        else:
+            heighScore,incomeScore,edcationScore,appearanceScore,characterScore=0,0,0,0,0
         userId=userProfile.user_id
         username=userProfile.user.username
         height=userProfile.height
@@ -163,7 +160,7 @@ def fllowList_to_CardList(user,fllowList,type):
         income=userProfile.income
         jobIndustry=userProfile.get_jobIndustry_display()
         followStatus=0
-        if userProfile.avatar_name_status==3:
+        if userProfile.avatar_name_status=='3':
            avatar_name=userProfile.avatar_name
            isVote=True
         else:

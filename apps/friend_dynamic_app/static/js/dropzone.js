@@ -1034,6 +1034,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         item = items[_i];
         if (item.webkitGetAsEntry != null) {
           entry = item.webkitGetAsEntry();
+          if (item.kind != 'file') {continue;}
           if (entry.isFile) {
             this.addFile(item.getAsFile());
           } else if (entry.isDirectory) {

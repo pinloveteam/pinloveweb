@@ -93,6 +93,16 @@
                  }
              }
          },
+         series:[
+                 {
+            dragable: {
+                    color: undefined,
+                    constrainTo: 'y'
+                      },
+            isDragable: true
+                  }
+                 ],
+          
           // Cursor(光标)
           // 鼠标移动到图中时，鼠标在图中显示形式，常与和高亮功能同时使用
           //此外，通过设置该属性的zoom相关属性来对图中某个区域钻取（就选定区域放大）
@@ -133,7 +143,7 @@
               sizeAdjust: 10,
               tooltipLocation: 'n',
               tooltipAxes: 'y',
-              tooltipFormatString: '<b><i><span style="color:red;">hello</span></i></b> %.2f',
+              tooltipFormatString: '%.2f',
               useAxesFormatters: false
           },
       });

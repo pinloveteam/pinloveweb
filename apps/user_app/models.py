@@ -11,15 +11,11 @@ import string
 from apps.upload_avatar.models import UploadAvatarMixIn
 from apps.upload_avatar.signals import avatar_crop_done
 import os
-from django.db.models.signals import post_delete
-from django.db.models import signals
-from django.dispatch.dispatcher import Signal
-from django.contrib.sessions.backends.base import SessionBase
 # import MySQLdb
 from apps.recommend_app.models import  MatchResult
-from apps.recommend_app.recommend_util import cal_recommend
+# from apps.recommend_app.recommend_util import cal_recommend
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
-from util.singal import cal_recommend_user
+# from util.singal import cal_recommend_user
 from apps.common_app.models import Tag
 
 class UserProfileManager(models.Manager):

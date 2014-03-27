@@ -7,7 +7,7 @@
  <style>
           .dz-max-files-reached {background-color: red};
  </style>
-  <script src="{% static 'js/dropzone.min.js' %}"></script>
+  <script src="{% static 'js/dropzone.js' %}"></script>
         <script type="text/javascript">
         Dropzone.options.myDropzone = {
 
@@ -405,7 +405,7 @@ function reply(username,dynamicId) {
           {%for dynamic in friendDynamicList%}
             <li id="dynamic_{{dynamic.id}}" class="lineD_btm">
               <div class="userPic">
-              <img src="{{MEDIA_URL}}{{dynamic.get_profile}}" style="margin:4px;height:70px;width:70px;" >
+              <img src="{{MEDIA_URL}}{{dynamic.get_profile}}-110.jpeg" style="margin:4px;height:70px;width:70px;" >
               </div>
               <div class="feed_c">
                 <div class="msgCnt">
