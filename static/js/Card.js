@@ -6,7 +6,18 @@ var name_self = '';
 var name_other = '';
 var dataArray = {};
 window.Card = function(person){
-	
+	var test_match= function(){
+			var userId=$(this).parent().attr("id")
+			userId=userId.substring(4,userId.length)
+			$.ajax({
+				url:'/recommend/test_match/',
+				data:{userId:userId},
+				dataType:"json",
+				success:function(data){
+					alert(JSON.stringify(data))
+				}
+			});
+	}
 	var dislike = function(){
 		var userId=$(this).parents('.card').attr('id');
 		var temp=$(this)
@@ -125,7 +136,7 @@ window.Card = function(person){
 			var name = $(this).attr('title');
 			datasets_self.data = dataArray[name];
 			var data = {labels : labels, datasets : [datasets_self]};
-			var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
+			var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleShowLabels : true,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
 			this.isRadarShow = true;
 		}
 	}
@@ -214,7 +225,7 @@ window.Card = function(person){
 		
 	$('.card_row').append(this.template.html());
 	
-	$('.icon_dislike,.icon_ding,.btn_send_msg,.other_name,.compare,.compare_cancle,[class^="icon_like"],.icon_msg').unbind();
+	$('.icon_dislike,.icon_ding,.btn_send_msg,.other_name,.compare,.compare_cancle,[class^="icon_like"],.icon_msg,.test_match').unbind();
 	
 	$('.icon_dislike').on('click',dislike);
 	
@@ -231,6 +242,7 @@ window.Card = function(person){
 	$("[class^='icon_like']").on('click',like);
 	
 	$(".icon_msg").on('click',init_msg);
+	$(".test_match").on('click',test_match);
 }
 
 function Person(username,age,city,headImg,userId,isFriend,heighScore,incomeScore,edcationScore,appearanceScore,characterScore){

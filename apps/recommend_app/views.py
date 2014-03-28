@@ -28,17 +28,17 @@ def update_weight(request):
     args={}
     flag=True
     try:
-        height=float(request.POST.get('height',False))/100
-        income=float(request.POST.get('income',False))/100
-        appearance=float(request.POST.get('appearance',False))/100
-        education=float(request.POST.get('education',False))/100
-        character=float(request.POST.get('character',False))/100
+        height=float(request.POST.get('height',-1))/100
+        income=float(request.POST.get('income',-1))/100
+        appearance=float(request.POST.get('appearance',-1))/100
+        education=float(request.POST.get('education',-1))/100
+        character=float(request.POST.get('character',-1))/100
     except Exception as e:
         flag=False
         args['result']='error'
         args['msg']='传输参类型错误！'
         logger.error('传输参类型错误！',e)
-    if not( education and education and income and appearance and height):
+    if ( education<0 and education<0 and income<0 and appearance<0 and height<0):
         flag=False
         args['result']='error'
         args['msg']='传输参数错误！'
@@ -319,3 +319,38 @@ def user_vote(request):
            args = {}
            args.update(csrf(request))
            return render(request, 'login.html', args) 
+       
+def test_match(request):
+    args={}
+    userId=int(request.GET.get('userId'))
+    gradeMy=Grade.objects.get(user_id=request.user.id)
+    matchResult=MatchResult.objects.get(my_id=request.user.id,other_id=userId)
+    grade=Grade.objects.get(user_id=userId)
+    args['我的收入得分']=gradeMy.incomescore
+    args['我的学历得分']=gradeMy.educationscore
+    args['我的外貌得分']=gradeMy.appearancescore
+    #对方得分
+    args['对方的收入得分']=grade.incomescore
+    args['对方的学历得分']=grade.educationscore
+    args['对方的外貌得分']=grade.appearancescore
+    #相互打分
+    args['异性对我的打分和']=matchResult.scoreMyself
+    args['我对异性的打分和']=matchResult.scoreMyself
+#     args['macthScore']=matchResult.macthScore
+    args['我对异性的身高打分（权重）']=matchResult.heighMatchOther
+    args['异性对我的身高打分（权重）']=matchResult.heighMatchMy
+    args['异性对我的收入打分（权重）']=matchResult.incomeMatchMy
+    args['我对异性的收入打分（权重）']=matchResult.incomeMatchOther
+    args['我对异性的学历打分（权重）']=matchResult.edcationMatchOther
+    args['异性对我的学历打分（权重）']=matchResult.edcationMatchMy
+    args['我对异性的外貌打分（权重）']=matchResult.appearanceMatchOther
+    args['异性对我的外貌打分（权重）']=matchResult.appearanceMatchMy
+    args['异性对我的性格打分（权重）']= matchResult.characterMatchMy
+    args['异性对我的性格打分（权重）']=matchResult.characterMatchMy 
+    
+    args['我匹配标签得分']=matchResult.tagMatchOtherScore
+    args['异性对我的匹配标签得分']=matchResult.tagMatchMyScore
+    args['我匹配身高得分']=matchResult.heighMatchOtherScore
+    args['异性对我的身高标签得分']=matchResult.heighMatchMyScore
+    json=simplejson.dumps(args)
+    return HttpResponse(json)

@@ -6,7 +6,7 @@ Created on Sep 17, 2013
 '''
 from apps.user_app.models import UserProfile
 from apps.upload_avatar.app_settings import default_iamge_name
-from apps.recommend_app.models import MatchResult
+from apps.recommend_app.models import MatchResult, Grade
 from django.utils import simplejson
 '''
   卡片类
@@ -67,11 +67,13 @@ class MyEncoder(simplejson.JSONEncoder):
 def matchResultList_to_CardList(matchResultList):
     recommendResultList=[]
     for matchResult in matchResultList:
-       heighScore=(matchResult.heighMatchMy+matchResult.heighMatchOther)/2
-       incomeScore=(matchResult.incomeMatchMy+matchResult.incomeMatchOther)/2
-       edcationScore=(matchResult.edcationMatchMy+matchResult.edcationMatchOther)/2
-       appearanceScore=(matchResult.appearanceMatchMy+matchResult.appearanceMatchOther)/2
-       characterScore=(matchResult.characterMatchMy+matchResult.characterMatchOther)/2
+       grade=Grade.objects.get(user=matchResult.other)
+       heighScore=matchResult.heighMatchOtherScore
+       incomeScore=grade.incomescore
+       edcationScore=grade.educationscore
+       appearanceScore=grade.appearancescore
+       characterScore=matchResult.tagMatchOtherScore
+       
        userBaiscProfile=matchResult.get_user_basic_profile()
        userId=matchResult.other_id
        username=matchResult.other.username
@@ -143,13 +145,13 @@ def fllowList_to_CardList(user,fllowList,type):
     for userProfile in userProfileList:
         #获取推荐分数
         if  MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id).exists():
-            matchResult=MatchResult.objects.get(my_id=user.id,other_id=userProfile.user_id)
-            MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id)
-            heighScore=(matchResult.heighMatchMy+matchResult.heighMatchOther)/2
-            incomeScore=(matchResult.incomeMatchMy+matchResult.incomeMatchOther)/2
-            edcationScore=(matchResult.edcationMatchMy+matchResult.edcationMatchOther)/2
-            appearanceScore=(matchResult.appearanceMatchMy+matchResult.appearanceMatchOther)/2
-            characterScore=(matchResult.characterMatchMy+matchResult.characterMatchOther)/2
+            matchResult=MatchResult.objects.select_related('other').get(my_id=user.id,other_id=userProfile.user_id)
+            grade=Grade.objects.get(user=matchResult.other)
+            heighScore=matchResult.heighMatchOtherScore
+            ncomeScore=grade.incomescore
+            edcationScore=grade.educationscore
+            appearanceScore=grade.appearancescore
+            characterScore=matchResult.tagMatchOtherScore
         else:
             heighScore,incomeScore,edcationScore,appearanceScore,characterScore=0,0,0,0,0
         userId=userProfile.user_id
@@ -172,3 +174,4 @@ def fllowList_to_CardList(user,fllowList,type):
     return recommendResultList
  
  
+    

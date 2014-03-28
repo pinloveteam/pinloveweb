@@ -133,9 +133,9 @@ attribute：
 def get_recommend_list(request,flag,disLikeUserIdList,focusEachOtherList,userProfile,**kwargs):
     if flag:
          if disLikeUserIdList is None:
-             matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id)
+             matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id)
          else:
-            matchResultList=MatchResult.objects.select_related().filter(my_id=request.user.id).exclude(other_id__in=disLikeUserIdList)
+            matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id).exclude(other_id__in=disLikeUserIdList)
          arg=page(request,matchResultList,**kwargs)
          matchResultList=arg['pages']
          from apps.pojo.card import matchResultList_to_CardList

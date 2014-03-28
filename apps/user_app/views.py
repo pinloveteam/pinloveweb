@@ -70,8 +70,9 @@ def detailed_info(request,userId):
         print 'userId转换失败'
     arg={}
     userProfile=UserProfile.objects.get_user_info(userId)
+    tagList=UserTag.objects.select_related('tag').filter(user_id=request.user.id,type=0)
     from apps.user_app.method import user_info_card
-    return render(request,'detailed_info.html',user_info_card(userProfile))
+    return render(request,'detailed_info.html',user_info_card(userProfile,tagList))
 '''
 查看关注信息
 attribute：
@@ -176,11 +177,11 @@ def user_profile(request):
         useBasicrProfile = UserProfile.objects.get(user_id=request.user.id)
         request.session['user_original_data']={'height':useBasicrProfile.height,'education':useBasicrProfile.education,'educationSchool':useBasicrProfile.educationSchool,'income':useBasicrProfile.income}
         #获取自己个人标签
-        tags=UserTag.objects.get_tags_by_myself(user_id=request.user.id,type=0)
+        tags=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=0)
         from apps.pojo.tag import tag_to_tagbean
         tagbeanList=tag_to_tagbean(tags)
         #获取对另一半期望标签
-        tagsForOther=UserTag.objects.get_tags_by_myself(user_id=request.user.id,type=1)
+        tagsForOther=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=1)
         tagbeanForOtherList=tag_to_tagbean(tagsForOther)
         args['tagOtherLengthMod2']=len(tagbeanForOtherList)/2
         args['tagbeanForOtherList']=tagbeanForOtherList

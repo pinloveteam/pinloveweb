@@ -240,7 +240,7 @@ interval = self.setInterval("polling()", time);
 	<div class="row" style="margin-top:63px;">
 		<div class="col-md-3">
 			<div class="user_info card_panel"> 
-				<div class="head head_boy" style="margin:4px;height:60px;width:60px;">
+				<div class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:60px;width:60px;">
 				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
 				</div>
 				<a href='/user/user_profile/#self_info'><div class="name">{{user.username}}</div></a>
@@ -291,7 +291,7 @@ interval = self.setInterval("polling()", time);
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab12">
 					<div class="introBox venoboxframe" data-type="iframe" href="">
-					<div class="head head_girl">
+					<div class="head {% ifequal gender 'F'%}head_boy{%else%}head_girl{%endifequal%}">
 						<img src="" alt="当前头像">
 					</div>
 						<div class="card-introBox" title="查看详细信息"><span class="detail_info">查看<br/>详细信息</span></div>

@@ -80,11 +80,9 @@ td{
 		<span>{{city}}</span>
 	</div>
 	<div class="tag">
-		<h4><span class="label label-info">年轻</span></h4>
-		<h4><span class="label label-info">非主流</span></h4>
-		<h4><span class="label label-info">呵呵</span></h4>
-		<h4><span class="label label-info">哈哈</span></h4>		
-		<h4><span class="label label-info">嘿嘿</span></h4>
+	    {% for tag in tagTupe %}
+		<h4><span class="label label-info">{{tag}}</span></h4>
+		{% endfor %}
 	</div>
 	<table class="table">
 		<tbody>

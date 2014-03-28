@@ -6,7 +6,7 @@ Created on Dec 23, 2013
 '''
 #用户信息未填时返回的值
 missing_value=[-1,'N',None,]
-def user_info_card(userProfile):
+def user_info_card(userProfile,userTagBeanList):
     if userProfile.avatar_name_status=='3':
         avatar_name=userProfile.avatar_name
     else:
@@ -22,6 +22,11 @@ def user_info_card(userProfile):
             'city':userProfile.city,
             'sunSign':userProfile.get_sunSign_display()
             }
+    #获取标签信息
+    tagTupe=()
+    for userTag in userTagBeanList:
+        tagTupe+=(userTag.tag.content,)
+    data['tagTupe']=tagTupe
     #判断信息是否未填
     for  key in data.keys():
         if data[key] in missing_value:

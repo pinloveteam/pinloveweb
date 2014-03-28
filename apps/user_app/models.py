@@ -353,8 +353,9 @@ class TagManage(models.Manager):
     return
        UserTag
     '''
-    def get_tags_by_myself(self,user_id=None,type=0,*args, **kwargs):   
+    def get_tags_by_type(self,user_id=None,type=0,*args, **kwargs):   
         return UserTag.objects.filter(user_id=user_id,type=type,*args, **kwargs) 
+    
     '''
     批量插入用户标签表
     '''   

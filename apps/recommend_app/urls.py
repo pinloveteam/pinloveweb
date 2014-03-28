@@ -11,6 +11,8 @@ urlpatterns=patterns('apps.recommend_app.views',
     #权重
     url(r'^weight/$', 'weight'),
     url(r'^user_vote/$', 'user_vote'),
+    url(r'^test_match/$', 'test_match'),
+    
 )
 urlpatterns+=patterns('apps.recommend_app.views',
     #更新权重                     

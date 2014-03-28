@@ -118,6 +118,11 @@ class MatchResult(models.Model):
     appearanceMatchMy=models.FloatField(verbose_name=u"对自己外貌打分",default='0.00')
     characterMatchOther=models.FloatField(verbose_name=u"对别人性格打分",default='0.00')
     characterMatchMy=models.FloatField(verbose_name=u"对自己性格打分",default='0.00')
+    #以下不加权重得分
+    tagMatchOtherScore=models.FloatField(verbose_name=u"对异性标签匹配得分",default='0.00')
+    tagMatchMyScore=models.FloatField(verbose_name=u"异性对自己标签匹配得分",default='0.00')
+    heighMatchOtherScore=models.FloatField(verbose_name=u"异性对自己身高匹配得分",default='0.00')
+    heighMatchMyScore=models.FloatField(verbose_name=u"异性对自己身高匹配得分",default='0.00')
      #定制管理器
     objects = MatchResultManager()
     class Meta:

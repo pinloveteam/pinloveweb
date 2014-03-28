@@ -88,7 +88,7 @@ div.computerMove {
 				var now_x = Math.round((offset_x + _x)/progressWidth*100);
 				
 				/* 改变目标元素的位置 */
-				if(now_x>0 && (_x<-5 || (now_x<=100 && total+now_x<=100))){
+				if(now_x>=0 && (_x<-5 || (now_x<=100 && total+now_x<=100))){
 					moveDiv.css({
 						left:now_x + "%"
 					});

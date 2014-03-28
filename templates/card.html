@@ -31,6 +31,7 @@ var previous_page_number=-1
 var myFollow={{myFollow}}
 var follow={{follow}}
 var fans={{fans}}
+
 $(document).ready(function(){
 	if (previous_page_number<0){
 		$('.prev').hide();
@@ -240,7 +241,7 @@ interval = self.setInterval("polling()", time);
 	<div class="row" style="margin-top:63px;">
 		<div class="col-md-3">
 			<div class="user_info card_panel"> 
-				<div class="head head_boy" style="margin:4px;height:60px;width:60px;">
+				<div class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:60px;width:60px;">
 				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
 				</div>
 				<a href='/user/user_profile/#self_info'><div class="name">{{user.username}}</div></a>
@@ -291,7 +292,7 @@ interval = self.setInterval("polling()", time);
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab12">
 					<div class="introBox venoboxframe" data-type="iframe" href="">
-					<div class="head head_girl">
+					<div class="head {% ifequal gender 'F'%}head_boy{%else%}head_girl{%endifequal%}">
 						<img src="" alt="当前头像">
 					</div>
 						<div class="card-introBox" title="查看详细信息"><span class="detail_info">查看<br/>详细信息</span></div>
@@ -311,6 +312,7 @@ interval = self.setInterval("polling()", time);
 					<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<span>杭州</span>
 				</div>
+				<div class="test_match"><button>测试数据</button></div>
 				<div class="tool_bar">
 					<a href="#"><i class="icon_ding" title="固定"></i></a>
 					<a href="#"><i class="icon_like_0" title="喜欢"></i></a>

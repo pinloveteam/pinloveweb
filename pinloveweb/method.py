@@ -12,6 +12,7 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg={}
     arg['avatar_name']=userProfile.get_avatar_image()
     arg['age']=userProfile.age
+    arg['gender']=userProfile.gender
     arg['height']=userProfile.height
     arg['income']=userProfile.income
     arg['education']=userProfile.get_education_display()
