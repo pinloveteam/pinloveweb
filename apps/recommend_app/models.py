@@ -107,7 +107,7 @@ class MatchResult(models.Model):
     other=models.ForeignKey(User,related_name='other_User',verbose_name=u"异性")
     scoreMyself=models.FloatField(verbose_name=u"异性给自己打分",default='0.00')
     scoreOther=models.FloatField(verbose_name=u"自己给异性打分",default='0.00')
-    macthScore=models.FloatField(verbose_name=u"对别人身高打分",default='0.00')
+    macthScore=models.FloatField(verbose_name=u"总分",default='0.00')
     heighMatchOther=models.FloatField(verbose_name=u"对别人身高打分",default='0.00')
     heighMatchMy=models.FloatField(verbose_name=u"对自己身高打分",default='0.00')
     incomeMatchMy=models.FloatField(verbose_name=u"对自己收入打分",default='0.00')
