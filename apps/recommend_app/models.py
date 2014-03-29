@@ -110,7 +110,7 @@ class MatchResult(models.Model):
     macthScore=models.FloatField(verbose_name=u"对别人身高打分",default='0.00')
     heighMatchOther=models.FloatField(verbose_name=u"对别人身高打分",default='0.00')
     heighMatchMy=models.FloatField(verbose_name=u"对自己身高打分",default='0.00')
-    incomeMatchMy=models.FloatField(verbose_name=u"对自己打分",default='0.00')
+    incomeMatchMy=models.FloatField(verbose_name=u"对自己收入打分",default='0.00')
     incomeMatchOther=models.FloatField(verbose_name=u"对别人收入打分",default='0.00')
     edcationMatchOther=models.FloatField(verbose_name=u"对别人学历打分",default='0.00')
     edcationMatchMy=models.FloatField(verbose_name=u"对自己学历打分",default='0.00')
@@ -119,10 +119,10 @@ class MatchResult(models.Model):
     characterMatchOther=models.FloatField(verbose_name=u"对别人性格打分",default='0.00')
     characterMatchMy=models.FloatField(verbose_name=u"对自己性格打分",default='0.00')
     #以下不加权重得分
-    tagMatchOtherScore=models.FloatField(verbose_name=u"对异性标签匹配得分",default='0.00')
-    tagMatchMyScore=models.FloatField(verbose_name=u"异性对自己标签匹配得分",default='0.00')
-    heighMatchOtherScore=models.FloatField(verbose_name=u"异性对自己身高匹配得分",default='0.00')
-    heighMatchMyScore=models.FloatField(verbose_name=u"异性对自己身高匹配得分",default='0.00')
+    tagMatchOtherScore=models.FloatField(verbose_name=u"对异性标签匹配得分(无权重)",default='0.00')
+    tagMatchMyScore=models.FloatField(verbose_name=u"异性对自己标签匹配得分(无权重)",default='0.00')
+    heighMatchOtherScore=models.FloatField(verbose_name=u"异性对自己身高匹配得分(无权重)",default='0.00')
+    heighMatchMyScore=models.FloatField(verbose_name=u"异性对自己身高匹配得分(无权重)",default='0.00')
      #定制管理器
     objects = MatchResultManager()
     class Meta:
