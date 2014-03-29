@@ -74,25 +74,25 @@ class UserExpectManager(models.Manager):
 class UserExpect(models.Model):
     user=models.ForeignKey(User,related_name='User')
 #     heightx1=models.SmallIntegerField(verbose_name=u'身高',default='160',null=True)
-    heighty1=models.FloatField(verbose_name=u'y1分数',default='0.00',null=True)
+    heighty1=models.FloatField(verbose_name=u'160y轴分数',default='0.00',null=True)
 #     heightx2=models.SmallIntegerField(verbose_name=u'身高',default='165',null=True)
-    heighty2=models.FloatField(verbose_name=u'y2分数',default='0.00',null=True)
+    heighty2=models.FloatField(verbose_name=u'165y轴分数',default='0.00',null=True)
 #     heightx3=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty3=models.FloatField(verbose_name=u'y3分数',default='0.00',null=True)
+    heighty3=models.FloatField(verbose_name=u'170y轴分数',default='0.00',null=True)
 #     heightx4=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty4=models.FloatField(verbose_name=u'y4分数',default='0.00',null=True)
+    heighty4=models.FloatField(verbose_name=u'175y轴分数',default='0.00',null=True)
 #     heightx5=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty5=models.FloatField(verbose_name=u'y5分数',default='0.00',null=True)
+    heighty5=models.FloatField(verbose_name=u'180y轴分数',default='0.00',null=True)
 #     heightx6=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty6=models.FloatField(verbose_name=u'y6分数',default='0.00',null=True)
+    heighty6=models.FloatField(verbose_name=u'185y轴分数',default='0.00',null=True)
 #     heightx7=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty7=models.FloatField(verbose_name=u'y7分数',default='0.00',null=True)
+    heighty7=models.FloatField(verbose_name=u'190y轴分数',default='0.00',null=True)
 #     heightx8=models.SmallIntegerField(verbose_name=u'身高',default='0',null=True)
-    heighty8=models.FloatField(verbose_name=u'y18分数',default='0.00',null=True)
+    heighty8=models.FloatField(verbose_name=u'195y轴分数',default='0.00',null=True)
     objects=UserExpectManager()
     class Meta:
         verbose_name = u'用户期望表' 
-        verbose_name_plural = u'推荐打分表'
+        verbose_name_plural = u'用户期望表'
         db_table=u'recommend_user_expect'
         
 class MatchResultManager(models.Manager):

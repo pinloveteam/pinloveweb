@@ -19,10 +19,12 @@ class GradeAdmin(admin.ModelAdmin):
 #     get_username.short_description = 'username'       
 
 class UserExpectAdmin(admin.ModelAdmin):
-     list_display = ('user','heighty1','heighty2','heighty3')
+     list_display = ('user','heighty1','heighty2','heighty3','heighty4','heighty5','heighty6','heighty7','heighty8')
      search_fields = ('user__username',)
 class MatchResultAdmin(admin.ModelAdmin):
-     list_display = ('my','other','scoreMyself','scoreOther','macthScore')
+     list_display = ('my','other','scoreMyself','scoreOther','macthScore','heighMatchOther','heighMatchMy',
+                     'incomeMatchMy','incomeMatchOther','edcationMatchOther','edcationMatchMy','appearanceMatchOther',
+                     'appearanceMatchMy','characterMatchOther','characterMatchMy','tagMatchOtherScore','tagMatchMyScore','heighMatchOtherScore','heighMatchMyScore')
      search_fields = ('my__username',)
 #      ordering =('-macthScore')
 admin.site.register(Grade,GradeAdmin)

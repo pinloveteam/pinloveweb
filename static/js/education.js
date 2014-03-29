@@ -59,20 +59,20 @@ $(function(){
 		  }
 		});
 		//学校列表mouseover事件
-		$("div[class='schoolList'] ul li").live("mouseover",function(){
+		$("div[class='schoolList'] ul").on("mouseover","li",function(){
 		  $(this).css("background-color","#72B9D7");
 		});
 		//学校列表mouseout事件
-		$("div[class='schoolList'] ul li").live("mouseout",function(){
+		$("div[class='schoolList'] ul").on("mouseout","li",function(){
 		  $(this).css("background-color","");
 		});
 		//学校列表点击事件
-		$("div[class='schoolList'] ul li").live("click",function(){
+		$("div[class='schoolList'] ul").on("click","li",function(){
 		  $("#id_educationSchool").val($(this).html());
 		  $("div[class='provinceSchool']").hide();
 		});
 		//点击输入学校名
-		$("div[class='proSelect'] span a").live("click",function(){
+		$("div[class='proSelect'] span").on("click","a",function(){
 		   $("div[class='proSelect'] select").val('99');
 		   
 		   $("div[class='schoolList'] ul").html("");
@@ -80,7 +80,7 @@ $(function(){
 		    $("div[class='proSelect'] input").show();
 		});
 		//按钮点击事件
-		$("div[class='button'] input").live("click",function(){
+		$("div[class='button']").on("click","input",function(){
 		  var flag = $(this).attr("flag");
 		  if("0"==flag){
 		    $("div[class='provinceSchool']").hide();

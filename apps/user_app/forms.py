@@ -38,15 +38,15 @@ class UserProfileForm(ModelForm):
     class Meta : 
         model = UserProfile  
         fields = ( 'gender', 'income','weight','jobIndustry','age',
-        'height', 'education', )
+        'height', 'education','year_of_birth', 'month_of_birth', 'day_of_birth','educationSchool', )
         
         exclude = ('stateProvince','avatar_name','city', 'country', 'sunSign', 'zodiac','avatar_name_status',
                    'self_evaluation','hairStyle','hairColor','face','eyeColor','bodyShape',
                    'jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
                    'belief','isSmoke','isDrink','beddingTime','pet','character',
                    'monthlyExpense','isOnlyChild','hasCar','hasHouse','financialCondition','parentEducation',
-                   'liveWithParent','likeChild','lastLoginAddress','year_of_birth', 'month_of_birth', 'day_of_birth', 'maritalStatus', 'hasChild' ,
-                   'link', 'streetAddress','position','language','educationSchool','ethnicGroup','bloodType',
+                   'liveWithParent','likeChild','lastLoginAddress', 'maritalStatus', 'hasChild' ,
+                   'link', 'streetAddress','position','language','ethnicGroup','bloodType',
                    ) 
 
 

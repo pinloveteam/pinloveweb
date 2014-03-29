@@ -1,6 +1,25 @@
 {%load util_filter%}
 <SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
  <SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+ <SCRIPT src="/static/js/education.js" type=text/javascript></SCRIPT>
+ <style>
+	  .provinceSchool { display:none;position:absolute;width:580px;height:310px;border:1px solid #72B9D7; background-color:#FFFFFF ;z-index: 1;}
+	  .provinceSchool .title { width:100%;height:30px;background:url({{STATIC_URL}}img/title-bg.png) repeat-x center left;}
+	  .provinceSchool .title span { margin-left:10px;font-weight:600;color:#FFF;line-height:30px;}
+	  .provinceSchool .proSelect { width:550px;height:22px;margin:10px 0 6px 15px;}
+	  .provinceSchool .proSelect select { width:136px;}
+	  .provinceSchool .proSelect input { display:none;}
+	  .provinceSchool .schoolList { width:550px;height:200px;margin-left:15px;overflow-y:auto; border:1px solid #72B9D7;}
+	  .provinceSchool .schoolList ul { width:510px;}
+	  .provinceSchool .schoolList ul li { float:left;width:240px;height:22px;margin-left:6px;padding-left:6px;line-height:22px;cursor:pointer;}
+		.provinceSchool .schoolList ul li.DoubleWidthLi { width:328px;}
+	  .provinceSchool .schoolList ul li:hover { background:#72B9D7;}
+	  .provinceSchool .button { width:100%;height:40px;margin-top:8px;}
+	  .provinceSchool .button input { float:right;height:30px;margin-right:20px;padding:4px 10px; background:url({{STATIC_URL}}img/title-bg.png);border:none;color:#FFF;font-weight:600;cursor:pointer;}
+      #id_year_of_birth,#id_month_of_birth,#id_day_of_birth{width: 200px;}
+      #id_month_of_birth{position: relative;left: 250px;top: -35px;}
+      #id_day_of_birth{position: relative;left: 490px;top: -70px;}
+</style>
     <SCRIPT>
         $(document).ready(function(){
         		$("#updateUserProfile").submit(function(){
@@ -88,6 +107,30 @@
                 </td>
             </tr>
             <tr>
+                <td>学校<span class="text-danger">*</span></td>
+                <td colspan="2"">
+                   {{user_profile_form.educationSchool}}
+                     <div id="proSchool" class="provinceSchool">
+                      <div class="title">
+                        <span>已选择:</span>
+                       </div>
+                      <div class="proSelect">
+                        <select></select>
+                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
+                        <input type="text" >
+                      </div>
+                      <div class="schoolList">
+                        <ul>
+                        </ul>
+                      </div>
+                      <div class="button">
+                       <input type="button" flag='0' value="取消">
+                       <input type="button" flag='1' value="确定">
+                      </div>
+                     </div>
+                </td>
+            </tr>
+            <tr>
                 <td>行业</td>
                 <td>
                     {{user_profile_form.jobIndustry}}
@@ -97,10 +140,18 @@
                     {{user_profile_form.income}}
                 </td>
             </tr>
+            <tr  height="30px">
+                <td>出生日期</td>
+                <td colspan="2">
+                   {{user_profile_form.year_of_birth}}
+                    {{user_profile_form.month_of_birth}}
+                    {{user_profile_form.day_of_birth}}
+                </td>
+            </tr>
             <tr>
                 <td>现居地<span class="text-danger">*</span></td>
                 <td>
-                    <select id="id_country" name="country" class="form-control"  style="width: 220px;">
+                    <select id="id_country" name="country" class="form-control"  style="width: 200px;">
                         {%ifnotequal country  Null%}
                         <option value="-1" >请选择</option>
                         <option value="{{country}}" selected="selected">{{country}}</option>
@@ -108,7 +159,7 @@
                         <option value="-1" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                    <select id="id_stateProvince" name="stateProvince" class="form-control"  style="width: 220px; position: relative;left: 270px;top:-35px;">
+                    <select id="id_stateProvince" name="stateProvince" class="form-control"  style="width: 200px; position: relative;left: 250px;top:-35px;">
                         {%ifnotequal stateProvince Null%}
                         <option value="-1" >请选择</option>
                         <option value="{{stateProvince}}" selected="selected">{{stateProvince}}</option>
@@ -116,7 +167,7 @@
                         <option value="-1" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                    <select id="id_city" name="city" class="form-control" style="width: 220px; position: relative;left: 534px;top:-69px;">
+                    <select id="id_city" name="city" class="form-control" style="width: 200px; position: relative;left: 490px;top:-69px;">
                         {%ifnotequal city Null%}
                         <option value="-1" >请选择</option>
                         <option value="{{city}}" selected="selected">{{city}}</option>
@@ -125,7 +176,7 @@
                         {%endifnotequal%}
                     </select>
                 </td>
-            </tr>
+           </tr>
             </tbody>
         </table>
         <table class="tag">
