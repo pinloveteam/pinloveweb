@@ -2,26 +2,68 @@
 {% load staticfiles %}  
 
 {% block runload %}
-<body onLoad="init()">
-<SCRIPT src="/static/js/search.js" type=text/javascript></SCRIPT>
+<body>
+<!-- <SCRIPT src="/static/js/search.js" type=text/javascript></SCRIPT> -->
+<SCRIPT>
+$(document).ready(function(){
+	 $("#simpeSearch").submit(function(){
+		 var data = $(this).serialize();
+	     $.ajax({
+	         type: $(this).attr('method'),
+	         url: "/search/simple_search/",
+	         data:data,
+	         beforeSend: function(XMLHttpRequest){
+	         },
+	         success: function(data, textStatus){
+	            if(textStatus == 'success'){
+	            	$('.tr').remove()
+	            	$(data).each(function(){
+	            		tr="<tr class='tr'><td>"+this.username+"</td><td><img src='"+this.avatar_name+"-60.jpeg'></td><td>"+this.age+"</td><td>"+this.height+"</td><td>"+this.income+"</td><td>"+this.education+"</td></tr>"
+	            		$(tr).appendTo("#table1")
+	            	});
+	            	
+	            	
+	             } 
+	         },
+	         complete: function(XMLHttpRequest, textStatus){
+	         },
+	         error: function(response){
+	             alert('网络异常!')
+	         }
+	     });
+	     return false;
+	 });
+});
+
+</SCRIPT>
 {% endblock %}
 
 {% block content %}
      <h2> 搜索 </h2> 
-    <form action="/search/search_result/" method="POST" onSubmit="return init1();">{% csrf_token %}
-  <!--   <label for="sex"> 我要找: </label> 
-    <select name='sex'>
-       <option value='F'>美女</option>
-       <option value='M'>帅哥</option>
-    </select> -->
+    <form id="simpeSearch" action="" method="POST" >{% csrf_token %}
    <label for="minAge">年龄: </label>
-    <select name='minAge' id="minAge" >
-	</select>
+    {{simpleSearchForm.minAge}}
 	 <label for="maxAge">到: </label>
-    <select name='maxAge' id="maxAge">
-    </select>
-    有照片<input type="checkbox" name="image" value="1"> 
-     <input type="submit" value="搜索" >
+    {{simpleSearchForm.maxAge}}
+    <br>
+    <label for="education">学历:</label>
+    {{simpleSearchForm.education}}
+    <br>
+    <label for="minHeigh">:身高</label>
+    {{simpleSearchForm.minHeigh}}
+    <label for="maxHeigh">到: </label>
+    {{simpleSearchForm.maxHeigh}}
+    <br>
+    <label for="minIncome">:收入</label>
+    {{simpleSearchForm.minIcome}}
+    <label for="maxIncome">到: </label>
+    {{simpleSearchForm.maxIncome}}
+    &nbsp;&nbsp;
+      有照片{{simpleSearchForm.isAvatar}}
+    
+      <button class="btn btn-warning user-save" style="position: relative; left: 30px;">搜索</button>
     </form> 
-
+    <table id="table1" border="1">
+    <th>名字</th><th>头像</th><th>年龄</th><th>身高</th><th>收入</th><th>教育</th>
+    </table>
 {% endblock %} 

@@ -2,24 +2,20 @@
 
 # from django.http import HttpResponse 
 
-from django.shortcuts import render , render_to_response, redirect
+from django.shortcuts import render 
 from django.http import HttpResponseRedirect 
 from django.contrib import auth , messages
 from django.core.context_processors import csrf 
 
 from django.contrib.auth.models import User 
 from apps.user_app.models import Verification, UserVerification, Follow
-from apps.user_app.models import UserProfile,UserContactLink,UserVerification
+from apps.user_app.models import UserProfile
 from django.core.mail import send_mail
 
 from forms import RegistrationForm 
 from pinloveweb import settings
 from apps.user_app.views import isIdAuthen
-import time
-import datetime
-from django.contrib.auth.forms import UserCreationForm
 from util.page import page
-from django.db import connection
 from apps.the_people_nearby.views import GetLocation
 import logging
 from django.views.decorators.csrf import csrf_protect
@@ -181,8 +177,8 @@ def register_user(request) :
     
     if request.method == 'POST' : 
         userForm = RegistrationForm(request.POST) 
-        check_box_list = request.REQUEST.getlist('check_box_list')
-        if userForm.is_valid() and len(check_box_list):
+#         check_box_list = request.REQUEST.getlist('check_box_list')
+        if userForm.is_valid():
             userForm.save()
             
             username = userForm.cleaned_data['username']
@@ -205,11 +201,11 @@ def register_user(request) :
             userVerification.user=user
             userVerification.save()
             # we need to generate a random number as the verification key 
-            
+             
             # user needs email verification 
             domain_name = u'http://www.pinpinlove.com/account/verification/'
             email_verification_link = domain_name + '?username=' + username + '&' + 'user_code=' + user_code
-            
+             
             email_message = u"请您点击下面这个链接完成注册："
             email_message += email_verification_link
             try :
@@ -218,7 +214,8 @@ def register_user(request) :
             except:
                 print u'邮件发送失败'
                 pass
-            auth.authenticate(username=username, password=user.password)
+            user = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
+            auth.login(request, user)
             return HttpResponseRedirect('/account/loggedin/')
             
         else : 

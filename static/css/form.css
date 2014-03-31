@@ -1,0 +1,68 @@
+label {
+	font-weight: normal;
+}
+
+/* 链接 */
+.cor_yellow {
+	color: #FF796D;
+	text-decoration: underline;
+}
+/* h4标题*/
+.h4_text {
+	color: #FF796D;
+	font-size: 24px;
+	font-weight: bold;
+	margin: 0 0 10px 0;
+	padding-top: 20px;
+}
+
+/* 表单 */
+.form-panel {
+	background-color: #F9F9F9;
+	width: 600px;
+	border-color: #DADADA;
+	border-width: 1px;
+	border-style: solid;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 110px;
+}
+.form-head {
+	border-bottom: 1px dashed #E3E3E3;
+	color: #999999;
+	padding: 0 0 20px 30px;
+	margin-bottom: 60px;
+}
+
+.form-control {
+	width: 300px;
+}
+/* 字体 */
+.text1-font {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.h3-font {
+	text-align: center;
+	width: 300px;
+}
+
+.checkbox {
+	width: 80px;
+}
+
+.btn-warning {
+	background-color: #FF9283;
+	border-color: #FF9283;
+	color: #FFFFFF;
+}
+
+.btn-warning:hover {
+	background-color: #FF796D;
+	border-color: #FF796D;
+}
+
+textarea {
+	resize: none;
+}

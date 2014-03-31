@@ -148,7 +148,7 @@ def fllowList_to_CardList(user,fllowList,type):
             matchResult=MatchResult.objects.select_related('other').get(my_id=user.id,other_id=userProfile.user_id)
             grade=Grade.objects.get(user=matchResult.other)
             heighScore=matchResult.heighMatchOtherScore
-            ncomeScore=grade.incomescore
+            incomeScore=grade.incomescore
             edcationScore=grade.educationscore
             appearanceScore=grade.appearancescore
             characterScore=matchResult.tagMatchOtherScore

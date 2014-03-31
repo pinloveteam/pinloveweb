@@ -2,50 +2,89 @@
 {% load staticfiles %}  
 
 {% block runload %}
-<body onLoad="init();set_height();">
-<SCRIPT src="/static/js/search.js" type=text/javascript></SCRIPT>
+<body>
+<!-- <SCRIPT src="/static/js/search.js" type=text/javascript></SCRIPT> -->
+<SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
+<SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+
+<SCRIPT>
+$(document).ready(function(){
+	 $("#simpeSearch").submit(function(){
+		 var data = $(this).serialize();
+	     $.ajax({
+	         type: $(this).attr('method'),
+	         url: "/search/advance_search/",
+	         data:data,
+	         beforeSend: function(XMLHttpRequest){
+	         },
+	         success: function(data, textStatus){
+	            if(textStatus == 'success'){
+	            	$('.tr').remove()
+	            	$(data).each(function(){
+	            		tr="<tr class='tr'><td>"+this.username+"</td><td><img src='"+this.avatar_name+"-60.jpeg'></td><td>"+this.age+"</td><td>"+this.height+"</td><td>"+this.income+"</td><td>"+this.education+"</td>"
+	            		tr+="<td>"+this.jobIndustry+"</td><td>"+this.hasHouse+"</td><td>"+this.hasCar+"</td><td>"+this.sunSign+"</td><td>"+this.country+"</td><td>"+this.stateProvince+"</td><td>"+this.city+"</td></tr>"
+	            		$(tr).appendTo("#table1")
+	            	});
+	            	
+	            	
+	             } 
+	         },
+	         complete: function(XMLHttpRequest, textStatus){
+	         },
+	         error: function(response){
+	             alert('网络异常!')
+	         }
+	     });
+	     return false;
+	 });
+});
+
+</SCRIPT>
 {% endblock %}
 
 {% block content %}
-     <h2> 高级搜索 </h2> 
-    <form action="/search/advance_search_result/" method="post" onSubmit="return check_height_age();">{% csrf_token %}
+     <h2> 搜索 </h2> 
+    <form id="simpeSearch" action="" method="POST" >{% csrf_token %}
    <label for="minAge">年龄: </label>
-    <select name='minAge' id="minAge" >
+    {{advanceSearchForm.minAge}}
+	 <label for="maxAge">到: </label>
+    {{advanceSearchForm.maxAge}}
+    <br>
+    <label for="education">学历:</label>
+    {{advanceSearchForm.education}}
+    <br>
+    <label for="minHeigh">身高：</label>
+    {{advanceSearchForm.minHeigh}}
+    <label for="maxHeigh">到: </label>
+    {{advanceSearchForm.maxHeigh}}
+    <br>
+    <label for="minIncome">:收入</label>
+    {{advanceSearchForm.minIcome}}
+    <label for="maxIncome">到: </label>
+    {{advanceSearchForm.maxIncome}}
+    &nbsp;&nbsp;
+      有照片{{advanceSearchForm.isAvatar}}
+    <br>
+    <label for="sunSign">星座</label>{{advanceSearchForm.sunSign}}
+    <label for="jobIndustry">行业</label>{{advanceSearchForm.jobIndustry}}
+    <br>
+    <label for="hasHouse">购房</label>{{advanceSearchForm.hasHouse}}
+    <label for="hasCar">购车</label>{{advanceSearchForm.hasCar}}
+    <br>
+    <label for="hasCar">户籍</label>
+    <select id="id_country" name="country">
+      <option value="None" >请选择</option>
 	</select>
-	到: 
-    <select name='maxAge' id="maxAge">
+    <select id="id_stateProvince" name="stateProvince" >
+      <option value="None" >请选择</option>
     </select>
-     <br> 有照片<input type="checkbox" name="image" value="1"> 
-  <label for="height">身高: </label>
-     <select name='minHeight' id="minHeight" >
-	</select>
-	到: 
-    <select name='maxHeight' id="maxHeight">
-    </select>
-    <label for="education">学历：</label>
-    {{advance_search_form.education}}
-    <label for="income">年收入（万）：</label>
-    {{advance_search_form.income}}
-    <label for="sunSign">星座：</label>
-    {{advance_search_form.sunSign}}
-    <label for="maritalStatus">目前状态：</label>
-    {{advance_search_form.maritalStatus}}
-    <label for="jobIndustry">职业领域：</label>
-    {{advance_search_form.jobIndustry}}
-    <label for="jobTitle">目前职位：</label>
-    {{advance_search_form.jobTitle}}
-    <label for="companyType">公司类型：</label>
-    {{advance_search_form.companyType}}
-    <label for="hasCar">购车：</label>
-    {{advance_search_form.hasCar}}
-    <label for="hasHouse">购房：</label>
-    {{advance_search_form.hasHouse}}
-
-    <label for="isOnlyChild">独生子女：</label>
-    {{advance_search_form.isOnlyChild}}
-    
-    
-     <input type="submit" value="搜索" >
+    <select id="id_city" name="city" >
+      <option value="None" >请选择</option>
+     </select> 
+      <button class="btn btn-warning user-save" style="position: relative; left: 30px;">搜索</button>
     </form> 
-
+    <table id="table1" border="1">
+    <th>名字</th><th>头像</th><th>年龄</th><th>身高</th><th>收入</th><th>教育</th>
+    <th>行业</th><th>住房</th><th>购车</th><th>星座</th><th>国家</th><th>省份</th><th>城市</th>
+    </table>
 {% endblock %} 
