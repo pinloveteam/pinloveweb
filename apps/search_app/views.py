@@ -30,12 +30,13 @@ def simple_search(request):
             minHeigh=simpleSearchForm.cleaned_data['minHeigh']
             maxHeigh=simpleSearchForm.cleaned_data['maxHeigh']
             isAvatar=simpleSearchForm.cleaned_data['isAvatar']
+            userProfile=UserProfile.objects.get(user=request.user)
             if isAvatar==True:
                 userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,avatar_name_status='3')
+                                               height__gte=minHeigh,height__lte=maxHeigh,avatar_name_status='3').exclude(gender=userProfile.gender)
             else:
                 userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,)
+                                               height__gte=minHeigh,height__lte=maxHeigh,).exclude(gender=userProfile.gender)
             searchRsultList=searchRsultBeanList_to_searchRsultList(userProfileList)
             from apps.pojo.search import SearchRsultEncoder
             json=simplejson.dumps(searchRsultList,cls=SearchRsultEncoder)
@@ -70,8 +71,9 @@ def advance_search(request):
                     searchSql[field]=advanceSearchForm.cleaned_data[field]
             if isAvatar==True:
                 searchSql['avatar_name_status']='3'
+            userProfile=UserProfile.objects.get(user=request.user)
             userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql)
+                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender)
             searchRsultList=searchRsultBeanList_to_searchRsultList(userProfileList)
             from apps.pojo.search import SearchRsultEncoder
             json=simplejson.dumps(searchRsultList,cls=SearchRsultEncoder)
