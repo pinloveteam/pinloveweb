@@ -66,7 +66,7 @@ def advance_search(request):
                 if advanceSearchForm.cleaned_data[field]!='None':
                     searchSql[field]=advanceSearchForm.cleaned_data[field]
             for field in ['stateProvince','country','city']:
-                if not advanceSearchForm.cleaned_data[field] in ['None','国家','省份、州','地级市、县']:
+                if not advanceSearchForm.cleaned_data[field] in [u'None',u'国家',u'省份、州',u'地级市、县']:
                     searchSql[field]=advanceSearchForm.cleaned_data[field]
             if isAvatar==True:
                 searchSql['avatar_name_status']='3'
