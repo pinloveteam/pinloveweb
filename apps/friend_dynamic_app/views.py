@@ -319,6 +319,8 @@ def comment(request):
             comment.receiver_id=receiverId
         if content.startswith(u'回复@'):
             comment.content=content[content.index(':')+1:]
+        else:
+            comment.content=content
         comment.friendDynamic_id=dynamicId
         comment.reviewer=request.user
         comment.save()
