@@ -5,7 +5,7 @@ Created on Sep 17, 2013
 @author: jin
 '''
 from apps.user_app.models import UserProfile
-from apps.upload_avatar.app_settings import default_iamge_name
+from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
 from apps.recommend_app.models import MatchResult, Grade
 from django.utils import simplejson
 '''
@@ -80,7 +80,7 @@ def matchResultList_to_CardList(matchResultList):
        height=userBaiscProfile.height
        age=userBaiscProfile.age
        education=userBaiscProfile.get_education_display()
-       income=userBaiscProfile.income
+       income=userBaiscProfile.get_income_display()
        jobIndustry=userBaiscProfile.get_jobIndustry_display()
        city=userBaiscProfile.city
        followStatus=0
@@ -89,7 +89,7 @@ def matchResultList_to_CardList(matchResultList):
            avatar_name=userBaiscProfile.avatar_name
            isVote=True
        else:
-           avatar_name=default_iamge_name
+           avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
        recommendResultList.append(recommendResult)
@@ -112,7 +112,7 @@ def userProfileList_to_CardList(userProfileList):
        height=userProfile.height
        age=userProfile.age
        education=userProfile.get_education_display()
-       income=userProfile.income
+       income=userProfile.get_income_display()
        jobIndustry=userProfile.get_jobIndustry_display()
        followStatus=0
        city=userProfile.city
@@ -121,7 +121,7 @@ def userProfileList_to_CardList(userProfileList):
            avatar_name=userProfile.avatar_name
            isVote=True
        else:
-           avatar_name=default_iamge_name
+           avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
        recommendResultList.append(recommendResult)
@@ -159,14 +159,14 @@ def fllowList_to_CardList(user,fllowList,type):
         height=userProfile.height
         age=userProfile.age
         education=userProfile.get_education_display()
-        income=userProfile.income
+        income=userProfile.get_income_display()
         jobIndustry=userProfile.get_jobIndustry_display()
         followStatus=0
         if userProfile.avatar_name_status=='3':
            avatar_name=userProfile.avatar_name
            isVote=True
         else:
-           avatar_name=default_iamge_name
+           avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
         city=userProfile.city
         recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)

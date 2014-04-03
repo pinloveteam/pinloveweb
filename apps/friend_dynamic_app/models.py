@@ -8,6 +8,13 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from apps.user_app.models import UserProfile
+class FriendDynamicManage(models.Manager):
+    def get_coment_count(self,publishUserId,userId,dynamicId):
+        if publishUserId==userId:
+            return FriendDynamicComment.objects.filter(friendDynamic_id=dynamicId).count()
+        else:
+            from django.db.models.query_utils import Q
+            return FriendDynamicComment.objects.filter(Q(friendDynamic_id=dynamicId,reviewer_id__in=[userId,publishUserId],receiver_id__in=[userId,publishUserId])|Q(receiver_id__isnull=True)).count()
 class FriendDynamic(models.Model):
     publishUser=models.ForeignKey(User,verbose_name='发布用户',)
     type=models.SmallIntegerField(verbose_name=r"类型",)
@@ -16,6 +23,7 @@ class FriendDynamic(models.Model):
     publishTime=models.DateTimeField(verbose_name="发表时间")
     argeeNum=models.IntegerField(verbose_name="点赞次数",default=0)
     commentNum=models.IntegerField(verbose_name="评论次数",default=0)
+    objects=FriendDynamicManage()
     def save(self):
         today=datetime.datetime.today()
         self.publishTime=today
@@ -39,10 +47,17 @@ class FriendDynamicArgee(models.Model):
 class FriendDynamicComment(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)
     reviewer=models.ForeignKey(User,verbose_name="评论者",related_name="reviewer")
-    receiver=models.ForeignKey(User,verbose_name="被评论者",related_name="receiver")
+    receiver=models.ForeignKey(User,verbose_name="被评论者",related_name="receiver",null=True,blank=True,)
     content=models.CharField(verbose_name="评论内容",max_length=255)
     isDelete=models.NullBooleanField(verbose_name="是否删除",default=False)
     commentTime=models.DateTimeField(verbose_name="评论时间")
+    def get_avatar_name(self,userId):
+        userProfile=UserProfile.objects.get(user_id=userId)
+        if userProfile.avatar_name_status=='3':
+           return userProfile.avatar_name
+        else:
+           from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
+           return DEFAULT_IMAGE_NAME
     def save(self):
         today=datetime.datetime.today()
         self.commentTime=today

@@ -1,4 +1,90 @@
-﻿/*The left side*/
+﻿/*common*/
+.img-circle,.img-rounded{
+	margin-left:30px; 
+	margin-top:4px; 
+  }
+
+.name{
+	margin:10px; 
+	font-weight:bold;
+	font-size:16px;
+  }
+
+a:hover {
+	text-decoration:none;
+	}
+	
+td{
+	padding:4px !important;
+}
+
+hr{
+	margin:7px;
+	border:none;
+	border-top:1px solid rgba(255, 255, 255, 0.4);
+}
+
+.card_panel{
+	transition: background 0.5s;
+	margin-top:17px;
+	width:203px;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.3);
+}
+
+.card_panel:hover{
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.card_panel:hover .icon_ding,.card_panel:hover .icon_like,.card_panel:hover .icon_dislike{
+	opacity:1;
+}
+
+.label,.fR,.btn,.badge,.progress {
+    border-radius: 0;
+}
+
+.controlArrow {
+	transition: border-color 0.5s;
+    border-style: solid;
+    cursor: pointer;
+    height: 0;
+    margin-top: -40px;
+    position: absolute;
+    top: 50%;
+    width: 0;
+}
+
+.controlArrow.prev {
+    border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-width: 50px 40px 50px 0;
+    left: -50px;
+    width: 0;
+}
+
+.controlArrow.next {
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.3);
+    border-width: 50px 0 50px 40px;
+    right: -45px;
+}
+
+.controlArrow.next:hover{
+	border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.7);
+}
+
+.controlArrow.prev:hover{
+	border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.7) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}
+
+#compare_tip{
+	display:none;
+	width: 600px;
+	position: absolute;
+	z-index:9999;
+}
+
+
+/*The left side*/
 .user_info{
 	height:199px;
   }
@@ -22,7 +108,7 @@
 	border:2px solid green !important;
 }
 
-.compare_cancle,.compare,.chart_info,canvas{
+.compare_cancle,.compare,.chart_info,.other_name > canvas{
 	display:none;
 	position: absolute; 
 	left: 120px; top: 0px;
@@ -30,7 +116,7 @@
 	Z-index:1000;
 }
 
-canvas{
+.other_name > canvas{
 	background-color: rgba(255, 255, 255, 0.9);
 	width: 320px;
 	Z-index:999;
@@ -58,7 +144,7 @@ canvas{
 	height: 100px;
 	background-clip: padding-box;
 	overflow: hidden;
-	display: block;
+	display: inline-block;
 }
 
 .head_girl{
@@ -311,4 +397,5 @@ canvas{
 	opacity:1;
 	background-image: url("/static/img/1.png");
 }
+
 
