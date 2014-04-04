@@ -5,6 +5,7 @@ Created on Sep 17, 2014
 @author: jin
 '''
 from django.utils import simplejson
+from simplejson.encoder import JSONEncoder
 '''
 评论类
 '''
@@ -19,7 +20,7 @@ class DynamicComment(object):
         else:
             self.receiverId=receiver.id
             self.receiverName=receiver.username
-        self.content=content
+        self.content=regex_expression(content)
         self.commentTime=commentTime.strftime("%Y-%m-%d %H:%M:%S")
         self.reviewerAvatarName=reviewerAvatarName
         
@@ -54,27 +55,52 @@ def FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList):
 '''  
 class Dynamic(object):
    def __init__(self):
-    self.publishUser=None
+    self.id=None
+    self.publishUserName=None
+    self.publishUserId=None
+    self.avatarName=None
     self.type=None
     self.content=None
     self.data=None
     self.publishTime=None
     self.argeeNum=None
-    self.commentNumNone
+    self.commentNum=None
+    self.isAgree=False
     
-# def friendDynamicList_to_Dynamic(friendDynamicList,friendDynamicArgeeList):
-#     arg={}
-#     DynamicList=[]
-#     argeeList=[]
-#     for friendDynamic in friendDynamicList:
-#         for field in []
-#         if friendDynamic.type==2:
-#             friendDynamic.data=simplejson.loads(friendDynamic.data)
-#         is_agreee=False  
-#         for friendDynamicArgee in friendDynamicArgeeList:
-#             if friendDynamic.id==friendDynamicArgee.friendDynamic_id:
-#                 is_agreee=True 
-#         argeeList.append(is_agreee)  
-#     arg['friendDynamicList']=friendDynamicList
-#     arg['argeeList']=argeeList
-    return arg
+class MyEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__  
+def friendDynamicList_to_Dynamic(friendDynamicList,userId):
+    DynamicList=[]
+    from apps.friend_dynamic_app.models import FriendDynamicArgee
+    from apps.friend_dynamic_app.models import FriendDynamic
+    for friendDynamic in friendDynamicList:
+        dynamic=Dynamic()
+        for field in ['id','type','content']:
+            setattr(dynamic,field,getattr(friendDynamic,field))
+        dynamic.content=regex_expression(dynamic.content)
+        dynamic.publishUserId=friendDynamic.publishUser.id
+        dynamic.publishUserName=friendDynamic.publishUser.username
+        dynamic.avatarName=friendDynamic.get_profile()
+        dynamic.publishTime=friendDynamic.publishTime.strftime("%Y-%m-%d %H:%M:%S")
+        if friendDynamic.type==2:
+            dynamic.data=simplejson.loads(friendDynamic.data)
+        dynamic.isAgree=FriendDynamicArgee.objects.is_agree(friendDynamic.id, userId)
+        dynamic.argeeNum=FriendDynamicArgee.objects.get_agree_count(friendDynamic.id)
+        dynamic.commentNum=FriendDynamic.objects.get_coment_count(friendDynamic.publishUser.id,userId,friendDynamic.id)
+        DynamicList.append(dynamic)
+    return DynamicList
+
+
+'''
+匹配表情
+'''  
+def regex_expression(content):
+    regex=u'{:pinlove_[1-9]{1,2}:}'
+    import re
+    return re.sub(regex, dashrepl, content)
+
+def dashrepl(matchobj):
+    s=matchobj.group(0)
+    num=s[10:-2]
+    return '%s%s%s' % ('<img src="/static/img/48x48/',num,'.gif" style="width: 25px; height: 25px;">')
