@@ -665,7 +665,7 @@ function del_comment(){
 					var dynamicId= href.substring('#comment_'.length)
 					$('#comment_'+dynamicId).find('.commentary-list').children().remove();
 					var publishUserId=$('#dynamic_'+dynamicId).find('#publishUserId').val()
-					$(href).show('slow');
+					$(href).show(1500);
 					$.getJSON('/dynamic/show_comment',{id:dynamicId,publishUserId:publishUserId},function(data){
 						init_comment(data,dynamicId)
 					 })
