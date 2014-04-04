@@ -15,6 +15,9 @@
 }
 .dropzone.dz-clickable {
   cursor: pointer;
+  background-color: #FFFFFF;
+    z-index: 9999;
+  
 }
 .dropzone.dz-clickable .dz-message,
 .dropzone.dz-clickable .dz-message span {
