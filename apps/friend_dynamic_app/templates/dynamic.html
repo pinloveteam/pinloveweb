@@ -80,22 +80,29 @@
 			.commentary {
 				background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
 				border-bottom: solid 1px #7E7582;
+				position: relative;
+				padding: 0 0 0 40px;
 			}
 
 			.commentary-head {
-				height: 50px;
-				width: 50px;
-				display: inline-block;
+				height: 35px;
+				width: 35px;
+				position: absolute;
+				top:0;
+				left: 0
 			}
 
-			.commentary-time, .commentary-delete {
+			.commentary-time, .commentary-delete,.commentary-reply {
 				position: relative;
 				left: 70%;
+			}
+			.comments-text{
+				position: relative;
 			}
 			.commentary-text {
 				text-indent: 2em;
 			}
-			.commentary-delete ,.commentary-reply{
+			.commentary-delete,.commentary-reply{
 				left: 67%;
 			}
 			
@@ -281,16 +288,17 @@ var userName="{{user.username}}"
 var userId="{{user.id}}"
 $(document).ready(function(){
 	//字数限制
-	$("#publishTextArea").keydown(function(){
-	   var curLength=$("#publishTextArea").val().length;
+	$(".publishTextArea").keydown(function(){
+		publishTextArea=$(this)
+	   var curLength=publishTextArea.val().length;
 	   var limitLenght=200
 	   if(curLength>=limitLenght){
-	      var num=$("#publishTextArea").val().substr(0,limitLenght);
-	      $("#publishTextArea").val(num);
+	      var num=publishTextArea.val().substr(0,limitLenght);
+	      $(".publishTextArea").val(num);
 	        alert("超过字数限制，多出的字将被截断！" );
 	       }
 	     else{
-	      $("#reserve").text(limitLenght-$("#publishTextArea").val().length)
+	      $("#reserve").text(limitLenght-publishTextArea.val().length)
 	      }
 	});
 	
@@ -301,7 +309,7 @@ $(document).ready(function(){
 	})
 	
 	$('.public').click(function(){
-		var content= $("#publishTextArea").val();
+		var content= $(this).closest('.publishInputArea').find(".publishTextArea").val();
 	       var length= $.trim(content).length
 	       if (length >0){
 	           $('#form1').submit();
@@ -312,26 +320,33 @@ $(document).ready(function(){
 	});
 	
 	
-	//发表评论
-	$(".reply").click(function(){
-	    var reply=$(this)
-		var dynamicId=$(this).closest('.card_panel').find('#dynamicId').val()
-		var receiverId=$(this).parent().find('#receiverId').val()
-		var content=$(this).closest('.publishInputArea').find('#publishTextArea').val()
-	      $.getJSON('/dynamic/comment/',{dynamicId:dynamicId,receiverId:receiverId,content:content},function(data){
-	        if (data['type']=='success'){
-	          init_comment(data['dynamicCommentList'],dynamicId)
-	          reply.closest('.publishInputArea').find('#publishTextArea').val('')
-	          reply.parent().find('#receiverId').val("")
-	        }else if(data['type']=='error'){
-	            alert("删除失败")
-	        }else{
-	            window.location.href='http://127.0.0.1:8000/';
-	        }
-	    })
-	});
+	
+	$(".reply").click(reply_comment);
+	
 	
 });
+//发表评论
+function reply_comment(){
+    var reply=$(this)
+	var dynamicId=$(this).closest('.card_panel').find('#dynamicId').val()
+	var receiverId=$(this).parent().find('#receiverId').val()
+	var content=$(this).closest('.publishInputArea').find('.publishTextArea').val()
+      $.getJSON('/dynamic/comment/',{dynamicId:dynamicId,receiverId:receiverId,content:content},function(data){
+        if (data['type']=='success'){
+          init_comment(data['dynamicCommentList'],dynamicId)
+          reply.closest('.publishInputArea').find('#publishTextArea').val('')
+          reply.parent().find('#receiverId').val("")
+          comment=reply.closest('.card_panel').find('#show_comment_'+dynamicId)
+          var commentNum=comment.html()
+          comment.html("评论("+(parseInt(commentNum.substring(3,commentNum.length-1))+1)+')');
+          
+        }else if(data['type']=='error'){
+            alert("删除失败")
+        }else{
+            window.location.href='http://127.0.0.1:8000/';
+        }
+    })
+}
 
 function commentary_reply(){
 	var commentId=$(this).parent().find('.commentId').val()
@@ -384,7 +399,6 @@ function init_comment(commentList,dynamicId){
 		var comment=$('.comment_clone').clone()
 		comment.removeClass('comment_clone')
 		comment.find('.commentary-head').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
-		comment.find('.commentary-text').html(this.content)
 		if(this.receiverName==null ){
 			comment.find('.commentary-username').html(this.reviewerName+'：')
 		}else{
@@ -399,11 +413,13 @@ function init_comment(commentList,dynamicId){
 			comment.find('.commentary-reply').bind("click",commentary_reply);
 		}
 		//comment.find('.commentary-time').html(this.commentTime)
+		comment.find('.comments-text').append(this.content)
 		comment.append('<span class="commentary-time">'+this.commentTime+'</span>')
 		comment.find('.commentId').val(this.id)
 		comment.find('.reviewerName').val(this.reviewerName)
 		comment.find('.reviewerId').val(this.reviewerId)
 		comment.find('.commentary-reply').bind("click",commentary_reply);
+		comment.find(".reply").click(reply_comment);
 		comment.show()
 		$('#comment_'+dynamicId).find('.commentary-list').append(comment)
 	})
@@ -467,14 +483,14 @@ function del_comment(){
 							<form action="" id="form1"   name="form1" method="POST">{% csrf_token %}
 								<input type="hidden" id="type" name="type" value="1">
 								<div class="publishInputArea">
-									<textarea id="publishTextArea" class="publishInputBefore" name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
+									<textarea id="publishTextArea_1" class="publishInputBefore publishTextArea" name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
 									<div class="publishInputBottom fn-clear f_gray_999">
 										<div class="fn-clear">
 											<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
 												<li id="publishInputPhoto" class="publishInputPhoto fn-left">
 													照片
 												</li>
-												<li class="publishInputExpression fn-left">
+												<li target="#publishTextArea_1" class="publishInputExpression fn-left">
 													表情
 												</li>
 												<li id="publishInputVideo" class="publishInputVideo fn-left">
@@ -506,30 +522,27 @@ function del_comment(){
 						
 						{%for dynamic in friendDynamicList%}
 						<div id="dynamic_{{dynamic.id}}" class="card_panel trend-list">
-						    <input type="hidden" id="publishUserId" value="{{dynamic.publishUser.id}}">
+						    <input type="hidden" id="publishUserId" value="{{dynamic.publishUserId}}">
 						    <input type="hidden" id="dynamicId" value="{{dynamic.id}}">
 							<div class="head head_boy" style="margin:4px;height:70px;width:70px;">
-								<img alt="140x140" src="{{MEDIA_URL}}{{dynamic.get_profile}}-110.jpeg"/>
+								<img alt="140x140" src="{{MEDIA_URL}}{{dynamic.avatarName}}-110.jpeg" style="height:70px;width:70px;"/>
 							</div>
-							<span class="name trend-name">{{dynamic.publishUser.username}}</span>
-							<span class="trend-text">{{dynamic.content}}</span>
-							{%ifequal dynamic.type 2 %}
+							<span class="name trend-name">{{dynamic.publishUserName}}</span>
+							<span class="trend-text">{{dynamic.content|safe}}</span>
 							<div class="pic-list">
+							{%ifequal dynamic.type 2 %}
 							    {%for photo in dynamic.data%}
 							    <a class="venobox" data-gall="gall1" href="{{MEDIA_URL}}images/{{photo}}" title="">
 								<img src="{{MEDIA_URL}}images/{{photo}}" style="width: 70px; height: 70px;">
 								</a>
 								{%endfor%}
-							</div>
 							{%endifequal%}
+							</div>
+							
 							<div class="interact">
 								<ul class="list-inline">
 									<li>
-									 {%ifequal argeeList|get_list_number:forloop.counter0 True%} 
-									 <a id="argeeName_{{dynamic.id}}" href="javascript:void(0)" onclick="agree({{dynamic.id}})">已赞({{dynamic.argeeNum}})</a>
-                                     {%else%}
-                                     <a id="argeeName_{{dynamic.id}}" href="javascript:void(0)" onclick="agree({{dynamic.id}})">赞({{dynamic.argeeNum}})</a>
-                                     {%endifequal%}      
+									 <a id="argeeName_{{dynamic.id}}" href="javascript:void(0)" onclick="agree({{dynamic.id}})">{%if dynamic.isAgree%}已赞{%else%}赞{%endif%}({{dynamic.argeeNum}})</a>
 									</li>
 									<li class="comment" href="#comment_{{dynamic.id}}">
 										<span><a id="show_comment_{{dynamic.id}}" href="javascript:void(0)">评论({{dynamic.commentNum}})</a></span>
@@ -547,11 +560,11 @@ function del_comment(){
 								<div class="commentary-list">
 								</div>
 								<div class="publishInputArea">
-									<textarea id="publishTextArea" class="publishInputBefore" name="content" style="color: rgb(0, 0, 0); height: 52px;"></textarea>
+									<textarea id="publishTextArea{{dynamic.id}}" class="publishInputBefore publishTextArea" name="content" style="color: rgb(0, 0, 0); height: 52px;"></textarea>
 									<div class="publishInputBottom fn-clear f_gray_999">
 										<div class="fn-clear">
 											<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
-												<li class="publishInputExpression fn-left">
+												<li target="#publishTextArea{{dynamic.id}}" class="publishInputExpression fn-left">
 													表情
 												</li>
 											</ul>
@@ -578,23 +591,25 @@ function del_comment(){
 					</div>
 				</div>
 			</div>
+			<!-- 表情 -->
 			<div id="emoji-layer" style="display: none;">
 			<div class="controlArrow" style="border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0); left: 20px;"></div>
 			<ul class="emoji-list"></ul>
 		</div>
+		    <!-- 评论 -->
 			<div class="commentary comment_clone" style="display: none;">
 			    <input type="hidden" class="commentId" value="">
 			    <input type="hidden" class="reviewerName" value="">
 			    <input type="hidden" class="reviewerId" value="">
-				<div class="commentary-user">
-				   <img class="commentary-head" src="">
-				   <span class="commentary-username"></span>
-				</div>
-				<p class="commentary-text"></p>
+			    <img class="commentary-head" src="">
+			    <div class="comments-text">
+			      <a href="#" class="commentary-username"></a>
+                  
+			    </div>
 			</div>
           <script>
             //显示评论
-			$('.comment').click(function(){
+            function show_comment(){
 				href = $(this).attr('href');
 				if ($(href).is(":hidden")){
 					var dynamicId= href.substring('#comment_'.length)
@@ -607,10 +622,8 @@ function del_comment(){
 				}else{
 					$(href).hide('slow')
 				}
-			});
-			for(i=0;i<=95;i++){
-				$('.emoji-list').append('<li action-text="[emoji]"><img src="{{STATIC_URL}}img/48x48/'+i+'.gif"/></li>');
 			}
+			$('.comment').click(show_comment);
 			
 			venobox();
 			function venobox() {
@@ -639,13 +652,144 @@ function del_comment(){
 				});
 			}
 			
-			$('.publishInputExpression').click(function(){
+			$('.publishInputExpression').click(publishInputExpression);
+			function publishInputExpression(){
 				var obj = $(this);
 				var offset = obj.offset();   
 				var left = offset.left+10;
 				var top = offset.top+30;
+				var target = obj.attr('target');
+				if(($('.emoji-list').html())==''){
+					for(i=0;i<=95;i++){
+						$('.emoji-list').append('<li action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/'+i+'.gif"/></li>');
+					}
+					//表情选择
+					$('.emoji-list').find('li').click(function(){
+						var target = $('#emoji-layer').attr('target');
+						var targettext = $(target);
+						targettext.insertAtCaret($(this).attr('action-text'));
+					});
+				}
 				$('#emoji-layer').css({left:left,top:top});
+				$('#emoji-layer').attr('target',target);
 				$('#emoji-layer').toggle();
-			});
+			}
 		</script>
+		<script type="text/javascript">
+		(function($){
+			$.fn.extend({
+			insertAtCaret: function(myValue){
+			var $t=$(this)[0];
+			if (document.selection) {
+			this.focus();
+			sel = document.selection.createRange();
+			sel.text = myValue;
+			this.focus();
+			}
+			else
+			if ($t.selectionStart || $t.selectionStart == '0') {
+			var startPos = $t.selectionStart;
+			var endPos = $t.selectionEnd;
+			var scrollTop = $t.scrollTop;
+			$t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
+			this.focus();
+			$t.selectionStart = startPos + myValue.length;
+			$t.selectionEnd = startPos + myValue.length;
+			$t.scrollTop = scrollTop;
+			}
+			else {
+			this.value += myValue;
+			this.focus();
+			}
+			}
+			})
+			})(jQuery);
+		
+		
+	   //滚动加载
+		var totalheight = 0; 
+        var page={{next_page_number}};
+		function loadData()
+		{ 
+		    totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
+
+		    if ($(document).height() <= totalheight) 
+			{ 
+				//加载数据
+				/* data=[{"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-04 06:26:53", "argeeNum": 1, "content": "\u6211\u5f88\u5f00\u5fc3<img src=\"/static/img/48x48/2.gif\" style=\"width: 25px; height: 25px;\">", "publishUserName": "jin", "isAgree": true, "type": 1, "id": 17}, {"data": ["1_20140403muIMkacpVx.png", "1_20140403LGnBKOjYrf.png"], "publishUserId": 1, "commentNum": 12, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-03 17:45:25", "argeeNum": 0, "content": "sgdgsdgfdgf", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 12}, {"data": ["1_20140403ogeOzKrIvs.png"], "publishUserId": 1, "commentNum": 1, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-03 17:37:42", "argeeNum": 0, "content": "\u53d1\u4e00\u5f20\u56fe\u7247", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 10}, {"data": null, "publishUserId": 10, "commentNum": 22, "avatarName": "user_img/1c6aeb978ea8c8d02a50ee0ba6d02cd4", "publishTime": "2014-04-03 15:49:14", "argeeNum": 0, "content": "jin\u5728\u5417", "publishUserName": "jin1111", "isAgree": false, "type": 1, "id": 9}, {"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 18:01:13", "argeeNum": 0, "content": "dgfgdf", "publishUserName": "jin", "isAgree": false, "type": 1, "id": 8}, {"data": ["1_20140402enIMucAJmX.png", "1_20140402bUewgrzyfV.png"], "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 17:53:56", "argeeNum": 0, "content": "\u9876\u5471\u5471", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 6}, {"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 17:32:23", "argeeNum": 0, "content": "\u7684\u4eba\u7279\u7279", "publishUserName": "jin", "isAgree": false, "type": 1, "id": 4}, {"data": ["10_20140327FcgCEujOXv.png"], "publishUserId": 10, "commentNum": 14, "avatarName": "user_img/1c6aeb978ea8c8d02a50ee0ba6d02cd4", "publishTime": "2014-03-27 18:30:38", "argeeNum": 0, "content": "\u6c83\u5c14\u6c83\u800c", "publishUserName": "jin1111", "isAgree": false, "type": 2, "id": 3}]
+				init_dynamic(data) */
+				if(page==-1){
+					alert('没有动态了!')
+					return;
+				}
+				 $.ajax({
+			         type: 'GET',
+			         url: "/dynamic/",
+			         data:{page:page,type:'ajax'},
+			         beforeSend: function(XMLHttpRequest){
+			         },
+			         success: function(data, textStatus){
+			            if(textStatus == 'success'){
+			            	page=data['next_page_number']
+			            	init_dynamic(data['friendDynamicList'])
+			             } 
+			         },
+			         complete: function(XMLHttpRequest, textStatus){
+			         },
+			         error: function(response){
+			             alert('网络异常!')
+			         }
+			     });
+		    } 
+		} 
+
+		$(window).scroll( function() { 
+		/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+			console.log("页面的文档高度 ："+$(document).height());
+			console.log('浏览器的高度：'+$(window).height()); */
+			loadData();
+		}); 
+		
+		//初始化动态
+		function init_dynamic(dynamicList){
+			$(dynamicList).each(function(){
+				var dynamic=$('.trend-list').first().clone()
+				dynamic.attr('id','dynamic_'+this.id)
+				dynamic.find('#dynamicId').val(this.id)
+				dynamic.find('#publishUserId').val(this.publishUserId)
+				dynamic.find('.head_boy').children().attr('src','/media/'+this.avatarName+'-110.jpeg')
+				dynamic.find('.name').html(this.publishUserName)
+				dynamic.find('.trend-text').html(this.content)
+				dynamic.find('.pic-list').children().remove()
+				pic_list=dynamic.find('.pic-list')
+				if(this.type==2){
+					for(var i=0;i<this.data.length;i++){
+						pic_list.append('<a class="venobox" data-gall="gall1" href="/media/images/'+this.data[i]+'" title="">').children().append('<img src="/media/images/'+this.data[i]+'" style="width: 70px; height: 70px;">')
+					}
+						
+				}
+				pic_list.find('.venobox').venobox({
+					numeratio : true,
+					border : '0'
+				});
+				dynamic.find('.commentary-area').attr('id','comment_'+this.id)
+				var operate=dynamic.find('.list-inline')
+				operate.children().remove()
+				if(this.isAgree){
+					operate.append('<li><a id="argeeName_'+this.id+'" onclick="agree('+this.id+')" href="javascript:void(0)">已赞('+this.argeeNum+')</a></li>')
+				}else{
+					operate.append('<li><a id="argeeName_'+this.id+'" onclick="agree('+this.id+')" href="javascript:void(0)">赞('+this.argeeNum+')</a></li>')
+				}
+				operate.append('<li class="comment" href="#comment_'+this.id+'"><span><a id="show_comment_'+this.id+'" href="javascript:void(0)">评论('+this.commentNum+')</a></span></li>')
+				dynamic.find('.comment').click(show_comment)
+				dynamic.find('.publishInputExpression').click(publishInputExpression);
+				//初始化表情
+				dynamic.find('.publishInputExpression').attr('target','#publishTextArea_'+this.id)
+				dynamic.find('.publishTextArea').attr('id','publishTextArea_'+this.id)
+				$('.col-md-9').append(dynamic)
+			});
+			
+		}
+
+</script>
 {% endblock %}

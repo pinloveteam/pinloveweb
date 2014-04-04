@@ -35,10 +35,22 @@ class FriendDynamic(models.Model):
         verbose_name_plural = u'好友动态信息表'
         db_table = "friend_dynamic" 
         
+class FriendDynamicArgeeManage(models.Manager):
+    '''
+    判断是否点赞
+    '''
+    def is_agree(self,friendDynamicId,userId):
+        return FriendDynamicArgee.objects.filter(user_id=userId,friendDynamic_id=friendDynamicId).exists()
     
+    '''
+    点赞总数
+    '''
+    def get_agree_count(self,dynamicId):
+            return FriendDynamicArgee.objects.filter(friendDynamic_id=dynamicId).count()
 class FriendDynamicArgee(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)
     user=models.ForeignKey(User,verbose_name="用户",)
+    objects=FriendDynamicArgeeManage()
     class Meta:
         verbose_name = u'点赞表' 
         verbose_name_plural = u'点赞表'

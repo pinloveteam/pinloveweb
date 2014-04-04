@@ -11,9 +11,8 @@ from pinloveweb import settings
 from PIL import ImageFile 
 import time
 from apps.user_app.models import UserProfile, Follow
-from django.db import connection
 from django.utils import simplejson
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 import logging
 
 '''
@@ -52,7 +51,11 @@ def dynamic(request):
     userProfile=UserProfile.objects.get(user_id=request.user.id)
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
-    arg=init_dynamic(request.user,arg)
+    arg=init_dynamic(request,request.user,arg)
+    if request.GET.get('type')=='ajax':
+        from apps.pojo.dynamic import MyEncoder
+        json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
+        return HttpResponse(json, mimetype='application/json')
     if  'images_path' in request.session:
         del request.session['images_path']
     return render(request, 'dynamic.html',arg )
@@ -60,7 +63,7 @@ def dynamic(request):
 '''
 初始化好友动态
 '''
-def init_dynamic(user,arg):
+def init_dynamic(request,user,arg):
     #查询关注的人列表
     followList=Follow.objects.filter(my=user)
     #我关注的人id列表
@@ -68,22 +71,30 @@ def init_dynamic(user,arg):
     for follow in followList:
         followIdList.append(follow.follow_id)
     followIdList.append(user.id)
-    friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id__in=followIdList).order_by('-publishTime')[0:8]
+    friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id__in=followIdList).order_by('-publishTime')
+    from util.page import page
+    arg.update(page(request,friendDynamicList,page_num=2))
+    from apps.pojo.dynamic import friendDynamicList_to_Dynamic
+    friendDynamicList=friendDynamicList_to_Dynamic(arg['pages'].object_list, user.id)
     #获取点赞列表
-    friendDynamicArgeeList=FriendDynamicArgee.objects.filter(user=user)
-    argeeList=[]
-    for friendDynamic in friendDynamicList:
-        commentNum=FriendDynamic.objects.get_coment_count(friendDynamic.publishUser.id,user.id,friendDynamic.id)
-        friendDynamic.commentNum=commentNum
-        if friendDynamic.type==2:
-            friendDynamic.data=simplejson.loads(friendDynamic.data)
-        is_agreee=False  
-        for friendDynamicArgee in friendDynamicArgeeList:
-            if friendDynamic.id==friendDynamicArgee.friendDynamic_id:
-                is_agreee=True 
-        argeeList.append(is_agreee)  
+#     friendDynamicArgeeList=FriendDynamicArgee.objects.filter(user=user)
+#     argeeList=[]
+#     for friendDynamic in friendDynamicList:
+#         commentNum=FriendDynamic.objects.get_coment_count(friendDynamic.publishUser.id,user.id,friendDynamic.id)
+#         friendDynamic.commentNum=commentNum
+#         if friendDynamic.type==2:
+#             friendDynamic.data=simplejson.loads(friendDynamic.data)
+#         is_agreee=False  
+#         for friendDynamicArgee in friendDynamicArgeeList:
+#             if friendDynamic.id==friendDynamicArgee.friendDynamic_id:
+#                 is_agreee=True 
+#         argeeList.append(is_agreee)  
     arg['friendDynamicList']=friendDynamicList
-    arg['argeeList']=argeeList
+    if arg['pages'].has_next():
+        arg['next_page_number']=arg['pages'].next_page_number()
+    else:
+        arg['next_page_number']=-1
+#     arg['argeeList']=argeeList
     return  arg
 ###############################################
 ##以上用用于1.0版
@@ -376,4 +387,4 @@ def init_card(arg,userProfile):
     arg['education']=userProfile.get_education_display()
     arg['jobIndustry']=userProfile.get_jobIndustry_display()
     return arg
-     
+   
