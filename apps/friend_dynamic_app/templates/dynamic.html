@@ -354,7 +354,7 @@ function commentary_reply(){
 	var reviewerId=$(this).parent().find('.reviewerId').val()
 	var areaText=$(this).closest('.commentary-area')
 	areaText.find('#receiverId').val(reviewerId)
-	areaText.find('#publishTextArea').val('回复@'+reviewerName+":")
+	areaText.find('.publishTextArea').val('回复@'+reviewerName+":")
 };
 //添加移除赞
 function agree(id){
@@ -418,8 +418,6 @@ function init_comment(commentList,dynamicId){
 		comment.find('.commentId').val(this.id)
 		comment.find('.reviewerName').val(this.reviewerName)
 		comment.find('.reviewerId').val(this.reviewerId)
-		comment.find('.commentary-reply').bind("click",commentary_reply);
-		comment.find(".reply").click(reply_comment);
 		comment.show()
 		$('#comment_'+dynamicId).find('.commentary-list').append(comment)
 	})
@@ -786,7 +784,10 @@ function del_comment(){
 				//初始化表情
 				dynamic.find('.publishInputExpression').attr('target','#publishTextArea_'+this.id)
 				dynamic.find('.publishTextArea').attr('id','publishTextArea_'+this.id)
+				dynamic.find('.commentary-list').children().remove()
+				dynamic.find('.commentary-area').hide()
 				$('.col-md-9').append(dynamic)
+				dynamic.find(".reply").click(reply_comment);
 			});
 			
 		}
