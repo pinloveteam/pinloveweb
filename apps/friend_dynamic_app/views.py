@@ -276,7 +276,7 @@ def show_comment(request):
          commentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=dynamicId).order_by('-commentTime')
     else:
         from django.db.models.query_utils import Q
-        commentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(Q(friendDynamic_id=dynamicId,reviewer_id__in=[request.user.id,publishUserId],receiver_id__in=[request.user.id,publishUserId])|Q(receiver_id__isnull=True)).order_by('-commentTime')
+        commentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(Q(friendDynamic_id=dynamicId,reviewer_id__in=[request.user.id,publishUserId],receiver_id__in=[request.user.id,publishUserId])|Q(friendDynamic_id=dynamicId,receiver_id__isnull=True)).order_by('-commentTime')
     from apps.pojo.dynamic import FriendDynamicCommentList_to_DynamicCommentList
     dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList(commentList)
 #     arg['commentList']=commentList

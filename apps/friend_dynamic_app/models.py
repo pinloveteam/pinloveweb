@@ -14,7 +14,7 @@ class FriendDynamicManage(models.Manager):
             return FriendDynamicComment.objects.filter(friendDynamic_id=dynamicId).count()
         else:
             from django.db.models.query_utils import Q
-            return FriendDynamicComment.objects.filter(Q(friendDynamic_id=dynamicId,reviewer_id__in=[userId,publishUserId],receiver_id__in=[userId,publishUserId])|Q(receiver_id__isnull=True)).count()
+            return FriendDynamicComment.objects.filter(Q(friendDynamic_id=dynamicId,reviewer_id__in=[userId,publishUserId],receiver_id__in=[userId,publishUserId])|Q(friendDynamic_id=dynamicId,receiver_id__isnull=True)).count()
 class FriendDynamic(models.Model):
     publishUser=models.ForeignKey(User,verbose_name='发布用户',)
     type=models.SmallIntegerField(verbose_name=r"类型",)
