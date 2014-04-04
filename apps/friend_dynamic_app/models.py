@@ -29,7 +29,11 @@ class FriendDynamic(models.Model):
         self.publishTime=today
         super(FriendDynamic, self).save()
     def get_profile(self):
-        return UserProfile.objects.get(user=self.publishUser).avatar_name
+        userProfile=UserProfile.objects.get(user=self.publishUser)
+        if userProfile.avatar_name_status!='3':
+            return 'user_img/image'
+        else:
+            return userProfile.avatar_name
     class Meta:
         verbose_name = u'好友动态信息表' 
         verbose_name_plural = u'好友动态信息表'
