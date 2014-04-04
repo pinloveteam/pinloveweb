@@ -73,7 +73,7 @@ def init_dynamic(request,user,arg):
     followIdList.append(user.id)
     friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id__in=followIdList).order_by('-publishTime')
     from util.page import page
-    arg.update(page(request,friendDynamicList,page_num=2))
+    arg.update(page(request,friendDynamicList,page_num=8))
     from apps.pojo.dynamic import friendDynamicList_to_Dynamic
     friendDynamicList=friendDynamicList_to_Dynamic(arg['pages'].object_list, user.id)
     #获取点赞列表
