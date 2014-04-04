@@ -96,7 +96,7 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
 匹配表情
 '''  
 def regex_expression(content):
-    regex=u'{:pinlove_[1-9]{1,2}:}'
+    regex=u'{:pinlove_[0-9]{1,2}:}'
     import re
     return re.sub(regex, dashrepl, content)
 
