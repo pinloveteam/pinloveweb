@@ -56,7 +56,8 @@ urlpatterns = patterns('',
     (r'^dynamic/', include('apps.friend_dynamic_app.urls')), 
     #the_people_nearby
     (r'^the_people_nearby/', include('apps.the_people_nearby.urls')), 
-    
+    #user_score_app
+    (r'^score/', include('apps.user_score_app.urls')), 
 #      url(r'^celery_test/', 'apps.task_app.views.test_celery'),
 ####第三方登录###
     (r'^third_party_login/', include('apps.third_party_login_app.urls')),

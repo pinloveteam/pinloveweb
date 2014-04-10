@@ -86,12 +86,23 @@ MIDDLEWARE_CLASSES = (
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCookieMiddleware',
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugTokenMiddleware',
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
-     'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
+    'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #     'django.middleware.cache.UpdateCacheMiddleware',
 #     'django.middleware.common.CommonMiddleware',
 #     'django.middleware.cache.FetchFromCacheMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS=(
+    "django.contrib.auth.context_processors.auth",
+"django.core.context_processors.debug",
+"django.core.context_processors.i18n",
+"django.core.context_processors.media",
+"django.core.context_processors.static",
+"django.core.context_processors.tz",
+"django.contrib.messages.context_processors.messages",
+'django.core.context_processors.request',
 )
 
 ROOT_URLCONF = 'pinloveweb.urls'
@@ -106,7 +117,7 @@ TEMPLATE_DIRS = (
 )
 templates=['templates','apps/user_app/templates','apps/upload_avatar/templates','apps/recommend_app/templates',
                'apps/game_app/templates','apps/verification_app/templates','apps/message_app/templates','apps/friend_dynamic_app/templates',
-               'apps/pay_app/templates',]
+               'apps/pay_app/templates','apps/user_score_app/templates']
 for template in templates:
     TEMPLATE_DIRS += (os.path.join(PATH,template).replace('\\','/'),) 
 
@@ -140,7 +151,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 #     'djcelery',   
 #     'apps.task_app',    
-# 'apps.user_score_app', 
+'apps.user_score_app', 
 )
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

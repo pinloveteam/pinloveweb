@@ -21,6 +21,7 @@ import logging
 from django.views.decorators.csrf import csrf_protect
 from django.http.response import HttpResponse
 from apps.recommend_app.models import MatchResult
+from django.db import transaction
 
 
 
@@ -63,6 +64,13 @@ def auth_view(request) :
     if user is not None and user.is_active : 
         # Correct password, and the user is marked "active"
         auth.login(request, user)
+        #登录奖励
+        from apps.user_score_app.method import get_score_by_invite_friend_login,get_score_by_user_login
+        get_score_by_user_login(request.user.id)
+        #邀请
+        link=request.REQUEST.get('link',False)
+        if link:
+            get_score_by_invite_friend_login(link,request.user.id)
         # Redirect to a success page 
         if check_save:
             response= render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
@@ -169,12 +177,15 @@ def logout(request) :
 def loggedout(request) : 
     
     return render(request, 'loggedout.html')
-    
+
+@transaction.commit_on_success      
 def register_user(request) : 
     
     args = {}
     args.update(csrf(request))
-    
+    link=request.REQUEST.get('link',False)
+    if link:
+        args['link']=link
     if request.method == 'POST' : 
         userForm = RegistrationForm(request.POST) 
 #         check_box_list = request.REQUEST.getlist('check_box_list')
@@ -194,12 +205,17 @@ def register_user(request) :
             verification.verification_code = user_code
             verification.save()
             sex=userForm.cleaned_data['gender']
-            userForm.photo='user_img/image.png'
-            UserProfile(user_id=user.id,gender=sex).save()
+            userForm.photo='user_img/image'
+            #创建二维码
+            from pinloveweb.method import create_invite_code
+            Userlink=create_invite_code(user.id)
+            UserProfile(user_id=user.id,gender=sex,link=Userlink).save()
             #创建用户验证信息
             userVerification=UserVerification()
             userVerification.user=user
             userVerification.save()
+            from apps.user_score_app.models import UserScore
+            UserScore(user_id=user.id).save()
             # we need to generate a random number as the verification key 
              
             # user needs email verification 
@@ -208,12 +224,16 @@ def register_user(request) :
              
             email_message = u"请您点击下面这个链接完成注册："
             email_message += email_verification_link
-            try :
-               from pinloveweb.settings import DEFAULT_FROM_EMAIL
-               send_mail(u'拼爱网注册电子邮件地址验证', email_message,DEFAULT_FROM_EMAIL,[user.email]) 
-            except:
-                print u'邮件发送失败'
-                pass
+#             try :
+#                from pinloveweb.settings import DEFAULT_FROM_EMAIL
+#                send_mail(u'拼爱网注册电子邮件地址验证', email_message,DEFAULT_FROM_EMAIL,[user.email]) 
+#             except:
+#                 print u'邮件发送失败'
+#                 pass
+            #注册成功赠送积分
+            from apps.user_score_app.method import get_score_by_invite_friend_register
+            if link:
+                get_score_by_invite_friend_register(link)
             user = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
             auth.login(request, user)
             return HttpResponseRedirect('/account/loggedin/')

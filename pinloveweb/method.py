@@ -84,3 +84,13 @@ def load_cards_by_ajax(request,cardList):
          from apps.pojo.card import MyEncoder
          json=simplejson.dumps(data,cls=MyEncoder)
          return HttpResponse(json)
+     
+'''
+生成邀请码
+'''
+def create_invite_code(userId):
+    import random
+    randomInt=random.randint(1001, 9999)
+    from util.util import random_str
+    randomStr=random_str(randomlength=5)
+    return '%s%s%s' % (userId,randomInt,randomStr)

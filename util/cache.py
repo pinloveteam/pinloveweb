@@ -15,6 +15,7 @@ def init_cache():
     init_game_cache()
     init_tag()
     init_recommend()
+    int_user_score()
 
 '''
 初始化游戏缓存
@@ -57,6 +58,18 @@ def init_recommend():
     for name in NAMES:
         if cache.get(name)==None:
             cache.set(name,{})
+ 
+'''
+初始化用户积分
+ DAY_LOGIN_COUNT每天登入次数,小于5次给积分
+ DAY_INIVITE_FRIEND_COUNT 邀请好友登录次数
+'''           
+def int_user_score():
+    NAMES=['DAY_INIVITE_FRIEND_COUNT','DAY_LOGIN_COUNT']
+    for name in NAMES:
+        if cache.get(name)==None:
+            cache.set(name,{})
+
 '''
  获得各个数据表的推荐所需的数据完成情况
  如全部完成则返回true

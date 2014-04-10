@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load staticfiles %}  
+{% block runload %}
+<body onLoad="init()">
+<SCRIPT src="/static/js/search.js" %}" type=text/javascript></SCRIPT>
+{% endblock %}
+{% block content %}
+     <h2>用户积分 </h2> 
+<form action="/user/photo_check/" method="POST">{% csrf_token %}
+{% endblock %} 
+{% block second_content %}
+用户邀请链接：<input type="text" value="http://www.pinpinlove.com/?link={{link}}">
+用户积分：<input type="text" value="{{userScore.validScore}}">
+今日登录次数：{{dayLoginCount}}
+今日邀请登录次数：{{inviteFriendLogin}}
+<table>
+
+ <th>操作类型</th><th>数量</th><th>时间</th>
+ {%for userScore in userScoreDtail%}
+ <tr>
+ <td>
+ {{userScore.exchangeRelate.instruction}}
+ </td>
+ <td>
+ {{userScore.amount}}
+ </td>
+ <td>
+ {{userScore.time}}
+ </td>
+ </tr>
+ {%endfor%}
+</table>
+</form>
+{% endblock %}
