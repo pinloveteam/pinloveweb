@@ -13,7 +13,7 @@ def user_score(request):
     arg={}
     userProfile=UserProfile.objects.get(user=request.user)
     arg['link']=userProfile.link
-    userScore=UserScore.objects.get(user=request.user)
+    userScore=UserScore.objects.get(user_id=request.user.id)
     arg['userScore']=userScore
     userScoreDtail=UserScoreDtail.objects.filter(userScore=userScore)
     arg['userScoreDtail']=userScoreDtail
