@@ -192,8 +192,12 @@ def register_user(request) :
         userForm = RegistrationForm(request.POST) 
 #         check_box_list = request.REQUEST.getlist('check_box_list')
         if userForm.is_valid():
+            #判断有没邀请码
+            if request.REQUEST.get('inviteCode','')!='pinlove_fate':
+                 args['user_form']=userForm
+                 args['inviteCodeError']='输入正确的邀请码'
+                 return render(request, 'register.html', args)
             userForm.save()
-            
             username = userForm.cleaned_data['username']
             # password = user_form.clean_password2()
             # user = authenticate(username=username, password=password)

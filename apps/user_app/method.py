@@ -38,7 +38,7 @@ def get_profile_finish_percent(userProfile):
         'height', 'education','year_of_birth', 'month_of_birth', 'day_of_birth','educationSchool','city','stateProvince','country')
     num=0
     for field in fields:
-        if  not getattr(userProfile,field) in [-1,'N',None]:
+        if  not getattr(userProfile,field) in [-1,'N',None,'',u'国家',u'省份、州',u'地级市、县']:
             num+=1
     return int((num+0.00)/len(fields)*100)
 

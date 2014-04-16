@@ -60,11 +60,13 @@ input{
 		<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
 		<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
 		<input type="checkbox" name="remember_status">记住登录状态<br>
+		{%if False %}
 		第三方登录：
         <a href="/third_party_login/qq_login_url/"><img src="{{STATIC_URL}}img/qq_login_logo.png"></a>&nbsp;&nbsp;
         <a href="/third_party_login/sina_login_url/" ><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
          <a href="/third_party_login/facebook_login_url/" ><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
 		<a href="/third_party_login/twitter_login_url/" >twitter</a>
+		{%endif %}
 		</div>
 		<div class="button_type_1"><a href="/account/forgetpwdpage/">忘记密码</a></div>
 		<div class="button_type_1"><a id='login' href="javascript:void(0)" onclick="submit()">登录</a></div>
