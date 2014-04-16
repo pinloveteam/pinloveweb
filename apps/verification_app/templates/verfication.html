@@ -106,7 +106,7 @@
 						<div id="cer_education" class="cer_tab">
 							<div class="divArrow"></div>
 							{% ifequal incomeValid '未认证'%}
-							<form id ="income_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" target="iframe-name">{% csrf_token %}
+							<form id ="income_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data">{% csrf_token %}
 							<input type="hidden" name="type" value="income">
 							{% if incomeValidForm.errors %}
 							<p style="color: red;">
@@ -128,7 +128,7 @@
 										 </div>
 									</tr>
 									<tr>
-									  <td colspan="2"><input type="submit" id="income_verfaction" class="btn btn-warning"  style="position: relative;">提交</button></td>
+									  <td colspan="2"><input type="submit" id="income_verfaction" class="btn btn-warning"  style="position: relative;" value="提交"></td>
 									</tr>
 								 
 								</tbody></table>
@@ -162,7 +162,7 @@
 							<button class="btn btn-warning cerbtn" disabled="true">{{IDCardValid}}</button>
 							{% endifequal %}
 						</div>
-						<div id="cer_education" class="cer_tab">
+						<div id="cer_education" class="cer_tab" style="height: 220px;">
 							<div class="divArrow"></div>
 							{% ifequal IDCardValid '未认证'%}
 							<form id="IDCard_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" >{% csrf_token %}
@@ -183,13 +183,13 @@
 									</tr>
 									<tr>
 										<td>证件照:</td>
-										<td>{{IDcardValidForm.IDCardPicture}}<br>{{IDcardValidForm.IDCardPicture.errors }}</td>
+										<td>{{IDcardValidForm.IDCardPicture}}{{IDcardValidForm.IDCardPicture.errors }}</td>
 									     <div class="text-muted">
 									     <span >请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span>
                                           </div>
 									</tr>
 									<tr>
-									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;">提交</button></td>
+									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;"  value="提交"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -245,7 +245,7 @@
 							       </div>
 							   </tr>
 							   <tr>
-									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;">提交</button></td>
+									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;"  value="提交"></td>
 								</tr>
 							  </tbody>
 							 </table>

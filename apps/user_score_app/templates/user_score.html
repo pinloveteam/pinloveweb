@@ -9,7 +9,7 @@
 <form action="/user/photo_check/" method="POST">{% csrf_token %}
 {% endblock %} 
 {% block second_content %}
-用户邀请链接：<input type="text" value="http://www.pinpinlove.com/?link={{link}}">
+用户邀请链接：<input type="text" value="{{ request.get_host }}/?link={{link}}">
 用户积分：<input type="text" value="{{userScore.validScore}}">
 今日登录次数：{{dayLoginCount}}
 今日邀请登录次数：{{inviteFriendLogin}}
@@ -19,7 +19,7 @@
  {%for userScore in userScoreDtail%}
  <tr>
  <td>
- {{userScore.exchangeRelate.instruction}}
+ {{userScore.data}}
  </td>
  <td>
  {{userScore.amount}}

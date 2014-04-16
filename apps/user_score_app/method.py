@@ -51,17 +51,62 @@ def get_score_by_invite_friend_login(inviteCode,userId):
     except AssertionError as e:
         return False  
 
+
+
+def get_score_by_verification(userId,verificationType):
+    '''
+    获得积分通过认证
+    attridute:
+     userId 用户id
+     verificationType 认证类型['education_verification','income_verification','IDCard_verification']
+     '''
+    
+    from apps.user_score_app.user_score_settings import VERIFICATION_SCORE
+    verificationData=VERIFICATION_SCORE.get(verificationType,False)
+    if verificationData:
+        user_score_save(userId,1006,data=verificationData)
+        return True
+ 
+
+def get_score_by_finish_proflie(userId,profliePercent):
+    '''
+    获得积分通过完成个人信息
+    attridute:
+     userId 用户id
+     profliePercent 个人信息完成百分比[30,60,100]
+     '''
+    
+    from apps.user_score_app.user_score_settings import PROFILE_SCORE
+    type=PROFILE_SCORE.get(profliePercent,False)
+    if type:
+        user_score_save(userId,type)
+        return True  
 '''
 保存积分
 '''
 @transaction.commit_on_success    
-def user_score_save(userId,type):
+def user_score_save(userId,type,*args,**kwargs):
     userScoreExchangeRelate=UserScoreExchangeRelate.objects.get(type=type)
     userScore=UserScore.objects.get(user_id=userId)
     userScore.validScore+=userScoreExchangeRelate.amount
     userScore.save()
-    UserScoreDtail(userScore=userScore,exchangeRelate_id=userScoreExchangeRelate.id,amount=userScoreExchangeRelate.amount).save()
+    data=kwargs.get('data',False)
+    if not data:
+        data=userScoreExchangeRelate.instruction
+    UserScoreDtail(userScore=userScore,exchangeRelate_id=userScoreExchangeRelate.id,amount=userScoreExchangeRelate.amount,data=data).save()
 
+
+
+def user_score_freeze(userId,type,amount,data,*args,**kwargs):
+    '''
+冻结积分
+'''
+    userScore=UserScore.objects.get(user_id=userId)
+    userScore.validScore-=amount
+    userScore.freezeScore+=amount
+    userScore.save()
+    UserScoreDtail(userScore=userScore,exchangeRelate_id='1107',amount=amount,data=data).save()
+    
 '''
 获取用户登录积分缓存
 '''

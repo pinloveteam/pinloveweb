@@ -40,6 +40,7 @@ class UserScoreDtail(models.Model):
     userScore=models.ForeignKey(UserScore,related_name="user_score_detail",verbose_name=u'用户积分')
     exchangeRelate=models.ForeignKey(UserScoreExchangeRelate,related_name="UserScoreExchangeRelate",verbose_name=u'兑换关系')
     amount=models.IntegerField(verbose_name=u'积分数量',)
+    data=models.CharField(verbose_name=u'记录说明',max_length=255)
     time=models.DateTimeField(verbose_name=u'记录时间',)
     def save(self, *args, **kwargs):
         today=datetime.datetime.today()

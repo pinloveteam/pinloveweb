@@ -3,6 +3,7 @@ from django.conf.urls import patterns, include, url, static
 import settings
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.views.generic.base import TemplateView
 admin.autodiscover()
 
 #user
@@ -66,7 +67,9 @@ urlpatterns = patterns('',
      url(r'^test/$', 'pinloveweb.views.test'),
 )
 
-
+urlpatterns+=patterns('',
+                       url(r'^robots\.txt$', TemplateView.as_view(template_name="robots.txt")),
+)
 
 if settings.DEBUG:
    urlpatterns += patterns('',

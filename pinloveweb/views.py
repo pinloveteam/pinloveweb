@@ -91,7 +91,9 @@ def auth_view(request) :
             return HttpResponseRedirect(redirectURL)
     else : 
         # Show an error page 
-        return HttpResponseRedirect('/account/invalid/')
+        link = request.REQUEST.get('link','')
+        next = request.REQUEST.get('next','')
+        return render(request,'login.html',{'error':'用户名或者密码错误!','link':link,'next':next},)
 '''
 根据key 获取缓存数据
 '''

@@ -32,3 +32,25 @@ def user_info_card(userProfile,userTagBeanList):
         if data[key] in missing_value:
             data[key]='未填'
     return data
+
+def get_profile_finish_percent(userProfile):
+    fields = ( 'gender', 'income','weight','jobIndustry',
+        'height', 'education','year_of_birth', 'month_of_birth', 'day_of_birth','educationSchool','city','stateProvince','country')
+    num=0
+    for field in fields:
+        if  not getattr(userProfile,field) in [-1,'N',None]:
+            num+=1
+    return int((num+0.00)/len(fields)*100)
+
+
+def get_score_by_profile_finsih_percent(userId,newProfileFinsihPercent,userProfile):
+    if newProfileFinsihPercent>userProfile.profileFinsihPercent:
+        from apps.user_score_app.method import get_score_by_finish_proflie
+        if newProfileFinsihPercent>=100:
+            get_score_by_finish_proflie(userId,100)
+        elif newProfileFinsihPercent>=60:
+            get_score_by_finish_proflie(userId,60)
+        elif newProfileFinsihPercent>=30:
+            get_score_by_finish_proflie(userId,30)
+        userProfile.profileFinsihPercent=newProfileFinsihPercent
+    return  userProfile

@@ -190,6 +190,9 @@
                 <td><a class="tag-trigger {{tag.colorClass}} " href="javascript:void(0);"  name="{{tag.id}}">{{tag.content}}</a></td>
              {% endif %}
         {% endfor %}
+        <tr>
+                <td colspan="2">资料完成度：{{profileFinsihPercent}}%</td>
+                </tr>
   </table>
   <button class="btn btn-warning user-save" style="position: relative; left: 300px;">保存</button>
 </form>

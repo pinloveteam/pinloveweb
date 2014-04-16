@@ -225,7 +225,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     liveWithParent=models.CharField(verbose_name=r'愿与Ta父母同住',choices=(('N',r'未填'),('0',r'愿意'),('1',r'不愿意'),('2',r'视情况而定'),),max_length=1,null=True,blank=True,)
     likeChild=models.CharField(verbose_name=r'是否喜欢有孩子',choices=(('N',r'未填'),('0',r'愿意'),('1',r'不愿意'),('2',r'视情况而定'),),max_length=1,null=True,blank=True,)
     lastLoginAddress=models.CharField(verbose_name=r'最后登录地点',max_length=100,null=True,blank=True,)
- 
+    profileFinsihPercent=models.SmallIntegerField(verbose_name=r'资料完成度',default=0,null=True,blank=True,)
     #定制管理器
     objects = UserProfileManager()
     

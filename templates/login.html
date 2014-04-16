@@ -54,10 +54,11 @@ input{
 	<form id="login" class="login_form" action="/account/auth/" method="post" class="form-signin">{% csrf_token %}
 		<span class="title">拼爱网</span>
 		<div class="form-group">
+		<span style="color:red;font-size:15px">{{error}}</span>
 		<input type="text" class="form-control input-lg" placeholder="请输入用户名" name="username" value="" id="username"/>
 		<input type="password" class="form-control input-lg" placeholder="请输入密码" name="password" value="" id="password"/>
-		<input type="hidden" name="next" value="{{request.GET.next}}"/>
-		<input type="hidden" name="link" value="{{request.GET.link}}"/>
+		<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
+		<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
 		<input type="checkbox" name="remember_status">记住登录状态<br>
 		第三方登录：
         <a href="/third_party_login/qq_login_url/"><img src="{{STATIC_URL}}img/qq_login_logo.png"></a>&nbsp;&nbsp;
@@ -70,7 +71,7 @@ input{
 		
 	</form>
 <script  type="text/javascript">
-	var picGroup = new Array("{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","img/Cityscape09.png","img/Cityscape55.jpg","img/Cityscape55.jpg");
+	var picGroup = new Array("{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape55.jpg","{{STATIC_URL}}img/Cityscape55.jpg");
     document.body.style.backgroundImage="url("+picGroup[new Date().getHours()>>2]+")";
 </script>
 <script  type="text/javascript">

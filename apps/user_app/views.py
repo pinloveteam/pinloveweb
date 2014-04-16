@@ -208,6 +208,7 @@ def user_profile(request):
         args['user_profile_form'] = UserProfileForm(instance=useBasicrProfile) 
         args['country']=useBasicrProfile.country
         args['city']=useBasicrProfile.city
+        args['profileFinsihPercent']=useBasicrProfile.profileFinsihPercent
         args['stateProvince']=useBasicrProfile.stateProvince
         #认证
         from apps.verification_app.views import verification
@@ -221,6 +222,7 @@ def update_profile(request):
         userProfile = UserProfile.objects.get(user_id=request.user.id)
         userProfileForm = UserProfileForm(request.POST,  instance=userProfile) 
         if userProfileForm.is_valid():
+            userProfileForm.clean_birthday()
             tagList=request.REQUEST.get('tagList','').split(',')
             username=request.POST['username']
             country=request.POST['country']
@@ -232,6 +234,10 @@ def update_profile(request):
             userProfile.country=country
             userProfile.stateProvince=stateProvince
             userProfile.city=city
+            #计算资料完成度
+            from apps.user_app.method import get_profile_finish_percent,get_score_by_profile_finsih_percent
+            profileFinsihPercent=get_profile_finish_percent(userProfile)
+            userProfile=get_score_by_profile_finsih_percent(request.user.id,profileFinsihPercent,userProfile)
             userProfile.save()
             map=request.session['user_original_data']
             cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),

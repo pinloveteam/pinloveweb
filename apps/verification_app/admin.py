@@ -54,6 +54,15 @@ class IDCardCheckAdmin(admin.ModelAdmin):
             )
         return super(IDCardCheckAdmin, self).formfield_for_choice_field(db_field, request, **kwargs)
     
+    #重写保存
+    def  save_model(self, request, obj, form, change):
+        userVerification=UserVerification.objects.get(id=obj.id)
+        #判断认证通过给积分
+        from apps.user_score_app.method import get_score_by_verification
+        if userVerification.IDCardValid=='2' and obj.IDCardValid=='3':
+            get_score_by_verification(obj.user_id,'IDCard_verification')
+        obj.save()
+    
     
 '''
 学历审核
@@ -102,6 +111,15 @@ class EducationCheckAdmin(admin.ModelAdmin):
     def __init__(self, *args, **kwargs):
         super(EducationCheckAdmin, self).__init__(*args, **kwargs)
         
+    #重写保存
+    def  save_model(self, request, obj, form, change):
+        userVerification=UserVerification.objects.get(id=obj.id)
+        #判断认证通过给积分
+        from apps.user_score_app.method import get_score_by_verification
+        if userVerification.educationValid=='2' and obj.educationValid=='3':
+            get_score_by_verification(obj.user_id,'education_verification')
+        obj.save()
+        
 '''
 收入审核
 '''
@@ -122,7 +140,16 @@ class IncomeCheckAdmin(admin.ModelAdmin):
     readonly_fields=('image_img','user','get_income',)
     list_filter=('incomeValid',)    
     fields =('user','get_income','image_img','incomeValid',)
-       
+    
+    #保存
+    def  save_model(self, request, obj, form, change):
+        userVerification=UserVerification.objects.get(id=obj.id)
+        #判断认证通过给积分
+        from apps.user_score_app.method import get_score_by_verification
+        if userVerification.incomeValid=='2' and obj.incomeValid=='3':
+            get_score_by_verification(obj.user_id,'income_verification')
+        obj.save()
+        
     def get_income(self,obj):
         return UserProfile.objects.get(user=obj.user).income
     get_income.short_description = '收入'
@@ -147,3 +174,4 @@ class IncomeCheckAdmin(admin.ModelAdmin):
 admin.site.register(IDCardCheck,IDCardCheckAdmin)
 admin.site.register(EducationCheck,EducationCheckAdmin)
 admin.site.register(IncomeCheck,IncomeCheckAdmin)
+
