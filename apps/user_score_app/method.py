@@ -134,3 +134,9 @@ def get_day_login_count(uid):
         cache.set('DAY_LOGIN_COUNT',user_game_count_forever)
     return cache.get('DAY_LOGIN_COUNT').get(uid)
         
+def reset_count():
+    '''
+      重置积分变量
+    '''
+    cache.set('DAY_LOGIN_COUNT',{})
+    cache.set('DAY_INIVITE_FRIEND_COUNT',{})
