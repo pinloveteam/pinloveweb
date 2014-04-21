@@ -98,7 +98,7 @@ class AvatarCheck(UserProfile):
 # #     avatar_name_status=models.CharField(verbose_name=r"头像状态",max_length=2, choices=STATUS_CHOICES,default='3')
     
     def image_img(self):
-            return u'<img src="%s" />' %(settings.MEDIA_URL+'user_img/image.png')
+            return u'<img src="%s" />' %(settings.MEDIA_URL+self.avatar_name+'-110.jpeg')
     image_img.short_description = '头像'
     image_img.allow_tags = True 
     
