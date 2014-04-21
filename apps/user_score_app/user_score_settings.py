@@ -14,7 +14,12 @@ VERIFICATION_SCORE={'education_verification':u'学历认证'
 
 #个人信息完善
 PROFILE_SCORE={
-               30:'1004',
-               60:'1008',
-               100:'1009'
+               'income':u'个人信息完善--收入',
+               'weight':u'个人信息完善--体重',
+               'jobIndustry':u'个人信息完善--工作类型',
+               'height':u'个人信息完善--身高',
+               'education':u'个人信息完善--学历', 
+               'day_of_birth':u'个人信息完善--生日',
+               'educationSchool':u'个人信息完善--学校',
+               'city':u'个人信息完善--居住地',
                }

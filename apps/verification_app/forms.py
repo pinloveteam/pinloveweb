@@ -17,22 +17,23 @@ class IDCardValidForm(ModelForm):
                                    ,help_text='',error_messages={
             'invalid':  _(u"证件位数或格式不正确！")})
     IDCardPicture=forms.ImageField()
-#     def __init__(self, *args, **kwargs):
-#         super(IDCardValidForm, self).__init__(*args, **kwargs)
-#         for key in self.fields:
-#             self.fields[key].required = False
-            
-                
+    def __init__(self, *args, **kwargs):
+        super(IDCardValidForm, self).__init__(*args, **kwargs)
+        self.fields['trueName'].required = False
+        self.fields['IDCardChoice'].choices=((u'', u'请选择'),(0,'身份证'),(1,'护照'),)
+        self.fields['IDCardChoice'].required=True      
     class Meta:
         model=UserContactLink
         fields=('IDCardChoice','trueName','IDCardNumber',)
         exclude=('stateProvinceHome','CountryHome','cityHome','QQ','MSN','mobileNumber')
-    widgets = {
-                   'IDCardChoice': forms.RadioSelect(attrs={'cols':20,'rows':20},choices=((True, u'是'), (False, u'否') ), )
-                   }
+       
+   
         
     def clean_IDCardNumber(self): 
-         IDCardChoice = self.cleaned_data["IDCardChoice"] 
+         try:
+             IDCardChoice = self.cleaned_data["IDCardChoice"] 
+         except Exception as e:
+             return
          IDCardNumber = self.cleaned_data["IDCardNumber"]  
          if len(IDCardNumber.rstrip()) <1:
              return IDCardNumber 
@@ -53,6 +54,10 @@ class IDCardValidForm(ModelForm):
 学历证验证
 '''
 class EducationValidForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EducationValidForm,self).__init__(*args, **kwargs)
+        self.fields['education'].choices=((u'',u'请选择'),(0,r'大专以下'),(1,r'大专'),(2,r'本科'),(3,r'硕士 '),(4,r'博士 '),)
+        self.fields['education'].required=True
     educationPicture=forms.ImageField()
     class Meta:
         model=UserProfile
@@ -69,7 +74,10 @@ class EducationValidForm(ModelForm):
 收入证验证
 '''
 class IncomeValidForm(ModelForm):
-    incomePicture=forms.ImageField()
+    incomePicture=forms.ImageField(label="收入证明")
+    def __init__(self, *args, **kwargs):
+        super(IncomeValidForm, self).__init__(*args, **kwargs)
+        self.fields['income'].required = True
     class Meta:
         model=UserProfile
         fields = ('income',)

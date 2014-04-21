@@ -1,10 +1,22 @@
+
 <SCRIPT>
+function onUploadSuccess(id){
+    //the function after upload
+     $('#cer_'+id).children().remove()
+     $('#cer_'+id).hide()
+     $('#'+id).find('.cerbtn').attr('disabled',true).html('正在审核')
+    alert('提交成功!')
+}
+function onUploadError(id,data){
+	//the function after upload
+    $('#'+id).html(data)
+}
 /**
         $(document).ready(function(){
         	   //收入认证
         		$("#income_valid").submit(function(){
                     
-                    var data = $(this).serialize();
+        			var data = $(this).serialize();
                     $.ajax({
                         type: $(this).attr('method'),
                         url: "/verification/valid/",
@@ -103,10 +115,10 @@
 							<button class="btn btn-warning cerbtn" disabled="true">{{incomeValid}}</button>
 							{% endifequal %}
 						</div>
-						<div id="cer_education" class="cer_tab">
+						<div id="cer_income" class="cer_tab">
 							<div class="divArrow"></div>
 							{% ifequal incomeValid '未认证'%}
-							<form id ="income_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+							<form id ="income_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" target="income_valid_iframe">{% csrf_token %}
 							<input type="hidden" name="type" value="income">
 							{% if incomeValidForm.errors %}
 							<p style="color: red;">
@@ -124,7 +136,8 @@
 										<td>收入证明:</td>
 										<td>{{incomeValidForm.incomePicture}} <br>{{incomeValidForm.incomePicture.errors }}</td>
 										 <div class="text-muted">
-										 <span >请上传公司的收入证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span>
+										 <span >请上传公司的收入证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br>
+										 <span id="income_error" style="color:red;"></span>
 										 </div>
 									</tr>
 									<tr>
@@ -133,7 +146,7 @@
 								 
 								</tbody></table>
 							</form>	
-							<iframe name="iframe-name"></iframe>
+							<iframe name="income_valid_iframe" id="income_valid_iframe" width="1" height="1" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
 							{% endifequal %}
 						</div>
 
@@ -162,10 +175,10 @@
 							<button class="btn btn-warning cerbtn" disabled="true">{{IDCardValid}}</button>
 							{% endifequal %}
 						</div>
-						<div id="cer_education" class="cer_tab" style="height: 220px;">
+						<div id="cer_identity" class="cer_tab" style="height: 220px;">
 							<div class="divArrow"></div>
 							{% ifequal IDCardValid '未认证'%}
-							<form id="IDCard_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" >{% csrf_token %}
+							<form id="IDCard_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" target="IDCard_valid_iframe">{% csrf_token %}
 							<input type="hidden" name="type" value="IDCard">
 							<table class="table">
 								<tbody>
@@ -185,7 +198,8 @@
 										<td>证件照:</td>
 										<td>{{IDcardValidForm.IDCardPicture}}{{IDcardValidForm.IDCardPicture.errors }}</td>
 									     <div class="text-muted">
-									     <span >请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span>
+									     <span >请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span><br>
+									     <span id="identity_error" style="color:red;"></span>
                                           </div>
 									</tr>
 									<tr>
@@ -194,6 +208,7 @@
 								</tbody>
 							</table>
 							</form>
+							<iframe name="IDCard_valid_iframe" id="IDCard_valid_iframe" width="1" height="1" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
 							{% endifequal %}
 						</div>
 
@@ -225,7 +240,7 @@
 						<div id="cer_education" class="cer_tab">
 							<div class="divArrow"></div>
 							{% ifequal educationValid '未认证'%}
-							<form id='education_valid' action="/verification/valid/" method="POST" enctype="multipart/form-data" ">{% csrf_token %}
+							<form id='education_valid' action="/verification/valid/" method="POST" enctype="multipart/form-data" target="education_valid_iframe">{% csrf_token %}
 							<input type="hidden" name="type" value="education">
 							<table>
 							  <tbody>
@@ -241,7 +256,8 @@
 							      <td>学历证明:</td>
 							      <td> {{educationValidForm.educationPicture}}<br>{{educationValidForm.educationPicture.errors }}</td>
 							       <div class="text-muted">
-							        <span >请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span>
+							        <span >请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br>
+							        <span id="education_error" style="color:red;"></span>
 							       </div>
 							   </tr>
 							   <tr>
@@ -250,5 +266,6 @@
 							  </tbody>
 							 </table>
 							 </form>
+							 <iframe name="education_valid_iframe" id="education_valid_iframe" width="1" height="1" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
 							{% endifequal %}
 						</div>

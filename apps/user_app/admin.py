@@ -6,8 +6,8 @@ Created on Jul 4, 2013
 '''
 #-*- coding: utf-8 -*-
 from django.contrib import admin
-from models import UserProfile,Dictionary
-from django.db import models
+from models import UserProfile
+from django.db import  transaction
 from apps.user_app.models import Follow
 from django.conf import settings
 from apps.recommend_app.models import Grade
@@ -116,13 +116,14 @@ class AvatarCheck(UserProfile):
 #         verbose_name_plural = u'相貌打分'
            
 class AvatarCheckForm(forms.ModelForm):
-    appearancescore=forms.FloatField(label=u"外貌分数")
+    from django.core.validators import MaxValueValidator,MinValueValidator
+    appearancescore=forms.FloatField(label=u"外貌分数",validators = [MinValueValidator(0), MaxValueValidator(100)],help_text=u'分数在[0,100]区间')
     class Meta:
-        model=UserProfile
-    def __init__(self, *args, **kwargs):
-        super(AvatarCheckForm, self).__init__(*args, **kwargs)
-        # Here we will redefine our test field.
-        self.fields['appearancescore'] = forms.FloatField(label=u"外貌分数",)
+        model=AvatarCheck
+#     def __init__(self, *args, **kwargs):
+#         super(AvatarCheckForm, self).__init__(*args, **kwargs)
+#         # Here we will redefine our test field.
+#         self.fields['appearancescore'] = forms.FloatField(label=u"外貌分数",)
 # class AppearancScoreForm(forms.ModelForm):
 # #     appearancescore=models.FloatField(verbose_name=u"外貌分数",null=True)
 #     class Meta:
@@ -130,21 +131,21 @@ class AvatarCheckForm(forms.ModelForm):
 #         
 #     def __init__(self, *args, **kwargs):
 #         super(AvatarCheckForm, self).__init__(*args, **kwargs)
-#       
+#  
+  
 class AvatarCheckAdmin(admin.ModelAdmin):
+    form = AvatarCheckForm
     list_display=('user','avatar_name_status','get_appearancescore')
     search_fields =('user__username',)
     readonly_fields=('image_img','avatar_name',)
     list_filter=('avatar_name_status',)    
-    fields =('user','image_img','avatar_name','avatar_name_status',)
-#     appearancescore=models.FloatField(verbose_name=u"外貌分数",null=True)
-#     def __init__(self, *args, **kwargs):
-#         super(AvatarCheckAdmin, self).__init__(*args, **kwargs)
+    fields =('user','image_img','avatar_name','avatar_name_status','appearancescore')
+    def __init__(self, *args, **kwargs):
+        super(AvatarCheckAdmin, self).__init__(*args, **kwargs)
 #         # Here we will redefine our test field.
 #         self.fields['appearancescore'] = models.FloatField(verbose_name=u"外貌分数",)
 #     def change_view(self, request, object_id, form_url='', extra_context=None):
-#         extra_context = extra_context or {}
-#         extra_context['osm_data'] = 'asasa'
+#         self.appearancescore=Grade.objects.get(user=self.user).appearancescore
 #         return super(AvatarCheckAdmin, self).change_view(request, object_id,
 #             form_url, extra_context=extra_context)
        
@@ -172,13 +173,17 @@ class AvatarCheckAdmin(admin.ModelAdmin):
     """
      重写save
     """
+    @transaction.commit_on_success  
     def save_model(self, request, obj, form, change):
         """
         Given a model instance save it to the database.
         """
-        obj.save(commit=False)
+        obj.save()
         user_1=obj.user
-        Grade.objects.filter(user=user_1).update(appearancescore=obj.appearancescore)
+        Grade.objects.filter(user=user_1).update(appearancescore=form.cleaned_data['appearancescore'])
+        #头像认证通过得分
+        from apps.user_score_app.method import get_score_by_avatar_check
+        get_score_by_avatar_check(user_1.id)
 class FollowAdmin(admin.ModelAdmin):
     list_display=('my','follow',)
     search_fields =('my__username','follow__username',)

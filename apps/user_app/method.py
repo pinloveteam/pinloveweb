@@ -33,17 +33,28 @@ def user_info_card(userProfile,userTagBeanList):
             data[key]='未填'
     return data
 
-def get_profile_finish_percent(userProfile):
-    fields = ( 'gender', 'income','weight','jobIndustry',
-        'height', 'education','year_of_birth', 'month_of_birth', 'day_of_birth','educationSchool','city','stateProvince','country')
+'''
+信息完成度
+'''
+def get_profile_finish_percent_and_score(userProfile,oldUserProfile):
+    fields = ( 'income','weight','jobIndustry',
+        'height', 'education', 'day_of_birth','educationSchool','city')
+    updateFields=[]
     num=0
     for field in fields:
-        if  not getattr(userProfile,field) in [-1,'N',None,'',u'国家',u'省份、州',u'地级市、县']:
+        if  not getattr(userProfile,field) in [-1,'N',None,u'',u'地级市、县']:
+            if getattr(userProfile,field)!=getattr(oldUserProfile,field):
+                updateFields.append(field)
             num+=1
-    return int((num+0.00)/len(fields)*100)
+    from apps.user_score_app.method import get_score_by_finish_proflie
+    profileFinsihPercent=int((num+0.00)/len(fields)*100)
+    if profileFinsihPercent>userProfile.profileFinsihPercent:
+        get_score_by_finish_proflie(userProfile.user_id,updateFields)
+        userProfile.profileFinsihPercent=profileFinsihPercent
+    return userProfile
 
 
-def get_score_by_profile_finsih_percent(userId,newProfileFinsihPercent,userProfile):
+def get_score_by_profile(userId,newProfileFinsihPercent,userProfile):
     if newProfileFinsihPercent>userProfile.profileFinsihPercent:
         from apps.user_score_app.method import get_score_by_finish_proflie
         if newProfileFinsihPercent>=100:

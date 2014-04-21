@@ -52,7 +52,13 @@ def get_score_by_invite_friend_login(inviteCode,userId):
         return False  
 
 
-
+def get_score_by_avatar_check(userId):
+    '''
+    头像认证通过
+    '''
+    user_score_save(userId,1005)
+    return True
+    
 def get_score_by_verification(userId,verificationType):
     '''
     获得积分通过认证
@@ -68,19 +74,18 @@ def get_score_by_verification(userId,verificationType):
         return True
  
 
-def get_score_by_finish_proflie(userId,profliePercent):
+def get_score_by_finish_proflie(userId,proflieTypeList):
     '''
     获得积分通过完成个人信息
     attridute:
      userId 用户id
-     profliePercent 个人信息完成百分比[30,60,100]
+     proflieTypeList 个人信息类型列表
      '''
-    
     from apps.user_score_app.user_score_settings import PROFILE_SCORE
-    type=PROFILE_SCORE.get(profliePercent,False)
-    if type:
-        user_score_save(userId,type)
-        return True  
+    for proflieType in proflieTypeList:
+        proflieData=PROFILE_SCORE.get(proflieType,False)
+        if type:
+            user_score_save(userId,'1004',data=proflieData)
 '''
 保存积分
 '''

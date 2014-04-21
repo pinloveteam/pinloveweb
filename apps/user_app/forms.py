@@ -36,12 +36,15 @@ class UserProfileForm(ModelForm):
             return self.cleaned_data['gender']
         
     #判断出生年月日是否正确
-    def clean_birthday(self):
+    def clean_day_of_birth(self):
         day_of_birth=self.cleaned_data['day_of_birth']
         month_of_birth=self.cleaned_data['month_of_birth']
         year_of_birth=self.cleaned_data['year_of_birth']
         if not((day_of_birth==-1 and month_of_birth==-1 and year_of_birth==-1) or (day_of_birth!=-1 and month_of_birth!=-1 and year_of_birth!=-1)):
-            raise Exception('出生年月日需填写完整!') 
+            raise  forms.ValidationError(u'请正确填写出生日期!')
+        else:
+            return day_of_birth
+    
     class Meta : 
         model = UserProfile  
         fields = ( 'gender', 'income','weight','jobIndustry','age',

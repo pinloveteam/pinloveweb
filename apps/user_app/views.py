@@ -220,9 +220,10 @@ def user_profile(request):
 def update_profile(request):
     if request.is_ajax():
         userProfile = UserProfile.objects.get(user_id=request.user.id)
+        import copy
+        oldUserProfile=copy.deepcopy(userProfile)
         userProfileForm = UserProfileForm(request.POST,  instance=userProfile) 
         if userProfileForm.is_valid():
-            userProfileForm.clean_birthday()
             tagList=request.REQUEST.get('tagList','').split(',')
             username=request.POST['username']
             country=request.POST['country']
@@ -235,9 +236,8 @@ def update_profile(request):
             userProfile.stateProvince=stateProvince
             userProfile.city=city
             #计算资料完成度
-            from apps.user_app.method import get_profile_finish_percent,get_score_by_profile_finsih_percent
-            profileFinsihPercent=get_profile_finish_percent(userProfile)
-            userProfile=get_score_by_profile_finsih_percent(request.user.id,profileFinsihPercent,userProfile)
+            from apps.user_app.method import get_profile_finish_percent_and_score
+            userProfile=get_profile_finish_percent_and_score(userProfile,oldUserProfile)
             userProfile.save()
             map=request.session['user_original_data']
             cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),

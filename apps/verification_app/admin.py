@@ -103,7 +103,7 @@ class EducationCheckAdmin(admin.ModelAdmin):
         return super(EducationCheckAdmin,self).changelist_view(request, extra_context=extra_context)
     
     def formfield_for_choice_field(self, db_field, request, **kwargs):
-        if db_field.name == "IDCardValid":
+        if db_field.name == "educationValid":
             kwargs['choices'] = (
                ('3',"审核通过"),('4',"审核未通过"),
             )
@@ -170,7 +170,7 @@ class IncomeCheckAdmin(admin.ModelAdmin):
                ('3',"审核通过"),('4',"审核未通过"),
             )
         return super(IncomeCheckAdmin, self).formfield_for_choice_field(db_field, request, **kwargs)
-    
+
 admin.site.register(IDCardCheck,IDCardCheckAdmin)
 admin.site.register(EducationCheck,EducationCheckAdmin)
 admin.site.register(IncomeCheck,IncomeCheckAdmin)

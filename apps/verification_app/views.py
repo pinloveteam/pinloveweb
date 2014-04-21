@@ -62,7 +62,17 @@ def valid(request):
                 userProfile=incomeValidForm.save(commit=False)
                 userVerification.save()
                 userProfile.save()
-                return HttpResponseRedirect('/user/user_profile/')
+                return HttpResponse( "<script>window.parent.onUploadSuccess('income')</script>" )
+            else:
+                error=''
+                for item in incomeValidForm.errors.items():
+                    if item[0]=='incomePicture':
+                        error+='收入证明 :'+item[1][0]+'<br>'
+                    if item[0]=='income':
+                        error+='收入 :'+item[1][0]+'<br>'
+                return  HttpResponse( "<script>window.parent.onUploadError('%s','%s')</script>" % \
+        ('income_error',error))
+                
         elif type=='IDCard':
             userContactLink=UserContactLink.objects.get(user=request.user)
             IDcardValidForm=IDCardValidForm(request.POST,request.FILES,instance=userContactLink)
@@ -73,7 +83,15 @@ def valid(request):
                 userContactLink=IDcardValidForm.save(commit=False)
                 userVerification.save()
                 userContactLink.save()
-                return HttpResponseRedirect('/user/user_profile/')
+                return  HttpResponse( "<script>window.parent.onUploadSuccess('identity')</script>" )
+            else:
+                error=''
+                type={'IDCardPicture':u'证件照','IDCardChoice':u'证件类型','trueName':u'真实姓名','IDCardNumber':u'证件号',}
+                for item in IDcardValidForm.errors.items():
+                    if item[0] in type.keys():
+                        error+=type[item[0]]+":"+item[1][0]+'<br>'
+                return  HttpResponse( "<script>window.parent.onUploadError('%s','%s')</script>" % \
+        ('identity_error',error))
         elif type=='education':
             userProfile=UserProfile.objects.get(user=request.user)
             educationValidForm=EducationValidForm(request.POST,request.FILES,instance=userProfile)
@@ -84,7 +102,15 @@ def valid(request):
                 userProfile=educationValidForm.save(commit=False)
                 userVerification.save()
                 userProfile.save()
-                return HttpResponseRedirect('/user/user_profile/')
+                return  HttpResponse( "<script>window.parent.onUploadSuccess('education')</script>" )
+            else:
+                error=''
+                type={'education':u'学历','educationSchool':u'毕业学校','educationPicture':u'学历证明'}
+                for item in educationValidForm.errors.items():
+                    if item[0] in type.keys():
+                        error+=type[item[0]]+":"+item[1][0]+'<br>'
+                return  HttpResponse( "<script>window.parent.onUploadError('%s','%s')</script>" % \
+                                      ('education_error',error))
 ######################################    
 #####以上正在用
 ##################################
