@@ -115,7 +115,8 @@ def socre_my(request):
         return HttpResponse(json)
     except Exception as e:
         logger.error('%s%s' %('获取另一半对自己打分出错',e))
-        args={'result':'error','error_messge':'系统出错!'}
+        args={'result':'error','error_messge':'%s%s' %('获取另一半对自己打分出错',e)}
+#         args={'result':'error','error_messge':'系统出错!'}
         json=simplejson.dumps(args)
         return HttpResponse(json)
   
