@@ -5,34 +5,43 @@ Created on Sep 17, 2013
 @author: jin
 '''
 from django.utils import simplejson
+from apps.recommend_app.models import Grade
 '''
   推荐结果类
 '''
 empty_result_list=[-1,'N',None]
 class RecommendResult(object):
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,scoreOther,scoreMyself,macthScore,isFriend,isVote,city):
-        self.user_id=userId
-        self.username=username
-        self.height=height
-        self.age=age
-        self.education=education
-        self.income=income
-        self.jobIndustry=jobIndustry
-        self.scoreOther=scoreOther
-        self.scoreMyself=scoreMyself
-        self.macthScore=macthScore
-        self.isFriend=isFriend
-        self.avatar_name=avatar_name
-        self.isVote=isVote
-        self.city=city
-        
-    def _dict_(self):
-        dict=vars(self) 
-        for key in dict.keys():
-            if dict[key] in [-1,'N',None]:
-                dict[key]=u'未填'
-        return dict
-        
+    def __init__(self,*args,**kwargs):
+        if not kwargs.get('kwargs',None) is None:
+            kwargs=kwargs.get('kwargs')
+        self.userId=kwargs.pop('user_id',None)
+        grade=Grade.objects.get(user_id=self.userId)
+        self.incomeScore=grade.incomescore
+        self.edcationScore=grade.educationscore
+        self.appearanceScore=grade.appearancescore
+        self.heighScore=kwargs.pop('heighMatchOtherScore',None)
+        self.characterScore=kwargs.pop('tagMatchOtherScore',None)
+        self.scoreMyself=int(kwargs.pop('scoreMyself',None))
+        self.scoreOther=int(kwargs.pop('scoreOther',None))
+     
+    '''
+    转换成字典类型，如果fields=None，则全部转换
+    '''   
+    def get_dict(self,member=0):
+        if member:
+            return self.__dict__
+        else:
+            args={}
+            fields=['incomeScore','edcationScore','appearanceScore','heighScore','characterScore','scoreOther']
+            for field in fields:
+                args[field]=getattr(self,field)
+            return args
+                
+       
+def  MarchResult_to_RecommendResult(marchResult):
+    return RecommendResult(user_id=marchResult.other_id,heighMatchOtherScore=marchResult.heighMatchOtherScore,
+                           tagMatchOtherScore=marchResult.tagMatchOtherScore,scoreMyself=marchResult.scoreMyself,
+                           scoreOther=marchResult.scoreOther)
 class MyEncoder(simplejson.JSONEncoder):
     def default(self, obj):
         if not isinstance(obj, RecommendResult):

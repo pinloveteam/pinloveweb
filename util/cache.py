@@ -87,6 +87,16 @@ def get_has_recommend(user_id):
              return False
 
 '''
+获取推荐数据填写状态
+'''
+def get_recommend_status(user_id):
+    recommend=cache.get('HAS_RECOMMEND')
+    if recommend.get(user_id)==None:
+        recommend[user_id]={'userProfile':False,'userExpect':False,'grade':False,'tag':False}
+    user=recommend.get(user_id)
+    return user
+    
+'''
 用于判断各个数据表的推荐所需的数据是否填写完成
 '''
 def has_recommend(user_id,field):

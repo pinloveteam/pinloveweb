@@ -83,6 +83,107 @@ def grade_for_other(request):
             args['result']='success'
         json=simplejson.dumps(args)
         return HttpResponse(json)
+ 
+'''
+ 获取另一半对自己打分
+'''   
+def socre_my(request):
+    args={}
+    try:
+        otherId=int(request.REQUEST.get('userId',False))
+        if otherId:
+            member=UserProfile.objects.get(user_id=request.user.id).member
+            from apps.user_app.models import BrowseOherScoreHistory
+            flag=BrowseOherScoreHistory.objects.filter(my_id=request.user.id,other_id=otherId).exists()
+            if member>0 or flag:
+                matchResult=get_matchresult(request,otherId)
+                args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
+                     
+            else:
+                from apps.user_score_app.method import use_score_by_other_score
+                result=use_score_by_other_score(request.user.id,otherId)
+                if result=='success':
+                    matchResult=get_matchresult(request,otherId)
+                    #保存浏览记录
+                    BrowseOherScoreHistory(my_id=request.user.id,other_id=otherId).save()
+                    args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
+                elif result=='less':
+                        args={'result':'error','error_messge':'请充值!'}
+        else:
+            args={'result':'error','error_messge':'用户id不存在!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception as e:
+        logger.error('%s%s' %('获取另一半对自己打分出错',e))
+        args={'result':'error','error_messge':'系统出错!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+  
+def get_matchresult(request,otherId):  
+    from apps.recommend_app.method import get_recommend_result_in_session
+    matchResult=get_recommend_result_in_session(request,otherId)
+    if matchResult is None:
+        from apps.recommend_app.method import get_match_score_other
+        matchResult=get_match_score_other(request.user.id,otherId)
+        if matchResult is None:
+            from apps.recommend_app.method import match_score
+            matchResult=match_score(request.user.id,otherId)
+        else:
+            from apps.pojo.recommend import MarchResult_to_RecommendResult
+            matchResult=MarchResult_to_RecommendResult(matchResult)
+    return matchResult
+                  
+     
+'''
+获得对自己对另一半的打分
+'''
+def get_socre_for_other(request):    
+    args={}
+    try:
+        otherId=int(request.REQUEST.get('userId',False))
+        if otherId:
+             from apps.recommend_app.method import get_match_score_other
+             matchResult=get_match_score_other(request.user.id,otherId)
+             if matchResult==None:
+                from apps.recommend_app.method import get_recommend_result_in_session
+                matchResult=get_recommend_result_in_session(request,otherId)
+                if matchResult is None:
+                 #判断是否可用匹配
+                 from util.cache import get_has_recommend,get_recommend_status,has_recommend
+                 for field in ['userProfile','userExpect','grade','tag']:
+                     has_recommend(request.user.id,field)
+                 if get_has_recommend(request.user.id):
+                     from apps.recommend_app.method import match_score
+                     matchResult=match_score(request.user.id,otherId)
+                     member=UserProfile.objects.get(user_id=request.user.id).member
+                     args={'result':'success','matchResult':matchResult.get_dict(member=member)}
+                     from apps.recommend_app.method import set_recommend_result_in_session
+                     set_recommend_result_in_session(request,matchResult)
+                 else:
+                     recommendStatus=get_recommend_status(request.user.id)
+                     dict={'userProfile':u'个人信息  ','userExpect':u'身高期望  ','grade':u'权重  ','tag':u'标签  '}
+                     errorMessge=''
+                     for key in recommendStatus.keys():
+                         if not recommendStatus[key]:
+                             errorMessge+=dict[key]
+                     args={'result':'error','error_messge':'%s%s' %(errorMessge,u'未填写完整!')}
+                else:
+                    member=UserProfile.objects.get(user_id=request.user.id).member
+                    args={'result':'success','matchResult':matchResult.get_dict(member=member)} 
+             else:
+                 member=UserProfile.objects.get(user_id=request.user.id).member
+                 from apps.pojo.recommend import MarchResult_to_RecommendResult
+                 matchResult=MarchResult_to_RecommendResult(matchResult)
+                 args={'result':'success','matchResult':matchResult.get_dict(member=member)}
+        else:
+            args={'result':'error','error_messge':'用户id不存在!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception as e:
+        logger.error('%s%s' %('获得对自己对另一半的打分，出错原因：',e))
+        args={'result':'error','error_messge':'系统出错!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
 ##########################################
 def recommend(request):
     arg={}

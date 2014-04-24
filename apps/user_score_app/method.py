@@ -86,19 +86,45 @@ def get_score_by_finish_proflie(userId,proflieTypeList):
         proflieData=PROFILE_SCORE.get(proflieType,False)
         if type:
             user_score_save(userId,'1004',data=proflieData)
+            
+'''
+消耗积分查看对象分数
+attridute:
+     userId 查看用户id
+     otherUserId 被查看用户id
+return：
+   'less'  积分不足
+    'success' 成功
+'''
+def use_score_by_other_score(userId,otherUserId):
+    result=user_score_save(userId,'1008')
+    return result
+        
+        
+            
 '''
 保存积分
+attridute:
+    userId 用户id
+    type   积分操作类型
+    **kwargs：data(option)  说明
+return:
+    less 消耗积分超过剩余有效积分
+    success 积分修改成功
 '''
 @transaction.commit_on_success    
 def user_score_save(userId,type,*args,**kwargs):
     userScoreExchangeRelate=UserScoreExchangeRelate.objects.get(type=type)
     userScore=UserScore.objects.get(user_id=userId)
+    if userScoreExchangeRelate.amount+userScore.validScore<0:
+        return 'less'
     userScore.validScore+=userScoreExchangeRelate.amount
     userScore.save()
     data=kwargs.get('data',False)
     if not data:
         data=userScoreExchangeRelate.instruction
     UserScoreDtail(userScore=userScore,exchangeRelate_id=userScoreExchangeRelate.id,amount=userScoreExchangeRelate.amount,data=data).save()
+    return 'success'
 
 
 

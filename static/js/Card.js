@@ -2,8 +2,7 @@ var labels = ["身高","收入情况","教育程度","样貌","性格"]
 var datasets_self = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(0,151,36)",pointColor : "rgb(0,151,36)"}
 var datasets_other = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(241,23,25)",pointColor : "rgb(241,23,25)"}
 var comparable = false;
-var name_self = '';
-var name_other = '';
+var name_self , name_other , showedRadar;
 var dataArray = {};
 window.Card = function(person){
 	var test_match= function(){
@@ -124,22 +123,87 @@ window.Card = function(person){
 		
 	}
 	
-	var showRadar = function(){
+	var showRadar = function(event){
+		var mouse_x = event.pageX;
 		if(this.isRadarShow){
 		$(this).children().not('.name').hide('fast');
 			this.isRadarShow = false;
 		}
 		else{
-			$(this).find("canvas").show('fast');
-			var ctx = $(this).find("canvas").get(0).getContext("2d");
-			$(this).find(".compare").show('fast');
-			var name = $(this).attr('title');
-			datasets_self.data = dataArray[name];
-			var data = {labels : labels, datasets : [datasets_self]};
-			var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleShowLabels : true,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
-			this.isRadarShow = true;
+			current=$(this)
+			userId=current.closest('.card_panel').attr('id')
+			username=current.find('.username').html()
+			if (dataArray[username]==null){
+				$.ajax({
+					type:'GET',
+					url:'/recommend/get_socre_for_other/',
+					dataType:"json",
+					data:{userId:userId},
+					success:function(data, textStatus){
+						if(textStatus=='success'){
+							if(data['result']=='success'){
+								matchResult=data['matchResult']
+								dataArray[username]= [matchResult.heighScore,matchResult.incomeScore,matchResult.edcationScore,matchResult.appearanceScore,matchResult.characterScore,];
+								current.find('#my_score_other').html('总分：'+matchResult.scoreOther.toString()+'分')
+								if(matchResult.scoreMyself){
+									current.find('.other_score_my').remove()
+									current.find('.dafen').append('<div id="scoreMyself">她对你的打分：'+matchResult.scoreMyself+'分</div>')
+								}
+								
+								if(showedRadar){
+									$(showedRadar).children().not('.name').hide('fast');
+									showedRadar.isRadarShow = false;
+								}
+								
+								if(mouse_x>1000){
+									current.find("canvas").css('left','-100px');
+									current.find(".radar").css('left','-210px');
+								}
+								current.find("canvas").show('fast');
+								var ctx = current.find("canvas").get(0).getContext("2d");
+								current.find(".radar").show('fast');
+								var name = current.attr('title');
+								datasets_self.data = dataArray[name];
+								var data = {labels : labels, datasets : [datasets_self]};
+								var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",scaleShowLabels : true,angleLineColor : "rgba(0,0,0,.5)"});
+								current.isRadarShow = true;
+								showedRadar = current;
+								
+							}else if(data['result']=='error'){
+								alert(data['error_messge'])
+							}
+							
+						}
+					},
+					error:function(response){
+						alert('网络异常!')
+					},
+			});
+			}else{
+				if(showedRadar){
+					$(showedRadar).children().not('.name').hide('fast');
+					showedRadar.isRadarShow = false;
+				}
+				
+				if(mouse_x>1000){
+					$(this).find("canvas").css('left','-100px');
+					$(this).find(".radar").css('left','-210px');
+				}
+				$(this).find("canvas").show('fast');
+				var ctx = $(this).find("canvas").get(0).getContext("2d");
+				$(this).find(".radar").show('fast');
+				var name = $(this).attr('title');
+				datasets_self.data = dataArray[name];
+				var data = {labels : labels, datasets : [datasets_self]};
+				var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",scaleShowLabels : true,angleLineColor : "rgba(0,0,0,.5)"});
+				this.isRadarShow = true;
+				showedRadar = this;
+			}
+			
+			
 		}
 	}
+	
 	
 	var compareRadar = function(){
 		if(this.isRadarShow){
@@ -147,31 +211,95 @@ window.Card = function(person){
 			this.isRadarShow = false;
 		}
 		else{
-			$(this).find("canvas").show('fast');
-			var ctx = $(this).find("canvas").get(0).getContext("2d");
-			$(this).find(".compare_cancle").show('fast');
-			$(this).find(".chart_info").show('fast')
-			name_other = $(this).attr('title');
-			datasets_self.data = dataArray[name_self];
-			datasets_other.data = dataArray[name_other];
-			var data = {labels : labels, datasets : [datasets_other,datasets_self]};
-			var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
-			if(name_self!=name_other){
-				$(this).find(".chart_info").find(".name_self").html(name_self);
-				$(this).find(".chart_info").find(".name_other").html(name_other);
+			current=$(this)
+			userId=current.closest('.card_panel').attr('id')
+			username=current.find('.username').html()
+			if (dataArray[username]==null){
+				$.ajax({
+					type:'GET',
+					url:'/recommend/get_socre_for_other/',
+					dataType:"json",
+					data:{userId:userId},
+					success:function(data, textStatus){
+						if(textStatus=='success'){
+							if(data['result']=='success'){
+								matchResult=data['matchResult']
+								dataArray[username]= [matchResult.heighScore,matchResult.incomeScore,matchResult.edcationScore,matchResult.appearanceScore,matchResult.characterScore,];
+								current.find('#my_score_other').html('总分：'+matchResult.scoreOther.toString()+'分')
+								if(matchResult.scoreMyself){
+									current.find('.other_score_my').remove()
+									current.find('.dafen').append('<div id="scoreMyself">她对你的打分：'+matchResult.scoreMyself+'分</div>')
+								}
+								
+								current.find("canvas").show('fast');
+								var ctx = current.find("canvas").get(0).getContext("2d");
+								current.find(".radar").show('fast');
+								current.find(".compare").hide('fast');
+								current.find(".compare_cancle").show('fast');
+								current.find(".chart_info").show('fast')
+								name_other = current.attr('title');
+								datasets_self.data = dataArray[name_self];
+								datasets_other.data = dataArray[name_other];
+								var data = {labels : labels, datasets : [datasets_other,datasets_self]};
+								var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
+								if(name_self!=name_other){
+									current.find(".chart_info").find(".name_self").html(name_self);
+									current.find(".chart_info").find(".name_other").html(name_other);
+								}
+								else{
+									current.find(".chart_info").find(".name_self").html('');
+									current.find(".chart_info").find(".name_other").html('');
+								}
+								this.isRadarShow = true;
+								showedRadar = this;
+								
+							}else if(data['result']=='error'){
+								alert(data['error_messge'])
+							}
+							
+						}
+					},
+					error:function(response){
+						alert('网络异常!')
+					},
+			});
+			}else{
+				if(showedRadar){
+					$(showedRadar).children().not('.name').hide('fast');
+					showedRadar.isRadarShow = false;
+				}
+				
+				$(this).find("canvas").show('fast');
+				var ctx = $(this).find("canvas").get(0).getContext("2d");
+				$(this).find(".radar").show('fast');
+				$(this).find(".compare").hide('fast');
+				$(this).find(".compare_cancle").show('fast');
+				$(this).find(".chart_info").show('fast')
+				name_other = $(this).attr('title');
+				datasets_self.data = dataArray[name_self];
+				datasets_other.data = dataArray[name_other];
+				var data = {labels : labels, datasets : [datasets_other,datasets_self]};
+				var myNewChart = new Chart(ctx).Radar(data,{scaleOverride:true,scaleSteps:4,scaleStepWidth:25,scaleStartValue:0,scaleLineColor : "rgba(0,0,0,.5)",angleLineColor : "rgba(0,0,0,.5)"});
+				if(name_self!=name_other){
+					$(this).find(".chart_info").find(".name_self").html(name_self);
+					$(this).find(".chart_info").find(".name_other").html(name_other);
+				}
+				else{
+					$(this).find(".chart_info").find(".name_self").html('');
+					$(this).find(".chart_info").find(".name_other").html('');
+				}
+				this.isRadarShow = true;
+				showedRadar = this;
 			}
-			else{
-				$(this).find(".chart_info").find(".name_self").html('');
-				$(this).find(".chart_info").find(".name_other").html('');
-			}
-			this.isRadarShow = true;
+			
 		}
 	}
 	
 	var compare = function(){
 		$(this).parents('.card').addClass('chosen');
-		$(this).hide().find('.compare_cancle').show('fast');
-		name_self = $(this).parent().attr('title');
+		$('.compare').hide();
+		$('.compare_cancle').show('fast');
+		name_self = $(this).parent().parent().attr('title');
 		$('#compare_tip').show('slow',function(){
 			$(this).delay(2000).hide('slow');
 		});
@@ -183,7 +311,8 @@ window.Card = function(person){
 	
 	var compare_cancle = function(){
 		$('.chosen').removeClass('chosen');
-		$(this).hide().find('.compare').show('fast');
+		$('.compare').show();
+		$('.compare_cancle').hide('fast');
 		comparable = false;
 		name_other = '';
 		name_self = '';
@@ -192,6 +321,31 @@ window.Card = function(person){
 		$('.other_name').on('click',showRadar);
 	}
 	
+	var score_my = function(e){
+		current=$(this)
+		userId=current.closest('.card_panel').attr('id')
+		e.stopPropagation();    //  阻止事件冒泡
+		$.ajax({
+				type:'GET',
+				url:'/recommend/socre_my/',
+				dataType:"json",
+				data:{userId:userId},
+				success:function(data, textStatus){
+					if(textStatus=='success'){
+						if(data['result']=='success'){
+							current.closest('.dafen').append('<div id="scoreMyself">她对你的打分：'+data['scoreMyself']+'分</div>')
+							current.remove()
+						}else if(data['result']=='error'){
+							alert(data['error_messge'])
+						}
+						
+					}
+				},
+				error:function(response){
+					alert('网络异常!')
+				},
+		});
+	}
 	this.template = $('#card').clone();
 
 	this.template.find('.username').html(person.username);
@@ -202,8 +356,6 @@ window.Card = function(person){
 	this.template.find('.other_name').attr('title',person.username);
 	//初始化详细信息href
 	this.template.find('.introBox').attr('href','/user/detailed_info/'+person.userId.toString());
-	 //初始化数组
-	dataArray[person.username]= [person.heighScore,person.incomeScore,person.edcationScore,person.appearanceScore,person.characterScore,];
     //添加用户id
 	this.template.find('.card_panel').attr('id',person.userId);
 	//是否关注
@@ -243,19 +395,16 @@ window.Card = function(person){
 	
 	$(".icon_msg").on('click',init_msg);
 	$(".test_match").on('click',test_match);
+	$('.dafen').find('button').unbind();
+	$('.dafen').find('button').on('click',score_my);
 }
 
-function Person(username,age,city,headImg,userId,isFriend,heighScore,incomeScore,edcationScore,appearanceScore,characterScore){
+function Person(username,age,city,headImg,userId,isFriend){
 	this.username = username;
 	this.age = age;
 	this.city = city;
 	this.headImg = headImg;
 	this.userId=userId;
 	this.isFriend=isFriend;
-	this.heighScore=heighScore;
-	this.incomeScore=incomeScore;
-	this.edcationScore=edcationScore;
-	this.appearanceScore=appearanceScore;
-	this.characterScore=characterScore;
 	
 }

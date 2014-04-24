@@ -71,7 +71,7 @@ $(document).ready(function(){
 					 choseCardsSize=0
 				 }
 				 for(x=0;x<cards.length-choseCardsSize;x++){
-						 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus,cards[x].heighScore, cards[x].incomeScore, cards[x].edcationScore, cards[x].appearanceScore, cards[x].characterScore));
+						 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus));
 					 } 
 				 preCard.remove();
 				 venobox();
@@ -110,7 +110,7 @@ $(document).ready(function(){
 					 choseCardsSize=0
 				 }
 				 for(x=0;x<cards.length-choseCardsSize;x++){
-					 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus,cards[x].heighScore, cards[x].incomeScore, cards[x].edcationScore, cards[x].appearanceScore, cards[x].characterScore));
+					 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus));
 					 } 
 				 nextCard.remove();
 				 venobox();
@@ -129,7 +129,7 @@ $(document).ready(function(){
 });
 function init_card(cards){
 	for(y=0;y<cards.length;y++){
-		new Card(new Person(cards[y].username,cards[y].age,cards[y].city,'/media/'+cards[y].avatar_name,cards[y].user_id,cards[y].followStatus,cards[y].heighScore, cards[y].incomeScore, cards[y].edcationScore, cards[y].appearanceScore, cards[y].characterScore));
+		new Card(new Person(cards[y].username,cards[y].age,cards[y].city,'/media/'+cards[y].avatar_name,cards[y].user_id,cards[y].followStatus));
 	}
 };
 
@@ -245,6 +245,12 @@ interval = self.setInterval("polling()", time);
 				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
 				</div>
 				<a href='/user/user_profile/#self_info'><div class="name">{{user.username}}</div></a>
+				{% ifequal member 0 %}
+				<a href='/user/member/'><div class="member">开通会员</div></a>
+				{%else%}
+				<div class="member">会员</div>
+				{% endifequal %}
+				
 				<hr/>
 				<p style="margin:20px 0 20px 20px;">搬砖砌墙敲代码，只为买瓶哇哈哈。</p>
 			</div>
@@ -299,12 +305,20 @@ interval = self.setInterval("polling()", time);
 					</div>
 					<div class="name other_name" title="22">
 						<span class="name username"></span>
-						<button class="compare_cancle btn btn-success">取消对比</button>
-						<button class="compare btn btn-success">对比</button>
-						<ul class="list-inline chart_info small">
+						<div class="radar">
+						  <button class="compare_cancle btn btn-success">取消对比</button>
+						  <button class="compare btn btn-success">对比</button>
+						  <ul class="list-inline chart_info small">
 							<li style="color:rgb(0,151,36)" class="name_self"></li>
 							<li style="color:rgb(241,23,25)" class="name_other"></li>
-						</ul>
+						 </ul>
+						 <div class="dafen">
+							<div id="my_score_other">总分：</div>
+							<button class="btn btn-success other_score_my">
+									查看对方打分
+							</button>
+							</div>
+						</div>
 						<canvas height="320" width="320"></canvas>
 					</div>
 					<hr />

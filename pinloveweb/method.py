@@ -17,6 +17,7 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['income']=userProfile.income
     arg['education']=userProfile.get_education_display()
     arg['jobIndustry']=userProfile.get_jobIndustry_display()
+    arg['member']=userProfile.member
     if kwargs.get('myFollowCount')==None:
         myFollowCount=Follow.objects.filter(my=userProfile.user).count()
     else:

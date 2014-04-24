@@ -226,6 +226,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     likeChild=models.CharField(verbose_name=r'是否喜欢有孩子',choices=(('N',r'未填'),('0',r'愿意'),('1',r'不愿意'),('2',r'视情况而定'),),max_length=1,null=True,blank=True,)
     lastLoginAddress=models.CharField(verbose_name=r'最后登录地点',max_length=100,null=True,blank=True,)
     profileFinsihPercent=models.SmallIntegerField(verbose_name=r'资料完成度',default=0,null=True,blank=True,)
+    member=models.SmallIntegerField(verbose_name=r'资料完成度',default=0,choices=((0,u'普通用户'),(1,u'会员'),),null=True,blank=True,)
     #定制管理器
     objects = UserProfileManager()
     
@@ -308,6 +309,17 @@ class UserVerification(models.Model):
         db_table = "user_verification" 
 
 
+'''
+浏览另一半分数表
+'''
+class BrowseOherScoreHistory(models.Model):
+    my=models.ForeignKey(User,verbose_name=u"用户",related_name=u'browse_oher_score_history_my')
+    other=models.ForeignKey(User,verbose_name=u"另一半用户",related_name=u'browse_oher_score_history_other')
+    class Meta:
+        verbose_name=u'浏览另一半得分记录表'
+        verbose_name_plural = u'浏览另一半得分记录表'
+        db_table = "browse_oher_score_history" 
+    
 class UserHobbyInterest(models.Model):
     user=models.ForeignKey(User)
     sport=models.CharField(verbose_name=r"爱好什么体育运动", max_length=50,null=True) 

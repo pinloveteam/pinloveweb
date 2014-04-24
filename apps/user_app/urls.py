@@ -29,6 +29,8 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^detailed_info/(.+)/$', 'detailed_info'),
      #不喜欢
      url(r'^dislike/$', 'dislike'),
+     url(r'^member/$','member'),
+     url(r'^become_member/$','become_member'),
     )
 #1.0使用
 urlpatterns += patterns('apps.user_app.views',

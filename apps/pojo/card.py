@@ -4,7 +4,7 @@ Created on Sep 17, 2013
 
 @author: jin
 '''
-from apps.user_app.models import UserProfile
+from apps.user_app.models import UserProfile, BrowseOherScoreHistory
 from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
 from apps.recommend_app.models import MatchResult, Grade
 from django.utils import simplejson
@@ -13,19 +13,21 @@ from django.utils import simplejson
 '''
 empty_result_list=[-1,'N',None]
 class Card(object):
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore=0,incomeScore=0,edcationScore=0,appearanceScore=0,characterScore=0):
+    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city):
         self.user_id=userId
         self.username=username
         self.height=height
         self.age=age
         self.education=education
         self.income=income
-        self.jobIndustry=jobIndustry
-        self.heighScore=heighScore
-        self.incomeScore=incomeScore
-        self.edcationScore=edcationScore
-        self.appearanceScore=appearanceScore
-        self.characterScore=characterScore
+#         self.jobIndustry=jobIndustry
+#         self.heighScore=heighScore
+#         self.incomeScore=incomeScore
+#         self.edcationScore=edcationScore
+#         self.appearanceScore=appearanceScore
+#         self.characterScore=characterScore
+#         self.scoreOther=int(scoreOther)
+#         self.scoreMyself=int(scoreMyself)
         '''
         关注情况
         0 未关注
@@ -68,12 +70,6 @@ def matchResultList_to_CardList(matchResultList):
     recommendResultList=[]
     for matchResult in matchResultList:
        grade=Grade.objects.get(user=matchResult.other)
-       heighScore=matchResult.heighMatchOtherScore
-       incomeScore=grade.incomescore
-       edcationScore=grade.educationscore
-       appearanceScore=grade.appearancescore
-       characterScore=matchResult.tagMatchOtherScore
-       
        userBaiscProfile=matchResult.get_user_basic_profile()
        userId=matchResult.other_id
        username=matchResult.other.username
@@ -91,7 +87,7 @@ def matchResultList_to_CardList(matchResultList):
        else:
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
-       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
+       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
        recommendResultList.append(recommendResult)
     return recommendResultList
 '''
@@ -102,11 +98,6 @@ attribute：
 def userProfileList_to_CardList(userProfileList):
      recommendResultList=[]
      for userProfile in userProfileList:
-       heighScore=0
-       incomeScore=0
-       edcationScore=0
-       appearanceScore=0
-       characterScore=0
        userId=userProfile.user_id
        username=userProfile.user.username
        height=userProfile.height
@@ -123,7 +114,7 @@ def userProfileList_to_CardList(userProfileList):
        else:
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
-       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
+       recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
        recommendResultList.append(recommendResult)
      return recommendResultList
  
@@ -143,17 +134,17 @@ def fllowList_to_CardList(user,fllowList,type):
             userList.append(myFollow.my)
     userProfileList=UserProfile.objects.select_related().filter(user_id__in=userList)
     for userProfile in userProfileList:
-        #获取推荐分数
-        if  MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id).exists():
-            matchResult=MatchResult.objects.select_related('other').get(my_id=user.id,other_id=userProfile.user_id)
-            grade=Grade.objects.get(user=matchResult.other)
-            heighScore=matchResult.heighMatchOtherScore
-            incomeScore=grade.incomescore
-            edcationScore=grade.educationscore
-            appearanceScore=grade.appearancescore
-            characterScore=matchResult.tagMatchOtherScore
-        else:
-            heighScore,incomeScore,edcationScore,appearanceScore,characterScore=0,0,0,0,0
+#         #获取推荐分数
+#         if  MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id).exists():
+#             matchResult=MatchResult.objects.select_related('other').get(my_id=user.id,other_id=userProfile.user_id)
+#             grade=Grade.objects.get(user=matchResult.other)
+#             heighScore=matchResult.heighMatchOtherScore
+#             incomeScore=grade.incomescore
+#             edcationScore=grade.educationscore
+#             appearanceScore=grade.appearancescore
+#             characterScore=matchResult.tagMatchOtherScore
+#         else:
+#             heighScore,incomeScore,edcationScore,appearanceScore,characterScore=0,0,0,0,0
         userId=userProfile.user_id
         username=userProfile.user.username
         height=userProfile.height
@@ -169,7 +160,7 @@ def fllowList_to_CardList(user,fllowList,type):
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
         city=userProfile.city
-        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,heighScore,incomeScore,edcationScore,appearanceScore,characterScore)
+        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
         recommendResultList.append(recommendResult)
     return recommendResultList
  

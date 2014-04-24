@@ -19,3 +19,43 @@ class FacebookPayDetail(models.Model):
         verbose_name = u'facebook交易明细表' 
         verbose_name_plural = u'facebook交易明细表'
         db_table = "facebook_pay_detail" 
+ 
+'''
+交易表
+'''       
+class Charge(models.Model):
+    vailAmount=models.DecimalField(verbose_name=u'有效金额',max_digits=11,decimal_places=2)
+    freezeAmount=models.DecimalField(verbose_name=u' 冻结金额金额',max_digits=11,decimal_places=2)
+    class Meta:
+        verbose_name = u'交易表' 
+        verbose_name_plural = '交易表'
+        db_table = "charge"
+  
+'''
+订单表
+'''  
+class Order(models.Model):
+    orderId=models.CharField(verbose_name=u'订单号',max_length=11)
+    amount=models.DecimalField(verbose_name=u'交易金额',max_digits=11,decimal_places=2)
+    currency=models.CharField(verbose_name=u'货币类型',max_length=11)
+    type=models.CharField(verbose_name=u'交易类型',max_length=5)
+    status=models.CharField(verbose_name=u'交易状态',max_length=11,choices=(('initiated',u'未支付'),('completed',u'成功'),('failed',u'失败'),))
+    createTime=models.DateTimeField(verbose_name=u'创建时间')
+    updateTime=models.DateTimeField(verbose_name=u'更新时间',null=True,blank=True)
+    data=models.CharField(verbose_name=u'说明',max_length=255,null=True,blank=True)
+    class Meta:
+        verbose_name = u'订单表' 
+        verbose_name_plural = '订单表'
+        db_table = "order"
+
+'''
+拼爱币兑换关系表
+'''
+class ChargeExchangeRelate():
+    type=models.CharField(verbose_name=u'操作类型',max_length=10)
+    amount=models.IntegerField(verbose_name=u'获得积分数量')
+    instruction=models.CharField(verbose_name=u'说明',max_length=255,)
+    class Meta:
+        verbose_name = u'拼爱币兑换关系表' 
+        verbose_name_plural = u'拼爱币兑换关系表'
+        db_table = "charge_exchange_relate"

@@ -684,3 +684,13 @@ def photo_check(request):
              return render(request,'member/photo_check.html',arg)
     else:
         return render(request,'login.html',arg)
+    
+'''
+会员页面
+'''
+def member(request):
+    return render(request,'member/member.html')
+
+def become_member(request):
+    UserProfile.objects.filter(user=request.user).update(member=1)
+    return render(request,'member/member.html',{'result':'开通成功'})

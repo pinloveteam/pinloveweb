@@ -126,7 +126,7 @@ def loggedin(request,**kwargs) :
     arg['pages']=matchResultList
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile,followEachCount=len(focusEachOtherList)))
-    return render(request, 'card.html',arg )
+    return render(request, 'index.html',arg )
 
 '''
 获得推荐列表

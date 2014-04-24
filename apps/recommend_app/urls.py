@@ -11,6 +11,8 @@ urlpatterns=patterns('apps.recommend_app.views',
     #权重
     url(r'^weight/$', 'weight'),
     url(r'^user_vote/$', 'user_vote'),
+    url(r'^socre_my/$', 'socre_my'),
+    url(r'^get_socre_for_other/$', 'get_socre_for_other'),
     url(r'^test_match/$', 'test_match'),
     
 )

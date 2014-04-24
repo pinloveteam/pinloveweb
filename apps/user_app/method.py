@@ -53,15 +53,3 @@ def get_profile_finish_percent_and_score(userProfile,oldUserProfile):
         userProfile.profileFinsihPercent=profileFinsihPercent
     return userProfile
 
-
-def get_score_by_profile(userId,newProfileFinsihPercent,userProfile):
-    if newProfileFinsihPercent>userProfile.profileFinsihPercent:
-        from apps.user_score_app.method import get_score_by_finish_proflie
-        if newProfileFinsihPercent>=100:
-            get_score_by_finish_proflie(userId,100)
-        elif newProfileFinsihPercent>=60:
-            get_score_by_finish_proflie(userId,60)
-        elif newProfileFinsihPercent>=30:
-            get_score_by_finish_proflie(userId,30)
-        userProfile.profileFinsihPercent=newProfileFinsihPercent
-    return  userProfile

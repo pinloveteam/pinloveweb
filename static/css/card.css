@@ -86,7 +86,7 @@ hr{
 
 /*The left side*/
 .user_info{
-	height:199px;
+	height:219px;
   }
   
 .sns_info{
@@ -107,16 +107,27 @@ hr{
 .chosen{
 	border:2px solid green !important;
 }
-
-.compare_cancle,.compare,.chart_info,.other_name > canvas{
+.radar{
+	position: absolute;
 	display:none;
+}
+
+.dafen,.compare_cancle,.compare,.chart_info,.other_name > canvas{
 	position: absolute; 
 	left: 120px; top: 0px;
 	width: 100px;
 	Z-index:1000;
 }
 
+.dafen,.compare_cancle,.compare{
+	 top: -120px;
+}
+.dafen{
+	left: 320px;
+}
+
 .other_name > canvas{
+	display:none;
 	background-color: rgba(255, 255, 255, 0.9);
 	width: 320px;
 	Z-index:999;
