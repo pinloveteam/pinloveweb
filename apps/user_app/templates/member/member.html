@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% load staticfiles %}
+{% endblock %}
+{% block content %}
+
+<h2> 会员： </h2>
+
+<form action="/user/become_member/"  method="POST" >{% csrf_token %}
+<input type="submit" value="开通会员">
+{{result}}
+</form> 
+{% endblock %} 
