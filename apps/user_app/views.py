@@ -210,6 +210,7 @@ def user_profile(request):
         args['city']=useBasicrProfile.city
         args['profileFinsihPercent']=useBasicrProfile.profileFinsihPercent
         args['stateProvince']=useBasicrProfile.stateProvince
+        args['gender']=useBasicrProfile.gender
         #认证
         from apps.verification_app.views import verification
         args.update(verification(request))
@@ -694,3 +695,6 @@ def member(request):
 def become_member(request):
     UserProfile.objects.filter(user=request.user).update(member=1)
     return render(request,'member/member.html',{'result':'开通成功'})
+def cancel_member(request):
+    UserProfile.objects.filter(user=request.user).update(member=0)
+    return render(request,'member/member.html',{'result2':'取消成功'})

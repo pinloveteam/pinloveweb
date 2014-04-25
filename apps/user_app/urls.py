@@ -31,6 +31,8 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^dislike/$', 'dislike'),
      url(r'^member/$','member'),
      url(r'^become_member/$','become_member'),
+     url(r'^cancel_member/$','cancel_member'),
+     
     )
 #1.0使用
 urlpatterns += patterns('apps.user_app.views',
