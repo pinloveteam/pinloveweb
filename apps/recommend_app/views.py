@@ -156,8 +156,7 @@ def get_socre_for_other(request):
                  if get_has_recommend(request.user.id):
                      from apps.recommend_app.method import match_score
                      matchResult=match_score(request.user.id,otherId)
-                     member=UserProfile.objects.get(user_id=request.user.id).member
-                     args={'result':'success','matchResult':matchResult.get_dict(member=member)}
+                     args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=request.user.id))} 
                      from apps.recommend_app.method import set_recommend_result_in_session
                      set_recommend_result_in_session(request,matchResult)
                  else:
@@ -169,13 +168,11 @@ def get_socre_for_other(request):
                              errorMessge+=dict[key]
                      args={'result':'error','error_messge':'%s%s' %(errorMessge,u'未填写完整!')}
                 else:
-                    member=UserProfile.objects.get(user_id=request.user.id).member
-                    args={'result':'success','matchResult':matchResult.get_dict(member=member)} 
+                    args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=request.user.id))} 
              else:
-                 member=UserProfile.objects.get(user_id=request.user.id).member
                  from apps.pojo.recommend import MarchResult_to_RecommendResult
                  matchResult=MarchResult_to_RecommendResult(matchResult)
-                 args={'result':'success','matchResult':matchResult.get_dict(member=member)}
+                 args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=request.user.id))} 
         else:
             args={'result':'error','error_messge':'用户id不存在!'}
         json=simplejson.dumps(args)

@@ -5,16 +5,6 @@ Created on 2014年4月22日
 @author: jin
 '''
 from apps.recommend_app.models import MatchResult
-'''
-获取另一半对你打分的结果
-'''
-def get_score_my(userId,otherUserId):
-    try:
-        matchResult=MatchResult.objects.get(my_id=userId,other_id=otherUserId)
-        return matchResult.scoreMyself
-    except Exception as e:
-        raise Exception('%s%s' %('获取另一半对你打分的结果出错,出错原因:',e))
- 
 
 '''
 获取你对另一半的打分，如果没有返回None

@@ -16,6 +16,7 @@ class UserProfileForm(ModelForm):
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             self.fields['age'].widget.attrs['readonly'] = True
+            self.fields['gender'].choices=((self.fields['gender'].initial,dict(self.fields['gender'].choices)[self.fields['gender'].initial]),)
             self.fields['gender'].widget.attrs['readonly'] = True
         for key in self.fields:
             self.fields[key].required = False
@@ -58,6 +59,9 @@ class UserProfileForm(ModelForm):
                    'liveWithParent','likeChild','lastLoginAddress', 'maritalStatus', 'hasChild' ,
                    'link', 'streetAddress','position','language','ethnicGroup','bloodType',
                    ) 
+#         widgets = { 
+#             'gender': forms.TextInput(),
+#         }   
 
 
 #个人基本详细

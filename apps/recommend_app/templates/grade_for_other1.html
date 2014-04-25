@@ -30,14 +30,23 @@
       {%ifequal grade_for_other False%}
       s2=[['160',0],['165',0],['170',0],['175',0],['180',0],['185',0],['190',0],['195',0]];
        {%else%}
-       s2=[['160',{{grade_for_other.heighty1}}],['165',{{grade_for_other.heighty2}}],['170',{{grade_for_other.heighty3}}],['175',{{grade_for_other.heighty4}}],['180',{{grade_for_other.heighty5}}],['185',{{grade_for_other.heighty6}}],['190',{{grade_for_other.heighty7}}],['195',{{grade_for_other.heighty8}}]]
+         {% ifequal gender 'F' %}
+         s2=[['160',{{grade_for_other.heighty1}}],['165',{{grade_for_other.heighty2}}],['170',{{grade_for_other.heighty3}}],['175',{{grade_for_other.heighty4}}],['180',{{grade_for_other.heighty5}}],['185',{{grade_for_other.heighty6}}],['190',{{grade_for_other.heighty7}}],['195',{{grade_for_other.heighty8}}]]
+      {%  else %}
+         s2=[['155',{{grade_for_other.heighty1}}],['160',{{grade_for_other.heighty2}}],['165',{{grade_for_other.heighty3}}],['170',{{grade_for_other.heighty4}}],['175',{{grade_for_other.heighty5}}],['180',{{grade_for_other.heighty6}}],['185',{{grade_for_other.heighty7}}],['190',{{grade_for_other.heighty8}}]]
+      {% endifequal %}
+       
       {% endifequal %} 
         $('#chartdiv').bind('jqplotDragStop',
                 function (seriesIndex, pointIndex, pixelposition, data) {
                    // alert(plot1.series[0].data)
                     
+                    	  for(var i=0;i<plot1.series[0].data.length;i++){
+                    		  if (plot1.series[0].data[i][1]>100){
+                    			  plot1.series[0].data[i][1]=100
+                    		  }
+                    	  }
                     	  $("#result").val(plot1.series[0].data)
-                   
                    // CalculateAveragePercentage();
                 });
 
@@ -75,9 +84,14 @@
             },
          axes: {
              xaxis: {
-
-				 min:160,
+                {% ifequal gender 'F' %}
+                 min:160,
 				 max:195,
+                {%  else %}
+                 min:155,
+				 max:190,
+                {% endifequal %}
+				
 				 numberTicks:8,
                  tickOptions: {
                      formatString:'%.2dmm'
@@ -86,8 +100,8 @@
              },
              yaxis: {
 			     min:0.00,
-				 max:100.00,
-				 numberTicks:11,
+				 max:102.00,
+				 numberTicks:11.2,
                  tickOptions: {
                      formatString: '%.2d'
                  }
@@ -102,7 +116,7 @@
             isDragable: true
                   }
                  ],
-          
+            
           // Cursor(光标)
           // 鼠标移动到图中时，鼠标在图中显示形式，常与和高亮功能同时使用
           //此外，通过设置该属性的zoom相关属性来对图中某个区域钻取（就选定区域放大）
