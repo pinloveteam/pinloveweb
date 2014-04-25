@@ -51,6 +51,12 @@ def get_score_by_invite_friend_login(inviteCode,userId):
     except AssertionError as e:
         return False  
 
+'''
+被查看分数获得积分
+'''
+def get_score_by_viewed_score(userId):
+    user_score_save(userId,1009)
+    return True
 
 def get_score_by_avatar_check(userId):
     '''
@@ -98,6 +104,8 @@ return：
 '''
 def use_score_by_other_score(userId,otherUserId):
     result=user_score_save(userId,'1008')
+    if result=='success':
+        get_score_by_viewed_score(otherUserId)
     return result
         
         
