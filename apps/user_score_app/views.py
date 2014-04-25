@@ -32,3 +32,21 @@ def score_test(request):
     get_score_by_invite_friend_login(num)
     return HttpResponse('succes')
     
+def score_test1(request):
+    userScoreList=UserScore.objects.all()
+    from django.contrib.auth.models import User
+    userList=User.objects.all()
+    idList=[]
+    idLists=[]
+    for userScore in userScoreList:
+        idList.append(userScore.user_id)
+    for user in userList:
+        if not user.id in idList:
+            idLists.append(user.id)
+    userScoreList=[]
+    for id in idLists:
+        userScore=UserScore()
+        userScore.user_id=id
+        userScoreList.append(userScore)
+    UserScore.objects.bulk_create(userScoreList)
+    return HttpResponse('succes')
