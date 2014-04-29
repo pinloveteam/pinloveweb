@@ -6,5 +6,5 @@ urlpatterns=patterns('apps.search_app.views',
     url(r'^search_result/$', 'search_result'),
     url(r'^advance_search/$', 'advance_search'),
     url(r'^advance_search_result/$', 'advance_search_result'),
-    
+    url(r'^$', 'search')
 )

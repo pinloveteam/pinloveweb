@@ -1,0 +1,686 @@
+{% extends "card.html" %}
+		<title> {% block title %} 拼爱网 ---消息中心{% endblock %} </title>
+		{% block staticfiles %}
+		<script>
+		   //消息列表是否展开
+		   var userId={{user.id}}
+		   var isMessageListShow=false;
+		   var messageNextPage=-1;
+		   {% if pages.has_next %}
+		   var next_page_number={{pages.next_page_number}}
+		   {%else%}
+		   var next_page_number=-1
+		   {% endif %}
+			$('.comment').click(function() {
+				href = $(this).attr('href');
+				$(href).toggle('slow');
+			});
+
+			$('.publishInputExpression').click(function() {
+				var obj = $(this);
+				var offset = obj.offset();
+				var left = offset.left + 10;
+				var top = offset.top + 30;
+				var target = obj.attr('target');
+				if (($('.emoji-list').html()) == '') {
+					for ( i = 0; i <= 95; i++) {
+						$('.emoji-list').append('<li onclick="sendExpression(this);" action-text="[emoji]"><img src="img/48x48/' + i + '.gif"/></li>');
+					}
+				}
+				$('#emoji-layer').css({
+					left : left,
+					top : top
+				});
+				$('#emoji-layer').attr('target', target);
+				$('#emoji-layer').toggle();
+			});
+
+			function sendExpression(e) {
+				//var target = $('#emoji-layer').attr('target');
+				//var targettext = $(target);
+				//targettext.text($(e).attr('action-text'));
+
+				$('#publishTextArea1').text('33');
+			};
+
+			function showMessage(senderId,receiverId,id) {
+				if ($(".hideable_"+id).is(":hidden")){
+					$.ajax({
+						dataType:"json",
+						url:'/message/detail/',
+						data:{'senderId':senderId,'receiverId':receiverId,'id':id,'page':messageNextPage},
+						success:function(data, textStatus){
+	                        if(data.result== 'success'){
+	                        	$(".hideable_"+id).children().remove()
+	                        	userId=data.userId
+	                        	init_message_detail(data.messageList,id);
+	                        	if (data.has_next== true){
+	                        		messageNextPage=data.next_page_number
+	                        		$(".hideable_"+id).append('<div class="card_panel next_page" style="text-align: center; width: 100%;"> <a onclick="next_message_detail('+senderId+','+receiverId+','+id+');" href="javascript:void(0);">下一页</a></div>	')
+	                        	}else{
+	                        		 $(".hideable_"+id).append('<div id="message-self" class="message-self" style="font-size: 14px; text-align: center;">没有更多消息</div>')
+	                        	}
+	                        }else if(data.result == 'error'){
+	                        	 alert(data.msg)
+	                        }
+					    $('.hideable_'+id).show('slow');
+					    isMessageListShow=true;
+						},
+	                    error: function(response){
+	                        alert('网络异常！')
+	                    },
+						
+					});
+				}else{
+					$('.hideable_'+id).hide('slow');
+					isMessageListShow=false;
+				}
+				
+				
+			}
+			
+			function next_message_detail(senderId,receiverId,id){
+				$.ajax({
+					dataType:"json",
+					url:'/message/detail/',
+					data:{'senderId':senderId,'receiverId':receiverId,'id':id,'page':messageNextPage},
+					success:function(data, textStatus){
+                        if(data.result== 'success'){
+                        	userId=data.userId
+                        	init_message_detail(data.messageList,id);
+                        	if (data.has_next== true){
+                        		messageNextPage=data.next_page_number
+                        		$(".hideable_"+id).find('.next_page').remove()
+                        		$(".hideable_"+id).append('<div class="card_panel next_page" style="text-align: center; width: 100%;"> <a onclick="next_message_detail('+senderId+','+receiverId+','+id+');" href="javascript:void(0);">下一页</a></div>	')
+                        	}else{
+                        		 $(".hideable_"+id).append('<div id="message-self" class="message-self" style="font-size: 14px; text-align: center;">没有更多消息</div>')
+                        	}
+                        }else if(data.result == 'error'){
+                        	 alert(data.msg)
+                        }
+				    $('.hideable_'+id).show('slow');
+				    isMessageListShow=true;
+					},
+                    error: function(response){
+                        alert('网络异常！')
+                    },
+					
+				});
+			}
+			
+			function init_message_detail(messageList,id){
+				$(messageList).each(function(){
+            		if(userId==this.senderId){
+            			message=$('.hideable_clone').find('.message-self').clone()
+            		}else{
+            			message=$('.hideable_clone').find('.message').clone()
+            		}
+            		message.find('.message-head').attr('src','/media/'+this.avatarName+'-60.jpeg')
+            		message.find('.content').html(this.content)
+            		message.find('#time').html(this.sendTime)
+            		$(".hideable_"+id).append(message)
+            	});
+			}
+			function reply_close(){
+				$('.masklayer').hide();
+				$('#reply').hide();
+				$('#emoji-layer').hide();
+			}
+			
+			function reply(receiverId){
+				$('#reply_receiverId').val(receiverId)
+				$('.masklayer').show();
+				$('#reply').show();
+			}
+			
+			function publishInputExpression(){
+				var obj = $(this);
+				var offset = obj.offset();   
+				var left = offset.left-470;
+				var top = offset.top-25;
+				var target = obj.attr('target');
+				if(($('.emoji-list').html())==''){
+					for(i=0;i<=95;i++){
+						$('.emoji-list').append('<li action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/'+i+'.gif"/></li>');
+					}
+					//表情选择
+					$('.emoji-list').find('li').click(function(){
+						var target = $('#emoji-layer').attr('target');
+						var targettext = $(target);
+						targettext.insertAtCaret($(this).attr('action-text'));
+					});
+				}
+				$('#emoji-layer').css({left:left,top:top});
+				$('#emoji-layer').attr('target',target);
+				$('#emoji-layer').toggle();
+			}
+			function limitTextArea() {
+				publishTextArea = $("#publishTextArea2")
+				var curLength = publishTextArea.val().trim().length;
+				var limitLenght = 199
+				if (curLength >= limitLenght) {
+					var num = publishTextArea.val().substr(0, limitLenght);
+					publishTextArea.val(num);
+					alert("超过字数限制，多出的字将被截断！");
+				} else {
+					publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght - curLength)
+				}
+			}
+			$(document).ready(function(){
+				$('.publishInputExpression').click(publishInputExpression);
+				limitTextArea()
+				$("#publishTextArea2").keyup(limitTextArea);
+				
+				$('#reply_action').submit(function(){
+					   if ($('#publishTextArea2').val().length<=0){
+						   alert('输入框不能为空！')
+						   return false;
+					   }
+					
+					   var data = $(this).serialize();
+					   var receiverId=$('#reply_receiverId').val()
+						$.ajax({
+							url:'/message/reply/',
+							type:'POST',
+							dataType:'json',
+							data: data,
+							success:function(data,textStatus){
+								if (textStatus='success'){
+									if(data.result=='success'){
+										alert(data.message)
+										message=data.messageBean
+										var message=$('#message'+receiverId)
+										message.find('#showAll').attr('onclick','')
+										senderId=this.senderId;
+										receiverId=this.receiverId;
+										id=this.id
+										message.find('#showAll').bind('click', function(){showMessage(1,9,9)});  
+										/* message.find('#showAll').one('onclick',"showMessage("+this.senderId+","+this.receiverId+","+this.id+");") */
+										if(userId==this.senderId){
+											message.find('#replyNow').attr('onclick',"reply("+this.receiverId+");")
+											message.find("[class^='hideable_']").attr('class','hideable_'+this.receiverId)
+										}else{
+											message.find('#replyNow').attr('onclick',"reply("+this.senderId+");")
+											message.find("[class^='hideable_']").attr('class','hideable_'+this.senderId)
+										}
+										message.find('.message-head').attr('src','/media/'+this.avatarName+'-60.jpeg')
+										message.find('.content').html(this.content)
+										message.find('.sendTime').html(this.sendTime)
+										$('#publishTextArea2').val('')
+									}else{
+										alert(data.error_message)
+									}
+								}
+							},
+							error:function(response){
+								 alert('网络异常！')
+							}
+						});
+						return false;
+					});
+			});
+		</script>
+		<script type="text/javascript">
+		(function($){
+			$.fn.extend({
+			insertAtCaret: function(myValue){
+			var $t=$(this)[0];
+			if (document.selection) {
+			this.focus();
+			sel = document.selection.createRange();
+			sel.text = myValue;
+			this.focus();
+			}
+			else
+			if ($t.selectionStart || $t.selectionStart == '0') {
+			var startPos = $t.selectionStart;
+			var endPos = $t.selectionEnd;
+			var scrollTop = $t.scrollTop;
+			$t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
+			this.focus();
+			$t.selectionStart = startPos + myValue.length;
+			$t.selectionEnd = startPos + myValue.length;
+			$t.scrollTop = scrollTop;
+			}
+			else {
+			this.value += myValue;
+			this.focus();
+			}
+			}
+			})
+			})(jQuery);
+		
+		//滚动加载
+		var totalheight = 0; 
+        var load_dynamic=true;
+		function loadData()
+		{ 
+		    totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
+
+		    if ($(document).height() <= totalheight) 
+			{ 
+				//加载数据
+				/* data=[{"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-04 06:26:53", "argeeNum": 1, "content": "\u6211\u5f88\u5f00\u5fc3<img src=\"/static/img/48x48/2.gif\" style=\"width: 25px; height: 25px;\">", "publishUserName": "jin", "isAgree": true, "type": 1, "id": 17}, {"data": ["1_20140403muIMkacpVx.png", "1_20140403LGnBKOjYrf.png"], "publishUserId": 1, "commentNum": 12, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-03 17:45:25", "argeeNum": 0, "content": "sgdgsdgfdgf", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 12}, {"data": ["1_20140403ogeOzKrIvs.png"], "publishUserId": 1, "commentNum": 1, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-03 17:37:42", "argeeNum": 0, "content": "\u53d1\u4e00\u5f20\u56fe\u7247", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 10}, {"data": null, "publishUserId": 10, "commentNum": 22, "avatarName": "user_img/1c6aeb978ea8c8d02a50ee0ba6d02cd4", "publishTime": "2014-04-03 15:49:14", "argeeNum": 0, "content": "jin\u5728\u5417", "publishUserName": "jin1111", "isAgree": false, "type": 1, "id": 9}, {"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 18:01:13", "argeeNum": 0, "content": "dgfgdf", "publishUserName": "jin", "isAgree": false, "type": 1, "id": 8}, {"data": ["1_20140402enIMucAJmX.png", "1_20140402bUewgrzyfV.png"], "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 17:53:56", "argeeNum": 0, "content": "\u9876\u5471\u5471", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 6}, {"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 17:32:23", "argeeNum": 0, "content": "\u7684\u4eba\u7279\u7279", "publishUserName": "jin", "isAgree": false, "type": 1, "id": 4}, {"data": ["10_20140327FcgCEujOXv.png"], "publishUserId": 10, "commentNum": 14, "avatarName": "user_img/1c6aeb978ea8c8d02a50ee0ba6d02cd4", "publishTime": "2014-03-27 18:30:38", "argeeNum": 0, "content": "\u6c83\u5c14\u6c83\u800c", "publishUserName": "jin1111", "isAgree": false, "type": 2, "id": 3}]
+				init_dynamic(data) */
+				if(next_page_number==-1){
+					var no_more_message=$('#no_more_message')
+					$('.col-md-9').append($('#no_more_message'))
+					no_more_message.show()
+					load_dynamic=false
+					return;
+				}
+				 $.ajax({
+			         type: 'GET',
+			         url: "/message/",
+			         data:{page:next_page_number,ajax:'true'},
+			         beforeSend: function(XMLHttpRequest){
+			         },
+			         success: function(data, textStatus){
+			            if(textStatus == 'success'){
+			            	data=$.parseJSON(data)
+			            	if (data.has_next){
+			            		next_page_number=data.next_page_number
+			            	}else{
+			            		next_page_number=-1
+			            	}
+			            	init_message(data.messageList)
+			             } 
+			         },
+			         complete: function(XMLHttpRequest, textStatus){
+			         },
+			         error: function(response){
+			             alert('网络异常!')
+			         }
+			     });
+		    } 
+		} 
+
+		$(window).scroll( function() { 
+			if(load_dynamic){
+		 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+			console.log("页面的文档高度 ："+$(document).height());
+			console.log('浏览器的高度：'+$(window).height()); 
+			loadData();
+			}
+		}); 
+		
+		function init_message(messageList){
+			$(messageList).each(function(){
+				var message=$('.trend-list').first().clone()
+				message.find('#showAll').attr('onclick','')
+				senderId=this.senderId;
+				receiverId=this.receiverId;
+				id=this.id
+				message.find('#showAll').bind('click', function(){showMessage(1,9,9)});  
+				/* message.find('#showAll').one('onclick',"showMessage("+this.senderId+","+this.receiverId+","+this.id+");") */
+				if(userId==this.senderId){
+					message.find('#replyNow').attr('onclick',"reply("+this.receiverId+");")
+					message.find("[class^='hideable_']").attr('class','hideable_'+this.receiverId)
+					message.attr('id','message_'+this.receiverId)
+				}else{
+					message.find('#replyNow').attr('onclick',"reply("+this.senderId+");")
+					message.find("[class^='hideable_']").attr('class','hideable_'+this.senderId)
+					message.attr('id','message_'+this.senderId)
+				}
+				message.find('.message-head').attr('src','/media/'+this.avatarName+'-60.jpeg')
+				message.find('.content').html(this.content)
+				message.find('.sendTime').html(this.sendTime)
+				$('.col-md-9').append(message)
+			});
+		}
+	  </script>
+		{% endblock %}
+		{% block css %}
+		<style>
+			.masklayer{
+				background: none repeat scroll 0 0 #000000;
+			    left: 0;
+			    opacity: 0.5;
+			    position: fixed;
+			    top: 0;
+			    display: none;
+			}
+			
+			.avatar {
+				float: left;
+			}
+
+			#form1 {
+				margin: 17px 0 17px 0;
+			}
+
+			.trend-list {
+				width: 100%;
+			}
+
+			.trend-name {
+				position: relative;
+				color: #000;
+			}
+
+			.trend-text {
+				font-size: 15px;
+				width: 730px;
+				margin-left: 86px;
+			}
+
+			.controlArrow {
+				border-style: solid;
+				position: absolute;
+				left: -10px;
+				top: 50px;
+				border-color: rgba(0, 0, 0, 0) rgba(178, 207, 115, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+				border-width: 11px 10px 11px 0;
+				cursor: inherit;
+			}
+
+			.controlArrow-slef {
+				border-color: rgba(0, 0, 0, 0) rgba(241, 241, 241, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+				-moz-transform: rotate(180deg);
+				-webkit-transform: rotate(180deg);
+				left: 677px;
+			}
+
+			.interact {
+				position: relative;
+				left: 80%;
+				width: 170px;
+			}
+
+			.interact > ul > li {
+				cursor: pointer;
+			}
+
+			.message-area {
+				width: 100%;
+			}
+
+			.message {
+				padding: 10px 0 0 80px;
+				position: relative;
+			}
+
+			.message-self {
+				padding: 0 30px 0 65px;
+				position: relative;
+			}
+
+			.message-head {
+				height: 70px;
+				width: 70px;
+				position: absolute;
+				top: 20px;
+				left: 5px;
+			}
+
+			.message-head-self {
+				left: 91%;
+				top: 0;
+			}
+
+			.message-text, .message-edit {
+				position: relative;
+			}
+
+			.message-text {
+				background-color: #B2CF73;
+				padding: 10px;
+				width: 90%;
+				margin: 10px;
+				border-radius: 5px;
+			}
+
+			.message-text-self {
+				background-color: #F1F1F1;
+			}
+
+			.message-edit {
+				left: 60%;
+				width: 230px;
+			}
+			/*reply*/
+			#reply{
+				position: absolute;
+				top:30%;
+				left: 20%;
+				width: 500px;
+				z-index: 1000;
+				background-color: #FFF;
+				display: none;
+			}
+			
+			.reply-title{
+			    font-size: 14px;
+			    font-weight: bold;
+			    height: 42px;
+			    line-height: 42px;
+			    margin-right: 8px;
+			}
+			/*reply end*/
+			#emoji-layer {
+				position: absolute;
+				padding: 4px;
+				background-color: #fff;
+				width: 417px;
+				z-index: 9999;
+			}
+
+
+			.emoji-list li:hover {
+				border: 1px solid #0095CD;
+			}
+
+			.emoji-list li {
+				border: 1px solid #E8E8E8;
+				cursor: pointer;
+				float: left;
+				overflow: hidden;
+				padding: 3px 3px;
+				text-align: center;
+				background-color: #fff;
+			}
+
+			.emoji-list li > img {
+				width: 26px;
+				height: 26px;
+			}
+
+			li {
+				list-style: none outside none;
+			}
+
+			.publishInputBefore {
+				border: 0 none;
+				color: #BBBBBB;
+				font-size: 14px;
+				height: 72px;
+				line-height: 24px;
+				outline: medium none;
+				overflow: auto;
+				padding: 6px 12px;
+				resize: none;
+				width: 100%;
+			}
+			.publishInputArea {
+				border: 2px solid #C4DAED;
+				border-radius: 3px 3px 3px 3px;
+				position: relative;
+				width: 100%;
+			}
+			.publishInputBottomLeft li {
+				cursor: pointer;
+				height: 16px;
+				line-height: 16px;
+				margin-left: 8px;
+				padding-left: 21px;
+			}
+			.publishInputBottom {
+				background: none repeat scroll 0 0 #F9F9F9;
+				height: 34px;
+				position: relative;
+				width: 100%;
+				z-index: 14;
+			}
+			.f_gray_999 {
+				color: #999999;
+			}
+			.fn-clear {
+			}
+			.fn-left {
+				float: left;
+			}
+			.publishInputPhoto {
+				background: url("{{STATIC_URL}}img/photo_icon.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+			}
+			.publishInputExpression {
+				background: url("{{STATIC_URL}}img/pop_expression.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+			}
+			.publishInputVideo {
+				background: url("{{STATIC_URL}}img/tag_icon.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+			}
+			.fn-left, .fn-right {
+				display: inline;
+			}
+			.fn-right {
+				float: right;
+			}
+			.publishBtn {
+				margin: 4px 10px 0 0;
+			}
+			.btn6025 {
+				height: 25px;
+				line-height: 25px;
+				text-align: center;
+				width: 60px;
+				background: #FF9283;
+			}
+			.wordNumber {
+				margin: -2px 16px 0 0;
+			}
+			.wordNumber span {
+				font-family: Constantia, Georgia;
+				font-size: 22px;
+				font-style: italic;
+				font-weight: 700;
+				padding: 0 2px;
+			}
+			.btn6025 a:link, .btn6025 a:visited {
+				background: -moz-linear-gradient(center top , #FF4F86, #FF5187) repeat scroll 0 0 rgba(0, 0, 0, 0);
+				border: 1px solid #F9F9F9;
+				color: #FFFFFF;
+				display: block;
+				height: 25px;
+				text-decoration: none;
+				width: 60px;
+			}
+			.publishInputUploadPhotoArea {
+				display: none;
+			}
+			.publishInputUploadVideoArea {
+				display: none;
+			}
+		</style>
+	{% endblock %}
+	{% block right %}
+	
+					<div class="col-md-9">
+					{% for page in pages %}
+						<div id="message_{%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%}" class="card_panel trend-list">
+							<div id="112" class="message-area">
+								<a id='showAll' href="javascript:void(0);" onclick="showMessage({{page.senderId}},{{page.receiverId}},{{page.id}});">
+									显示全部
+								</a>
+								<a  id='replyNow' href="javascript:void(0);" onclick="reply({%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%});">
+									回复
+								</a>
+								<div class="message-list">
+									<div class="message">
+										<img class="message-head" src="{{MEDIA_URL}}{{page.avatarName}}-60.jpeg"/>
+										<div class="message-text">
+											<div class="controlArrow"></div>
+											<p class="content">{{page.content|safe}}<p>
+										</div>
+
+										<ul class="list-inline message-edit">
+											<li>
+												<span style="color: #999999" class='sendTime'>{{page.sendTime}}</span>
+											</li>
+										</ul>
+									</div>
+									<div class="hideable_{{page.id}}" style="display: none;">
+									
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endfor%}
+						
+						</div>
+						<div id="no_more_message" class="card_panel trend-list" style="text-align:center;font-size:14px;display: none;">
+						<span >没有更多消息</span>
+						</div>
+						<div class="hideable_clone" style="display: none;">
+										<div id="message-self" class="message-self" >
+											<img class="message-head message-head-self" src=".\img\man_image5.jpeg"/>
+											<div class="message-text message-text-self">
+												<div class="controlArrow controlArrow-slef"></div>
+												<p class='content'>
+												时至今日都是我咎由自取，学IT那是自找，与任何人无关。程序员生涯的苦逼，造就了我呆板无趣，不问红尘的脾气，导致今日岌岌可危的地步，我今天愿意承担一切后果。其实，我很感谢你们让我跌倒在今天，而不是在我依旧屌丝的将来，我必须重新梳理自己，坦然面对并修复bug！本码农，生活中写就了一段满是bug的代码。我辜负了老板和老板的老板，辜负了公司，辜负了IT精英和软件工程师的称呼，辜负了所有希望我天天加班的人。对不起，请能接受我发自深心的歉意和扯淡。老板和老板的老板本来可以有一个更温暖更美好的生活，可这一切被我打破了，我的错误行为不配得到原谅，我造就的损失也难以弥补，但我想弥补，必须去弥补，这是我今日之后的生活。至于我自己，已咎由自取，愿日后再不负人！
+											   </p>
+											</div>
+
+											<ul class="list-inline message-edit">
+												<li>
+													<span style="color: #999999" id="time">2014-12-12 10:12:12</span>
+												</li>
+											</ul>
+										</div>
+										
+										<div class="message">
+										<img class="message-head" src="{{MEDIA_URL}}{{page.avatarName}}-60.jpeg"/>
+										<div class="message-text">
+											<div class="controlArrow"></div>
+											<p class='content'></p>
+										</div>
+
+										<ul class="list-inline message-edit">
+											<li>
+												<span style="color: #999999" id="time"></span>
+											</li>
+										</ul>
+									</div>
+					</div>
+		
+		<div id="reply" class="card_panel">
+		<form id="reply_action" action="" method="POST">{% csrf_token %}
+		    <input type="hidden" value="" id='reply_receiverId' name='receiverId' >
+			<a href="#"><i class="icon_dislike" title="不喜欢" onclick="reply_close();"></i></a>
+			<h4 class="reply-title">发送私信</h4>
+			<div class="publishInputArea" style="position: relative;top: 50%;">
+				<textarea id="publishTextArea2" class="publishInputBefore" name="content" style="color: rgb(0, 0, 0); height: 52px;"></textarea>
+				<div class="publishInputBottom fn-clear f_gray_999">
+					<div class="fn-clear">
+						<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
+							<li target="#publishTextArea2" class="publishInputExpression fn-left">
+								表情
+							</li>
+						</ul>
+					</div>
+					<div class="fn-right">
+							<input type="submit" value="回复" class="btn6025 publishBtn fn-right">
+						<p class="wordNumber fn-right">
+							还能输入
+							<span id="reserve">199</span>
+							字
+						</p>
+					</div>
+				</div>
+			</div>
+		</form>
+		</div>
+		<div class="masklayer" style="z-index: 999; width: 100%; height: 100%;" onclick="reply_close();"></div>
+		<div id="emoji-layer" style="display: none;">
+			<ul class="emoji-list"></ul>
+		</div>
+		
+{% endblock %}

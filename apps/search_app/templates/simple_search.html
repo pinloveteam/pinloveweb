@@ -1,0 +1,111 @@
+﻿{% extends "card.html" %}
+<title>{% block title %} 拼爱网--搜索 {% endblock %}</title>
+{% block left %}
+<SCRIPT>
+$(document).ready(function(){
+	 $('#id_minAge,#id_maxAge').change(function(){
+		 minAge=parseInt($('#id_minAge').val());
+		 maxAge=parseInt($('#id_maxAge').val());
+		 if (maxAge<=minAge){
+			 alert('请选择正确的年龄区间!')
+			 $('#id_maxAge').val(minAge+1)
+		 }
+	 });
+	 
+	 $('#id_minHeigh,id_maxHeigh').change(function(){
+		 minHeigh=parseInt($('#id_minHeigh').val());
+		 maxHeigh=parseInt($('#id_maxHeigh').val());
+		 if (maxHeigh<=minHeigh){
+			 alert('请选择正确的身高区间!')
+			 $('#id_maxHeigh').val(minHeigh+1)
+		 }
+	 });
+	 
+	 $('#id_minIcome,#id_maxIncome').change(function(){
+		 minIcome=parseInt($('#id_minIcome').val());
+		 maxIncome=parseInt($('#id_maxIncome').val());
+		 if (maxIncome<=minIcome){
+			 alert('请选择正确的收入区间!')
+			 $('#id_maxIncome').val(minIcome+1)
+		 }
+	 });
+	 //提交请求
+	 $("#simpeSearch").submit(function(){
+		 var data = $(this).serialize();
+	     $.ajax({
+	         type: $(this).attr('method'),
+	         url: "/search/",
+	         data:data,
+	         beforeSend: function(XMLHttpRequest){
+	         },
+	         success: function(data, textStatus){
+	            if(textStatus == 'success'){
+	            	data=$.parseJSON(data)
+	            	$('.card_row').children().hide('slow');
+	            	if (data['has_next']){
+						 next_page_number=data['next_page_number'];
+					 }else{
+						 next_page_number=-1;
+						 $('.next').hide();
+					 }
+	            	previous_page_number=-1;
+	            	 $('.prev').hide();
+	            	 $('.card_row').children().remove()
+	            	 var cards=data['cards'];
+	            	 init_card(cards);
+	            	 venobox();
+	            	pane = $('.chat');
+	            	pane.jScrollPane();
+					 /* if  (data['removeCard']){
+						 choseCardsSize=0
+					 }
+					 for(x=0;x<cards.length;x++){
+							 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus));
+						 } 
+					 preCard.remove();
+					 venobox(); */
+	             } 
+	         },
+	         complete: function(XMLHttpRequest, textStatus){
+	         },
+	         error: function(response){
+	             alert('网络异常!')
+	         }
+	     });
+	     return false;
+	 });
+});
+
+</SCRIPT>
+<div class="col-md-3">
+	<div class="user_search card_panel">
+		<p>搜索条件</p>
+<form id="simpeSearch" action="" method="POST" >{% csrf_token %}
+		<ul style="list-style-type: none;">
+			<li>年龄：
+			{{simpleSearchForm.minAge}}
+			 到： 
+			 {{simpleSearchForm.maxAge}}
+			</li>
+			<li>学历：
+			 {{simpleSearchForm.education}}
+			</li>
+			<li>身高： 
+			 {{simpleSearchForm.minHeigh}}
+			 到
+			  {{simpleSearchForm.maxHeigh}}
+			</li>
+			<li>收入：
+			  {{simpleSearchForm.minIcome}}
+                              到:
+               {{simpleSearchForm.maxIncome}}
+			</li>
+			<li>
+			  有照片{{simpleSearchForm.isAvatar}}
+			</li>
+		</ul>
+		 <button class="btn btn-warning user-save" style="position: relative; left: 30px;">搜索</button>
+    </form> 
+	</div>
+</div>
+{% endblock %}

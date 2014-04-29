@@ -11,11 +11,61 @@ from util.page import page
 from apps.pojo.search import SearchRsult
 from django.http.response import HttpResponse
 from django.utils import simplejson
+def search(request):
+    args={}
+    userProfile=UserProfile.objects.get_user_info(request.user.id)
+    if request.method=='POST':
+        simpleSearchForm=SimpleSearchForm(request.POST)
+        if simpleSearchForm.is_valid():
+            minAge=simpleSearchForm.cleaned_data['minAge']
+            maxAge=simpleSearchForm.cleaned_data['maxAge']
+            education=simpleSearchForm.cleaned_data['education']
+            minIcome=simpleSearchForm.cleaned_data['minIcome']
+            maxIncome=simpleSearchForm.cleaned_data['maxIncome']
+            minHeigh=simpleSearchForm.cleaned_data['minHeigh']
+            maxHeigh=simpleSearchForm.cleaned_data['maxHeigh']
+            isAvatar=simpleSearchForm.cleaned_data['isAvatar']
+            searchSql={}
+            try:
+                if isAvatar==True:
+                    searchSql['avatar_name_status']='3'
+                userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
+                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender)
+            except Exception as e:
+                print e 
+            searchList=get_recommend_list(request,userProfile,userProfileList)
+            from pinloveweb.method import load_cards_by_ajax
+            return load_cards_by_ajax(request,searchList)
+    else:
+        userProfileList=UserProfile.objects.exclude(gender=userProfile.gender)
+        searchList=get_recommend_list(request,userProfile,userProfileList)
+        if request.GET.get('ajax')=='true':
+            from pinloveweb.method import load_cards_by_ajax
+            return load_cards_by_ajax(request,searchList)
+        from apps.pojo.card import MyEncoder
+        searchList.object_list=simplejson.dumps(searchList.object_list,cls=MyEncoder)
+        args['pages']=searchList
+        initial=init_search_condition(request.user.id)
+        simpleSearchForm=SimpleSearchForm(initial=initial)
+        args['simpleSearchForm']=simpleSearchForm
+        return render(request, 'simple_search.html',args)
 
+def get_recommend_list(request,userProfile,userProfileList,**kwargs):
+   
+    #相互关注的人的id
+    follows=Follow.objects.follow_each(request.user.id)
+    focusEachOtherList=[follow.my.id for follow in follows ]
+    args=page(request,userProfileList)
+    matchResultList=args['pages']
+    from apps.pojo.card import userProfileList_to_CardList
+    matchResultList.object_list=userProfileList_to_CardList(matchResultList.object_list)
+    from pinloveweb.method import is_focus_each_other
+    matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
+    return matchResultList
 '''
 简单搜索
 根据 年龄，身高，学历，收入，所在地
-   
+   可能要删除
 '''
 def simple_search(request):
     args={}

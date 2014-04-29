@@ -38,6 +38,19 @@ class Message(models.Model):
     #接收者是否读件
     isRead=models.NullBooleanField(verbose_name="是否阅读",default=False)
     
+    def get_avatar_name(self,*args,**kwargs):
+        from apps.user_app.models import UserProfile
+        from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
+        if kwargs.get('userId',None) is None:
+            userProfile=UserProfile.objects.get(user_id=self.sender_id)
+        else:
+            userProfile=UserProfile.objects.get(user_id=kwargs.get('userId',None))
+        if userProfile.avatar_name_status=='3':
+            return userProfile.avatar_name
+        else:
+            return DEFAULT_IMAGE_NAME
+        
+    
     '''
     序列化
     '''

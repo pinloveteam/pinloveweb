@@ -58,9 +58,10 @@ class UserProfile(models.Model, UploadAvatarMixIn):
    
     age = models.IntegerField(verbose_name=r"年龄",max_length=11,null=True,blank=True,)
     #calculate  age
-    def cal_age(self):
-        current_year = time.strftime('%Y', time.localtime(time.time()))
-        self.age = string.atoi(current_year) - self.year_of_birth
+    def cal_age(self,year_of_birth):
+        if self.year_of_birth !=-1 and self.year_of_birth !=year_of_birth:
+            current_year = time.strftime('%Y', time.localtime(time.time()))
+            self.age = string.atoi(current_year) - self.year_of_birth
     
     SUN_SIGN_CHOOSICE=((-1,r'未填'),(1,r'水瓶座'),(2,r'双鱼座'),(3,r'白羊座'),(4,r'金牛座'),(5,r'双子座'),(6,r'巨蟹座'),(7,r'狮子座'),(8,r'处女座'),(9,r'天秤座'),(10,r'天蝎座'),(11,r'射手座'),(12,r'摩羯座'),)
     sunSign=models.SmallIntegerField(verbose_name=r"星座",choices=SUN_SIGN_CHOOSICE,null=True,blank=True,default=-1)
@@ -237,23 +238,27 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         else:
             return self.avatar_name
         
+
     def save(self, *args, **kwargs):
+       oldUserProfile=kwargs.pop('oldUserProfile',None)
+       if oldUserProfile:
         from apps.recommend_app.models import Grade
-        if self.income!=None:
+        if self.income!=None and self.income!=oldUserProfile.income:
             from apps.recommend_app.recommend_util import cal_income
             incomes=cal_income(self.income)
             if Grade.objects.filter(user=self.user).exists():
                 Grade.objects.filter(user=self.user).update(incomescore=incomes)
             else:
                 Grade(user=self.user,incomescore=incomes).save()
-        if self.education!=None or self.educationSchool!=None:
+        if (self.education!=None and self.education != oldUserProfile.education)or (self.educationSchool!=None and self.educationSchool!=oldUserProfile.educationSchool):
             from apps.recommend_app.recommend_util import cal_education
             educationscore=cal_education(self.education,self.educationSchool)
             if Grade.objects.filter(user=self.user).exists():
                 Grade.objects.filter(user=self.user).update(educationscore=educationscore)
             else:
                 Grade(user=self.user,educationscore=educationscore).save()
-        super(UserProfile, self).save(*args, **kwargs)
+        self.cal_age(oldUserProfile.year_of_birth)
+       super(UserProfile, self).save(*args, **kwargs)
     class Meta:
         verbose_name=u'用户基本信息'
         verbose_name_plural = u'用户基本信息'

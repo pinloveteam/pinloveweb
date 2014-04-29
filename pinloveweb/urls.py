@@ -67,8 +67,15 @@ urlpatterns = patterns('',
      url(r'^test/$', 'pinloveweb.views.test'),
 )
 
+#禁止搜索引擎收录
 urlpatterns+=patterns('',
                        url(r'^robots\.txt$', TemplateView.as_view(template_name="robots.txt")),
+)
+#网站信息
+urlpatterns+=patterns('',
+                       url(r'^web/privacy/$','pinloveweb.views.web',{'template_name': 'privacy.html'}),
+                       url(r'^web/about/$','pinloveweb.views.web',{'template_name': 'about.html'}),
+                      
 )
 
 if settings.DEBUG:

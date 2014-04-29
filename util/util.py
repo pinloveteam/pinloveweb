@@ -48,3 +48,16 @@ def model_to_dict(instance,fields=None):
         list.append(args)
     return list
 
+
+'''
+匹配表情
+'''  
+def regex_expression(content):
+    regex=u'{:pinlove_[0-9]{1,2}:}'
+    import re
+    return re.sub(regex, dashrepl, content)
+
+def dashrepl(matchobj):
+    s=matchobj.group(0)
+    num=s[10:-2]
+    return '%s%s%s' % ('<img src="/static/img/48x48/',num,'.gif" style="width: 25px; height: 25px;">')

@@ -239,7 +239,7 @@ def update_profile(request):
             #计算资料完成度
             from apps.user_app.method import get_profile_finish_percent_and_score
             userProfile=get_profile_finish_percent_and_score(userProfile,oldUserProfile)
-            userProfile.save()
+            userProfile.save(oldUserProfile=oldUserProfile)
             map=request.session['user_original_data']
             cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),
                                         education=map.get('education'),educationSchool=map.get('educationSchool'),income=map.get('income'))

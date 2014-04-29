@@ -78,6 +78,7 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
         dynamic=Dynamic()
         for field in ['id','type','content']:
             setattr(dynamic,field,getattr(friendDynamic,field))
+        from util.util import regex_expression
         dynamic.content=regex_expression(dynamic.content)
         dynamic.publishUserId=friendDynamic.publishUser.id
         dynamic.publishUserName=friendDynamic.publishUser.username
@@ -92,15 +93,3 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
     return DynamicList
 
 
-'''
-匹配表情
-'''  
-def regex_expression(content):
-    regex=u'{:pinlove_[0-9]{1,2}:}'
-    import re
-    return re.sub(regex, dashrepl, content)
-
-def dashrepl(matchobj):
-    s=matchobj.group(0)
-    num=s[10:-2]
-    return '%s%s%s' % ('<img src="/static/img/48x48/',num,'.gif" style="width: 25px; height: 25px;">')

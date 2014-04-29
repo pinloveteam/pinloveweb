@@ -11,6 +11,121 @@ from apps.message_app.models import Notify, Message
 from django.http.response import Http404, HttpResponse
 from django.utils import simplejson
 import datetime
+from apps.user_app.models import UserProfile
+from django.db.models.query_utils import Q
+###############################
+##1.0
+'''
+初始化个人消息
+'''
+def message(request,template_name):
+    args={}
+    user=request.user
+    sql='''
+    SELECT id,sender_id,receiver_id,content,sendTime,isDeleteSender,isDeletereceiver,isRead  from (
+SELECT u.id,u.sender_id,u.receiver_id,u.content,u.sendTime,u.isDeleteSender,u.isDeletereceiver,u.isRead,u2.sendTime as sendTime2
+ FROM  (
+SELECT * FROM message u
+WHERE (isDeleteSender= False  AND sender_id= %s ) 
+OR (isDeletereceiver = False  AND receiver_id = %s and sender_id!=%s) 
+GROUP BY sender_id,receiver_id
+ORDER BY sendTime desc 
+) u LEFT JOIN  (
+SELECT * FROM message u
+WHERE (isDeleteSender= False  AND sender_id= %s ) 
+OR (isDeletereceiver = False  AND receiver_id = %s and sender_id!=%s) 
+GROUP BY sender_id,receiver_id
+ORDER BY sendTime desc )u2 on u.sender_id=u2.receiver_id and  u2.sender_id=u.receiver_id )s
+WHERE sendTime>sendTime2 or sendTime2 is NULL
+    '''
+    userProfile=UserProfile.objects.get(user=user)
+    messageList=Message.objects.raw(sql,[user.id,user.id,user.id,user.id,user.id,user.id])
+    args=page(request,messageList)
+    messageList=args['pages']
+    from apps.pojo.message import Message_to_MessageBean
+    messageList.object_list=Message_to_MessageBean(messageList.object_list,request,type=1)
+    if request.REQUEST.get('ajax',False):
+        data={}
+        data['messageList']=messageList.object_list
+        data['has_next']=messageList.has_next()
+        if messageList.has_next():
+            data['next_page_number']=messageList.next_page_number()
+        from apps.pojo.message import MessageBeanEncoder
+        json=simplejson.dumps(data,cls=MessageBeanEncoder)
+        return HttpResponse(json)
+    args['pages']=messageList
+    from pinloveweb.method import init_person_info_for_card_page
+    args.update(init_person_info_for_card_page(userProfile))
+    return render(request,template_name,args)
+
+
+'''
+获取我和指定异性之间所有私信
+'''    
+def message_detail(request):
+    args={}
+    try:
+        senderId=int(request.REQUEST.get('senderId',False))
+        receiverId=int(request.REQUEST.get('receiverId',False))
+        id=int(request.REQUEST.get('id',False))
+        if senderId and senderId and id:
+            messageList=Message.objects.filter(sender_id__in=[senderId,receiverId],receiver_id__in=[senderId,receiverId]).exclude(id=id).order_by('-sendTime')
+            messageList=page(request,messageList)['pages']
+            from apps.pojo.message import Message_to_MessageBean
+            messageList.object_list=Message_to_MessageBean(messageList.object_list,request)
+            args['messageList']=messageList.object_list
+            args['has_next']=messageList.has_next()
+            if messageList.has_next():
+                args['next_page_number']=messageList.next_page_number()
+            args['result']='success'
+            args['userId']=request.user.id
+        else:
+            args={'result':'error','error_message':'传递参数出错!'}
+        from apps.pojo.message import MessageBeanEncoder
+        json=simplejson.dumps(args,cls=MessageBeanEncoder)
+        return HttpResponse(json)
+    except Exception as e:
+        print '%s%s' %('获取我和指定异性之间所有私信出错，出错原因',e)
+        args={'result':'error','error_message':'获取我和指定异性之间所有私信出错!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    
+    
+'''
+回复私信
+attribute：
+     receiver_id(int)： 接收者id
+     reply_content(text)： 回复内容
+return ：
+     
+'''   
+def message_reply(request):  
+    args={}
+    try:
+        if request.method=="POST":
+            receiver_id=request.POST.get('receiverId')
+            content=request.POST.get('content')
+            message=Message()
+            message.sender=request.user
+            message.receiver_id=receiver_id
+            message.content=content
+            message.sendTime=datetime.datetime.today()
+            message.save()
+            from apps.pojo.message import Message_to_MessageBean
+            messageBean=Message_to_MessageBean([message,],request)
+            args={'result':'success','message':'发送成功!','messageBean':messageBean}
+        else:
+            args={'result':'success','error_message':'提交参数出错!'}  
+        from apps.pojo.message import MessageBeanEncoder
+        json=simplejson.dumps(args,cls=MessageBeanEncoder)
+        return HttpResponse(json)
+       
+    except Exception as e:
+        print '%s%s' %('回复私信，出错原因',e)
+        args={'result':'error','error_message':'获取我和指定异性之间所有私信出错!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+##############################
 
 '''
 获取信息数量
@@ -104,52 +219,10 @@ def delete_notify(request):
     json = simplejson.dumps(result)
     return HttpResponse(json)
     
-'''
-获取私信发送者和接受者之间所有短信
-attribute：render_id (int)私信发送者id
-return: messageList (Messgae)私信列表
-'''    
-def message_detail(request,renderId):
-    arg={}
-    if request.user.is_authenticated():
-        try:
-            renderId=int(renderId)
-            messageList=Message.objects.filter(sender_id=renderId,receiver_id=request.user.id,isDeletereceiver=False).order_by('sendTime')
-        except:
-            Http404
-        arg['messageList']=messageList
-        return render(request, 'message.html', arg,) 
-    else:
-        return render(request, 'login.html', arg,) 
-'''
-回复私信
-attribute：
-     receiver_id(int)： 接收者id
-     reply_content(text)： 回复内容
-return ：
-     
-'''   
-def message_reply(request):  
-    arg={}
-    if request.user.is_authenticated():
-        if request.method=="POST":
-            receiver_id=request.POST.get('receiver_id')
-            reply_content=request.POST.get('reply_content')
-            message=Message()
-            message.sender=request.user
-            message.receiver_id=receiver_id
-            message.content=reply_content
-            message.sendTime=datetime.datetime.today()
-            message.save()
-            return  HttpResponse("发送成功！")
-        else:
-            receiver_id=request.GET.get('receiver_id')
-            receiver_name=request.GET.get('receiver_name') 
-            arg['receiver_id']=receiver_id
-            arg['receiver_name']=receiver_name
-            return render(request, 'relpy.html', arg,) 
-    else:
-        return render(request, 'login.html', arg,) 
+
+    
+    
+
     
 '''
 私信   发送

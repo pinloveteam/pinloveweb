@@ -23,8 +23,14 @@ from django.http.response import HttpResponse
 from apps.recommend_app.models import MatchResult
 from django.db import transaction
 
-
-
+####################
+######1.0
+'''
+网站基本信息介绍
+'''
+def web(request,template_name):
+    return render(request,template_name,)
+####################
 
 def login(request) :
        

@@ -28,9 +28,9 @@ var previous_page_number=-1
 {% endif %}
 
 //关注
-var myFollow={{myFollow}}
-var follow={{follow}}
-var fans={{fans}}
+var myFollow={% if myFollow %}{{myFollow}}{%else%}0{% endif %}
+var follow={% if follow %}{{follow}}{%else%}0{% endif %}
+var fans={% if fans %}{{fans}}{%else%}0{% endif %}
 
 $(document).ready(function(){
 	if (previous_page_number<0){
@@ -196,49 +196,9 @@ interval = self.setInterval("polling()", time);
 {% block logo %}
 {% endblock %}
 {% block content %}
-<header class="navbar">
-  <div class="container" style="height:10px;">
-    <div class="navbar-header">
-    <a href='/'>
-      <img alt="140x140" src="{{STATIC_URL}}img/logo.png"/>
-    </a>  
-    <span class="site_name">拼爱网</span>
-    
-    </div>
-    <nav class="navigation">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="/">推荐</a>
-        </li>
-        <li>
-          <a href="/dynamic/">动态</a>
-        </li>
-        <li class="active">
-          <a href="/the_people_nearby/the_people_nearby">附近的人</a>
-        </li>
-        <li>
-          <a href="/search/simple_search/">用户搜索</a>
-        </li>
-        <li>
-          <a href="/game/game_pintu/">缘分拼图</a>
-        </li>
-         <li>
-          <a href="/account/logout/">注销</a>
-        </li>
-		<li>
-          <a href="#">+</a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <!-- <a href=".{{STATIC_URL}}about">关于</a> -->
-        </li>
-      </ul>
-    </nav>
-  </div>
-</header>
 <div class="container">
 	<div class="row" style="margin-top:63px;">
+	{% block left %}
 		<div class="col-md-3">
 			<div class="user_info card_panel"> 
 				<div class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:60px;width:60px;">
@@ -279,6 +239,8 @@ interval = self.setInterval("polling()", time);
 			<div class="send_pic card_panel">
 			</div>
 		</div>
+		{% endblock %}
+		{% block right %}
 		<div class="col-md-9" style="height:550px;">
 		<div id="compare_tip" class="alert alert-success alert-dismissable">
 		  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -363,4 +325,5 @@ interval = self.setInterval("polling()", time);
 		</div>
 	</div>
 </div>
+{% endblock %}
 {% endblock %}
