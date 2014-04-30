@@ -25,17 +25,17 @@ def message(request,template_name):
     SELECT id,sender_id,receiver_id,content,sendTime,isDeleteSender,isDeletereceiver,isRead  from (
 SELECT u.id,u.sender_id,u.receiver_id,u.content,u.sendTime,u.isDeleteSender,u.isDeletereceiver,u.isRead,u2.sendTime as sendTime2
  FROM  (
-SELECT * FROM message u
+SELECT * FROM (SELECT * from message ORDER BY sendTime desc ) u
 WHERE (isDeleteSender= False  AND sender_id= %s ) 
 OR (isDeletereceiver = False  AND receiver_id = %s and sender_id!=%s) 
 GROUP BY sender_id,receiver_id
-ORDER BY sendTime desc 
+ ORDER BY sendTime desc
 ) u LEFT JOIN  (
-SELECT * FROM message u
+SELECT * FROM (SELECT * from message ORDER BY sendTime desc ) u
 WHERE (isDeleteSender= False  AND sender_id= %s ) 
 OR (isDeletereceiver = False  AND receiver_id = %s and sender_id!=%s) 
 GROUP BY sender_id,receiver_id
-ORDER BY sendTime desc )u2 on u.sender_id=u2.receiver_id and  u2.sender_id=u.receiver_id )s
+ ORDER BY sendTime desc)u2 on u.sender_id=u2.receiver_id and  u2.sender_id=u.receiver_id )s
 WHERE sendTime>sendTime2 or sendTime2 is NULL
     '''
     userProfile=UserProfile.objects.get(user=user)
@@ -112,7 +112,7 @@ def message_reply(request):
             message.sendTime=datetime.datetime.today()
             message.save()
             from apps.pojo.message import Message_to_MessageBean
-            messageBean=Message_to_MessageBean([message,],request)
+            messageBean=Message_to_MessageBean([message,],request,type=1)
             args={'result':'success','message':'发送成功!','messageBean':messageBean}
         else:
             args={'result':'success','error_message':'提交参数出错!'}  

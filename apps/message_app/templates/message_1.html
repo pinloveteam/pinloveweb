@@ -125,6 +125,7 @@
 				$('.masklayer').hide();
 				$('#reply').hide();
 				$('#emoji-layer').hide();
+				$('#publishTextArea2').val('')
 			}
 			
 			function reply(receiverId){
@@ -187,26 +188,25 @@
 							success:function(data,textStatus){
 								if (textStatus='success'){
 									if(data.result=='success'){
+										reply_close()
 										alert(data.message)
-										message=data.messageBean
-										var message=$('#message'+receiverId)
+										messageBean=data.messageBean[0]
+										var message=$('#message_'+receiverId)
 										message.find('#showAll').attr('onclick','')
-										senderId=this.senderId;
-										receiverId=this.receiverId;
-										id=this.id
-										message.find('#showAll').bind('click', function(){showMessage(1,9,9)});  
+										senderId=messageBean.senderId;
+										receiverId=messageBean.receiverId;
+										id=messageBean.id
+										message.find('#showAll').bind('click', function(){showMessage(senderId,receiverId,id)});  
 										/* message.find('#showAll').one('onclick',"showMessage("+this.senderId+","+this.receiverId+","+this.id+");") */
-										if(userId==this.senderId){
-											message.find('#replyNow').attr('onclick',"reply("+this.receiverId+");")
-											message.find("[class^='hideable_']").attr('class','hideable_'+this.receiverId)
+										if(userId==senderId){
+											message.find('#replyNow').attr('onclick',"reply("+receiverId+");")
 										}else{
-											message.find('#replyNow').attr('onclick',"reply("+this.senderId+");")
-											message.find("[class^='hideable_']").attr('class','hideable_'+this.senderId)
+											message.find('#replyNow').attr('onclick',"reply("+senderId+");")
 										}
-										message.find('.message-head').attr('src','/media/'+this.avatarName+'-60.jpeg')
-										message.find('.content').html(this.content)
-										message.find('.sendTime').html(this.sendTime)
-										$('#publishTextArea2').val('')
+										message.find("[class^='hideable_']").attr('class','hideable_'+messageBean.id)
+										message.find('.message-head').attr('src','/media/'+messageBean.avatarName+'-60.jpeg')
+										message.find('.content').html(messageBean.content)
+										message.find('.sendTime').html(messageBean.sendTime)
 									}else{
 										alert(data.error_message)
 									}
