@@ -109,6 +109,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     education = models.IntegerField(verbose_name=r"学位",choices=EDUCATION_DEGREE_CHOICES, default=-1,null=True,blank=True,) # educate = models.CharField(max_length=50)
     #school
     educationSchool = models.CharField(verbose_name=r"最高学位毕业学校", max_length=100,null=True,blank=True,) 
+    educationSchool_2 = models.CharField(verbose_name=r"毕业学校2", max_length=100,null=True,blank=True,) 
     # personal web and links 
     link=models.CharField(verbose_name=r"共享链接",max_length=128,default='me',null=True,blank=True,)  
 
@@ -250,9 +251,18 @@ class UserProfile(models.Model, UploadAvatarMixIn):
                 Grade.objects.filter(user=self.user).update(incomescore=incomes)
             else:
                 Grade(user=self.user,incomescore=incomes).save()
-        if (self.education!=None and self.education != oldUserProfile.education)or (self.educationSchool!=None and self.educationSchool!=oldUserProfile.educationSchool):
+        if self.education!=-1 and self.educationSchool!=None and (self.education != oldUserProfile.education or  self.educationSchool!=oldUserProfile.educationSchool or self.educationSchool_2!=oldUserProfile.educationSchool_2):
             from apps.recommend_app.recommend_util import cal_education
-            educationscore=cal_education(self.education,self.educationSchool)
+            if self.educationSchool_2==None:
+                educationscore=cal_education(self.education,self.educationSchool)
+            else:
+                SchoolScore1=cal_education(self.education,self.educationSchool)
+                SchoolScore2=cal_education(self.education,self.educationSchool_2)
+                if SchoolScore1>SchoolScore2:
+                    educationscore=SchoolScore1
+                else:
+                    educationscore=SchoolScore2
+#             educationscore=cal_education(self.education,self.educationSchool)
             if Grade.objects.filter(user=self.user).exists():
                 Grade.objects.filter(user=self.user).update(educationscore=educationscore)
             else:

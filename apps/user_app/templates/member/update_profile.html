@@ -70,6 +70,11 @@
         			var op = 0.5/opint;
         			$(this).css('opacity',op+'');
         		});
+        		
+        		$('#add_school').click(function(){
+        			 $('#id_educationSchool_2').closest('tr').show()
+        			 $(this).parent().hide()
+        		})
         });
 
     </SCRIPT> 
@@ -108,8 +113,9 @@
             </tr>
             <tr>
                 <td>学校<span class="text-danger">*</span></td>
-                <td colspan="2"">
+                <td colspan="2">
                    {{user_profile_form.educationSchool}}
+                   {% if  user_profile_form.educationSchool_2.value %} {%else%} <a href="javascript:void(0);"><img id="add_school" src="/static/img/拼图-62.png" style="height: 30px; position: relative; left: 451px; top: -30px; width: 30px;"> </a>{%endif%}
                      <div id="proSchool" class="provinceSchool">
                       <div class="title">
                         <span>已选择:</span>
@@ -130,6 +136,29 @@
                      </div>
                 </td>
             </tr>
+            <tr {% if  user_profile_form.educationSchool_2.value %} {%else%} style="display: none;"{%endif%}>
+                <td>学校</td>
+                <td colspan="2"">
+                   {{user_profile_form.educationSchool_2}}
+                     <div id="proSchool" class="provinceSchool">
+                      <div class="title">
+                        <span>已选择:</span>
+                       </div>
+                      <div class="proSelect">
+                        <select></select>
+                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
+                        <input type="text" >
+                      </div>
+                      <div class="schoolList">
+                        <ul>
+                        </ul>
+                      </div>
+                      <div class="button">
+                       <input type="button" flag='0' value="取消">
+                       <input type="button" flag='1' value="确定">
+                      </div>
+                     </div>
+                </td>
             <tr>
                 <td>行业</td>
                 <td>

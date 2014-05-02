@@ -49,7 +49,7 @@ class UserProfileForm(ModelForm):
     class Meta : 
         model = UserProfile  
         fields = ( 'gender', 'income','weight','jobIndustry','age',
-        'height', 'education','year_of_birth', 'month_of_birth', 'day_of_birth','educationSchool', )
+        'height', 'education','year_of_birth', 'month_of_birth', 'day_of_birth','educationSchool','educationSchool_2' )
         
         exclude = ('stateProvince','avatar_name','city', 'country', 'sunSign', 'zodiac','avatar_name_status',
                    'self_evaluation','hairStyle','hairColor','face','eyeColor','bodyShape',

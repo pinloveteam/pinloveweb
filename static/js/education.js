@@ -5,11 +5,13 @@ $(function(){
 		//province;
 		//proSchool;
 		//学校名称 激活状态
-		$("#id_educationSchool").focus(function(){
+		$("#id_educationSchool,#id_educationSchool_2").focus(function(){
+		 $("div[class='provinceSchool']").hide();
 		  var top = $(this).position().top+22;
     	  var left = $(this).position().left;
-    	  $("div[class='provinceSchool']").css({top:top,left:left});
-    	  $("div[class='provinceSchool']").show();
+    	  provinceSchool=$(this).closest('td').find('.provinceSchool')
+    	  provinceSchool.css({top:top,left:left});
+    	  provinceSchool.show();
 		});
 		//初始化省下拉框
 		var provinceArray = "";
@@ -68,7 +70,7 @@ $(function(){
 		});
 		//学校列表点击事件
 		$("div[class='schoolList'] ul").on("click","li",function(){
-		  $("#id_educationSchool").val($(this).html());
+			$(this).closest('td').find("[id^='id_educationSchool']").val($(this).html());
 		  $("div[class='provinceSchool']").hide();
 		});
 		//点击输入学校名
