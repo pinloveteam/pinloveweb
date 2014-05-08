@@ -24,8 +24,9 @@ class FacebookPayDetail(models.Model):
 交易表
 '''       
 class Charge(models.Model):
-    vailAmount=models.DecimalField(verbose_name=u'有效金额',max_digits=11,decimal_places=2)
-    freezeAmount=models.DecimalField(verbose_name=u' 冻结金额金额',max_digits=11,decimal_places=2)
+    user=models.ForeignKey(User,verbose_name='用户id')
+    vailAmount=models.DecimalField(verbose_name=u'有效金额',max_digits=11,decimal_places=2,default=0.00)
+    freezeAmount=models.DecimalField(verbose_name=u' 冻结金额金额',max_digits=11,decimal_places=2,default=0.00)
     class Meta:
         verbose_name = u'交易表' 
         verbose_name_plural = '交易表'
@@ -35,6 +36,7 @@ class Charge(models.Model):
 订单表
 '''  
 class Order(models.Model):
+    user=models.ForeignKey(User,verbose_name='用户id')
     orderId=models.CharField(verbose_name=u'订单号',max_length=11)
     amount=models.DecimalField(verbose_name=u'交易金额',max_digits=11,decimal_places=2)
     currency=models.CharField(verbose_name=u'货币类型',max_length=11)
@@ -43,6 +45,11 @@ class Order(models.Model):
     createTime=models.DateTimeField(verbose_name=u'创建时间')
     updateTime=models.DateTimeField(verbose_name=u'更新时间',null=True,blank=True)
     data=models.CharField(verbose_name=u'说明',max_length=255,null=True,blank=True)
+    
+    def save(self,*args,**kwargs):
+         import datetime
+         self.createTime=datetime.datetime.today()
+         super(Order, self).save(*args, **kwargs)
     class Meta:
         verbose_name = u'订单表' 
         verbose_name_plural = '订单表'

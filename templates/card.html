@@ -196,6 +196,7 @@ interval = self.setInterval("polling()", time);
 {% block logo %}
 {% endblock %}
 {% block content %}
+<div class="wrap">
 <div class="container">
 	<div class="row" style="margin-top:63px;">
 	{% block left %}
@@ -251,10 +252,10 @@ interval = self.setInterval("polling()", time);
 			<div class="controlArrow prev" title="上一页"></div>
 			<div class="controlArrow next" title="下一页"></div>
 		</div>
-	</div>
-</div>
-
-<div id="card" style="display:none;">
+		
+		<!-- card clone -->
+		
+		<div id="card" style="display:none;">
 <div class="card card_panel col-sm-6 hideable">
 	    <div class="tabbable">
 			<div class="tab-content">
@@ -325,5 +326,11 @@ interval = self.setInterval("polling()", time);
 		</div>
 	</div>
 </div>
-{% endblock %}
+		{% endblock %}
+	</div>
+</div>
+
+
+
+</div>
 {% endblock %}

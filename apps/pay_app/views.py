@@ -10,6 +10,7 @@ from django.utils import simplejson
 from django.http.response import HttpResponse
 import logging
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 logger=logging.getLogger(__name__)
 def get_icon(request):
     return render(request,'icon.html')
@@ -56,6 +57,36 @@ def pay_test(request):
          logging.error(simplejson.dumps(object_type))
          logging.error(simplejson.dumps(entries))
          return HttpResponse()
+
+
+
+def view_that_asks_for_money(request):
+    from apps.pay_app.PayPal import asks_for_money
+    args=asks_for_money(request)
+    from apps.pay_app.models import Order
+    orderList=Order.objects.filter(user_id=request.user.id).order_by('-createTime')
+    args['orderList']=orderList
+    from apps.pay_app.models import Charge
+    charge=Charge.objects.get(user_id=request.user.id)
+    args['charge']=charge
+    return render(request,"payment.html", args)
+
+@csrf_exempt
+def paypal_notify(request):
+    logging.error('payal通知')
+    return HttpResponse('payal通知')
+
+@csrf_exempt
+def paypal_success(request):
+    logging.error('paypal_success')
+    return HttpResponse('paypal_success')
+
+@csrf_exempt
+def paypal_cancel(request):
+    logging.error('paypal_cancel')
+    return HttpResponse('paypal_cancel')
+
+
 
 @csrf_exempt
 def pay_test2(request):

@@ -12,8 +12,8 @@
         }
         
         #uploadAvatarBtnLayout button {
-            width: 100%;
-            height: 100%;
+           /*  width: 100%;
+            height: 100%; */
         }
         
         #uploadAvatarInputFile {
@@ -26,21 +26,29 @@
         #uploadAvatarSelectArea {
             width: {{ crop_image_area_size }}px;
             height: {{ crop_image_area_size }}px;
-            border: 1px solid #ddd;
+            border: 1px solid #74BADD;
             overflow: hidden;
             float: left;
+            margin-left: 100px;
         }
         
         #uploadAvatarPreviewArea {
             float: right;
+            position: relative;
+            right: 50px;
         }
         
+        #uploadAvatarCropSubmit{
+			position: absolute;
+			left: 50%;
+		}
         {% for p in preview_areas %}
             #uploadAvatarPreviewArea{{ p.size }} {
                 width: {{ p.size }}px;
                 height: {{ p.size }}px;
                 border: 1px solid #ddd;
                 overflow: hidden;
+                border-radius:50%
             }
         {% endfor %}
     </style>
@@ -191,8 +199,8 @@
     <div id="uploadAvatarUploadArea">
         <form id="uploadAvatarForm" action="{% url 'uploadavatar_upload' %}" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
             {% csrf_token %}
-            <div id="uploadAvatarBtnLayout">
-                <button>{{ CHOOSE_IMAGE }}</button>
+            <div id="uploadAvatarBtnLayout" >
+                <button class="btn btn-danger">{{ CHOOSE_IMAGE }}</button>
                 <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
             </div>
         </form>
@@ -210,7 +218,7 @@
     <div style="clear: both;"></div>
     
     <div id="uploadAvatarBtns">
-        <button id="uploadAvatarCropSubmit" disabled="disabled">{{ CROP_IMAGE }}</button>
+        <button id="uploadAvatarCropSubmit" class="btn btn-info" disabled="disabled">{{ CROP_IMAGE }}</button>
     </div>
     
     <div id="uploadAvatarCropResult" style="display: none;"></div>
