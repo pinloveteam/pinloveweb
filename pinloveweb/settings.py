@@ -154,7 +154,7 @@ INSTALLED_APPS = (
 'apps.user_score_app', 
 'paypal.standard.ipn',
 )
-PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
+PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
