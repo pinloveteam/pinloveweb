@@ -6,6 +6,7 @@ Created on Sep 17, 2014
 '''
 from django.utils import simplejson
 from simplejson.encoder import JSONEncoder
+from util.util import regex_expression
 '''
 评论类
 '''

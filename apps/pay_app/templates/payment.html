@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+</head>
+<body>
+<h1>Show me the money!</h1>
+<!-- writes out the form tag automatically -->
+{{ form.render }}
+拼爱币数量:<input type="text" value="{{charge.vailAmount}}">
+<table>
+<th>操作类型</th><th>数量</th><th>货币类型</th><th>交易情况</th><th>时间</th>
+ {%for userScore in orderList%}
+ <tr>
+ <td>
+ {{userScore.data}}
+ </td>
+ <td>
+ {{userScore.amount}}
+ </td>
+  <td>
+ {{userScore.status}}
+ </td>
+ <td>
+ {{userScore.createTime}}
+ </td>
+ </tr>
+ {%endfor%}
+</table>
+</form>
+</body>
+</html>
