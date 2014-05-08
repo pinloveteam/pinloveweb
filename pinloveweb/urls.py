@@ -65,6 +65,8 @@ urlpatterns = patterns('',
     (r'^pay/', include('apps.pay_app.urls')),
 
      url(r'^test/$', 'pinloveweb.views.test'),
+     #paypal
+    (r'^pay/paypal/', include('paypal.standard.ipn.urls')),
 )
 
 #禁止搜索引擎收录

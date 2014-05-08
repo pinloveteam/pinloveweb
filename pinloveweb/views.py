@@ -228,6 +228,8 @@ def register_user(request) :
             userVerification.save()
             from apps.user_score_app.models import UserScore
             UserScore(user_id=user.id).save()
+            from apps.pay_app.models import Charge
+            Charge(user_id=user.id).save()
             # we need to generate a random number as the verification key 
              
             # user needs email verification 
