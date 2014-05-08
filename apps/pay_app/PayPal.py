@@ -25,7 +25,7 @@ def asks_for_money(request):
         "item_name": "pinlove",
         "invoice": orderId,
         "notify_url": PAYPAL['PAYPAL_URL']+"/pay/paypal/",
-        "return_url": PAYPAL['PAYPAL_URL']+"/paypal_success/",
+        "return_url": PAYPAL['PAYPAL_URL']+"/pay/paypal_success/",
         "cancel_return": PAYPAL['PAYPAL_URL']+"/pay/paypal_cancel/",
 
     }
