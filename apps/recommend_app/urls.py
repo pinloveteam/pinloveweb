@@ -21,4 +21,6 @@ urlpatterns+=patterns('apps.recommend_app.views',
     url(r'^update_weight/$', 'update_weight'),
     #对另一半打分
     url(r'^grade_for_other/$', 'grade_for_other'),
+    #性格标签
+    url(r'^character_tags/$', 'character_tags'),
 )                 

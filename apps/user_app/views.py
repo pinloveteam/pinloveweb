@@ -183,7 +183,6 @@ def user_profile(request):
         #获取对另一半期望标签
         tagsForOther=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=1)
         tagbeanForOtherList=tag_to_tagbean(tagsForOther)
-        args['tagOtherLengthMod2']=len(tagbeanForOtherList)/2
         args['tagbeanForOtherList']=tagbeanForOtherList
         #获取权重
         grade=Grade.objects.filter(user_id=request.user.id)
@@ -202,8 +201,6 @@ def user_profile(request):
             args['grade_for_other']=False
         else:
             args['grade_for_other']=userExpect
-        #一半的长度
-        args['taglength_2']=len(tagbeanList)/2
         args['tagbeanList']=tagbeanList
         args['user_profile_form'] = UserProfileForm(instance=useBasicrProfile) 
         args['country']=useBasicrProfile.country
@@ -240,16 +237,13 @@ def update_profile(request):
             from apps.user_app.method import get_profile_finish_percent_and_score
             userProfile=get_profile_finish_percent_and_score(userProfile,oldUserProfile)
             userProfile.save(oldUserProfile=oldUserProfile)
-            map=request.session['user_original_data']
-            cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),
-                                        education=map.get('education'),educationSchool=map.get('educationSchool'),income=map.get('income'))
-            #保存tag
-            UserTag.objects.filter(user=request.user,type=0).delete()
-            UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagList)
+#             map=request.session['user_original_data']
+#             cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),
+#                                         education=map.get('education'),educationSchool=map.get('educationSchool'),income=map.get('income'))
             data = serializers.serialize('json', [userProfile,])
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
-            cal_recommend(request.user.id,['userProfile','tag'])     
+            cal_recommend(request.user.id,['userProfile'])     
             return HttpResponse(data, mimetype='application/json')
  
 

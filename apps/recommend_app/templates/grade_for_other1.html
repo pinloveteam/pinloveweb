@@ -172,14 +172,6 @@
         $("#grade_for_other").submit(function(){
                             
                             var data = $(this).serialize();
-                            var tagObj = new Array()
-                            var tag = $(this).find('.tag a');
-                        	tag.each(function(){
-                        		if($(this).css('opacity') == '1'){
-                        			tagObj.push($(this).attr('name'));
-                        		}
-                        	});
-                        	data=data+'&tagList='+tagObj.toString();
                             $.ajax({
                                 type: $(this).attr('method'),
                                 url: "/recommend/grade_for_other/",
@@ -210,19 +202,6 @@
 <form id="grade_for_other" action="" method="POST">{% csrf_token %}
  <input type="hidden" id="result" name="result" value="">
 <div id="chartdiv" ></div> 
-<div class="grade_for_other_tag">
-<table class="tag">
-        {% for tag in tagbeanForOtherList %}
-           {% ifequal forloop.counter0 tagOtherLengthMod2 %}
-             <tr>
-           {% endifequal%}
-            {%if tag.isChoice%}
-              <td><a class="tag-trigger {{tag.colorClass}} " style="opacity: 1;" href="javascript:void(0);" name="{{tag.id}}">{{tag.content}}</a></td>
-             {% else %}
-                <td><a class="tag-trigger {{tag.colorClass}} " href="javascript:void(0);"  name="{{tag.id}}">{{tag.content}}</a></td>
-             {% endif %}
-        {% endfor %}
-  </table>
- </div>
-<button class="btn btn-warning" style="position: relative; left: 350px">保存</button>
+<button class="btn btn-pink btn-save">保存</button>
+
 </form> 

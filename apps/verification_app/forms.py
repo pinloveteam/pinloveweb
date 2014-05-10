@@ -21,6 +21,9 @@ class IDCardValidForm(ModelForm):
         super(IDCardValidForm, self).__init__(*args, **kwargs)
         self.fields['trueName'].required = False
         self.fields['IDCardChoice'].choices=((u'', u'请选择'),(0,'身份证'),(1,'护照'),)
+        self.fields['IDCardChoice'].widget.attrs["class"]="form-label"
+        self.fields['IDCardPicture'].widget.attrs["style"] = "display:inline-block;"
+        
         self.fields['IDCardChoice'].required=True      
     class Meta:
         model=UserContactLink
@@ -58,6 +61,7 @@ class EducationValidForm(ModelForm):
         super(EducationValidForm,self).__init__(*args, **kwargs)
         self.fields['education'].choices=((u'',u'请选择'),(0,r'大专以下'),(1,r'大专'),(2,r'本科'),(3,r'硕士 '),(4,r'博士 '),)
         self.fields['education'].required=True
+        self.fields['educationPicture'].widget.attrs["style"] = "display:inline-block;"
     educationPicture=forms.ImageField()
     class Meta:
         model=UserProfile
@@ -78,6 +82,7 @@ class IncomeValidForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(IncomeValidForm, self).__init__(*args, **kwargs)
         self.fields['income'].required = True
+        self.fields['incomePicture'].widget.attrs["style"] = "display:inline-block;"
     class Meta:
         model=UserProfile
         fields = ('income',)

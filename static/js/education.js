@@ -9,7 +9,7 @@ $(function(){
 		 $("div[class='provinceSchool']").hide();
 		  var top = $(this).position().top+22;
     	  var left = $(this).position().left;
-    	  provinceSchool=$(this).closest('td').find('.provinceSchool')
+    	  provinceSchool=$(this).closest('.school_div').find('.provinceSchool')
     	  provinceSchool.css({top:top,left:left});
     	  provinceSchool.show();
 		});
@@ -70,7 +70,7 @@ $(function(){
 		});
 		//学校列表点击事件
 		$("div[class='schoolList'] ul").on("click","li",function(){
-			$(this).closest('td').find("[id^='id_educationSchool']").val($(this).html());
+			$(this).closest('.school_div').find("[id^='id_educationSchool']").val($(this).html());
 		  $("div[class='provinceSchool']").hide();
 		});
 		//点击输入学校名

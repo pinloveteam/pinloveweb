@@ -129,19 +129,19 @@ def has_recommend(user_id,field):
 def init_tag():
     from apps.common_app.models import Tag
     try:
-        tags=Tag.objects.filter(type='0')
+        tags=Tag.objects.filter()
     except Exception as e:
         print e
     tagList=[]
     tagList1=[]
     i=0
     for tag in tags:
-        if i%2==0:
-            tagList1.append((tag.id,tag.content,tag.opposition))
-        else:
-            tagList.append((tag.id,tag.content,tag.opposition))
+        tagList1.append((tag.id,tag.content))
         i+=1
-    tagList.extend(tagList1)
+        if i>=3:
+            tagList.append(tagList1)
+            tagList1=[]
+            i=0
     cache.set('TAG',tuple(tagList))
 '''
 插入可以值，如果值为None，则创建

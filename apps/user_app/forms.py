@@ -20,7 +20,7 @@ class UserProfileForm(ModelForm):
             self.fields['gender'].widget.attrs['readonly'] = True
         for key in self.fields:
             self.fields[key].required = False
-            self.fields[key].widget.attrs['class']='form-control'
+            self.fields[key].widget.attrs['class']='form-input'
     
     def clean_age(self):
         instance = getattr(self, 'instance', None)

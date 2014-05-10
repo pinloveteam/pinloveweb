@@ -16,6 +16,7 @@ from apps.verification_app.forms import IDCardValidForm, IncomeValidForm,\
 from django.conf import settings
 from apps.the_people_nearby.tt import request
 from django.http.response import HttpResponse, HttpResponseRedirect
+from django.utils import simplejson
 '''
 获取认证信息
 '''
@@ -64,14 +65,14 @@ def valid(request):
                 userProfile.save()
                 return HttpResponse( "<script>window.parent.onUploadSuccess('income')</script>" )
             else:
-                error=''
+                errorMessage=[]
                 for item in incomeValidForm.errors.items():
                     if item[0]=='incomePicture':
-                        error+='收入证明 :'+item[1][0]+'<br>'
+                        errorMessage.append(['incomePicture',item[1][0]])
                     if item[0]=='income':
-                        error+='收入 :'+item[1][0]+'<br>'
-                return  HttpResponse( "<script>window.parent.onUploadError('%s','%s')</script>" % \
-        ('income_error',error))
+                         errorMessage.append([item[0],item[1][0]])
+                return  HttpResponse( "<script>window.parent.onUploadError('%s')</script>" % \
+        (simplejson.dumps(errorMessage)))
                 
         elif type=='IDCard':
             userContactLink=UserContactLink.objects.get(user=request.user)
@@ -85,13 +86,13 @@ def valid(request):
                 userContactLink.save()
                 return  HttpResponse( "<script>window.parent.onUploadSuccess('identity')</script>" )
             else:
-                error=''
                 type={'IDCardPicture':u'证件照','IDCardChoice':u'证件类型','trueName':u'真实姓名','IDCardNumber':u'证件号',}
+                errorMessage=[]
                 for item in IDcardValidForm.errors.items():
                     if item[0] in type.keys():
-                        error+=type[item[0]]+":"+item[1][0]+'<br>'
-                return  HttpResponse( "<script>window.parent.onUploadError('%s','%s')</script>" % \
-        ('identity_error',error))
+                        errorMessage.append([item[0],item[1][0]])
+                return  HttpResponse( "<script>window.parent.onUploadError('%s')</script>" % \
+        (simplejson.dumps(errorMessage)))
         elif type=='education':
             userProfile=UserProfile.objects.get(user=request.user)
             educationValidForm=EducationValidForm(request.POST,request.FILES,instance=userProfile)
@@ -104,13 +105,13 @@ def valid(request):
                 userProfile.save()
                 return  HttpResponse( "<script>window.parent.onUploadSuccess('education')</script>" )
             else:
-                error=''
+                errorMessage=[]
                 type={'education':u'学历','educationSchool':u'毕业学校','educationPicture':u'学历证明'}
                 for item in educationValidForm.errors.items():
                     if item[0] in type.keys():
-                        error+=type[item[0]]+":"+item[1][0]+'<br>'
-                return  HttpResponse( "<script>window.parent.onUploadError('%s','%s')</script>" % \
-                                      ('education_error',error))
+                       errorMessage.append([item[0],item[1][0]])
+                return  HttpResponse( "<script>window.parent.onUploadError('%s')</script>" % \
+                                      (simplejson.dumps(errorMessage)))
 ######################################    
 #####以上正在用
 ##################################

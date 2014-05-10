@@ -1,0 +1,121 @@
+<style>
+.my_tag {
+	display: inline-block;
+	width: 350px;
+	margin-left: 40px;
+}
+
+.p-tag {
+	cursor: pointer;
+	display: inline-block;
+	width: 80px;
+	margin: 10px;
+}
+
+.tag-active {
+	background: url({{STATIC_URL}}img/标签男背景.png) no-repeat;
+}
+
+.tag-active-g {
+	background: url({{STATIC_URL}}img/标签女背景.png) no-repeat;
+}
+</style>
+<script>
+$(document).ready(function() {
+       $('.p-tag').click(function() {
+				var className = $(this).parents('.my_tag').attr('class-data');
+				choseTag=$(this).parent().find('.'+className)
+				$(this).parent().children().removeClass(className);
+				if(choseTag.attr('name')!=$(this).attr('name')){
+					$(this).toggleClass(className);
+				}
+				
+		});
+
+		$('.btn_self_info').click(function() {
+				var tag = $('.tag').find('a');
+				tag.each(function() {
+				 if ($(this).css('opacity') == '1') {
+					alert($(this).attr('id'));
+				 }
+			});
+	});
+	
+	//提交事件
+	$("#character_tags").submit(function(){
+            data=$(this).serialize()
+		    var tagMyObj = new Array();
+		    var tagOtherObj = new Array();
+		    var tagMy=$(this).find('.tag-active');
+		    tagMy.each(function(){
+		    	tagMyObj.push($(this).attr('name'));
+		    });
+		    var tagOther=$(this).find('.tag-active-g');
+		    tagOther.each(function(){
+		    	tagOtherObj.push($(this).attr('name'));
+		    });
+		    data+='&tagMyList='+tagMyObj.toString()+'&tagOhterList='+tagOtherObj.toString()
+            $.ajax({
+                type: $(this).attr('method'),
+                url: '/recommend/character_tags/',
+                data:data,
+                beforeSend: function(XMLHttpRequest){
+                },
+                success: function(data, textStatus){
+                   /*  if(response == 'success'){
+                        var content = $('#id_content');
+                        $('#answer-list').append('<p>'+content.val()+'</p>');
+                        content.val('');
+                    } */
+                    if(textStatus== 'success'){
+                    	data=$.parseJSON(data)
+                    	if(data.result=='success'){
+                    		alert('保存成功!')
+                    	}
+                    }
+                },
+                complete: function(XMLHttpRequest, textStatus){
+                },
+                error: function(response){
+                    $('#answer-list').html(response);
+                }
+            });
+            return false;
+        });
+});
+
+</script>
+<form id='character_tags' action="" method="POST">{% csrf_token %}
+<img class="detail" src="{{STATIC_URL}}img/detail_information.png" />
+<div class="my_tag" class-data="tag-active">
+	<img src="{{STATIC_URL}}img/my_character_tags.jpg"
+		style="margin-left: 50px;" />
+	<div class="tags"
+		style="background: no-repeat url({{STATIC_URL}}img/character_tags_male.png)">
+		{% for tag in tagbeanList %}
+		<div class="tags-row">
+		 <span name="{{tag.0.id}}" class="p-tag {%if tag.0.isChoice%}tag-active{% endif %}">{{tag.0.content}}</span>
+		 <span name="{{tag.1.id}}" class="p-tag {%if tag.1.isChoice%}tag-active{% endif %}">适中</span>
+		 <span name="{{tag.2.id}}" class="p-tag {%if tag.2.isChoice%}tag-active{% endif %}">{{tag.2.content}}</span>
+       </div>
+        {% endfor %}
+		
+	</div>
+</div>
+
+<div class="my_tag" class-data="tag-active-g">
+	<img src="{{STATIC_URL}}img/Ta_character_tags.jpg"
+		style="margin-left: 50px;" />
+	<div class="tags"
+		style="background: no-repeat url({{STATIC_URL}}img/character_tags_female.png)">
+		{% for tag in tagbeanForOtherList %}
+		<div class="tags-row">
+		 <span name="{{tag.0.id}}" class="p-tag {%if tag.0.isChoice%}tag-active-g{% endif %}">{{tag.0.content}}</span>
+		 <span name="{{tag.1.id}}" class="p-tag {%if tag.1.isChoice%}tag-active-g{% endif %}">适中</span>
+		 <span name="{{tag.2.id}}" class="p-tag {%if tag.2.isChoice%}tag-active-g{% endif %}">{{tag.2.content}}</span>
+       </div>
+        {% endfor %}
+	</div>
+</div>
+<button class="btn btn-pink btn-save">保存</button>
+</form>

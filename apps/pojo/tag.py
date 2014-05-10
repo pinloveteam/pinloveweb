@@ -6,26 +6,26 @@ Created on 2014年1月15日
 '''
 COLOR_CLASS=('tag-limeGreen','tag-softPink')
 class TagBean(object):
-    def __init__(self,id,content,colorClass,isChoice):
+    def __init__(self,id,content,isChoice):
         self.id=id
         self.content=content
-        if colorClass%2==0:
-            self.colorClass=COLOR_CLASS[0]
-        elif colorClass%2==1:
-            self.colorClass=COLOR_CLASS[1]
         self.isChoice=isChoice
         
 def tag_to_tagbean(tagUserList):
-    tagTuple=get_tag()
+    tagLists=get_tag()
+    tagBeanLists=[]
     tagBeanList=[]
     tags=[tagUser.tag.id for tagUser in tagUserList]
-    for tag in tagTuple:
+    for tagList in tagLists:
+      for tag in tagList:
         if tag[0] in tags:
-            tagBean=TagBean(tag[0],tag[1],tag[2],True)
+            tagBean=TagBean(tag[0],tag[1],True)
         else:
-            tagBean=TagBean(tag[0],tag[1],tag[2],False)
+            tagBean=TagBean(tag[0],tag[1],False)
         tagBeanList.append(tagBean)
-    return tagBeanList
+      tagBeanLists.append(tagBeanList)
+      tagBeanList=[]
+    return tagBeanLists
 
 '''
 从缓存中获取性格标签

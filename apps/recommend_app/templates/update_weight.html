@@ -14,7 +14,30 @@ div.computerMove {
 	position: relative;
 	margin-top: 50px;
 	overflow: visible;
+	width: 500px;
+	border: solid 1px #000000;
 }
+
+.progress-bar-bule {
+	background-color: #92E3FF;
+}
+
+.progress-bar-yellow {
+	background-color: #FEF492;
+}
+
+.progress-bar-red {
+	background-color: #FF8089;
+}
+
+.progress-bar-green {
+	background-color: #C9FF73;
+}
+
+.progress-bar-purple {
+	background-color: #CD94FF;
+}
+
 </style>
 <SCRIPT>
     $(document).ready(function(){
@@ -98,7 +121,7 @@ div.computerMove {
 					moveDiv.html(now_x+ "%");
 					moveDiv.parent().find('input').attr('value',now_x)
 					
-					$('#_x').html('剩余:'+(100-(total+now_x)) +'%');
+					$('#_x').html((100-(total+now_x)) +'%');
 				}
 	
 			});
@@ -116,58 +139,65 @@ div.computerMove {
     	for (i=0;i<data.length;i++){
     		count+=parseInt(data[i].value)
     	}
-    	$('#_x').html('剩余:'+(100-(count)) +'%');
+    	$('#_x').html(+(100-(count)) +'%');
     	
     }
 </script>
-	<form id="update_weight" action="" menthod="post">
-		<div style="width: 500px; position: relative; left: 100px; height:100px;">
-		   <div id='_x' style="position: absolute;left:500px;"> 剩余:100%</div>
-			<span class='font'>身高</span>
-			<div class="progress">
-				<div class="progress-bar progress-bar-success" role="progressbar"
-					aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
-					style="width: {{heightweight}}%">
-					<div class="computerMove" style="left: {{heightweight}}%;">{{heightweight}}%</div>
-					<input type="hidden" name="height" value="{{heightweight}}">
-				</div>
-			</div>
-			<span>收入</span>
-			<div class="progress">
-				<div class="progress-bar progress-bar-info" role="progressbar"
-					aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-					style="width: {{incomeweight}}%">
-					<div class="computerMove" style="left: {{incomeweight}}%;">{{incomeweight}}%</div>
-					<input type="hidden" name="income" value="{{incomeweight}}">
-				</div>
-			</div>
-			<span>外貌</span>
-			<div class="progress">
-				<div class="progress-bar progress-bar-warning" role="progressbar"
-					aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
-					style="width: {{appearanceweight}}%">
-					<div class="computerMove" style="left: {{appearanceweight}}%;">{{appearanceweight}}%</div>
-					<input type="hidden" name="appearance" value="{{appearanceweight}}">
-				</div>
-			</div>
-			<span>学历</span>
-			<div class="progress">
-				<div class="progress-bar progress-bar-danger" role="progressbar"
-					aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
-					style="width: {{educationweight}}%">
-					<div class="computerMove" style="left: {{educationweight}}%;">{{educationweight}}%</div>
-					<input type="hidden" name="education" value="{{educationweight}}">
-				</div>
-			</div>
-			<span>性格</span>
-			<div class="progress">
-				<div class="progress-bar progress-bar-danger" role="progressbar"
-					aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
-					style="width: {{characterweight}}%">
-					<div class="computerMove" style="left: {{characterweight}}%;">{{characterweight}}%</div>
-					<input type="hidden" name="character" value="{{characterweight}}">
-				</div>
-				<button class="btn btn-warning" style="position: relative; left: 550px;">保存</button>
-			</div>
+<form id="update_weight" action="" menthod="post">
+<img class="detail" src="{{STATIC_URL}}img/detail_information.png" />
+<ul style="float: left; list-style-type: none; color: #053B8D; font-size: 18px;">
+	<li style="margin-top: 45px;">身高</li>
+	<li style="margin-top: 45px;">相貌</li>
+	<li style="margin-top: 45px;">财富</li>
+	<li style="margin-top: 45px;">学历</li>
+	<li style="margin-top: 45px;">性格</li>
+	<li style="margin-top: 45px;" >剩余：</li>
+</ul>
+<div style="float: right; margin-right: 280px;">
+	<div class="progress">
+		<div class="progress-bar progress-bar-green" role="progressbar"
+			aria-valuenow="80" aria-valuemin="{{heightweight}}" aria-valuemax="100"
+			style="width:  {{heightweight}}%">
+			<div class="computerMove" style="left: {{heightweight}}%;"> {{heightweight}}%</div>
+			<input type="hidden" name="height" value="{{heightweight}}">
 		</div>
-	</form>
+	</div>
+	<div class="progress">
+		<div class="progress-bar progress-bar-purple" role="progressbar"
+			aria-valuenow="20" aria-valuemin="{{appearanceweight}}" aria-valuemax="100"
+			style="width: {{appearanceweight}}%">
+			<div class="computerMove" style="left: {{appearanceweight}}%;">{{appearanceweight}}%</div>
+			<input type="hidden" name="appearance" value="{{appearanceweight}}">
+		</div>
+	</div>
+	<div class="progress">
+		<div class="progress-bar progress-bar-bule" role="progressbar"
+			aria-valuenow="60" aria-valuemin={{incomeweight}}" aria-valuemax="100"
+			style="width: {{incomeweight}}%">
+			<div class="computerMove" style="left: {{incomeweight}}%;">{{incomeweight}}%</div>
+			<input type="hidden" name="income" value="{{incomeweight}}">
+		</div>
+	</div>
+	<div class="progress">
+		<div class="progress-bar progress-bar-yellow" role="progressbar"
+			aria-valuenow="40" aria-valuemin="{{educationweight}}" aria-valuemax="100"
+			style="width: {{educationweight}}%">
+			<div class="computerMove" style="left: {{educationweight}}%;">{{educationweight}}%</div>
+			<input type="hidden" name="education" value="{{educationweight}}">
+		</div>
+	</div>
+	<div class="progress">
+		<div class="progress-bar progress-bar-red" role="progressbar"
+			aria-valuenow="20" aria-valuemin="{{characterweight}}" aria-valuemax="100"
+			style="width: {{characterweight}}%">
+			<div class="computerMove" style="left: {{characterweight}}%;">{{characterweight}}%</div>
+			<input type="hidden" name="character" value="{{characterweight}}">
+		</div>
+	</div>
+
+	<div id='_x'
+		style="position: relative; top: 27px; color: #053B8D; font-size: 18px;">
+		100%</div>
+</div>
+<button class="btn btn-pink btn-save">保存</button>
+</form>	

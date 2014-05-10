@@ -28,12 +28,12 @@ class School(models.Model):
 class Tag(models.Model):
     content=models.CharField(max_length=25,verbose_name=u'标签内容')
     #用于区分一组对立性格，例如：内向外向的对立
-    opposition=models.SmallIntegerField(verbose_name=u'性格对立类型')
-    type=models.CharField(max_length=2,verbose_name=u'标签类型')
+    group=models.SmallIntegerField(verbose_name=u'性格分组')
+    value=models.SmallIntegerField(verbose_name=u'性格标签的值')
     class Meta:
         verbose_name = u'标签表' 
         verbose_name_plural = u'标签表'
-        ordering = ['opposition']
+        ordering = ['group','value']
         db_table = "tag" 
         
 '''

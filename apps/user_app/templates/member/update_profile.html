@@ -2,6 +2,7 @@
 <SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
  <SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
  <SCRIPT src="/static/js/education.js" type=text/javascript></SCRIPT>
+  <SCRIPT src="/static/js/education.js" type=text/javascript></SCRIPT>
  <style>
 	  .provinceSchool { display:none;position:absolute;width:580px;height:310px;border:1px solid #72B9D7; background-color:#FFFFFF ;z-index: 1;}
 	  .provinceSchool .title { width:100%;height:30px;background:url({{STATIC_URL}}img/title-bg.png) repeat-x center left;}
@@ -16,23 +17,12 @@
 	  .provinceSchool .schoolList ul li:hover { background:#72B9D7;}
 	  .provinceSchool .button { width:100%;height:40px;margin-top:8px;}
 	  .provinceSchool .button input { float:right;height:30px;margin-right:20px;padding:4px 10px; background:url({{STATIC_URL}}img/title-bg.png);border:none;color:#FFF;font-weight:600;cursor:pointer;}
-      #id_year_of_birth,#id_month_of_birth,#id_day_of_birth{width: 200px;}
-      #id_month_of_birth{position: relative;left: 250px;top: -35px;}
-      #id_day_of_birth{position: relative;left: 490px;top: -70px;}
 </style>
     <SCRIPT>
         $(document).ready(function(){
         		$("#updateUserProfile").submit(function(){
                     
                     var data = $(this).serialize();
-                    var tagObj = new Array()
-                    var tag = $(this).find('.tag a')
-                	tag.each(function(){
-                		if($(this).css('opacity') == '1'){
-                			tagObj.push($(this).attr('name'));
-                		}
-                	});
-                	data=data+'&tagList='+tagObj.toString();
                     $.ajax({
                         type: $(this).attr('method'),
                         url: "/user/update_profile/",
@@ -72,116 +62,105 @@
         		});
         		
         		$('#add_school').click(function(){
-        			 $('#id_educationSchool_2').closest('tr').show()
+        			$('#id_educationSchool_2').closest('.school_div').css('display','inline-block').show()
         			 $(this).parent().hide()
         		})
         });
 
     </SCRIPT> 
-                         <form id=updateUserProfile action="" method="post" >{% csrf_token %}
-						<table class="table">
-							            <tbody>
-            <tr>
-                <td>昵称<span class="text-danger">*</span></td>
-                <td>
-                    <input id='username' type="text" class="form-control" name='username' value="{{user.username}}"/>
-                </td>
-                <td>学历<span class="text-danger">*</span></td>
-                <td>
-                    {{user_profile_form.education}}
-                </td>
-            </tr>
-            <tr>
-                <td>性别<span class="text-danger">*</span></td>
-                <td>
-                    {{user_profile_form.gender}}
-                </td>
-                <td>年龄</td>
-                <td>
-                    {{user_profile_form.age}}
-                </td>
-            </tr>
-            <tr>
-                <td>身高(mm)<span class="text-danger">*</span></td>
-                <td>
-                    {{user_profile_form.height}}
-                </td>
-                <td>体重(kg)</td>
-                <td>
-                    {{user_profile_form.weight}}
-                </td>
-            </tr>
-            <tr>
-                <td>学校<span class="text-danger">*</span></td>
-                <td colspan="2">
-                   {{user_profile_form.educationSchool}}
-                   {% if  user_profile_form.educationSchool_2.value %} {%else%} <a href="javascript:void(0);"><img id="add_school" src="/static/img/拼图-62.png" style="height: 30px; position: relative; left: 451px; top: -30px; width: 30px;"> </a>{%endif%}
-                     <div id="proSchool" class="provinceSchool">
-                      <div class="title">
-                        <span>已选择:</span>
-                       </div>
-                      <div class="proSelect">
-                        <select></select>
-                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
-                        <input type="text" >
-                      </div>
-                      <div class="schoolList">
-                        <ul>
-                        </ul>
-                      </div>
-                      <div class="button">
-                       <input type="button" flag='0' value="取消">
-                       <input type="button" flag='1' value="确定">
-                      </div>
-                     </div>
-                </td>
-            </tr>
-            <tr {% if  user_profile_form.educationSchool_2.value %} {%else%} style="display: none;"{%endif%}>
-                <td>学校</td>
-                <td colspan="2"">
-                   {{user_profile_form.educationSchool_2}}
-                     <div id="proSchool" class="provinceSchool">
-                      <div class="title">
-                        <span>已选择:</span>
-                       </div>
-                      <div class="proSelect">
-                        <select></select>
-                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
-                        <input type="text" >
-                      </div>
-                      <div class="schoolList">
-                        <ul>
-                        </ul>
-                      </div>
-                      <div class="button">
-                       <input type="button" flag='0' value="取消">
-                       <input type="button" flag='1' value="确定">
-                      </div>
-                     </div>
-                </td>
-            <tr>
-                <td>行业</td>
-                <td>
-                    {{user_profile_form.jobIndustry}}
-                </td>
-                <td>收入<span class="text-danger">*</span></td>
-                <td>
-                    {{user_profile_form.income}}
-                </td>
-            </tr>
-            <tr  height="30px">
-                <td>出生日期</td>
-                {{user_profile_form.day_of_birth.error}}
-                <td colspan="2">
-                   {{user_profile_form.year_of_birth}}
+          <form id=updateUserProfile action="" method="post" >{% csrf_token %}
+				
+				<div class="form-row">
+					<label class="form-label">昵称<span class="text-danger">*</span></label>
+					<input type="text" class="form-input" name="username" value="{{user.username}}"/>
+				</div>
+                
+                <div class="form-row">
+					<label class="form-label">性别<span class="text-danger">*</span></label>
+							 {{user_profile_form.gender}}
+				</div>
+						
+				<div class="form-row">
+					<label class="form-label">身高<span class="text-danger">*</span></label>
+					{{user_profile_form.height}}
+					<label class="form-label" style="margin-left: 75px;">体重</label>
+					 {{user_profile_form.weight}}
+				</div>
+						
+				<div class="form-row">
+					<label class="form-label">生日<span class="text-danger">*</span></label>
+					{{user_profile_form.year_of_birth}}
                     {{user_profile_form.month_of_birth}}
                     {{user_profile_form.day_of_birth}}
-                </td>
-            </tr>
-            <tr>
-                <td>现居地<span class="text-danger">*</span></td>
-                <td>
-                    <select id="id_country" name="country" class="form-control"  style="width: 200px;">
+							
+					<label class="form-label" style="margin-left: 50px;">年龄</label>
+					 {{user_profile_form.age}}
+				</div>
+						
+				<div class="form-row ">
+					<label class="form-label">学历<span class="text-danger">*</span></label>
+					{{user_profile_form.education}}
+					<div class="school_div" style="display: inline-block;">
+					<label class="form-label" style="margin-left: 75px;">学校<span class="text-danger">*</span></label>
+					{{user_profile_form.educationSchool}}
+					{% if  user_profile_form.educationSchool_2.value %} {%else%} <a href="javascript:void(0);"><img id="add_school" src="/static/img/拼图-62.png"> </a>{%endif%}
+                     <div id="proSchool" class="provinceSchool">
+                      <div class="title">
+                        <span>已选择:</span>
+                       </div>
+                      <div class="proSelect">
+                        <select></select>
+                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
+                        <input type="text" >
+                      </div>
+                      <div class="schoolList">
+                        <ul>
+                        </ul>
+                      </div>
+                      <div class="button">
+                       <input type="button" flag='0' value="取消">
+                       <input type="button" flag='1' value="确定">
+                      </div>
+                     </div>
+                     </div>
+					<div class="school_div" style="{% if  user_profile_form.educationSchool_2.value %} display: inline-block;{%else%} display: none;{%endif%}">	
+					   <label class="form-label" style="margin-left: 50px;">学校</label>
+					   {{user_profile_form.educationSchool_2}}
+					   <div id="proSchool" class="provinceSchool">
+                      <div class="title">
+                        <span>已选择:</span>
+                       </div>
+                      <div class="proSelect">
+                        <select></select>
+                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
+                        <input type="text" >
+                      </div>
+                      <div class="schoolList">
+                        <ul>
+                        </ul>
+                      </div>
+                      <div class="button">
+                       <input type="button" flag='0' value="取消">
+                       <input type="button" flag='1' value="确定">
+                      </div>
+                     </div>
+					</div>
+							
+				</div>
+						
+				<div class="form-row">
+					<label class="form-label">收入<span class="text-danger">*</span></label>
+					{{user_profile_form.income}}
+				</div>
+						
+				<div class="form-row">
+					<label class="form-label">行业<span class="text-danger">*</span></label>
+					 {{user_profile_form.jobIndustry}}
+				</div>
+						
+				<div class="form-row">
+					<label class="form-label">现居地<span class="text-danger">*</span></label>
+					<select id="id_country" name="country" class="form-input"  style="width: 200px;">
                         {%ifnotequal country  Null%}
                         <option value="-1" >请选择</option>
                         <option value="{{country}}" selected="selected">{{country}}</option>
@@ -189,7 +168,7 @@
                         <option value="-1" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                    <select id="id_stateProvince" name="stateProvince" class="form-control"  style="width: 200px; position: relative;left: 250px;top:-35px;">
+                    <select id="id_stateProvince" name="stateProvince" class="form-input"  >
                         {%ifnotequal stateProvince Null%}
                         <option value="-1" >请选择</option>
                         <option value="{{stateProvince}}" selected="selected">{{stateProvince}}</option>
@@ -197,7 +176,7 @@
                         <option value="-1" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                    <select id="id_city" name="city" class="form-control" style="width: 200px; position: relative;left: 490px;top:-69px;">
+                    <select id="id_city" name="city" class="form-input" >
                         {%ifnotequal city Null%}
                         <option value="-1" >请选择</option>
                         <option value="{{city}}" selected="selected">{{city}}</option>
@@ -205,24 +184,8 @@
                         <option value="-1" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                </td>
-           </tr>
-            </tbody>
-        </table>
-        <table class="tag">
-        {% for tag in tagbeanList %}
-           {% ifequal forloop.counter0 taglength_2 %}
-             <tr>
-           {% endifequal%}
-            {%if tag.isChoice%}
-              <td><a class="tag-trigger {{tag.colorClass}} " style="opacity: 1;" href="javascript:void(0);" name="{{tag.id}}">{{tag.content}}</a></td>
-             {% else %}
-                <td><a class="tag-trigger {{tag.colorClass}} " href="javascript:void(0);"  name="{{tag.id}}">{{tag.content}}</a></td>
-             {% endif %}
-        {% endfor %}
-        <tr>
-                <td colspan="2">资料完成度：{{profileFinsihPercent}}%</td>
-                </tr>
-  </table>
-  <button class="btn btn-warning user-save" style="position: relative; left: 300px;">保存</button>
+				</div>
+  <button class="btn btn-pink btn_self_info btn-save">
+  	保存
+  </button>
 </form>

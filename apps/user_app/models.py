@@ -257,7 +257,9 @@ class UserProfile(models.Model, UploadAvatarMixIn):
                 educationscore=cal_education(self.education,self.educationSchool)
             else:
                 SchoolScore1=cal_education(self.education,self.educationSchool)
-                SchoolScore2=cal_education(self.education,self.educationSchool_2)
+                SchoolScore2=0
+                if self.educationSchool_2 != None and self.educationSchool_2.rstrip() !=u'':
+                    SchoolScore2=cal_education(self.education,self.educationSchool_2)
                 if SchoolScore1>SchoolScore2:
                     educationscore=SchoolScore1
                 else:
@@ -388,10 +390,10 @@ class TagManage(models.Manager):
     '''   
     def bulk_insert_user_tag(self,user_id,type,tagIdList):
         from django.core.cache import cache
-        tagTupe=cache.get('TAG')
+        tagTupe=Tag.objects.all()
         tagIds=[]
         for tag in tagTupe:
-            tagIds.append(tag[0])
+            tagIds.append(tag.id)
         #保存tag信息
         tags=[]
         for tag in tagIdList:

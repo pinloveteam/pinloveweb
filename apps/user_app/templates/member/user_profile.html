@@ -5,26 +5,37 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css" type="text/css" />
 <script type="text/javascript" src="{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.scrollUp.min.js"></script>
+ <link href="/static/css/form.css" rel="stylesheet">
 <style type="text/css">
+
 			.col-sm-9 {
 				width: 870px;
-				height: 48px;
 				letter-spacing: 2px;
 				margin-top: 65px;
 			}
-
+			.col-sm-9 > div {
+				padding-top: 20px;
+				position: relative;
+			}
+			
+			.col-sm-9>.card_panel {
+				height: 530px;
+				width: 870px;
+				padding-left: 20px;
+			}
+			.detail{
+				position: absolute;
+				top: 5px;
+				left: 85%;	
+				cursor: pointer;
+			}
 			#scrollUp {
-				background: url("./img/top.png") no-repeat scroll 0 0 transparent;
+				background: url("{{STATIC_URL}}img/top.png") no-repeat scroll 0 0 transparent;
 				bottom: 20px;
 				height: 38px;
 				right: 20px;
 				width: 38px;
 			}
-			.card_panel {
-				height: 600px;
-				width: 870px;
-			}
-
 			.upload {
 				border: solid 1px #3A87AD;
 				width: 70px;
@@ -34,20 +45,6 @@
 				margin-top: 10px;
 			}
 
-			td {
-				border: none !important;
-			}
-
-			.table {
-				margin-top: 30px;
-			}
-
-			#income, #identity, #education {
-				border: solid 1px #716B7A;
-				width: 800px;
-				height: 100px;
-				margin: 20px;
-			}
 
 			.cerbtn {
 				position: relative;
@@ -56,63 +53,29 @@
 			}
 
 			.cer_tab {
-				border: solid 1px #ed9c28;
-				background-color: #FFFFc9;
 				width: 800px;
-				height: 200px;
-				margin-left: 20px;
-				position: relative;
+				height: 130px;
 				display: none;
 			}
 
-			.divArrow {
-				border-style: solid none none solid;
-				border-color: #ed9c28;
-				border-width: 1px;
-				background-color: #FFFFc9;
-				width: 25px;
-				height: 25px;
-				transform: rotate(45deg);
-				-webkit-transform: rotate(45deg);
+			.cer_button{
 				position: absolute;
-				top: -13px;
-				left: 700px;
+				top: 70px;
+				left: 400px;
 			}
 
-			.tag a {
-				color: #FFFFFF;
-				display: inline-block;
-				height: 25px;
-				padding: 0 9px;
-				text-decoration: none;
-				white-space: nowrap;
+			.btn-save {
+			position: absolute;
+			top: 90%;
+			left: 45%;
 			}
-			.tag {
-				line-height: 25px;
-				text-align: left;
+			#income, #identity, #education {
+				border: solid 1px #716B7A;
+				width: 800px;
+				height: 100px;
+				margin: 20px 0 20px 0;
 			}
 
-			.tag-limeGreen {
-				background: none repeat scroll 0 0 #52B369;
-			}
-			/*.tag-limeGreen:hover {
-				background: none repeat scroll 0 0 #52B369;
-			}*/
-			.tag-desaturatedBlue {
-				background: none repeat scroll 0 0 #75A6CF;
-			}
-			/*.tag-desaturatedBlue:hover {
-				background: none repeat scroll 0 0 #478CC6;
-			}*/
-			.tag-softPink {
-				background: none repeat scroll 0 0 #EA3873;
-			}
-			/*.tag-softPink:hover {
-				background: none repeat scroll 0 0 #EA3873;
-			}*/
-			.tag-trigger{
-				opacity: 0.5;
-			}
 		</style>
 
 {% endblock %}
@@ -124,7 +87,7 @@
 			<div class="row">
 				<div class="col-md-3">
 					<div role="complementary" class="bs-sidebar hidden-print affix">
-						<ul class="nav bs-sidenav">
+						<ul class="nav card_panel">
 							<li class="active">
 								<a href="#upload_head">上传头像</a>
 							</li>
@@ -132,10 +95,12 @@
 								<a href="#self_info">个人信息</a>
 							</li>
 							<li>
-								<a href="#certification">申请认证</a>
+								<a href="#personality">
+									性格标签
+								</a>
 							</li>
 							<li>
-								<a href="#account_info">账户信息</a>
+								<a href="#certification">申请认证</a>
 							</li>
 							<li>
 								<a href="#weight">权重</a>
@@ -158,59 +123,17 @@
 					{% include "member/update_profile.html"%}
 				   </div>
 					
+				   <!--性格标签 -->
+				   <div id="personality" class="card_panel">
+				      {% include "character_tags.html" %}
+				   </div>
 				   <!-- 认证 -->
 					<div id="certification" class="card_panel">
 						{% include "verfication.html" %}
 					</div>
-					<div id="account_info" class="card_panel account_info">
-					<script>
-					 $(document).ready(function(){
-							 $("#alter_password").submit(function(){
-									var data=$(this).serialize();
-									$.ajax({
-				                        type: $(this).attr('method'),
-				                        url: "/user/alter_password/",
-				                        data:data,
-				                        success: function(response){
-				                            alert("修改成功！")
-				                        },
-				                    
-				                    });
-								});
-						
-					 });
-					
-					</script>
-					    <form id='alter_password',name="alter_password" action="" menthod='POST'>
-						<table class="table">
-							<tbody>
-								<tr>
-									<td>旧密码:</td>
-									<td>
-									<input type="text" name='oldpassword' class="form-control" style="width: 300px;"/>
-									</td>
-								</tr>
-								<tr>
-									<td>新密码:</td>
-									<td>
-									<input type="text" name='newpassword' class="form-control" style="width: 300px;"/>
-									</td>
-								</tr>
-								<tr>
-									<td>重复密码:</td>
-									<td>
-									<input type="text" name='oldpassword' class="form-control" style="width: 300px;"/>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<button class="btn btn-warning alter_password" style="position: relative; left: 300px;">保存</button>
-						</form>
-					</div>
-					
 				   <!-- 权重 -->
 					<div id="weight" class="card_panel">
-					     {% include "member/update_weight.html" %}
+					     {% include "update_weight.html" %}
 					</div>
 					<!-- 另一半打分 -->
 					<div id="fate" class="card_panel">
@@ -256,5 +179,3 @@ this.isshow=true;
 		</script>
 		
 {% endblock %}
-{% block footer %}
-{% endblock %} 

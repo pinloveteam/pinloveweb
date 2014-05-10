@@ -7,9 +7,14 @@ function onUploadSuccess(id){
      $('#'+id).find('.cerbtn').attr('disabled',true).html('正在审核')
     alert('提交成功!')
 }
-function onUploadError(id,data){
+function onUploadError(data){
 	//the function after upload
-    $('#'+id).html(data)
+	data=$.parseJSON(data)
+    if (data.length>0){
+    	for(i=0;i<data.length;i++){
+    		$('#'+data[i][0]+'_error').html(data[i][1])
+    	}
+    }
 }
 /**
         $(document).ready(function(){
@@ -91,181 +96,161 @@ function onUploadError(id,data){
         **/
     </SCRIPT> 
 <div id="income">
-							<ul class="list-inline">
-								<li>
-									<img src="{{STATIC_URL}}img/income.png" class="icon"/>
-								</li>
-								<li>
-									<ul style="list-style:none;">
-										<li>
-											<span>收入认证</span>
-										</li>
-										<li>
-											<span>可以选择上传收入证明或者房产证进行认证。</span>
-										</li>
-										<li>
-											<span></span>
-										</li>
-									</ul>
-								</li>
-							</ul>
-							{% ifequal incomeValid '未认证'%}
-							<button class="btn btn-warning cerbtn">现在认证</button>
-							{% else %}
-							<button class="btn btn-warning cerbtn" disabled="true">{{incomeValid}}</button>
-							{% endifequal %}
-						</div>
-						<div id="cer_income" class="cer_tab">
-							<div class="divArrow"></div>
-							{% ifequal incomeValid '未认证'%}
-							<form id ="income_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" target="income_valid_iframe">{% csrf_token %}
-							<input type="hidden" name="type" value="income">
-							{% if incomeValidForm.errors %}
-							<p style="color: red;">
-							填写的信息有误，请重填。
-							</p>
-							{% endif %}
-							<table class="table">
-							<tbody>
-							  
-									<tr>
-										<td>收入:</td>
-										<td>{{incomeValidForm.income}}{{incomeValidForm.income.errors }}</td>
-									</tr>
-									<tr>
-										<td>收入证明:</td>
-										<td>{{incomeValidForm.incomePicture}} <br>{{incomeValidForm.incomePicture.errors }}</td>
-										 <div class="text-muted">
-										 <span >请上传公司的收入证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br>
-										 <span id="income_error" style="color:red;"></span>
-										 </div>
-									</tr>
-									<tr>
-									  <td colspan="2"><input type="submit" id="income_verfaction" class="btn btn-warning"  style="position: relative;" value="提交"></td>
-									</tr>
-								 
-								</tbody></table>
-							</form>	
-							<iframe name="income_valid_iframe" id="income_valid_iframe" width="1" height="1" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
-							{% endifequal %}
-						</div>
+	<ul class="list-inline">
+		<li><img src="{{STATIC_URL}}img/income.png" class="icon" /></li>
+		<li>
+			<ul style="list-style: none;">
+				<li><span>收入认证</span></li>
+				<li><span>可以选择上传收入证明或者房产证进行认证。</span></li>
+				<li><span></span></li>
+			</ul>
+		</li>
+	</ul>
+	{% ifequal incomeValid '未认证'%}
+	<button class="btn btn-success cerbtn ">现在认证</button>
+	{% else %}
+	<button class="btn btn-success cerbtn " disabled="true">{{incomeValid}}</button>
+	{% endifequal %}
+</div>
+<div id="cer_income" class="cer_tab gray-panel">
+	<div class="divArrow gray-panel"></div>
+	{% ifequal incomeValid '未认证'%}
+	<form id="income_valid" action="/verification/valid/" method="POST"
+		enctype="multipart/form-data" target="income_valid_iframe">{% csrf_token %} 
+		 <input type="hidden" name="type" value="income">
+	<div style="margin-top: -18px;">
+		<div class="text-muted">
+			<span>请上传公司的收入证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br> <span
+				style="color: red;" id="income_error"></span>
+		</div>
+		<div>
+			<label class="form-label">收入</label> {{incomeValidForm.income}}<div id="income_error" style="display: inline-block;color:red;"></div>
+		</div>
 
-						<div id="identity">
-							<ul class="list-inline">
-								<li>
-									<img src="{{STATIC_URL}}img/identity.png" class="icon"/>
-								</li>
-								<li>
-									<ul style="list-style:none;">
-										<li>
-											<span>身份认证</span>
-										</li>
-										<li>
-											<span>填写真实姓名和身份证号进行认证。</span>
-										</li>
-										<li>
-											<span></span>
-										</li>
-									</ul>
-								</li>
-							</ul>
-							{% ifequal IDCardValid '未认证'%}
-							<button class="btn btn-warning cerbtn">现在认证</button>
-							{% else %}
-							<button class="btn btn-warning cerbtn" disabled="true">{{IDCardValid}}</button>
-							{% endifequal %}
-						</div>
-						<div id="cer_identity" class="cer_tab" style="height: 220px;">
-							<div class="divArrow"></div>
-							{% ifequal IDCardValid '未认证'%}
-							<form id="IDCard_valid" action="/verification/valid/" method="POST" enctype="multipart/form-data" target="IDCard_valid_iframe">{% csrf_token %}
-							<input type="hidden" name="type" value="IDCard">
-							<table class="table">
-								<tbody>
-									<tr>
-										<td>真实姓名:</td>
-										<td>{{IDcardValidForm.trueName}}{{IDcardValidForm.trueName.errors }}</td></td>
-									</tr>
-									<tr>
-									    <td>证件类型:</td>
-									     <td>{{IDcardValidForm.IDCardChoice}}{{IDcardValidForm.IDCardChoice.errors }}</td>
-									</tr>
-									<tr>
-										<td>身份证号:</td>
-										<td>{{IDcardValidForm.IDCardNumber}}{{IDcardValidForm.IDCardNumber.errors }}</td>
-									</tr>
-									<tr>
-										<td>证件照:</td>
-										<td>{{IDcardValidForm.IDCardPicture}}{{IDcardValidForm.IDCardPicture.errors }}</td>
-									     <div class="text-muted">
-									     <span >请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span><br>
-									     <span id="identity_error" style="color:red;"></span>
-                                          </div>
-									</tr>
-									<tr>
-									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;"  value="提交"></td>
-									</tr>
-								</tbody>
-							</table>
-							</form>
-							<iframe name="IDCard_valid_iframe" id="IDCard_valid_iframe" width="1" height="1" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
-							{% endifequal %}
-						</div>
+		<div>
+			<label class="form-label">收入证明</label> {{incomeValidForm.incomePicture}} <div id="incomePicture_error" style="display: inline-block;color:red;"></div>
+		</div>
 
-						<div id="education">
-							<ul class="list-inline">
-								<li>
-									<img src="{{STATIC_URL}}img/education.png" class="icon"/>
-								</li>
-								<li>
-									<ul style="list-style:none;">
-										<li>
-											<span>学历认证</span>
-										</li>
-										<li>
-											<span>上传学历证件进行认证。</span>
-										</li>
-										<li>
-											<span></span>
-										</li>
-									</ul>
-								</li>
-							</ul>
-							{% ifequal educationValid '未认证'%}
-							<button class="btn btn-warning cerbtn">现在认证</button>
-							{% else %}
-							<button class="btn btn-warning cerbtn" disabled="true">{{educationValid}}</button>
-							{% endifequal %}
-						</div>
-						<div id="cer_education" class="cer_tab">
-							<div class="divArrow"></div>
-							{% ifequal educationValid '未认证'%}
-							<form id='education_valid' action="/verification/valid/" method="POST" enctype="multipart/form-data" target="education_valid_iframe">{% csrf_token %}
-							<input type="hidden" name="type" value="education">
-							<table>
-							  <tbody>
-							   <tr> 
-							      <td>学历:</td>
-							      <td>{{educationValidForm.education}}{{educationValidForm.education.errors }}</td>
-							   </tr>
-							   <tr> 
-							      <td>毕业学校:</td>
-							      <td>{{educationValidForm.educationSchool}}{{educationValidForm.educationSchool.errors }}</td>
-							   </tr>
-							   <tr>
-							      <td>学历证明:</td>
-							      <td> {{educationValidForm.educationPicture}}<br>{{educationValidForm.educationPicture.errors }}</td>
-							       <div class="text-muted">
-							        <span >请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br>
-							        <span id="education_error" style="color:red;"></span>
-							       </div>
-							   </tr>
-							   <tr>
-									  <td colspan="2"><input type="submit" id="IDcard_verfaction" class="btn btn-warning"  style="position: relative;"  value="提交"></td>
-								</tr>
-							  </tbody>
-							 </table>
-							 </form>
-							 <iframe name="education_valid_iframe" id="education_valid_iframe" width="1" height="1" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
-							{% endifequal %}
-						</div>
+		<button class="btn btn-info  cer_button">提交</button>
+	</div>
+	</form>
+	<iframe name="income_valid_iframe" id="income_valid_iframe" width="1"
+		height="1" marginwidth="0" marginheight="0" scrolling="no"
+		frameborder="0"></iframe>
+	{% endifequal %}
+</div>
+
+<div id="identity">
+	<ul class="list-inline">
+		<li><img src="{{STATIC_URL}}img/identity.png" class="icon" /></li>
+		<li>
+			<ul style="list-style: none;">
+				<li><span>身份认证</span></li>
+				<li><span>填写真实姓名和身份证号进行认证。</span></li>
+				<li><span></span></li>
+			</ul>
+		</li>
+	</ul>
+	{% ifequal IDCardValid '未认证'%}
+	<button class="btn btn-success cerbtn">现在认证</button>
+	{% else %}
+	<button class="btn btn-success cerbtn" disabled="true">{{IDCardValid}}</button>
+	{% endifequal %}
+</div>
+<div id="cer_identity" class="cer_tab gray-panel">
+	<div class="divArrow gray-panel"></div>
+	{% ifequal IDCardValid '未认证'%}
+	<form id="IDCard_valid" action="/verification/valid/" method="POST"
+		enctype="multipart/form-data" target="IDCard_valid_iframe">
+		{% csrf_token %} <input type="hidden" name="type" value="IDCard">
+	<div style="margin-top: -18px;">
+		<div class="text-muted">
+			<span>请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span><br> <span
+				style="color: red;" id="income_error"></span>
+		</div>
+		<div>
+			<label class="form-label">真实姓名</label> {{IDcardValidForm.trueName}} <div id="trueName_error" style="display: inline-block;color:red;"></div>
+		</div>
+
+		<div>
+			<label class="form-label">证件类型</label> 
+			{{IDcardValidForm.IDCardChoice}} <div id="IDCardChoice_error" style="display: inline-block;color:red;"></div>
+		</div>
+
+		<div>
+			<label class="form-label">证件号</label> 
+			{{IDcardValidForm.IDCardNumber}} <div id="IDCardNumber_error" style="display: inline-block;color:red;"></div>
+		</div>
+		<div>
+			<label class="form-label">证件照</label> 
+			{{IDcardValidForm.IDCardPicture}}<div id="IDCardPicture_error" style="display: inline-block;color:red;"></div>
+			<div class="text-muted">
+				<span>请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span><br>
+				<span id="identity_error" style="color: red;"></span>
+			</div>
+		</div>
+
+		<button class="btn btn-info  cer_button">提交</button>
+	</div>
+	</form>
+	<iframe name="IDCard_valid_iframe" id="IDCard_valid_iframe" width="1"
+		height="1" marginwidth="0" marginheight="0" scrolling="no"
+		frameborder="0"></iframe>
+	{% endifequal %}
+</div>
+
+<div id="education">
+	<ul class="list-inline">
+		<li><img src="{{STATIC_URL}}img/education.png" class="icon" /></li>
+		<li>
+			<ul style="list-style: none;">
+				<li><span>学历认证</span></li>
+				<li><span>上传学历证件进行认证。</span></li>
+				<li><span></span></li>
+			</ul>
+		</li>
+	</ul>
+	{% ifequal educationValid '未认证'%}
+	<button class="btn btn-success cerbtn">现在认证</button>
+	{% else %}
+	<button class="btn btn-success cerbtn" disabled="true">{{educationValid}}</button>
+	{% endifequal %}
+</div>
+<div id="cer_education" class="cer_tab gray-panel">
+	<div class="divArrow gray-panel"></div>
+	{% ifequal educationValid '未认证'%}
+	<form id='education_valid' action="/verification/valid/" method="POST"
+		enctype="multipart/form-data" target="education_valid_iframe">
+		{% csrf_token %} <input type="hidden" name="type" value="education">
+	<div style="margin-top: -18px;">
+		<div class="text-muted">
+			<span>请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br> <span
+				style="color: red;" id="income_error"></span>
+		</div>
+		<div>
+			<label class="form-label">学历</label>
+			 {{educationValidForm.education}} <div id="education_error" style="display: inline-block;color:red;"></div>
+		</div>
+
+		<div>
+			<label class="form-label">毕业学校</label> 
+			{{educationValidForm.educationSchool}} <div id="educationSchool_error" style="display: inline-block;color:red;"></div>
+		</div>
+
+		<div>
+			<label class="form-label">学历证明</label> 
+			{{educationValidForm.educationPicture}}<br> <div id="educationPicture_error" style="display: inline-block;color:red;"></div>
+			<div class="text-muted">
+				<span>请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br> 
+				<span id="education_error" style="color: red;"></span>
+			</div>
+		</div>
+
+		<button class="btn btn-info  cer_button">提交</button>
+	</div>
+	</form>
+	<iframe name="education_valid_iframe" id="education_valid_iframe"
+		width="1" height="1" marginwidth="0" marginheight="0" scrolling="no"
+		frameborder="0"></iframe>
+	{% endifequal %}
+</div>

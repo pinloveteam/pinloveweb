@@ -185,7 +185,12 @@
             $('#uploadAvatarCropResult').hide().text(msg).show(200);
         };
     </script>
-    
+    <div class="tip">
+<h5>请上传清晰美观的个人近照，给别人留下美好的第一印象。</h5>
+<p class="text-muted">
+<small>支持jpg、gif、png格式，单张照片在10k-8M之间；</small>
+</p>
+</div>
     <form id="uploadAvatarCropForm" action="{% url 'uploadavatar_crop' %}" method="post" target="uploadAvatarIframe" style="display: none;">
         {% csrf_token %}
         <input id="uploadAvatarValueX1" type="text" name="x1"/>

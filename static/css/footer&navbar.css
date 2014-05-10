@@ -1,47 +1,86 @@
-*{
-    margin: 0;
-    padding: 0;
-}
-html,body{
-    font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
-	background:url("../img/CARD.png");
-	background-size:100%;
-	height:100%;
-	/*background-color:#FFC1DE;*/
-    }
-/* navigation */
-.navbar{
-	z-index:100;
-	position:fixed;
-	/* background-color:#fff; */
-	background-color:rgba(255, 255, 255, 1);
-	width:100%;
-	height:70px;
-	/* border-color: #f3f4e8; */
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
-    border-radius: 0;
+* {
+	margin: 0;
+	padding: 0;
 }
 
-.navbar-nav{
-	margin-top:20px;
-	margin-left:150px;
+html, body {
+	font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+	background-size: 100%;
+	height: 100%;
+	background-color: #EDEFF5;
+}
+
+textarea {
+	resize: none;
+}
+
+navbar>a:hover {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+navbar>a {
+	color: #fff;
+}
+
+.divArrow {
+	border-style: solid none none solid !important;
+	width: 20px;
+	height: 20px;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	position: absolute;
+	top: -11px;
+	left: 700px;
+}
+
+.gray-panel {
+	position: relative;
+	border: solid 1px #E0D7BF;
+	background-color: #F6F7FA;
+}
+
+/* navigation */
+#user_config,#messages {
+	position: absolute;
+	background-color: #203854;
+	width: 80px;
+	display: none;
+}
+.navbar {
+	z-index: 100;
+	position: fixed;
+	background-color: #203854;
+	width: 100%;
+	height: 60px;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+	border-radius: 0;
+}
+
+.navbar-nav {
+	margin-top: 10px;
+	margin-left: 210px;
+	background-color: #203854;
 }
 
 .navbar-nav > li > a {
-    margin-right:20px;
-	color:#000;
+	margin-right: 20px;
+	font-weight: bold;
 }
 
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+	background-color: #34495e;
+}
 /* footer */
-.wrap{
+.wrap {
 	min-height: 88%;
 }
-	
+
 .indexFooter {
 	position: relative;
 	margin-top: 20px; /* footer高度的负值 */
 	height: 40px;
-	clear:both;
-    color: #A8A8A8;
-	text-align:center; 
+	clear: both;
+	color: #A8A8A8;
+	text-align: center;
 }

@@ -61,25 +61,21 @@ def grade_for_other(request):
         flag=True
         try:
             result=request.POST.get('result',False)
-            tags=request.REQUEST.get('tagList',False)
         except Exception as e:
             flag=False
             args['result']='error'
             args['msg']='传输参类型错误！'
             logger.error('传输参类型错误！',e)
-        if not( result and tags ):
+        if not result :
             flag=False
             args['result']='error'
             args['msg']='传输参数错误！'
         if flag:
-            tagList=tags.split(',')
             s=result.split(',')
             UserExpect.objects.create_update_by_uid(user_id=request.user.id,heighty1=float(s[1]),heighty2=float(s[3]),heighty3=float(s[5]),heighty4=float(s[7]),heighty5=float(s[9]) ,heighty6=float(s[11]),heighty7=float(s[13]),heighty8=float(s[15]))
-            UserTag.objects.filter(user=request.user,type=1).delete()
-            UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagList)   
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
-            cal_recommend(request.user.id,['userExpect','tag'])     
+            cal_recommend(request.user.id,['userExpect'])     
             args['result']='success'
         json=simplejson.dumps(args)
         return HttpResponse(json)
@@ -179,6 +175,31 @@ def get_socre_for_other(request):
         return HttpResponse(json)
     except Exception as e:
         logger.error('%s%s' %('获得对自己对另一半的打分，出错原因：',e))
+        args={'result':'error','error_messge':'系统出错!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    
+'''
+性格标签
+'''    
+def character_tags(request):
+    args={}
+    try:
+        if request.method=="POST":
+            tagMyList=request.REQUEST.get('tagMyList','').split(',')
+            tagOhterList=request.REQUEST.get('tagOhterList','').split(',')
+            #保存tag
+            UserTag.objects.filter(user=request.user).delete()
+            UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagMyList)
+            UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOhterList)
+            #判断推荐条件是否完善
+            from apps.recommend_app.recommend_util import cal_recommend
+            cal_recommend(request.user.id,['userExpect']) 
+            args['result']='success'
+            json=simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception as e:
+        logger.error('%s%s' %('性格标签，出错原因：',e))
         args={'result':'error','error_messge':'系统出错!'}
         json=simplejson.dumps(args)
         return HttpResponse(json)

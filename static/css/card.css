@@ -9,10 +9,6 @@
 	font-weight:bold;
 	font-size:16px;
   }
-
-a:hover {
-	text-decoration:none;
-	}
 	
 td{
 	padding:4px !important;
@@ -28,12 +24,11 @@ hr{
 	transition: background 0.5s;
 	margin-top:17px;
 	width:203px;
-	border: 1px solid rgba(255, 255, 255, 0.6);
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.3);
-}
-
-.card_panel:hover{
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
+	/*border: 2px solid #C4DAED;*/
+	background: none repeat scroll 0 0 rgba(255, 255, 255,1);
+	-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+    -webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
+    box-shadow:2px 2px 10px #909090;/*opera或ie9*/
 }
 
 .card_panel:hover .icon_ding,.card_panel:hover .icon_like,.card_panel:hover .icon_dislike{
@@ -86,7 +81,7 @@ hr{
 
 /*The left side*/
 .user_info{
-	height:219px;
+	height:199px;
   }
   
 .sns_info{
@@ -107,6 +102,7 @@ hr{
 .chosen{
 	border:2px solid green !important;
 }
+
 .radar{
 	position: absolute;
 	display:none;
@@ -122,10 +118,10 @@ hr{
 .dafen,.compare_cancle,.compare{
 	 top: -120px;
 }
+
 .dafen{
 	left: 320px;
 }
-
 .other_name > canvas{
 	display:none;
 	background-color: rgba(255, 255, 255, 0.9);
@@ -334,17 +330,17 @@ hr{
 
 /* icon */
 .icon_profile,.icon_photo,.icon_msg,.icon_ding,.icon_like_0,.icon_like_1,.icon_like_2,.icon_dislike{
-	background: url("/static/img/profile.png") no-repeat;
+	background: url("../img/profile.png") no-repeat;
 	margin-right:3px;
 	display: inline-block;
     height: 32px;
     width: 32px;
 }
 .icon_photo{
-	background-image: url("/static/img/photo.png");
+	background-image: url("../img/photo.png");
 }
 .icon_msg{
-	background-image: url("/static/img/msg.png");
+	background-image: url("../img/msg.png");
 }
 
 
@@ -360,36 +356,36 @@ hr{
 .icon_ding{
 	top:0px;
 	left:0px;
-	background-image: url("/static/img/2.png");
+	background-image: url("../img/2.png");
 }
 
 .icon_like_0,.icon_like_1,.icon_like_2{
-	top:107px;
-	left:130px;
+	top:177px;
+	left:95px;
 	opacity:1;
-	background-image: url("/static/img/like.png");
+	background-image: url("../img/like.png");
 }
 .icon_like_0{
-	background-image: url("/static/img/like.png");
+	background-image: url("../img/like.png");
 	title:"未关注"
 }
 .icon_like_1{
-	background-image: url("/static/img/slike.png");
+	background-image: url("../img/slike.png");
 	title:"已关注"
 }
 .icon_like_2{
-	background-image: url("/static/img/dlike.png");
+	background-image: url("../img/dlike.png");
 	title:"相互关注"
 }
 .icon_dislike{
 	top:0px;
-	left:185px;
-	background-image: url("/static/img/dislike.png");
+	right:-10px;
+	background-image: url("../img/dislike.png");
 }
 
 
 .icon_follow,.icon_fans,.icon_mutual_like{
-	background:url("/static/img/关注.png") no-repeat;
+	background:url("../img/关注.png") no-repeat;
 	margin-left:8px;
 	display:block;
     height: 27px;
@@ -397,16 +393,16 @@ hr{
 }
 
 .icon_fans{
-	background-image: url("/static/img/粉丝.png");
+	background-image: url("../img/粉丝.png");
 }
 
 .icon_mutual_like{
-	background-image: url("/static/img/相互关注.png");
+	background-image: url("../img/相互关注.png");
 }
 
 .ding{
 	opacity:1;
-	background-image: url("/static/img/1.png");
+	background-image: url("../img/1.png");
 }
 
 

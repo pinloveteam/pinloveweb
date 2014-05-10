@@ -7,7 +7,7 @@
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
     <link href="{{STATIC_URL}}css/footer&navbar.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}css/util.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
 	{% block staticfiles %}
 	
 	{% endblock %}
@@ -23,47 +23,82 @@
 </div>
 {% endblock %}
 {% block navigation %}
-<header class="navbar">
-  <div class="container" style="height:10px;">
-    <div class="navbar-header">
-    <a href='/'>
-      <img alt="140x140" src="{{STATIC_URL}}img/logo.png"/>
-    </a>  
-    <span class="site_name">拼爱网</span>
-    
-    </div>
-    <nav class="navigation">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="/">推荐</a>
-        </li>
-        <li>
-          <a href="/dynamic/">动态</a>
-        </li>
-        <li class="active">
-          <a href="/the_people_nearby/the_people_nearby">附近的人</a>
-        </li>
-        <li>
-          <a href="/search/">用户搜索</a>
-        </li>
-        <li>
-          <a href="/game/game_pintu/">缘分拼图</a>
-        </li>
-         <li>
-          <a href="/account/logout/">注销</a>
-        </li>
-		<li>
-          <a href="/message/">消息中心</a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <!-- <a href=".{{STATIC_URL}}about">关于</a> -->
-        </li>
-      </ul>
-    </nav>
-  </div>
+<header role="banner" class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button data-target=".bs-navbar-collapse" data-toggle="collapse"
+				type="button" class="navbar-toggle collapsed">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/"> Pinlove </a>
+		</div>
+		<nav role="navigation" class="navbar-collapse bs-navbar-collapse collapse" style="height: 1px;">
+			<ul class="nav navbar-nav" style=" position: absolute;left: 100px;">
+				<li class="active"><a href="/"> 推荐 </a></li>
+				<li><a href="/dynamic/"> 动态 </a></li>
+				<li><a href="/the_people_nearby/the_people_nearby"> 附近的人 </a></li>
+				<li><a href="/search/"> 用户搜索 </a></li>
+				<li><a href="/game/game_pintu/"> 缘分拼图 </a></li>
+			</ul>
+			<!--<ul class="nav navbar-nav navbar-right">
+					<li>
+					<a href="../about">
+					关于
+					</a>
+					</li>
+					</ul>-->
+
+			<ul class="nav navbar-nav navbar-right" style="position: absolute;right: 100px;">
+				<li target="#user_config"><a> <span
+						class="glyphicon glyphicon-user"></span>
+				</a>
+					<div id="user_config">
+						<div style="margin: 10px;">
+							<a href="#"> 个人信息 </a>
+						</div>
+						<div style="margin: 10px;">
+							<a href="#"> 账号设置 </a>
+						</div>
+						<div style="margin: 10px;">
+							<a href="#"> 会员中心 </a>
+						</div>
+						<div style="margin: 10px;">
+							<a href="/account/logout/"> 退出 </a>
+						</div>
+					</div></li>
+				<li target="#messages"><a> <span
+						class="glyphicon glyphicon-envelope"></span>
+				</a>
+					<div id="messages">
+						<div style="margin: 10px;">
+							<a href="#"> 系统消息 </a>
+						</div>
+						<div style="margin: 10px;">
+							<a href="#"> 最近访客 </a>
+						</div>
+						<div style="margin: 10px;">
+							<a href="/message/"> 查看私信 </a>
+						</div>
+					</div></li>
+			</ul>
+		</nav>
+	</div>
 </header>
+<script type="text/javascript">
+$(document).ready(function() {
+	 $('.navbar-right').find('li').mouseover(function() {
+		 target = $(this).attr('target');
+		 $(target).show();
+		 });
+	 $('.navbar-right').find('li').mouseleave(function() {
+		 target = $(this).attr('target');
+		 $(target).hide();
+		 }); 
+});
+</script>
+
 {% endblock %}
 {% block content %}{% endblock %}
 {% block footer %}

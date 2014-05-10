@@ -37,6 +37,20 @@ label {
 .form-control {
 	width: 300px;
 }
+
+.form-row {
+	margin-bottom: 20px;
+}
+
+.form-label {
+	width: 75px;
+}
+
+.form-input {
+	border: solid 1px #000000;
+	font-size: 18px;
+	width: 150px;
+}
 /* 字体 */
 .text1-font {
 	font-weight: bold;
@@ -52,17 +66,15 @@ label {
 	width: 80px;
 }
 
-.btn-warning {
+.btn-pink {
 	background-color: #FF9283;
 	border-color: #FF9283;
 	color: #FFFFFF;
 }
 
-.btn-warning:hover {
+.btn-pink:hover, .btn-pink:active, .btn-pink:focus {
 	background-color: #FF796D;
 	border-color: #FF796D;
+	color: #FFFFFF;
 }
 
-textarea {
-	resize: none;
-}
