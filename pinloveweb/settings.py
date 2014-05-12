@@ -155,6 +155,7 @@ INSTALLED_APPS = (
 'paypal.standard.ipn',
 )
 PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
+PAYPAL_TEST=False
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
