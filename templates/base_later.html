@@ -1,116 +1,166 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title> {% block title %} 拼爱网 {% endblock %} </title>
+    <link rel="shortcut icon" href="{{STATIC_URL}}img/icon.png" >
+	<title> {% block title %} 拼爱网{% endblock %} </title>
 	{% load staticfiles %}
 	<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
     <link href="{{STATIC_URL}}css/footer&navbar.css" rel="stylesheet">
     <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
-	{% block staticfiles %}
-	
-	{% endblock %}
-	{% block css %}
-	
-	{% endblock %}
+    <link href="{{STATIC_URL}}css/poplayer.css" rel="stylesheet">
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.poplayer.js"></script>
+    <script src="{{STATIC_URL}}js/jquery.loading.js" type="text/javascript" charset="utf-8"></script>
+	{% block staticfiles %}{% endblock %}
+	{% block css %}{% endblock %}
 </head> 
 <body>
 {% block logo %}
-<div class="wrap">  
+<header >
 <div class="page_top">
 			<div class="logo"><a href="/"><img alt="140x140" src="{{STATIC_URL}}img/logo.png"/></a></div>
-</div>
+</header>
 {% endblock %}
 {% block navigation %}
-<header role="banner" class="navbar navbar-inverse navbar-fixed-top">
-	<div class="container">
-		<div class="navbar-header">
-			<button data-target=".bs-navbar-collapse" data-toggle="collapse"
-				type="button" class="navbar-toggle collapsed">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="/"> Pinlove </a>
+<header data-log="navi" class="header" id="header">
+	<div class="header-inner">
+		<h1 class="header-logo"></h1>
+		<ul class="header-navi list-inline">
+			<li id="home"><a href="/"> <span>推荐</span>
+			</a></li>
+			<li id="dynamic"><a href="/dynamic/"> <span>动态</span>
+			</a></li>
+			<li id="the_people_nearby"><a href="/the_people_nearby/the_people_nearby"> <span>附近的人</span>
+			</a></li>
+			<li id="search"><a href="/search/"> <span>用户搜索</span>
+			</a> <em class="icon-recomm header-park-recomm"></em></li>
+			<li id="game_pintu"><a href="/game/game_pintu/"> <span>缘分拼图</span>
+			</a></li>
+		</ul>
+		<div class="header-info js-header-info">
+			<a  href="/message/" title="消息"><div class="header-info-mess js-info-mess glyphicon" id="newMessage">
+				<!-- <div class="header-info-list js-list">
+					<ul>
+						<li class="js-message"><a href="/messages"> <em
+								class="js-item"></em> <span>系统消息</span>
+						</a></li>
+						<li class="js-heed"><a href="/message/"> <em
+								class="js-item"></em> <span>查看私信</span>
+						</a></li>
+					</ul>
+				</div> -->
+			</div>
+			</a>
+			<div class="header-info-user js-info-user glyphicon ">
+				<div class="header-info-list header-info-setting-list">
+					<ul>
+						<li><a href="/user/user_profile/#self_info"> <span>个人信息</span>
+						</a></li>
+						<li><a href="/user/reset_password/"> <span>修改密码</span>
+						</a></li>
+						<li><a href="/pay/member/"> <span>会员中心</span>
+						</a></li>
+						<li class="line"></li>
+						<li><a href="/account/logout/" id="logOut"> <span>退出</span>
+						</a></li>
+					</ul>
+				</div>
+			</div>
 		</div>
-		<nav role="navigation" class="navbar-collapse bs-navbar-collapse collapse" style="height: 1px;">
-			<ul class="nav navbar-nav" style=" position: absolute;left: 100px;">
-				<li class="active"><a href="/"> 推荐 </a></li>
-				<li><a href="/dynamic/"> 动态 </a></li>
-				<li><a href="/the_people_nearby/the_people_nearby"> 附近的人 </a></li>
-				<li><a href="/search/"> 用户搜索 </a></li>
-				<li><a href="/game/game_pintu/"> 缘分拼图 </a></li>
-			</ul>
-			<!--<ul class="nav navbar-nav navbar-right">
-					<li>
-					<a href="../about">
-					关于
-					</a>
-					</li>
-					</ul>-->
-
-			<ul class="nav navbar-nav navbar-right" style="position: absolute;right: 100px;">
-				<li target="#user_config"><a> <span
-						class="glyphicon glyphicon-user"></span>
-				</a>
-					<div id="user_config">
-						<div style="margin: 10px;">
-							<a href="#"> 个人信息 </a>
-						</div>
-						<div style="margin: 10px;">
-							<a href="#"> 账号设置 </a>
-						</div>
-						<div style="margin: 10px;">
-							<a href="#"> 会员中心 </a>
-						</div>
-						<div style="margin: 10px;">
-							<a href="/account/logout/"> 退出 </a>
-						</div>
-					</div></li>
-				<li target="#messages"><a> <span
-						class="glyphicon glyphicon-envelope"></span>
-				</a>
-					<div id="messages">
-						<div style="margin: 10px;">
-							<a href="#"> 系统消息 </a>
-						</div>
-						<div style="margin: 10px;">
-							<a href="#"> 最近访客 </a>
-						</div>
-						<div style="margin: 10px;">
-							<a href="/message/"> 查看私信 </a>
-						</div>
-					</div></li>
-			</ul>
-		</nav>
 	</div>
 </header>
 <script type="text/javascript">
 $(document).ready(function() {
-	 $('.navbar-right').find('li').mouseover(function() {
-		 target = $(this).attr('target');
-		 $(target).show();
-		 });
-	 $('.navbar-right').find('li').mouseleave(function() {
-		 target = $(this).attr('target');
-		 $(target).hide();
-		 }); 
+	$('.indexFooter .bd-btn').click(function () {
+		var UA = navigator.userAgent.toLowerCase(); 
+		var footer = $('.indexFooter .footer-bd');
+		if(footer.css('display')=='none'){
+			footer.slideDown(400);
+			$('.indexFooter .btn-icon').css({
+				'border-color':'#363636 transparent transparent transparent',
+				'top':'10px'
+			});
+			jQuery('html').animate({scrollTop:footer.offset().top},400);
+			jQuery('body').animate({scrollTop:footer.offset().top},400);
+		 
+		}else{
+			footer.slideUp(400);
+			$('.indexFooter .btn-icon').css({
+				'border-color':'transparent transparent #363636 transparent',
+				'top':'-10px'
+			});
+		}
+	});
 });
+
+//切换导航栏
+function change_navi(){
+	pathname=window.location.pathname
+	if(pathname=='/account/loggedin/'){
+		$('#home').addClass('active')
+	}else if(pathname=='/dynamic/'){
+		$('#dynamic').addClass('active')
+	}else if(pathname=='/the_people_nearby/the_people_nearby/'){
+		$('#the_people_nearby').addClass('active')
+	}else if(pathname=='/search/'){
+		$('#search').addClass('active')
+	}else if(pathname=='/game/game_pintu/'){
+		$('#game_pintu').addClass('active')
+	}
+}
 </script>
 
 {% endblock %}
 {% block content %}{% endblock %}
 {% block footer %}
 <div class="indexFooter">
-	<ul class="indexFooterRight list-inline">
-		<li><a href="/web/about/" style="color:#000">关于我们</a></li>
-		<li><a href="#" style="color:#000">媒体关注</a></li>
-		<li><a href="#" style="color:#000">联系客服</a></li>
-		<li><a href="/web/privacy/" style="color:#000">隐私保护</a></li>
-		<li><a href="#" style="color:#000">帮助</a></li>
-	</ul>
-  	<p>Copyright  &copy;  2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;京ICP证130108号</p>
+	<div class="bd-btn">
+		<div class="btn-icon" style="border-color: transparent transparent rgb(54, 54, 54); top: -10px;"></div>
+	</div>
+	<div class="footer-bd" style="display: none;">
+		<dl class="db-item">
+			<dt class="item-title">
+				<span style="background-color: #55AADE"></span> 友情链接
+			</dt>
+			<dd>
+				<ul>
+					<li><a href="#">拼爱网</a></li>
+					<li><a href="#">拼爱网</a></li>
+					<li><a href="#">拼爱网</a></li>
+					<li><a href="#">拼爱网</a></li>
+				</ul>
+			</dd>
+		</dl>
+
+		<dl class="db-item">
+			<dt class="item-title">
+				<span></span> 手机客户端下载
+			</dt>
+			<dd>
+				<div class="app android">Android客户端下载</div>
+				<div class="app apple">iphone客户端下载</div>
+			</dd>
+		</dl>
+
+		<dl class="db-item">
+			<dt class="item-title">
+				<span style="background-color: #56CC99;"></span> 关注我们
+			</dt>
+			<dd>
+				<div class="follow"></div>
+			</dd>
+		</dl>
+	</div>
+	<div class="footer-ft">
+		<div class="ft">
+			<p>
+				<a href="/web/about/">关于我们</a> - <a href="/web/contactus/">联系我们</a> - <a href="#">拼爱特色服务</a> -
+				<a href="#">意见反馈</a> <span class="cRed"> Copyright &copy;
+					2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;浙ICP备14016914号</span>
+			</p>
+		</div>
+	</div>
 </div>
 {% endblock %}
 </body> 

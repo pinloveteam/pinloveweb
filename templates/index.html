@@ -1,1 +1,34 @@
-﻿{% extends "card.html" %}
+﻿{% extends "base_later.html" %}
+	<title> {% block title %} 拼爱网--个人主页 {% endblock %} </title>
+{% load staticfiles %}
+{% block staticfiles %}
+<link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/jquery.jscrollpane.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.jscrollpane.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/Card.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	change_navi()
+})
+
+</script>
+{% endblock %}
+{% block css %}
+
+{% endblock %}
+{% block logo %}
+{% endblock %}
+{% block content %}
+<div class="wrap">
+ <div class="container">
+	<div class="row" style="margin-top:63px;">
+	{% include "left.html" %}
+	{% include "card.html" %}
+	</div>
+ </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 var s=["id_country","id_stateProvince","id_city"];
-var opt0 = ["国家","省份、州","地级市、县"]; 
+var opt0 = ["请选择","请选择","请选择"]; 
 $(document).ready(function(){
 	
 //	     $('#id_stateProvince').bind('change',function(){

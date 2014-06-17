@@ -6,7 +6,7 @@ Created on Nov 5, 2013
 '''
 from django.shortcuts import render
 from apps.friend_dynamic_app.models import FriendDynamic, Picture,\
-    FriendDynamicArgee, FriendDynamicComment
+    FriendDynamicComment, FriendDynamicArgee
 from pinloveweb import settings
 from PIL import ImageFile 
 import time
@@ -14,12 +14,15 @@ from apps.user_app.models import UserProfile, Follow
 from django.utils import simplejson
 from django.http import HttpResponse
 import logging
-
+from django.http.response import HttpResponseRedirect
+logger=logging.getLogger(__name__)
 '''
 卡片界面动态
+发动态
 '''
 def dynamic(request):
     arg={}
+    #发布动态
     if request.method=="POST":
         flag=True
         content=request.POST.get('content').strip()
@@ -46,12 +49,13 @@ def dynamic(request):
                 from util import util_settings
                 picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
                 picture.save()
+                del request.session['images_path']
 #                 pictureList.append(picture.picPath)
-            del request.session['images_path']
+        return HttpResponseRedirect('/dynamic/')
     userProfile=UserProfile.objects.get(user_id=request.user.id)
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
-    arg=init_dynamic(request,request.user,arg)
+    arg=init_dynamic(request,request.user.id,arg,0)
     if request.GET.get('type')=='ajax':
         from apps.pojo.dynamic import MyEncoder
         json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
@@ -61,21 +65,40 @@ def dynamic(request):
     return render(request, 'dynamic.html',arg )
 
 '''
-初始化好友动态
+用户个人动态中心
 '''
-def init_dynamic(request,user,arg):
-    #查询关注的人列表
-    followList=Follow.objects.filter(my=user)
-    #我关注的人id列表
-    followIdList=[]
-    for follow in followList:
-        followIdList.append(follow.follow_id)
-    followIdList.append(user.id)
-    friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id__in=followIdList).order_by('-publishTime')
+def person_dynamic(request):
+    arg={}
+    try:
+        userId=int(request.REQUEST.get('userId'))
+        arg['userId']=userId
+        userProfile=UserProfile.objects.get(user_id=request.user.id)
+        from pinloveweb.method import init_person_info_for_card_page
+        arg.update(init_person_info_for_card_page(userProfile))
+        arg=init_dynamic(request,userId,arg,1)
+        if request.GET.get('type')=='ajax':
+            from apps.pojo.dynamic import MyEncoder
+            json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
+            return HttpResponse(json, mimetype='application/json')
+        return render(request, 'person_dynamic.html',arg )
+    except:
+        logger.expction('用户个人动态中心,出错!')
+'''
+初始化动态
+attridute 
+  type 
+     0   好友动态
+     1   自己的动态
+'''
+def init_dynamic(request,userId,arg,type=None):
+    if type==0:
+        friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
+    else:
+        friendDynamicList=FriendDynamic.objects.filter(publishUser_id=userId).order_by('-publishTime')
     from util.page import page
-    arg.update(page(request,friendDynamicList,page_num=8))
+    arg.update(page(request,friendDynamicList,page_num=1))
     from apps.pojo.dynamic import friendDynamicList_to_Dynamic
-    friendDynamicList=friendDynamicList_to_Dynamic(arg['pages'].object_list, user.id)
+    friendDynamicList=friendDynamicList_to_Dynamic(arg['pages'].object_list, userId)
     #获取点赞列表
 #     friendDynamicArgeeList=FriendDynamicArgee.objects.filter(user=user)
 #     argeeList=[]
@@ -96,6 +119,8 @@ def init_dynamic(request,user,arg):
         arg['next_page_number']=-1
 #     arg['argeeList']=argeeList
     return  arg
+
+
 ###############################################
 ##以上用用于1.0版
 ########################################
@@ -175,9 +200,10 @@ def dynamic_list(request):
     else:
         return render(request, 'login.html', arg,) 
 '''
-上传图片
+上传动态图片
 '''  
 def update_photo(request): 
+  try:
     if request.method == 'POST':
       if request.FILES :
         arg={}
@@ -189,7 +215,7 @@ def update_photo(request):
         img = parser.close()
         from util import util_settings
         from util.util import random_str
-        pictureName='%s%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10),f.name[f.name.find('.'):])
+        pictureName='%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10))
         if 'images_path' in request.session.keys():
             list=simplejson.loads(request.session['images_path'])
             list.append(pictureName)
@@ -197,9 +223,15 @@ def update_photo(request):
         else:
             request.session['images_path']=simplejson.dumps([pictureName,])
         name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
-        img.save(name) 
+        from apps.friend_dynamic_app.dynamic_settings import thumbnails,IMAGE_SAVE_FORMAT
+        img.save('%s%s%s'%(name,'.',IMAGE_SAVE_FORMAT))
+        img.thumbnail(thumbnails)
+        img.save('%s%s%s%s%s'%(name,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT))
 #         return HttpResponseRedirect('/dynamic/send/')
         return HttpResponse(pictureName)
+  except :
+        logger.exception('上传动态图片出错！')
+        return HttpResponse('上传图片出错!')
 
 '''
 删除图片
@@ -216,9 +248,13 @@ def delete_photo(request):
             if pictureName in list:
                 list.remove(pictureName)
         from util import util_settings
-        path = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
+        name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
+        from apps.friend_dynamic_app.dynamic_settings import IMAGE_SAVE_FORMAT,thumbnails
+        path='%s%s%s'%(name,'.',IMAGE_SAVE_FORMAT)
+        thumbnailPath='%s%s%s%s%s'%(name,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT)
         import os
         os.remove(path)
+        os.remove(thumbnailPath)
         return HttpResponse('删除成功!')
     
 def update_video(request): 

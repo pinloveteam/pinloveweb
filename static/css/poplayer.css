@@ -1,0 +1,139 @@
+.text-white {
+	color: #fff;
+}
+
+.text-red {
+	color: #f00
+}
+
+.masklayer {
+	background: #000;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 999;
+}
+
+.poplayer {
+	position: fixed;
+	z-index: 1000;
+	top: 35%;
+	left: 35%;
+}
+
+.poplayer-confirm {
+	background-color: #fff;
+	width: 470px;
+	-webkit-box-shadow: 0 0 4px #000;
+	-moz-box-shadow: 0 0 4px #000;
+	box-shadow: 0 0 4px #000;
+}
+
+.poplayer-confirm-head {
+	background-color: #9CD0FF;
+	padding-left: 15px;
+}
+
+.poplayer-close-btn {
+	padding: 1px 7px;
+	cursor: pointer;
+	position: absolute;
+	left: 445px;
+	top: 3px;
+}
+
+.poplayer-close-btn:hover {
+	background-color: #203854;
+}
+
+.poplayer-confirm-head-text {
+	font-size: 18px;
+	line-height: 30px;
+}
+
+.poplayer-confirm-body {
+	padding: 16px 30px 21px 79px;
+}
+
+.poplayer-confirm-bottom {
+	background-color: #f0f0f0;
+	padding: 7px;
+}
+
+.poplayer-confirm-bottom > button {
+	position: relative;
+	left: 80%;
+}
+
+
+.poplayer .col-xs-4 {
+	background-color: #fff;
+	height: 530px;
+	width: 400px;
+}
+.poplayer .score {
+	display: inline-block;
+	font-size: 60px;
+	width: 176px;
+	text-align: center;
+}
+
+.poplayer .main {
+text-align: center;
+}
+
+.poplayer .table {
+	margin-top: 50px;
+	margin-left: 20px;
+}
+
+.poplayer td {
+	border: none !important;
+	vertical-align: middle !important;
+}
+
+.poplayer .icon {
+	display: inline-block;
+	height: 32px;
+	width: 32px;
+	background: no-repeat;
+}
+.poplayer .icon-height {
+	background: url("../img/身高.png");
+}
+.poplayer .icon-education {
+	background: url("../img/学历.png");
+}
+
+.poplayer .icon-age {
+	background: url("../img/年龄.png");
+}
+
+.poplayer .icon-income {
+	background: url("../img/收入.png");
+}
+
+.poplayer .icon-trade {
+	background: url("../img/行业.png");
+}
+
+.poplayer .icon-constellation {
+	background: url("../img/星座.png");
+}
+
+.poplayer .icon-eye {
+	background: url("../img/个人信息新-08.png");
+	cursor: pointer;
+}
+
+.label {
+	font-size: 100%;
+	line-height: 2;
+	margin-left: 5px;
+	margin-top: 5px;
+	display: inline-block;
+}

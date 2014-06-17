@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
 from apps.user_app.models import UserProfile,UserContactLink,Follow,Verification,\
-    UserTag
+    UserTag, UserVerification
 from apps.user_app.forms import UserBasicProfileForm, UserContactForm,UserAppearanceForm, UserStudyWorkForm, UserPersonalHabitForm,\
     UserFamilyInformationForm, UserProfileForm
 from django.core.context_processors import csrf 
@@ -26,7 +26,8 @@ from util.singal import cal_recommend_user
 from apps.pojo.card import MyEncoder
 from django.core import serializers
 from django.utils import simplejson
-log=logging.getLogger('django.db.backends')
+from django.db import transaction
+from pinloveweb.forms import ChangePasswordForm
 
 '''
 推荐页面移除不喜欢用户
@@ -63,16 +64,20 @@ def dislike(request):
 用户详细信息
 userId： int 用户id
 '''
-def detailed_info(request,userId):
+def detailed_info(request):
     try:
-        userId=int(userId)
+        userId=int(request.GET.get('userId'))
+        compareId=request.GET.get('compareId',None)
     except Exception as e:
         print 'userId转换失败'
-    arg={}
-    userProfile=UserProfile.objects.get_user_info(userId)
-    tagList=UserTag.objects.select_related('tag').filter(user_id=request.user.id,type=0)
-    from apps.user_app.method import user_info_card
-    return render(request,'detailed_info.html',user_info_card(userProfile,tagList))
+    args={}
+    from apps.user_app.method import detailed_info_div
+    if not compareId is None:
+        args=detailed_info_div(request.user.id,userId,compareId)
+    else:
+        args=detailed_info_div(request.user.id,userId)
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
 '''
 查看关注信息
 attribute：
@@ -100,9 +105,6 @@ def follow(request,type,ajax='false'):
             #获得相互关注列表
             fllowList=Follow.objects.follow_each(request.user.id)
           
-        #获取相互关注列表
-        followEachList=Follow.objects.follow_each(request.user.id)
-        focusEachOtherList=[follow.my_id for follow in followEachList]
         userProfile=UserProfile.objects.get(user_id=request.user.id)
         #分页
         arg=page(request,fllowList)
@@ -112,7 +114,7 @@ def follow(request,type,ajax='false'):
         cardList.object_list=fllowList_to_CardList(request.user,cardList.object_list,type)
         #好友关系
         from pinloveweb.method import is_focus_each_other
-        cardList.object_list=is_focus_each_other(request, cardList.object_list, focusEachOtherList)
+        cardList.object_list=is_focus_each_other(request, cardList.object_list)
         ajax=request.GET.get('ajax')
         if ajax =='true':
             data={}
@@ -141,8 +143,9 @@ attribute：
     userId ：int 用户id
 return：
     type：
-        1 ,-1 单向关注
+        1 ,-1 我关注的
         2 ,-2 双向关注
+        3 ,-3 他关注我的
     content:
          返回提示
 '''
@@ -152,7 +155,7 @@ def update_follow(request):
     if Follow.objects.filter(my=request.user,follow_id=offset).exists():
         Follow.objects.filter(my=request.user,follow=offset).delete()
         if Follow.objects.filter(my_id=offset,follow=request.user).exists():
-            arg['type']=-2
+            arg['type']=-3
         else:
             arg['type']=-1
         arg['content'] = "取消关注"
@@ -175,6 +178,9 @@ def update_follow(request):
 def user_profile(request):
         args=get_uploadavatar_context()
         useBasicrProfile = UserProfile.objects.get(user_id=request.user.id)
+        #判断出生年月日是否填写
+        check_birth=useBasicrProfile.check_birth()
+        args['check_birth']=check_birth
         request.session['user_original_data']={'height':useBasicrProfile.height,'education':useBasicrProfile.education,'educationSchool':useBasicrProfile.educationSchool,'income':useBasicrProfile.income}
         #获取自己个人标签
         tags=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=0)
@@ -203,72 +209,113 @@ def user_profile(request):
             args['grade_for_other']=userExpect
         args['tagbeanList']=tagbeanList
         args['user_profile_form'] = UserProfileForm(instance=useBasicrProfile) 
-        args['country']=useBasicrProfile.country
-        args['city']=useBasicrProfile.city
-        args['profileFinsihPercent']=useBasicrProfile.profileFinsihPercent
-        args['stateProvince']=useBasicrProfile.stateProvince
-        args['gender']=useBasicrProfile.gender
+        fields=['country','city','stateProvince','profileFinsihPercent','gender','age']
+        for field in fields:
+           args[field]=getattr(useBasicrProfile,field)
+        args['gender_name']=useBasicrProfile.get_gender_display()
+        
         #认证
         from apps.verification_app.views import verification
         args.update(verification(request))
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(useBasicrProfile))
         return render(request,'member/user_profile.html',args)
 '''
 修改个人信息
 '''
+@transaction.commit_on_success
 def update_profile(request):
     if request.is_ajax():
         userProfile = UserProfile.objects.get(user_id=request.user.id)
         import copy
         oldUserProfile=copy.deepcopy(userProfile)
-        userProfileForm = UserProfileForm(request.POST,  instance=userProfile) 
+        POSTdata=request.POST.copy()
+        #如果出生年月已经存在填充userProfileForm
+        if userProfile.check_birth():
+            for field in ['year_of_birth','month_of_birth','day_of_birth']:
+                POSTdata[field]=getattr(userProfile,field)
+        userProfileForm = UserProfileForm(POSTdata, instance=userProfile) 
         if userProfileForm.is_valid():
-            tagList=request.REQUEST.get('tagList','').split(',')
-            username=request.POST['username']
-            country=request.POST['country']
-            stateProvince = request.POST['stateProvince']
-            city = request.POST['city']
+#             tagList=request.REQUEST.get('tagList','').split(',')
             #保存 user_profle信息
             userProfile = userProfileForm.save(commit=False)
-            userProfile.user.username=username
-            userProfile.country=country
-            userProfile.stateProvince=stateProvince
-            userProfile.city=city
+            userProfile.user.username=request.POST['username']
+#             for field in ['country','stateProvince','city']:
+#                 setattr(userProfile,field,request.POST[field])
             #计算资料完成度
             from apps.user_app.method import get_profile_finish_percent_and_score
             userProfile=get_profile_finish_percent_and_score(userProfile,oldUserProfile)
             userProfile.save(oldUserProfile=oldUserProfile)
-#             map=request.session['user_original_data']
-#             cal_recommend_user.send(sender=None,userProfile=userProfile,height=map.get('height'),
-#                                         education=map.get('education'),educationSchool=map.get('educationSchool'),income=map.get('income'))
-            data = serializers.serialize('json', [userProfile,])
+            data={}
+            if userProfile.check_birth():
+                year_of_birth=userProfile.year_of_birth
+                month_of_birth=userProfile.month_of_birth
+                day_of_birth=userProfile.day_of_birth
+                data['birth']='{0}年{1}月{2}日'.format(year_of_birth,month_of_birth,day_of_birth)
+                data['age']=userProfile.age
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
             cal_recommend(request.user.id,['userProfile'])     
-            return HttpResponse(data, mimetype='application/json')
+            data['result']='success'
+            json=simplejson.dumps(data)
+            return HttpResponse(json, mimetype='application/json')
+        else:
+            errors=userProfileForm.errors.items()
+            data={'errors':errors,'result':'error'}
+            json=simplejson.dumps(data)
+            return HttpResponse(json, mimetype='application/json')
  
 
 '''
 修改密码
 
 '''
-@csrf_protect
-def alter_password(request):
-    oldpassword = request.REQUEST.get('oldpassword','')
-    newpassword = request.REQUEST.get('newpassword','')
-    repassword = request.REQUEST.get('repassword','')
-    if newpassword == repassword:
-        if isIdAuthen(request): 
-            user = User.objects.get(username=request.REQUEST.get('username',''))
-        elif auth.authenticate(username=request.user.username, password=oldpassword) is not None :
-            user = request.user
-        else :
-            return render(request, 'error.html') 
-        user.set_password(newpassword)
-        user.save()
-        return render(request, 'success.html') 
-    else :
-        return render(request, 'error.html') 
-           
+#change_password
+def change_password(request,tempate_name):
+    args={}
+    if request.method=="POST":
+        changePasswordForm=ChangePasswordForm(request.POST)
+        if changePasswordForm.is_valid():
+            user=request.user
+            user.set_password(changePasswordForm.cleaned_data['newpassword'])
+            user.save()
+            args={'change_result':True}
+        else:
+            args['changePasswordForm']=changePasswordForm
+            errors=changePasswordForm.errors.items()
+            for error in errors:
+                args[error[0]+'Error']=error[1][0]
+    else:
+        changePasswordForm=ChangePasswordForm()
+        args['changePasswordForm']=changePasswordForm
+    return render(request,tempate_name,args)
+
+
+#reset the password
+def reset_password(request):
+    args={}
+    if request.GET.get('username',False) and request.GET.get('user_code',False):
+      if request.method=="POST":
+        user_code=request.GET.get('user_code')
+        username=request.GET.get('username')
+        newpassword=request.GET.get('newpassword','')
+        import re
+        match=re.match(r'^[0-9a-zA-Z\xff_]{6,20}$',newpassword)
+        if  match is None:
+            args={'error_message':u'密码个数错误!'}
+        if Verification.objects.filter(verification_code=user_code).exists():
+            Verification.objects.filter(verification_code=user_code).remove()
+            user=User.objects.get(username=username)
+            user.set_password(newpassword)
+            args['reset_result']=True
+            return render(request,'reset_password.thtml',args)
+        else:
+            args={'error_message':u'该连接已过期或被使用!'}
+      else:
+          return render(request,'reset_password.thtml',args)
+    else:
+        args={'error_message':u'该链接无效!'}
+    return render(request,'error.html',args)
 #######################################################
 #上面是改版页面
 #######################################################
@@ -515,21 +562,7 @@ def family_information_view(request):
         args.update(csrf(request))
         return render(request, 'login.html', args) 
     
-#change_password
-def change_password(request):
-     if request.user.is_authenticated() :
-         if request.method=="POST":
-             password=request.POST['password1']
-             user=request.user
-             user.set_password(password)
-             user.save()
-             return render(request, 'member/change_password_success.html')
-         else:
-             return render(request, 'member/change_password.html')
-     else: 
-        args = {}
-        args.update(csrf(request))
-        return render(request, 'login.html', args) 
+
 
 
 # get userinfor
@@ -571,39 +604,6 @@ def removeFriend(request, offset):
          return HttpResponseRedirect("/user/friend/")
 
     
-#forget the password
-def forget_password(request):
-     if request.method == 'POST':
-         querystr = request.REQUEST.get('forget_account','')
-         user = User()
-         if request.REQUEST.get('forget_type','') == 'email':
-            try :
-               user = User.objects.get(email=querystr)
-            except Exception:
-                return render(request, 'error.html')
-         elif request.REQUEST.get('forget_type','') == 'nickname':
-             try :
-               user = User.objects.get(username=querystr)
-             except Exception:
-                return render(request, 'error.html')
-         else :
-            return render(request, 'error.html') 
-         verification = Verification()
-         verification.username = user.username
-         verification.verification_code = user_code
-         verification.save()
-            # we need to generate a random number as</font> the verification key 
-            
-            # user needs email verification 
-         
-         return render(request, 'success.html')  
-
-#reset the password
-def reset_password(request):
-    if request.REQUEST.get('username','') != '' and request.REQUEST.get('user_code','') != '':
-        return render_to_response('reset_password.html',{'username':request.REQUEST.get('username',''),'user_code':request.REQUEST.get('user_code','')}, RequestContext(request) )
-    else :
-        return render(request, 'error.html')
 
 
 #commit the password

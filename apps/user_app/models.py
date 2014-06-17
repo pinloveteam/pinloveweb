@@ -54,12 +54,12 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     DAY_OF_BIRTH_CHOICES = ((-1,r'未填'),)
     for day in range(1,32):  
         DAY_OF_BIRTH_CHOICES += ((day, str(day)),)
-    day_of_birth = models.SmallIntegerField(verbose_name=r"出生日期", choices=DAY_OF_BIRTH_CHOICES, default=-1)
+    day_of_birth = models.SmallIntegerField(verbose_name=r"出生日期", choices=DAY_OF_BIRTH_CHOICES, default=-1,null=True,blank=True,)
    
     age = models.IntegerField(verbose_name=r"年龄",max_length=11,null=True,blank=True,)
     #calculate  age
-    def cal_age(self,year_of_birth):
-        if self.year_of_birth !=-1 and self.year_of_birth !=year_of_birth:
+    def cal_age(self):
+        if self.year_of_birth !=-1:
             current_year = time.strftime('%Y', time.localtime(time.time()))
             self.age = string.atoi(current_year) - self.year_of_birth
     
@@ -67,6 +67,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     sunSign=models.SmallIntegerField(verbose_name=r"星座",choices=SUN_SIGN_CHOOSICE,null=True,blank=True,default=-1)
     #calculate  sunSign
     def cal_sunSign(self):
+#         if self.year_of_birth !=-1 and self.month_of_birth !=-1 and self.year_of_birth !=year_of_birth and self.month_of_birth !=month_of_birth :
          n = (12,1,2,3,4,5,6,7,8,9,10,11)  
          d = ((1,20),(2,19),(3,21),(4,21),(5,21),(6,22),(7,23),(8,23),(9,23),(10,23),(11,23),(12,23))  
          self.sunSign= n[len(filter(lambda y:y<=(self.month_of_birth,self.day_of_birth), d))%12]  
@@ -132,7 +133,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
      
     language=models.CharField(verbose_name='语言能力',max_length=20,null=True,blank=True,)
     
-    avatar_name = models.CharField(verbose_name=r"头像路径",max_length=128,default='user_img/image.png',null=True,blank=True,)
+    avatar_name = models.CharField(verbose_name=r"头像路径",max_length=128,default='user_img/image',null=True,blank=True,)
     """
            1:未上传  
            2.正在审核
@@ -153,6 +154,15 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         if not os.path.exists(path):
             return None
         return path
+    
+    '''
+    检查出生年月日是否填写
+    '''
+    def check_birth(self):
+        if (self.day_of_birth!=-1 and self.month_of_birth!=-1 and self.year_of_birth!=-1):
+            return True
+        else:
+            return False
     
 ####user_appearance###
     self_evaluation=models.FloatField(verbose_name=r"自我评价",choices=((0.0,r'未填'),(0.35,r'普通'),(0.70,r'不错'),(1.00,r'很好')),null=True,blank=True,default=0.0)
@@ -178,7 +188,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     
 #####user_study_work
     JOB_INDUSRY_CHOICE=((-1,r'未填'),(0,r'计算机/互联网/通信'),(1,r'公务员/事业单位'),(2,r'教师'),(3,r'医生'),(4,r'护士'),(5,r'空乘人员'),
-                        (6,r'生产/工艺/制造'),(7,r'生产/工艺/制造'),(8,r'商业/服务业/个体经营'),(9,r'文化/广告/传媒'),(10,r'娱乐/艺术/表演'),
+                        (6,r'生产/工艺/制造'),(8,r'商业/服务业/个体经营'),(9,r'文化/广告/传媒'),(10,r'娱乐/艺术/表演'),
                         (11,r'律师/法务'),(12,r'教育/培训/管理咨询'),(13,r'建筑/房地产/物业'),(14,r'消费零售/贸易/交通物流'),(15,r'酒店旅游'),
                         (16,r'现代农业'),(17,r'在校学生'))
     jobIndustry = models.IntegerField(verbose_name=r"职业领域",choices=JOB_INDUSRY_CHOICE, max_length=50,null=True,blank=True,default=-1) 
@@ -239,7 +249,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         else:
             return self.avatar_name
         
-
+    @transaction.commit_on_success
     def save(self, *args, **kwargs):
        oldUserProfile=kwargs.pop('oldUserProfile',None)
        if oldUserProfile:
@@ -251,7 +261,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
                 Grade.objects.filter(user=self.user).update(incomescore=incomes)
             else:
                 Grade(user=self.user,incomescore=incomes).save()
-        if self.education!=-1 and self.educationSchool!=None and (self.education != oldUserProfile.education or  self.educationSchool!=oldUserProfile.educationSchool or self.educationSchool_2!=oldUserProfile.educationSchool_2):
+        if self.education!=-1 and (not self.educationSchool in [None,u'']) and (self.education != oldUserProfile.education or  self.educationSchool!=oldUserProfile.educationSchool or self.educationSchool_2!=oldUserProfile.educationSchool_2):
             from apps.recommend_app.recommend_util import cal_education
             if self.educationSchool_2==None:
                 educationscore=cal_education(self.education,self.educationSchool)
@@ -269,7 +279,9 @@ class UserProfile(models.Model, UploadAvatarMixIn):
                 Grade.objects.filter(user=self.user).update(educationscore=educationscore)
             else:
                 Grade(user=self.user,educationscore=educationscore).save()
-        self.cal_age(oldUserProfile.year_of_birth)
+        if not oldUserProfile.check_birth():
+            self.cal_age()
+            self.cal_sunSign()
        super(UserProfile, self).save(*args, **kwargs)
     class Meta:
         verbose_name=u'用户基本信息'
@@ -354,9 +366,45 @@ class UserHobbyInterest(models.Model):
 关注表
 '''
 class FollwManager(models.Manager):
-    def follow_each(self,follow_id):
+    #==================================
+    #获取相互关注的人数
+    #attribute：follow_id关注者的id
+    #=================================
+    def follow_each_count(self,follow_id):
+        try:
+            sql='''
+            select count(*) from follow where follow_id= %s and my_id in (SELECT follow_id from follow where my_id=%s)
+            '''
+            from django.db import connection
+            cursor=connection.cursor()
+            cursor.execute(sql,(follow_id,follow_id))
+            count=cursor.fetchone()[0]
+            cursor.close()
+            return count
+        except Exception as e:
+            print e
+     
+    #==================================
+    #获取相互关注的列表
+    #attribute：follow_id关注者的id
+    #=================================       
+    def follow_each(self,follow_id,**kwargs):
         follow_id=str(follow_id)
-        followEachList=Follow.objects.raw("select * from follow where follow_id= %s and my_id in (SELECT follow_id from follow where my_id=%s) ",(follow_id,follow_id))
+        if kwargs.get('userIdList',False):
+            userIdList=kwargs.get('userIdList')
+            count=len(userIdList)
+            
+            sql='''
+            select * from 
+follow where follow_id= %s and 
+my_id in (SELECT follow_id from follow where my_id=%s) 
+and my_id in('''+('%s,'*count)[:-1]+''')
+            '''
+            params=[follow_id,follow_id]
+            params.extend(userIdList)
+            followEachList=Follow.objects.raw(sql,params)
+        else:
+            followEachList=Follow.objects.raw("select * from follow where follow_id= %s and my_id in (SELECT follow_id from follow where my_id=%s) ",(follow_id,follow_id))
         return followEachList
 class Follow(models.Model):
     my=models.ForeignKey(User,related_name='user_my',verbose_name=r'自己',)
@@ -388,9 +436,15 @@ class TagManage(models.Manager):
     '''
     批量插入用户标签表
     '''   
+    @transaction.commit_on_success 
     def bulk_insert_user_tag(self,user_id,type,tagIdList):
-        from django.core.cache import cache
         tagTupe=Tag.objects.all()
+        count=len(tagTupe)/3
+        if len(tagIdList)!=count:
+            if type==0:
+                raise Exception('我的性格标签必须全部选择') 
+            elif type==1:
+                raise Exception('Ta的性格标签必须全部选择') 
         tagIds=[]
         for tag in tagTupe:
             tagIds.append(tag.id)
@@ -405,6 +459,7 @@ class TagManage(models.Manager):
                 pass
             else:
                 tags.append(UserTag(user_id=user_id,tag_id=tag,type=type))
+        UserTag.objects.filter(user_id=user_id,type=type).delete()
         UserTag.objects.bulk_create(tags)
 class UserTag(models.Model):
     user=models.ForeignKey(User,related_name='tab_user',verbose_name=u'用户')

@@ -68,10 +68,10 @@ if UPLOAD_AVATAR_SAVE_FORMAT == 'jpg':
 
 UPLOAD_AVATAR_SAVE_QUALITY = getattr(settings, 'UPLOAD_AVATAR_SAVE_QUALITY', 90)
 DEFAULT_IMAGE_NAME="user_img/image"
+SYSTEM_DEFAULT_IMAGE_NAME="user_img/systemImage"
 
 # Whethe delete the uploaded original image after avatar cropped, default is True
 UPLOAD_AVATAR_DELETE_ORIGINAL_AFTER_CROP = getattr(settings, 'UPLOAD_AVATAR_DELETE_ORIGINAL_AFTER_CROP', True)
-
 
 
 # Bellow settings are for web layout and text shown in web or javascript alert

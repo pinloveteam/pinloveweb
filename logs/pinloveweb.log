@@ -1,0 +1,5 @@
+ERROR pinloveweb.views 2014-06-09 13:03:27 E:\eclipse_64\code\pinloveweb\pinloveweb\views.py views 266 An error occurred
+Traceback (most recent call last):
+  File "E:\eclipse_64\code\pinloveweb\pinloveweb\views.py", line 253, in test
+    int('wewf')
+ValueError: invalid literal for int() with base 10: 'wewf'

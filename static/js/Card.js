@@ -1,9 +1,13 @@
-var labels = ["身高","收入情况","教育程度","样貌","性格"]
 var datasets_self = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(0,151,36)",pointColor : "rgb(0,151,36)"}
 var datasets_other = {fillColor : "rgba(0,0,0,0)",strokeColor : "rgb(241,23,25)",pointColor : "rgb(241,23,25)"}
 var comparable = false;
 var name_self , name_other , showedRadar;
 var dataArray = {};
+detail_info=true;
+var compare_flag=false;
+//选择用户
+var check_id=null;
+var diaogList=[];
 window.Card = function(person){
 	var test_match= function(){
 			var userId=$(this).parent().attr("id")
@@ -43,22 +47,23 @@ window.Card = function(person){
 		var icon_like=$(this).parents('.tool_bar :nth-child(2) ').children();
 		$.getJSON("/user/update_follow/",{userId:userId},function(data) {
 			  if(data['type']==1){
-					icon_like.removeClass("icon_like_0").addClass("icon_like_1")
+					icon_like.removeClass().addClass("icon_like_1")
 					myFollow=myFollow+1
 					$('#myFollow').html(myFollow)
-
 			  }else if(data['type']==2){
-				  icon_like.removeClass("icon_like_0").addClass("icon_like_2")
+				  icon_like.removeClass().addClass("icon_like_2")
 					follow=follow+1
 					myFollow=myFollow+1
 					$('#follow').html(follow)
 					$('#myFollow').html(myFollow)
 				  }else{
-					  icon_like.removeClass("icon_like_1").removeClass("icon_like_2").addClass("icon_like_0") 
+					  icon_like.following();
 				     if(data['type']==-1){
+				    	 icon_like.removeClass().addClass("icon_like_0") 
 				    	 myFollow=myFollow-1
 					     $('#myFollow').html(myFollow)
 				     }else{
+				    	 icon_like.removeClass().addClass("icon_like_3") 
 				    	 follow=follow-1
 						 myFollow=myFollow-1
 						 $('#follow').html(follow)
@@ -66,7 +71,6 @@ window.Card = function(person){
 				     }
 				     
 				  };
-		       alert(data['content']);
 		       
 		       
 		    });
@@ -205,7 +209,7 @@ window.Card = function(person){
 	}
 	
 	
-	var compareRadar = function(){
+/*	var compareRadar = function(){
 		if(this.isRadarShow){
 			$(this).children().not('.name').hide('fast');
 			this.isRadarShow = false;
@@ -307,8 +311,34 @@ window.Card = function(person){
 		
 		$('.other_name').unbind();
 		$('.other_name').on('click',compareRadar);
-	}
+	}*/
 	
+	/*创建雷达图
+	data[list]*/
+	function create_dialog(data){
+		dialog=$('.poplayer')
+		var ctx = dialog.find('canvas').get(0).getContext("2d");
+		var datasets = {
+			fillColor : "rgba(0,0,0,0)",
+			strokeColor : "rgb(0,151,36)",
+			pointColor : "rgb(0,151,36)",
+			data:data
+		}
+		var data = {
+				labels : ["教育程度", "性格", "收入情况", "样貌", "身高"],
+				datasets : [datasets]
+			};
+		var myNewChart = new Chart(ctx).Radar(data, {
+			scaleOverride : true,
+			scaleSteps : 4,
+			scaleStepWidth : 25,
+			scaleStartValue : 0,
+			scaleLineColor : "rgba(0,0,0,.5)",
+			scaleShowLabels : true,
+			angleLineColor : "rgba(0,0,0,.5)"
+		});
+		return dialog;
+	}
 	var compare_cancle = function(){
 		$('.chosen').removeClass('chosen');
 		$('.compare').show();
@@ -321,9 +351,10 @@ window.Card = function(person){
 		$('.other_name').on('click',showRadar);
 	}
 	
+    
 	var score_my = function(e){
 		current=$(this)
-		userId=current.closest('.card_panel').attr('id')
+		userId=$(this).val()
 		e.stopPropagation();    //  阻止事件冒泡
 		$.ajax({
 				type:'GET',
@@ -333,7 +364,7 @@ window.Card = function(person){
 				success:function(data, textStatus){
 					if(textStatus=='success'){
 						if(data['result']=='success'){
-							current.closest('.dafen').append('<div id="scoreMyself">她对你的打分：'+data['scoreMyself']+'分</div>')
+							current.parent().append(data['scoreMyself'])
 							current.remove()
 						}else if(data['result']=='error'){
 							alert(data['error_messge'])
@@ -346,6 +377,99 @@ window.Card = function(person){
 				},
 		});
 	}
+	
+	/*type:
+		1---对比
+		2--取消对比*/
+	function compare(userId,type){
+		if(type==1){
+			compare_flag=true;
+			check_id=userId;
+		}else{
+			compare_flag=false;
+		}
+	}
+	
+	//对比用户中的取消对比
+	function cancel_compare(userId){
+		$('.compare-btn_1').closest('.col-xs-4').remove();
+		$('.compare-btn').html('对比');
+		$('.score_other').remove();
+		dialog=create_dialog(diaogList);
+		$('.poplayer').css('left','25%').css('width','780px');
+		 $('.compare-btn').click(function(){compare(userId,1)})
+	}
+	
+	//生成个人详细信息页面，对比页面
+	function detail_info(){
+		if ( $('.masklayer').length==0&&detail_info){
+		detail_info=false;
+		userId=$(this).closest('.card').attr('id');
+		if(compare_flag){
+			if(check_id==userId){
+				detail_info=true;
+				var body = $("<p>不能选择同一个用户!</p>")
+	        	 $.poplayer({body:body});
+				 return;
+			}
+			data={userId:check_id,compareId:userId}
+		}else{
+			data={userId:userId}
+		}
+		
+		$.ajax({
+			type:'GET',
+			url:'/user/detailed_info/',
+			data:data,
+			dataType:"json",
+			success:function(data, textStatus){
+				try {
+				 var body = $(data.detail)
+				 var socreForOther=data.socreForOther
+				 if(compare_flag){
+					 diaogList=[socreForOther.matchResult.edcationScore,socreForOther.matchResult.characterScore,socreForOther.matchResult.incomeScore,socreForOther.matchResult.appearanceScore,socreForOther.matchResult.heighScore,]					 
+					 var compareSocreForOther=data.compareSocreForOther
+					 compareList=[compareSocreForOther.matchResult.edcationScore,compareSocreForOther.matchResult.characterScore,compareSocreForOther.matchResult.incomeScore,compareSocreForOther.matchResult.appearanceScore,compareSocreForOther.matchResult.heighScore,]
+					 $.poplayer({body:body,type:'frame',data:diaogList,data2:compareList});
+					 $('.compare-btn').click(function(){
+						 compare(userId,2)
+					 })
+				 }else{
+					 if(data.socreForOther.result=="success"){
+						 diaogList=[socreForOther.matchResult.edcationScore,socreForOther.matchResult.characterScore,socreForOther.matchResult.incomeScore,socreForOther.matchResult.appearanceScore,socreForOther.matchResult.heighScore,]
+						 $.poplayer({body:body,type:'frame',data:diaogList,data2:[]});
+					 }else{
+						 detail_info=true
+						 diaogList=[0,0,0,0,0]
+						 $.poplayer({body:body,type:'frame',data:diaogList,data2:[]});
+//							var body = $("<p>"+socreForOther.error_messge+"</p>")
+//							$.poplayer({body:body});
+					 }
+					 $('.compare-btn').click(function(){
+						 compare(userId,1)
+					 })
+					 
+				 }
+				 $('#radar').find('button').on('click',score_my);
+				 $('.compare-btn_1').click(function(){
+					 cancel_compare(userId)
+				 })
+				 detail_info=true;
+			 } catch (e) {
+					detail_info=true
+					var body = $("<p>异常错误!</p>")
+					$.poplayer({body:body});
+						}
+			},
+			error:function(response){
+				detail_info=true;
+				var body = $("<p>网络异常!</p>")
+	        	 $.poplayer({body:body});
+			},
+	});
+		}
+		
+	}
 	this.template = $('#card').clone();
 
 	this.template.find('.username').html(person.username);
@@ -354,13 +478,21 @@ window.Card = function(person){
 	this.template.find('.min_head').children().attr('src',person.headImg+'-60.jpeg');
 	this.template.find('.card').attr('id',person.username);
 	this.template.find('.other_name').attr('title',person.username);
+	this.template.find('#dynamic').attr('href','/dynamic/person/?userId='+person.userId);
 	//初始化详细信息href
-	this.template.find('.introBox').attr('href','/user/detailed_info/'+person.userId.toString());
+//	this.template.find('.introBox').attr('href','/user/detailed_info/'+person.userId.toString());
     //添加用户id
 	this.template.find('.card_panel').attr('id',person.userId);
 	//是否关注
 	var icon_like=this.template.find('.tool_bar :nth-child(2) ').children();
 	icon_like.removeClass().addClass('icon_like_'+person.isFriend);
+	icon_like.attr('move-data',person.headImg+'-60.jpeg')
+	if(person.isFriend=='0'||person.isFriend=='1'){
+		icon_like.attr('move-to','js-follow')
+	}else{
+		icon_like.attr('move-to','js-follow-each')
+	}
+	
 	//添加tab id
 	var tab=this.template.find('.tab-pane');
 	var nav=this.template.find('.card-nav').children().children();
@@ -370,14 +502,17 @@ window.Card = function(person){
 	  nav[i].href='#tab'+j+person.userId;
 	}
 
-	
-	for (i=0;i<4;i++){
-		this.template.find('.hoverbox').append('<li><a class="venobox" data-gall="gall1" href="/static/img/img2.jpg" title="ss"><img alt="demo1" src="/static/img/img2.jpg" title="demo1"></a></li>');
+	for(i=0;i<person.pictureList.length;i++){
+		if(i<=6){
+			this.template.find('.hoverbox').append('<li><a class="venobox" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');
+		}else{
+			this.template.find('.hoverbox').append('<li><a  style="display:none;" class="venobox" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');
+		}
 	}
 		
 	$('.card_row').append(this.template.html());
 	
-	$('.icon_dislike,.icon_ding,.btn_send_msg,.other_name,.compare,.compare_cancle,[class^="icon_like"],.icon_msg,.test_match').unbind();
+	$('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
 	
 	$('.icon_dislike').on('click',dislike);
 	
@@ -385,26 +520,24 @@ window.Card = function(person){
 	
 	$('.btn_send_msg').on('click',sendMsg);
 	
-	$('.other_name').on('click',showRadar);
-	
-	$('.compare').on('click',compare);
-	
-	$('.compare_cancle').on('click',compare_cancle);
-	
 	$("[class^='icon_like']").on('click',like);
 	
 	$(".icon_msg").on('click',init_msg);
 	$(".test_match").on('click',test_match);
 	$('.dafen').find('button').unbind();
-	$('.dafen').find('button').on('click',score_my);
+	$('.introBox').on('click',detail_info);
+	$(function(){
+		 $('.icon_like_0,.icon_like_3').following();
+		});
 }
 
-function Person(username,age,city,headImg,userId,isFriend){
+function Person(username,age,city,headImg,userId,isFriend,pictureList){
 	this.username = username;
 	this.age = age;
 	this.city = city;
 	this.headImg = headImg;
 	this.userId=userId;
 	this.isFriend=isFriend;
+	this.pictureList=pictureList;
 	
 }

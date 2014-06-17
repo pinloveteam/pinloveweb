@@ -16,6 +16,8 @@ from django.core.context_processors import csrf
 from django.http import HttpResponse
 import logging
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+from apps.recommend_app.method import get_matchresult
 logger = logging.getLogger(__name__)  
 #######################################
 #1.0使用版本
@@ -94,7 +96,6 @@ def socre_my(request):
             if member>0 or flag:
                 matchResult=get_matchresult(request,otherId)
                 args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
-                     
             else:
                 from apps.user_score_app.method import use_score_by_other_score
                 result=use_score_by_other_score(request.user.id,otherId)
@@ -104,6 +105,14 @@ def socre_my(request):
                     BrowseOherScoreHistory(my_id=request.user.id,other_id=otherId).save()
                     args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
                 elif result=='less':
+                    from apps.pay_app.method import use_charge_by_other_score
+                    chargeResult=use_charge_by_other_score(request.user.id,otherId)
+                    if chargeResult=='success':
+                        matchResult=get_matchresult(request,otherId)
+                        #保存浏览记录
+                        BrowseOherScoreHistory(my_id=request.user.id,other_id=otherId).save()
+                        args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
+                    elif chargeResult=='less':
                         args={'result':'error','error_messge':'请充值!'}
         else:
             args={'result':'error','error_messge':'用户id不存在!'}
@@ -115,73 +124,50 @@ def socre_my(request):
 #         args={'result':'error','error_messge':'系统出错!'}
         json=simplejson.dumps(args)
         return HttpResponse(json)
-  
-def get_matchresult(request,otherId):  
-    from apps.recommend_app.method import get_recommend_result_in_session
-    matchResult=get_recommend_result_in_session(request,otherId)
-    if matchResult is None:
-        from apps.recommend_app.method import get_match_score_other
-        matchResult=get_match_score_other(request.user.id,otherId)
-        if matchResult is None:
-            from apps.recommend_app.method import match_score
-            matchResult=match_score(request.user.id,otherId)
-        else:
-            from apps.pojo.recommend import MarchResult_to_RecommendResult
-            matchResult=MarchResult_to_RecommendResult(matchResult)
-    return matchResult
-                  
-     
+
+
 '''
 获得对自己对另一半的打分
 '''
-def get_socre_for_other(request):    
+def get_socre_for_other(userId,otherId):    
     args={}
     try:
-        otherId=int(request.REQUEST.get('userId',False))
         if otherId:
              from apps.recommend_app.method import get_match_score_other
-             matchResult=get_match_score_other(request.user.id,otherId)
+             matchResult=get_match_score_other(userId,otherId)
              if matchResult==None:
-                from apps.recommend_app.method import get_recommend_result_in_session
-                matchResult=get_recommend_result_in_session(request,otherId)
-                if matchResult is None:
                  #判断是否可用匹配
                  from util.cache import get_has_recommend,get_recommend_status,has_recommend
                  for field in ['userProfile','userExpect','grade','tag']:
-                     has_recommend(request.user.id,field)
-                 if get_has_recommend(request.user.id):
+                     has_recommend(userId,field)
+                 if get_has_recommend(userId):
                      from apps.recommend_app.method import match_score
-                     matchResult=match_score(request.user.id,otherId)
-                     args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=request.user.id))} 
-                     from apps.recommend_app.method import set_recommend_result_in_session
-                     set_recommend_result_in_session(request,matchResult)
+                     matchResult=match_score(userId,otherId)
+                     args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
                  else:
-                     recommendStatus=get_recommend_status(request.user.id)
+                     recommendStatus=get_recommend_status(userId)
                      dict={'userProfile':u'个人信息  ','userExpect':u'身高期望  ','grade':u'权重  ','tag':u'标签  '}
                      errorMessge=''
                      for key in recommendStatus.keys():
                          if not recommendStatus[key]:
                              errorMessge+=dict[key]
                      args={'result':'error','error_messge':'%s%s' %(errorMessge,u'未填写完整!')}
-                else:
-                    args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=request.user.id))} 
              else:
                  from apps.pojo.recommend import MarchResult_to_RecommendResult
                  matchResult=MarchResult_to_RecommendResult(matchResult)
-                 args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=request.user.id))} 
+                 args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
         else:
             args={'result':'error','error_messge':'用户id不存在!'}
-        json=simplejson.dumps(args)
-        return HttpResponse(json)
+        return args
     except Exception as e:
         logger.error('%s%s' %('获得对自己对另一半的打分，出错原因：',e))
         args={'result':'error','error_messge':'系统出错!'}
-        json=simplejson.dumps(args)
-        return HttpResponse(json)
+        return args
     
 '''
 性格标签
 '''    
+@transaction.commit_on_success     
 def character_tags(request):
     args={}
     try:
@@ -189,7 +175,6 @@ def character_tags(request):
             tagMyList=request.REQUEST.get('tagMyList','').split(',')
             tagOhterList=request.REQUEST.get('tagOhterList','').split(',')
             #保存tag
-            UserTag.objects.filter(user=request.user).delete()
             UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagMyList)
             UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOhterList)
             #判断推荐条件是否完善
@@ -200,7 +185,7 @@ def character_tags(request):
         return HttpResponse(json)
     except Exception as e:
         logger.error('%s%s' %('性格标签，出错原因：',e))
-        args={'result':'error','error_messge':'系统出错!'}
+        args={'result':'error','error_messge':e.message}
         json=simplejson.dumps(args)
         return HttpResponse(json)
 ##########################################

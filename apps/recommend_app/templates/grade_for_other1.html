@@ -84,14 +84,18 @@
             },
          axes: {
              xaxis: {
-                {% ifequal gender 'F' %}
+            	 {%ifequal grade_for_other False%}
+            	 min:160,
+				 max:195,
+				 {%else%}
+            	 {% ifequal gender 'F' %}
                  min:160,
 				 max:195,
                 {%  else %}
                  min:155,
 				 max:190,
                 {% endifequal %}
-				
+                {% endifequal %}
 				 numberTicks:8,
                  tickOptions: {
                      formatString:'%.2dmm'
@@ -181,7 +185,8 @@
                                 success: function(data, textStatus){
                                 	data=$.parseJSON(data)
                                     if(data.result== 'success'){
-                                        alert('修改成功!')
+                                    	var body = $("<p>修改成功!</p>")
+            							$.poplayer({body:body});
                                     }else if(data.result == 'error'){
                                     	 alert(data.msg)
                                     }
@@ -189,7 +194,8 @@
                                 complete: function(XMLHttpRequest, textStatus){
                                 },
                                 error: function(response){
-                                    alert('网络异常！')
+                                	var body = $("<p>网络异常!</p>")
+        							$.poplayer({body:body});
                                 }
                             });
                             return false;

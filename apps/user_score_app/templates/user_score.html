@@ -1,18 +1,102 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load staticfiles %}  
 {% block runload %}
-<body onLoad="init()">
-<SCRIPT src="/static/js/search.js" %}" type=text/javascript></SCRIPT>
+<SCRIPT src="{{STATIC_URL}}js/jquery.copy.js" type=text/javascript></SCRIPT>
+<html xmlns:wb=“http://open.weibo.com/wb”>
+<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://qzonestyle.gtimg.cn/qzone/app/qzlike/qzopensl.js#jsdate=20111201" charset="utf-8"></script>
+<script type="text/javascript">
+var appId=1412943645609984
+$(document).ready(function() {
+	  $.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+	    FB.init({
+	      appId:appId,
+	    });     
+	  });
+	});
+function feeds(){
+	FB.ui({
+		  method: 'feed',
+		  link: 'https://developers.facebook.com/docs/dialogs/',
+		  app_id:appId,
+		  caption: '',
+		  description:get_content(),
+		  name:'pinlove web'
+		}, function(response){});
+}
+
+function clone(){
+	
+}
+function get_content(){
+	return $('textarea').html()
+}
+</script>
+
 {% endblock %}
 {% block content %}
      <h2>用户积分 </h2> 
 <form action="/user/photo_check/" method="POST">{% csrf_token %}
 {% endblock %} 
 {% block second_content %}
-用户邀请链接：<input type="text" value="{{ request.get_host }}/?link={{link}}">
+用户邀请链接：<textarea rows="2" cols="50">我注册了拼爱网，强烈推荐你来啊 ：{{ request.get_host }}/?link={{link}}</textarea><button onclick="clone()">复制链接</button>
 用户积分：<input type="text" value="{{userScore.validScore}}">
 今日登录次数：{{dayLoginCount}}
 今日邀请登录次数：{{inviteFriendLogin}}
+<div>
+<!-- QQ分享  -->
+<script type="text/javascript">
+(function(){
+var p = {
+url:'http://pinlove.com?link=178035UbXsdf3', /*获取URL，可加上来自分享到QQ标识，方便统计*/
+desc:'亲，我在用拼爱pinlove，来看看哈！', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
+title:'', /*分享标题(可选)*/
+summary:'', /*分享摘要(可选)*/
+pics:'', /*分享图片(可选)*/
+flash: '', /*视频地址(可选)*/
+site:'', /*分享来源(可选) 如：QQ分享*/
+style:'201',
+width:32,
+height:32
+};
+var s = [];
+for(var i in p){
+s.push(i + '=' + encodeURIComponent(p[i]||''));
+}
+document.write(['<a class="qcShareQQDiv" href="http://connect.qq.com/widget/shareqq/index.html?',s.join('&'),'" target="_blank">分享到QQ</a>'].join(''));
+})();
+</script>
+<script src="http://connect.qq.com/widget/loader/loader.js" widget="shareqq" charset="utf-8"></script>
+</div>
+<!-- qq空间分享 -->
+<div>
+<script type="text/javascript">
+(function(){
+var p = {
+url:location.href,
+showcount:'1',/*是否显示分享总数,显示：'1'，不显示：'0' */
+desc:get_content(),/*默认分享理由(可选)*/
+summary:'',/*分享摘要(可选)*/
+title:'',/*分享标题(可选)*/
+site:'',/*分享来源 如：腾讯网(可选)*/
+pics:'', /*分享图片的路径(可选)*/
+style:'201',
+width:113,
+height:39
+};
+var s = [];
+for(var i in p){
+s.push(i + '=' + encodeURIComponent(p[i]||''));
+}
+document.write(['<a version="1.0" class="qzOpenerDiv" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?',s.join('&'),'" target="_blank">分享</a>'].join(''));
+})();
+</script>
+</div>
+<div>
+<a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+</div>
+<a href="javascript:void(0)" onclick="feeds();"><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
 <table>
 
  <th>操作类型</th><th>数量</th><th>时间</th>

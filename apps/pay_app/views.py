@@ -5,13 +5,19 @@ Created on Sep 8, 2013
 @author: jin
 '''
 from django.shortcuts import render
-from apps.pay_app.models import FacebookPayDetail
+from apps.pay_app.models import FacebookPayDetail, ChargeExchangeRelate, Charge,\
+    Order
 from django.utils import simplejson
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 import logging
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from apps.user_app.models import UserProfile
+from django.db import transaction
+from util.page import page
 logger=logging.getLogger(__name__)
+##############
+###1.0
+
 def get_icon(request):
     return render(request,'icon.html')
 
@@ -41,6 +47,125 @@ def pay_detail(request):
         args['result']='error'
     json=simplejson.dumps(args)
     return HttpResponse(json)
+
+'''
+会员购买页面
+'''
+@csrf_exempt
+def member(request):
+    try:
+        args={}
+        userProfile=UserProfile.objects.get(user=request.user)
+        chargeExchangeRelateList=ChargeExchangeRelate.objects.filter(currencyType=1)
+        charge=Charge.objects.get(user_id=request.user.id)
+        args['chargeExchangeRelateList']=chargeExchangeRelateList
+        args['charge']=charge
+        #初始化个人信息模块
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(userProfile))
+        return render(request,'buy.html',args)
+    except Exception as e:
+        errorMessage='会员购买页面出错'
+        logger.error('%s%s%s' %(errorMessage,'出错原因:',e))
+        return render(request,'buy.html',{'errorMessage':errorMessage})
+
+#===============================
+#下订单，并跳转到第三方制度
+#===============================
+def pay_icon_order(request):
+    args={}
+    try:
+       if request.method=="POST":
+           id=int(request.REQUEST.get('id',False))
+           type=request.REQUEST.get('type',False)
+           chargeExchangeRelate=ChargeExchangeRelate.objects.get(id=id)
+           if type=='paypal':
+#                args['type']='paypal'
+               from apps.pay_app.PayPal import asks_for_money
+               args=asks_for_money(userId=request.user.id,amount=chargeExchangeRelate.get_amount(),price=chargeExchangeRelate.currencyPrice,currency=chargeExchangeRelate.currencyType,data=u'购买拼爱币')
+           return render(request,'redirect_to_pay.html',args)
+       else:
+            return HttpResponseRedirect('/pay/member/')
+    except Exception as e:
+        print e
+    
+@transaction.commit_on_success          
+def redeem_price(request):
+    try:
+        args={}
+        validAmount=int(request.REQUEST.get('validAmount',False))
+        type=request.REQUEST.get('type',False)
+        if not(validAmount and validAmount):
+            raise Exception('缺少参数!')
+        charge=Charge.objects.get(user_id=request.user.id)
+        if charge.validAmount>=validAmount:
+            order=Order(user_id=request.user.id,amount=validAmount,price=(validAmount+0.00)/100,status='initiated',type='1',pattern='2')
+            order.data=order.get_pattern_display()
+            order.get_order_id(request.user.id)
+            if type==u'alipay':
+                order.channel='1'
+                order.currency='RMB'
+            elif type==u'paypal':
+                order.channel='2'
+                order.currency='USB'
+            order.save()
+            charge.validAmount=charge.validAmount-validAmount
+            charge.freezeAmount=charge.freezeAmount+validAmount
+            charge.save()
+            args={'result':'success','message':u'提交成功等待审核!'} 
+        elif validAmount>0:
+            args={'result':'error','error_message':u'金额不足'}
+        else:
+             args={'result':'error','error_message':u'输入金额不能为负'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception as e:
+        print e
+    
+'''
+交易记录
+'''    
+def charge_record(request):   
+    args={} 
+    sql='''
+    SELECT *   from `order` u
+where u.user_id=%s and not(u.`status`='initial' and u.channel='1' and u.updateTime is null)
+ORDER BY IF(u.createTime>IFNULL(u.updateTime,DATE(0)),u.createTime,u.updateTime) DESC
+
+    '''
+    orderList=Order.objects.raw(sql,[request.user.id])
+    data=page(request,orderList,page_num=8)
+    args['has_next']=data['pages'].has_next()
+    if data['pages'].has_next():
+        args['next_page_number']=data['pages'].next_page_number()
+    if data['pages'].has_previous():
+        args['previous_page_number']=data['pages'].previous_page_number()
+    args['has_previous']=data['pages'].has_previous()
+    list=[]
+    for order in data['pages'].object_list:
+        dict={}
+        dict['amount']=order.amount
+        dict['data']=order.data
+        if order.updateTime!=None:
+            dict['time']=order.updateTime.strftime("%Y-%m-%d")
+        else:
+             dict['time']=order.createTime.strftime("%Y-%m-%d")
+        dict['channel']=order.get_channel_display()
+        dict['type']=order.type
+        dict['status']=order.get_status()
+        list.append(dict)
+    args['orderList']=list
+    args['result']='success'
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
+        
+        
+        
+        
+    
+       
+#############
+
     
 @csrf_exempt
 def pay_test(request):
@@ -90,8 +215,7 @@ def paypal_cancel(request):
 
 @csrf_exempt
 def pay_test2(request):
-#      logging.error("pay_test2")
-#      logging.error(simplejson.dumps(request.GET))
-#      logging.error(simplejson.dumps(request.POST))
-     return HttpResponse('222')
+    from django.contrib.auth.hashers import make_password
+    make_password('2323223')
+    return HttpResponse('222')
     

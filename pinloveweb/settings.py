@@ -2,6 +2,7 @@
 # Django settings for pinlove project.
 import os
 PATH=os.path.dirname(os.path.dirname(__file__))
+DOMAIN='pinlove.com'
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -154,8 +155,8 @@ INSTALLED_APPS = (
 'apps.user_score_app', 
 'paypal.standard.ipn',
 )
-PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
-PAYPAL_TEST=False
+PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
+# PAYPAL_TEST=False
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -207,7 +208,8 @@ PAYPAL_TEST=False
 #         },
 #     }
 # }
-
+logger_app=['pinloveweb','apps.friend_dynamic_app','apps.game_app','apps.message_app',
+            'apps.pay_app','apps.recommend_app','apps.search_app','the_people_nearby','apps.third_party_login_app','apps.user_app','apps.user_score_app','apps.verification_app']
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -238,7 +240,7 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
-        'custom_log_file':{
+        'log_file':{
             'level': 'WARNING',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(PATH, 'logs/django.log').replace('\\','/'),#you need define your VAR_ROOT variable that points to your project path,and mkdir a logs directory in your project root path.
@@ -270,7 +272,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console','log_file'],
             'level': 'DEBUG',
             'propagate': False,
         },
@@ -280,24 +282,39 @@ LOGGING = {
             'propagate': True,
         },
         'django.db.backends': {
-            'handlers': ['django_db_backends_logfile','console'],
+            'handlers': ['django_db_backends_logfile'],
             'level': 'DEBUG',
             'propagate': True,
         },
         
-        'customapp': {#then you can change the level to control your custom app whether to output the debug infomation
-            'handlers': ['console'],
+        'pinloveweb': {#then you can change the level to control your custom app whether to output the debug infomation
+            'handlers': ['log_file'],
             'level': 'DEBUG',
             'propagate': False,
         },
-        'customapp.engine': {#then you can change the level to control your custom app whether to output the debug infomation
-            'handlers': ['custom_log_file'],
-            'level': 'WARNING',
-            'propagate': True,
-        },
+#         'customapp.engine': {#then you can change the level to control your custom app whether to output the debug infomation
+#             'handlers': ['custom_log_file'],
+#             'level': 'WARNING',
+#             'propagate': True,
+#         },
     },
 }
-
+for app in logger_app:
+    LOGGING['handlers'][app]={
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PATH, 'logs/'+app+'.log').replace('\\','/'),#you need define your VAR_ROOT variable that points to your project path,and mkdir a logs directory in your project root path.
+            'backupCount': 5,
+            'maxBytes': '16777216', # 16megabytes(16M)
+            'formatter': 'verbose'
+        }
+    LOGGING['loggers'][app]={#then you can change the level to control your custom app whether to output the debug infomation
+            'handlers': [app,'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
+    
+    
 # Host for sending e-mail.
 EMAIL_HOST = 'smtp.webfaction.com'
 

@@ -4,13 +4,12 @@
 
 from django.shortcuts import render 
 from django.http import HttpResponseRedirect 
-from django.contrib import auth , messages
+from django.contrib import auth 
 from django.core.context_processors import csrf 
 
 from django.contrib.auth.models import User 
-from apps.user_app.models import Verification, UserVerification, Follow
+from apps.user_app.models import  UserVerification, Verification
 from apps.user_app.models import UserProfile
-from django.core.mail import send_mail
 
 from forms import RegistrationForm 
 from pinloveweb import settings
@@ -22,7 +21,9 @@ from django.views.decorators.csrf import csrf_protect
 from django.http.response import HttpResponse
 from apps.recommend_app.models import MatchResult
 from django.db import transaction
-
+from django.utils import simplejson
+from pinloveweb.method import create_invite_code
+logger = logging.getLogger(__name__)
 ####################
 ######1.0
 '''
@@ -33,7 +34,7 @@ def web(request,template_name):
 ####################
 
 def login(request) :
-       
+    
     unicode_s = u'欢迎来到拼爱网'
 #     if "userId" in request.COOKIES:
 #         userId=request.COOKIES['userId']
@@ -114,13 +115,10 @@ def loggedin(request,**kwargs) :
     #判断推荐分数是否生成
     flag=MatchResult.objects.is_exist_by_userid(request.user.id)
     userProfile=UserProfile.objects.get_user_info(request.user.id)
-    #相互关注的人的id
-    follows=Follow.objects.follow_each(request.user.id)
-    focusEachOtherList=[follow.my.id for follow in follows ]
     #从缓存中获取不推荐用户id
     disLikeUserIdList=get_cache_by_key(request.user.id)
     #获取推荐列表
-    matchResultList=get_recommend_list(request,flag,disLikeUserIdList,focusEachOtherList,userProfile,**kwargs)
+    matchResultList=get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs)
     if kwargs.get('card')==True:
         return matchResultList
     if request.GET.get('ajax')=='true':
@@ -131,7 +129,7 @@ def loggedin(request,**kwargs) :
     matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
     arg['pages']=matchResultList
     from pinloveweb.method import init_person_info_for_card_page
-    arg.update(init_person_info_for_card_page(userProfile,followEachCount=len(focusEachOtherList)))
+    arg.update(init_person_info_for_card_page(userProfile))
     return render(request, 'index.html',arg )
 
 '''
@@ -142,7 +140,7 @@ attribute：
   focusEachOtherList(List)：相互关注列表
   userProfile(UserProfile)：当前用户详细信息
 '''
-def get_recommend_list(request,flag,disLikeUserIdList,focusEachOtherList,userProfile,**kwargs):
+def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):
     if flag:
          if disLikeUserIdList is None:
              matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id)
@@ -162,7 +160,7 @@ def get_recommend_list(request,flag,disLikeUserIdList,focusEachOtherList,userPro
           from apps.pojo.card import userProfileList_to_CardList
           matchResultList.object_list=userProfileList_to_CardList(matchResultList.object_list)
     from pinloveweb.method import is_focus_each_other
-    matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
+    matchResultList=is_focus_each_other(request,matchResultList)
     return matchResultList
 
      
@@ -188,7 +186,6 @@ def loggedout(request) :
 
 @transaction.commit_on_success      
 def register_user(request) : 
-    
     args = {}
     args.update(csrf(request))
     link=request.REQUEST.get('link',False)
@@ -196,7 +193,6 @@ def register_user(request) :
         args['link']=link
     if request.method == 'POST' : 
         userForm = RegistrationForm(request.POST) 
-#         check_box_list = request.REQUEST.getlist('check_box_list')
         if userForm.is_valid():
             #判断有没邀请码
             if request.REQUEST.get('inviteCode','')!='pinlove_fate':
@@ -208,42 +204,16 @@ def register_user(request) :
             # password = user_form.clean_password2()
             # user = authenticate(username=username, password=password)
             user = User.objects.get(username=username)
-            user.is_active = False 
-            #user verification
-            from util.util import random_str
-            user_code = random_str()
-            verification = Verification()
-            verification.username = username
-            verification.verification_code = user_code
-            verification.save()
             sex=userForm.cleaned_data['gender']
-            userForm.photo='user_img/image'
             #创建二维码
-            from pinloveweb.method import create_invite_code
             Userlink=create_invite_code(user.id)
             UserProfile(user_id=user.id,gender=sex,link=Userlink).save()
-            #创建用户验证信息
-            userVerification=UserVerification()
-            userVerification.user=user
-            userVerification.save()
-            from apps.user_score_app.models import UserScore
-            UserScore(user_id=user.id).save()
-            from apps.pay_app.models import Charge
-            Charge(user_id=user.id).save()
-            # we need to generate a random number as the verification key 
-             
-            # user needs email verification 
-            domain_name = u'http://www.pinpinlove.com/account/verification/'
-            email_verification_link = domain_name + '?username=' + username + '&' + 'user_code=' + user_code
-             
-            email_message = u"请您点击下面这个链接完成注册："
-            email_message += email_verification_link
-#             try :
-#                from pinloveweb.settings import DEFAULT_FROM_EMAIL
-#                send_mail(u'拼爱网注册电子邮件地址验证', email_message,DEFAULT_FROM_EMAIL,[user.email]) 
-#             except:
-#                 print u'邮件发送失败'
-#                 pass
+            #生成激活码
+            from util.util import random_str
+            user_code = random_str()
+            #初始化所需表
+            from pinloveweb.method import init_table_in_register
+            init_table_in_register(user,user_code)
             #注册成功赠送积分
             from apps.user_score_app.method import get_score_by_invite_friend_register
             if link:
@@ -251,10 +221,8 @@ def register_user(request) :
             user = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
             auth.login(request, user)
             return HttpResponseRedirect('/account/loggedin/')
-            
         else : 
             args['user_form'] = userForm
-
     else : 
         args['user_form']= RegistrationForm() 
     
@@ -276,18 +244,58 @@ def register_verify(request) :
     else :
         return render(request, 'error.html')
 
-def forget_password(request) : 
-    return render(request, 'forget_password.html')   
+'''
+忘记密码
+'''
+def forget_password(request):
+    args={}
+    #是否提交请求
+    postResult=False
+    if request.method == 'POST':
+         querystr = request.REQUEST.get('forget_account','')
+         user = User()
+         if request.REQUEST.get('forget_type','') == 'email':
+            try :
+               user = User.objects.get(email=querystr)
+            except Exception:
+                error_message='该邮箱未注册!'
+                pass
+         elif request.REQUEST.get('forget_type','') == 'nickname':
+             try :
+               user = User.objects.get(username=querystr)
+             except Exception:
+               error_message='该用户未注册!'
+               pass
+         else :
+            return render(request, 'error.html') 
+         verification = Verification()
+         verification.username = user.username
+         from apps.verification_app.views import random_str
+         user_code=random_str()
+         verification.verification_code = user_code
+         verification.save()
+         postResult=True
+    args['postResult']=postResult
+    return render(request, 'forget_password.html',args)   
  
                           
 def test(request):
-    from django.core.cache import cache
-    cache_key = "myID"
-    result = cache.get(cache_key)
-    if result is None:
-        data = "hello, found"
-        cache.set(cache_key, data, 60)
-        return HttpResponse("not found")
-    else:
-        return HttpResponse(result)
+   try:
+       int('wewf')
+       return HttpResponse('sd')
+#     from django.core.cache import cache
+#     cache_key = "myID"
+#     result = cache.get(cache_key)
+#     if result is None:
+#         data = "hello, found"
+#         cache.set(cache_key, data, 60)
+#         return HttpResponse("not found")
+#     else:
+#         return HttpResponse(result)
+   except :
+      logging.exception('sdsd')
+      logger.exception("An error occurred")
+      return HttpResponse('sd')
+############################
+
     

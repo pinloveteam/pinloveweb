@@ -52,7 +52,8 @@ div.computerMove {
 	  				    	sum+=parseInt(weightData[i].value)
 	  				    }
 	  				    if (sum<100){
-	  				    	alert("权重总和需为100%")
+	  				    	var body = $("<p>权重总和需为100%!</p>")
+							$.poplayer({body:body});
 	  				    	return false;
 	  				    }
 	  				 }catch(msg){
@@ -67,9 +68,11 @@ div.computerMove {
                        success: function(data,textStatus){
                     	   data=$.parseJSON(data)
                     	   if(data.result== 'success'){
-                               alert('修改成功!')
+                    		   var body = $("<p>修改成功!</p>")
+   							   $.poplayer({body:body});
                            }else if(data.result == 'error'){
-                           	 alert(data.msg)
+                        	   var body = $("<p>"+data.msg+"</p>")
+   							  $.poplayer({body:body});
                            }
                        },
                    
@@ -144,7 +147,6 @@ div.computerMove {
     }
 </script>
 <form id="update_weight" action="" menthod="post">
-<img class="detail" src="{{STATIC_URL}}img/detail_information.png" />
 <ul style="float: left; list-style-type: none; color: #053B8D; font-size: 18px;">
 	<li style="margin-top: 45px;">身高</li>
 	<li style="margin-top: 45px;">相貌</li>
@@ -153,7 +155,7 @@ div.computerMove {
 	<li style="margin-top: 45px;">性格</li>
 	<li style="margin-top: 45px;" >剩余：</li>
 </ul>
-<div style="float: right; margin-right: 280px;">
+<div style="float: right; margin-right: 80px;">
 	<div class="progress">
 		<div class="progress-bar progress-bar-green" role="progressbar"
 			aria-valuenow="80" aria-valuemin="{{heightweight}}" aria-valuemax="100"

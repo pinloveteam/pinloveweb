@@ -4,21 +4,28 @@ Created on Jul 21, 2013
 
 @author: jin
 '''
-#!/usr/bin/env python
-#coding:utf-8
 from django import template
 register = template.Library()
-i=0
-@register.filter(name='qwer')
-def qwer(value):
-    global i
-    print i
-    if i<len(value):
-        value = value[i]
-        i=i+1
-        return str(value)
+#!/usr/bin/env python
+#coding:utf-8
+'''
+求余
+attribute：
+      value:本身的值
+      var：传入值
+'''
+@register.filter
+def sunSign(value,var):
+    try:
+        value=int(value)
+        var=int(var)
+    except:
+        pass
+    if value==0:
+        value=2
     else:
-        return "0"
+        value=value%var
+    return value
    
 
 

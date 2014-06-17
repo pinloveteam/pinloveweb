@@ -5,6 +5,8 @@ import re
 import logging
 from pinloveweb.settings import PATH
 from apps.third_party_login_app.models import FacebookPhoto
+from apps.third_party_login_app.facebook import GraphAPI
+from django.contrib.auth.models import User
 
 
 
@@ -59,7 +61,4 @@ from apps.third_party_login_app.models import FacebookPhoto
 #         logger.warn("test error")
 #         logging.exception('Got exception on main handler')
 # >>>>>>> Stashed changes 1386963224.48
-from apps.third_party_login_app.models import FacebookPhotoEncoder
-facebookPhotoList=FacebookPhoto.objects.filter(user_id="100007571047423")[:12]
-from django.utils import simplejson
-facebookPhotoList=simplejson.dumps(facebookPhotoList,cls=FacebookPhotoEncoder)
+User.objects.filter(id>2)

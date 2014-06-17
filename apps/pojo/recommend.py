@@ -32,7 +32,7 @@ class RecommendResult(object):
             return self.__dict__
         else:
             args={}
-            fields=['incomeScore','edcationScore','appearanceScore','heighScore','characterScore','scoreOther']
+            fields=['userId','incomeScore','edcationScore','appearanceScore','heighScore','characterScore','scoreOther']
             for field in fields:
                 args[field]=getattr(self,field)
             return args

@@ -7,36 +7,42 @@
 <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 <link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
- <link href="{% static 'css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
-  <script src="{% static 'js/dropzone.js' %}"></script>
+ <link href="{{STATIC_URL}}css/dropzone.css" type="text/css" rel="stylesheet"/>
+  <script src="{{STATIC_URL}}js/dropzone.js"></script>
+  <script type="text/javascript">
+  var page={{next_page_number}};
+  $(document).ready(function(){
+		change_navi()
+	})
+</script>
+
 {% endblock %}
 {% block css %}
 
-<style>
-			textarea {
-				resize: none;
+	<style>
+			.avatar {
+				float: left;
 			}
-			#s-trend {
-				width: 100%;
-				height: 112px;
-				margin-bottom: 17px;
+
+			#form1 {
+				margin: 17px 0;
 			}
 
 			.trend-list {
 				width: 100%;
-				border-bottom: solid 1px #7E7582;
 				margin-top: 0;
+				margin-bottom: 17px;
 			}
 
 			.trend-name {
 				position: relative;
-				top: -40px;
+				color: #000;
 			}
 
 			.trend-text {
-				position: relative;
-				left: -40px;
-				font-size: 16px;
+				font-size: 15px;
+				width: 730px;
+				margin-left: 86px;
 			}
 
 			.controlArrow {
@@ -52,9 +58,9 @@
 			}
 
 			.interact {
+				display: inline-block;
 				position: relative;
-				left: 80%;
-				width: 170px;
+				left: 75%;
 			}
 
 			.interact > ul > li {
@@ -62,7 +68,7 @@
 			}
 
 			.pic-list {
-				margin-left: 60px;
+				margin-left: 88px;
 			}
 
 			.pic-list > a > img {
@@ -71,72 +77,64 @@
 				display: inline-block;
 			}
 
-			.commentary-area {
-				position: relative;
+			.comments-area {
 				left: 25%;
 				width: 70%;
 			}
 
-			.commentary {
-				background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
-				border-bottom: solid 1px #7E7582;
-				position: relative;
+			.comments {
 				padding: 0 0 0 40px;
+				position: relative;
 			}
 
-			.commentary-head {
+			.comments-head {
 				height: 35px;
 				width: 35px;
 				position: absolute;
-				top:0;
-				left: 0
+				top: 0;
+				left: 0;
 			}
 
-			.commentary-time, .commentary-delete,.commentary-reply {
-				position: relative;
-				left: 70%;
-			}
-			.comments-text{
+			.comments-text, .comments-edit {
 				position: relative;
 			}
-			.commentary-text {
-				text-indent: 2em;
+
+			.comments-edit {
+				left: 60%;
+				width: 230px;
 			}
-			.commentary-delete,.commentary-reply{
-				left: 67%;
-			}
-			
-			#emoji-layer{
-				position: absolute;	
+
+			#emoji-layer {
+				position: absolute;
 				padding: 4px;
 				background-color: #fff;
 				width: 417px;
 				z-index: 9999;
 			}
-			
-			.emoji-list li:hover{
+
+			.emoji-list li:hover {
 				border: 1px solid #0095CD;
 			}
-			
+
 			.emoji-list li {
-			    border: 1px solid #E8E8E8;
-			    cursor: pointer;
-			    float: left;
-			    overflow: hidden;
-			    padding: 3px 3px;
-			    text-align: center;
-			    background-color: #fff;
+				border: 1px solid #E8E8E8;
+				cursor: pointer;
+				float: left;
+				overflow: hidden;
+				padding: 3px 3px;
+				text-align: center;
+				background-color: #fff;
 			}
-			
-			.emoji-list li > img{
+
+			.emoji-list li > img {
 				width: 26px;
 				height: 26px;
 			}
-			
+
 			li {
-			    list-style: none outside none;
+				list-style: none outside none;
 			}
-			
+
 			.publishInputBefore {
 				border: 0 none;
 				color: #BBBBBB;
@@ -229,61 +227,6 @@
 			}
 		</style>
 <script type="text/javascript">
-        Dropzone.options.myDropzone = {
-
-      		  // Prevents Dropzone from uploading dropped files immediately
-      		  autoProcessQueue: true,
-      		  maxFilesize:10, // MB
-      		  dictFileTooBig: "图片不得大于 10MB" ,
-      		  //文件类型
-      		  acceptedFiles:".png,.jpg,.JPG",
-      		  //文件类型错误提示
-      		  dictInvalidFileType:"照片格式不符合规范",
-      		  //uploadMultiple:true,
-      		  //最大文件数
-      		  maxFiles:4,
-      		  //删除文件
-      		 addRemoveLinks:"dictRemoveFile",
-      		 dictRemoveFile:"删除文件",
-      		 dictResponseError:"服务器无响应",
-      		  init: function() {
-      		  //  var submitButton = document.querySelector("#submit-all")
-      		      myDropzone = this; // closure
-
-      		    //submitButton.addEventListener("click", function() {
-      		  //    myDropzone.processQueue(); // Tell Dropzone to process all queued files.
-      		    
-      		   // });
-                 
-      		  
-      		    // You might want to show the submit button only when 
-      		    // files are dropped here:
-      		    	
-      		    this.on("addedfile", function() {
-      		      // Show submit button here and/or inform user to click it.
-      		       $('#type').val('2');
-      		    });
-      		   this.on("maxfilesexceeded", function(file) { this.removeFile(file); });
-      		   
-      		    this.on("success", function(file, response) {
-      		    	file.pictureName = response; // If you just return the ID when storing the file
-      		      // You can also return a JSON object then the line would
-      		      // look something like this:
-      		      //
-      		      // file.serverId = response.id;
-      		      //
-      		      // In that case make sure that you respond with the mime type
-      		      // application/json
-      		    });
-      		    this.on("removedfile", function(file) {
-      		      if (!file.pictureName) { return; } // The file hasn't been uploaded
-      		      $.getJSON("/dynamic/deletePhoto/",{pictureName:file.pictureName}); // Send the file id along
-      		    });
-
-      		  }
-      		};
-</script>
-<script type="text/javascript">
 var userName="{{user.username}}"
 var userId="{{user.id}}"
 $(document).ready(function(){
@@ -291,7 +234,7 @@ $(document).ready(function(){
 	$(".publishTextArea").keydown(function(){
 		publishTextArea=$(this)
 	   var curLength=publishTextArea.val().length;
-	   var limitLenght=200
+	   var limitLenght=140
 	   if(curLength>=limitLenght){
 	      var num=publishTextArea.val().substr(0,limitLenght);
 	      $(".publishTextArea").val(num);
@@ -378,7 +321,15 @@ function agree(id){
         }
     });
 }
-
+function confirm_del_dynamic(id,type){
+	var body = $("<p>确认删除</p>")
+	var hehe = function(){
+		del_dynamic(id,type)
+		$(this).data('object').masklayer.remove();
+		$(this).data('object').dialog.remove();
+		}
+	$.poplayer({body:body,btnFunc:hehe});
+}
 //删除动态
 function del_dynamic(id,type){
     $.getJSON('/dynamic/delDynamic/',{id:id,type:type},function(data){
@@ -398,42 +349,44 @@ function init_comment(commentList,dynamicId){
 	$(commentList).each(function(){
 		var comment=$('.comment_clone').clone()
 		comment.removeClass('comment_clone')
-		comment.find('.commentary-head').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
+		comment.find('.comments-head').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
+		comments_edit=comment.find('.comments-edit')
 		if(this.receiverName==null ){
 			comment.find('.commentary-username').html(this.reviewerName+'：')
 		}else{
 			comment.find('.commentary-username').html(this.reviewerName+'回复：'+this.receiverName)
 		}
 		if(userId==this.reviewerId){
-			comment.append('<a class="commentary-delete" href="javascript:void(0);">删除</a>')
+			comments_edit.append('<li><a class="commentary-delete" href="javascript:void(0);">删除</a></li>')
 			comment.find('.commentary-delete').bind("click",del_comment);
 			
 		}else{
-			comment.append('<a class="commentary-reply" href="javascript:void(0);">回复</a>')
+			comments_edit.append('<li><a class="commentary-reply" href="javascript:void(0);">回复</a></li>')
 			comment.find('.commentary-reply').bind("click",commentary_reply);
 		}
 		//comment.find('.commentary-time').html(this.commentTime)
 		comment.find('.comments-text').append(this.content)
-		comment.append('<span class="commentary-time">'+this.commentTime+'</span>')
+		comments_edit.append('<li><span class="commentary-time">'+this.commentTime+'</span></li>')
 		comment.find('.commentId').val(this.id)
 		comment.find('.reviewerName').val(this.reviewerName)
 		comment.find('.reviewerId').val(this.reviewerId)
 		comment.show()
-		$('#comment_'+dynamicId).find('.commentary-list').append(comment)
+		$('#comment_'+dynamicId).find('.comments-list').append(comment)
 	})
 };
 
 //删除评论
 function del_comment(){
 	var comment=$(this)
-	commentId=comment.parent().find('.commentId').val();
+	commentId=comment.closest('#comment').find('.commentId').val();
 	 $.getJSON('/dynamic/del_comment/',{commentId:commentId},function(data){
 	        if(data['type']=='success'){
-	        	comment.parent().remove()
-	            alert('删除成功！')
+	        	comment.closest('#comment').remove()
+	           var body = $('<p>删除成功</p>');
 	        }else if(data['type']=='error'){
-	        	 alert(data['msg'])
+	        	 var body = $('<p>'+data['msg']+'</p>');
 	        }
+	        $.poplayer({body:body});
 	    })
 };
 </script>
@@ -444,41 +397,10 @@ function del_comment(){
 <div class="wrap">
 <div class="container">
 				<div class="row" style="margin-top:63px;">
-					<div class="col-md-3">
-						<div class="user_info card_panel">
-						<div class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:60px;width:60px;">
-				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
-				</div>
-				<a href='/user/user_profile/#self_info'><div class="name">{{user.username}}</div></a>
-				<hr/>
-				<p style="margin:20px 0 20px 20px;">搬砖砌墙敲代码，只为买瓶哇哈哈。</p>
-			</div>
-			<div class="sns_info card_panel">
-				<table class="table">
-					<tbody>
-					  <tr>
-						<td><i class="icon_follow"></i></td>
-						<td><a href="/user/follow/1">关注</a></td>
-						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
-					  </tr>
-					  <tr>
-						<td><i class="icon_fans"></i></td>
-						<td><a href="/user/follow/2">粉丝</a></td>
-						<td><a id="fans" href="/user/follow/2">{{fans}}</a></td>
-					  </tr>
-					  <tr>
-						<td><i class="icon_mutual_like"></i></td>
-						<td><a href="/user/follow/3">相互关注</a></td>
-						<td><a id="follow" href="/user/follow/3">{{follow}}</a></td>
-					  </tr>
-					</tbody>
-				</table>
-			</div>
-
-						<div class="send_pic card_panel"></div>
-					</div>
-					<div class="col-md-9">
-						<div id="s-trend" class="card_panel">
+					{% include 'left.html'%}
+					<div id="dynmaic_content" class="col-xs-9">
+					{%block public_dynmaic %}
+						<div id="s-trend">
 							<form action="" id="form1"   name="form1" method="POST">{% csrf_token %}
 								<input type="hidden" id="type" name="type" value="1">
 								<div class="publishInputArea">
@@ -492,9 +414,6 @@ function del_comment(){
 												<li target="#publishTextArea_1" class="publishInputExpression fn-left">
 													表情
 												</li>
-												<li id="publishInputVideo" class="publishInputVideo fn-left">
-													视频
-												</li>
 											</ul>
 										</div>
 										<div class="fn-right">
@@ -505,7 +424,7 @@ function del_comment(){
 											</p>
 											<p class="wordNumber fn-right">
 												还能输入
-												<span id="reserve">199</span>
+												<span id="reserve">140</span>
 												字
 											</p>
 										</div>
@@ -517,22 +436,82 @@ function del_comment(){
                             {% csrf_token %}
                              </form>
        </div>
+       <script type="text/javascript">
+       dynamicUrl="/dynamic/"
+       dynamicData={page:page,type:'ajax'}
+        Dropzone.options.myDropzone = {
+
+      		  // Prevents Dropzone from uploading dropped files immediately
+      		  autoProcessQueue: true,
+      		  maxFilesize:10, // MB
+      		  dictFileTooBig: "图片不得大于 10MB" ,
+      		  //文件类型
+      		  acceptedFiles:".png,.jpg,.JPG",
+      		  //文件类型错误提示
+      		  dictInvalidFileType:"照片格式不符合规范",
+      		  //uploadMultiple:true,
+      		  //最大文件数
+      		  maxFiles:4,
+      		  //删除文件
+      		 addRemoveLinks:"dictRemoveFile",
+      		 dictRemoveFile:"删除文件",
+      		 dictResponseError:"服务器无响应",
+      		  init: function() {
+      		  //  var submitButton = document.querySelector("#submit-all")
+      		      myDropzone = this; // closure
+
+      		    //submitButton.addEventListener("click", function() {
+      		  //    myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+      		    
+      		   // });
+                 
+      		  
+      		    // You might want to show the submit button only when 
+      		    // files are dropped here:
+      		    	
+      		    this.on("addedfile", function() {
+      		      // Show submit button here and/or inform user to click it.
+      		       $('#type').val('2');
+      		    });
+      		   this.on("maxfilesexceeded", function(file) { this.removeFile(file); });
+      		   
+      		    this.on("success", function(file, response) {
+      		    	file.pictureName = response; // If you just return the ID when storing the file
+      		      // You can also return a JSON object then the line would
+      		      // look something like this:
+      		      //
+      		      // file.serverId = response.id;
+      		      //
+      		      // In that case make sure that you respond with the mime type
+      		      // application/json
+      		    });
+      		    this.on("removedfile", function(file) {
+      		      if (!file.pictureName) { return; } // The file hasn't been uploaded
+      		      $.getJSON("/dynamic/deletePhoto/",{pictureName:file.pictureName}); // Send the file id along
+      		    });
+
+      		  }
+      		};
+</script>
 						</div>
+						{% endblock %}
 						
 						{%for dynamic in friendDynamicList%}
 						<div id="dynamic_{{dynamic.id}}" class="card_panel trend-list">
 						    <input type="hidden" id="publishUserId" value="{{dynamic.publishUserId}}">
 						    <input type="hidden" id="dynamicId" value="{{dynamic.id}}">
-							<div class="head head_boy" style="margin:4px;height:70px;width:70px;">
+							<div class="avatar">
 								<img alt="140x140" src="{{MEDIA_URL}}{{dynamic.avatarName}}-110.jpeg" style="height:70px;width:70px;"/>
 							</div>
-							<span class="name trend-name">{{dynamic.publishUserName}}</span>
-							<span class="trend-text">{{dynamic.content|safe}}</span>
+							<div style="min-height: 70px;">
+								<a class="name trend-name">{{dynamic.publishUserName}}</a>
+								<p class="trend-text">{{dynamic.content|safe}}</p>
+							</div>
 							<div class="pic-list">
 							{%ifequal dynamic.type 2 %}
 							    {%for photo in dynamic.data%}
-							    <a class="venobox" data-gall="gall1" href="{{MEDIA_URL}}images/{{photo}}" title="">
-								<img src="{{MEDIA_URL}}images/{{photo}}" style="margin: 5px;">
+							    <a class="venobox" data-gall="gall1" href="{{MEDIA_URL}}images/{{photo}}.jpg" title="">
+								<img src="{{MEDIA_URL}}images/{{photo}}-50.jpg" style="margin: 5px;">
 								</a>
 								{%endfor%}
 							{%endifequal%}
@@ -548,15 +527,15 @@ function del_comment(){
 									</li>
 									{%ifequal dynamic.publishUserId user.id %} 
 									<li>
-										 <a href="javascript:void(0)" onclick="del_dynamic({{dynamic.id}},{{dynamic.type}})">删除</a>
+										 <a href="javascript:void(0)" onclick="confirm_del_dynamic({{dynamic.id}},{{dynamic.type}})">删除</a>
 									</li>
 									{%endifequal%}
 								</ul>
 							</div>
 
-							<div id="comment_{{dynamic.id}}" class="commentary-area" style="display: none;">
-								<div class="controlArrow"></div>
-								<div class="commentary-list">
+							<div id="comment_{{dynamic.id}}" class="comments-area gray-panel" style="display: none;">
+								<div class="divArrow gray-panel" style="left: 500px;"></div>
+								<div class="comments-list">
 								</div>
 								<div class="publishInputArea">
 									<textarea id="publishTextArea{{dynamic.id}}" class="publishInputBefore publishTextArea" name="content" style="color: rgb(0, 0, 0); height: 52px;"></textarea>
@@ -597,15 +576,17 @@ function del_comment(){
 			<ul class="emoji-list"></ul>
 		</div>
 		    <!-- 评论 -->
-			<div class="commentary comment_clone" style="display: none;">
+			<div id="comment" class="comments comment_clone" style="display: none;">
 			    <input type="hidden" class="commentId" value="">
 			    <input type="hidden" class="reviewerName" value="">
 			    <input type="hidden" class="reviewerId" value="">
-			    <img class="commentary-head" src="">
+			    <img class="comments-head" src="">
 			    <div class="comments-text">
 			      <a href="#" class="commentary-username"></a>
                   
 			    </div>
+			    <ul id="comments-edit" class="list-inline comments-edit">
+			    </ul>
 			</div>
 			<!-- 没有动态 -->
 			<div id="no_dynamic" class="card_panel trend-list" style=" text-align: center; margin: 0px auto;display: none;">
@@ -629,7 +610,7 @@ function del_comment(){
 							</div>
 							<div id="" class="commentary-area" style="display: none;">
 								<div class="controlArrow"></div>
-								<div class="commentary-list">
+								<div class="comments-list">
 								</div>
 								<div class="publishInputArea">
 									<textarea id="publishTextArea{{dynamic.id}}" class="publishInputBefore publishTextArea" name="content" style="color: rgb(0, 0, 0); height: 52px;"></textarea>
@@ -665,7 +646,7 @@ function del_comment(){
 				href = $(this).attr('href');
 				if ($(href).is(":hidden")){
 					var dynamicId= href.substring('#comment_'.length)
-					$('#comment_'+dynamicId).find('.commentary-list').children().remove();
+					$('#comment_'+dynamicId).find('.comments-list').children().remove();
 					var publishUserId=$('#dynamic_'+dynamicId).find('#publishUserId').val()
 					$(href).show('slow');
 					$.getJSON('/dynamic/show_comment',{id:dynamicId,publishUserId:publishUserId},function(data){
@@ -760,7 +741,6 @@ function del_comment(){
 		
 	   //滚动加载
 		var totalheight = 0; 
-        var page={{next_page_number}};
         var load_dynamic=true;
 		function loadData()
 		{ 
@@ -780,8 +760,8 @@ function del_comment(){
 				}
 				 $.ajax({
 			         type: 'GET',
-			         url: "/dynamic/",
-			         data:{page:page,type:'ajax'},
+			         url:dynamicUrl,
+			         data:dynamicData,
 			         beforeSend: function(XMLHttpRequest){
 			         },
 			         success: function(data, textStatus){
@@ -838,16 +818,16 @@ function del_comment(){
 				}
 				operate.append('<li class="comment" href="#comment_'+this.id+'"><span><a id="show_comment_'+this.id+'" href="javascript:void(0)">评论('+this.commentNum+')</a></span></li>')
 				if(this.publishUserId==userId){
-					operate.append('<li><a href="javascript:void(0)" onclick="del_dynamic('+this.id+','+this.type+'">删除</a></li>')
+					operate.append('<li><a href="javascript:void(0)" onclick="confirm_del_dynamic('+this.id+','+this.type+')">删除</a></li>')
 				}
 				dynamic.find('.comment').click(show_comment)
 				dynamic.find('.publishInputExpression').click(publishInputExpression);
 				//初始化表情
 				dynamic.find('.publishInputExpression').attr('target','#publishTextArea_'+this.id)
 				dynamic.find('.publishTextArea').attr('id','publishTextArea_'+this.id)
-				dynamic.find('.commentary-list').children().remove()
+				dynamic.find('.comments-list').children().remove()
 				dynamic.find('.commentary-area').hide()
-				$('.col-md-9').append(dynamic)
+				$('#dynmaic_content').append(dynamic)
 				dynamic.find(".reply").click(reply_comment);
 				dynamic.show()
 			});

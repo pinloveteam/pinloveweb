@@ -13,6 +13,11 @@ urlpatterns=patterns('apps.pay_app.views',
      url(r'^pay_paypal/$', 'view_that_asks_for_money'),
      url(r'^paypal_success/$', 'paypal_success'),
      url(r'^paypal_cancel/$', 'paypal_cancel'),
+     url(r'^member/$', 'member'),
+     url(r'^pay_icon_order/$', 'pay_icon_order'),
+     url(r'^redeem_price/$', 'redeem_price'),
+      url(r'^charge_record/$', 'charge_record'),
+     
 #      url(r'^paypal/$', 'paypal_notify'),
      
 )

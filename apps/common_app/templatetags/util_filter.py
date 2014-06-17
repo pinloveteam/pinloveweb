@@ -39,6 +39,10 @@ def greater_than(value,var):
         return True
     else:
         return False
+    
+@register.filter
+def initial_choice(form, field_name):
+    return dict(form.fields[field_name].choices)[form.initial[field_name]]
 '''
 test
 '''

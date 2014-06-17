@@ -6,61 +6,71 @@ Created on Jul 4, 2013
 '''
 from django.shortcuts import render
 from apps.user_app.models import UserProfile, Follow
-from apps.search_app.forms import AdvanceSearchForm, SimpleSearchForm
+from apps.search_app.forms import SearchForm
 from util.page import page
 from apps.pojo.search import SearchRsult
 from django.http.response import HttpResponse
 from django.utils import simplejson
+################################
+##1.0
 def search(request):
     args={}
-    userProfile=UserProfile.objects.get_user_info(request.user.id)
-    if request.method=='POST':
-        simpleSearchForm=SimpleSearchForm(request.POST)
-        if simpleSearchForm.is_valid():
-            minAge=simpleSearchForm.cleaned_data['minAge']
-            maxAge=simpleSearchForm.cleaned_data['maxAge']
-            education=simpleSearchForm.cleaned_data['education']
-            minIcome=simpleSearchForm.cleaned_data['minIcome']
-            maxIncome=simpleSearchForm.cleaned_data['maxIncome']
-            minHeigh=simpleSearchForm.cleaned_data['minHeigh']
-            maxHeigh=simpleSearchForm.cleaned_data['maxHeigh']
-            isAvatar=simpleSearchForm.cleaned_data['isAvatar']
-            searchSql={}
-            try:
-                if isAvatar==True:
-                    searchSql['avatar_name_status']='3'
-                userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender)
-            except Exception as e:
-                print e 
+    try:
+        userProfile=UserProfile.objects.get_user_info(request.user.id)
+        if request.method=='POST':
+                searchForm=SearchForm(request.POST)
+                if searchForm.is_valid():
+                    searchSql={}
+                    minAge=searchForm.cleaned_data['minAge'] if searchForm.cleaned_data['minAge']!=u'' else 0
+                    maxAge=searchForm.cleaned_data['maxAge'] if searchForm.cleaned_data['maxAge']!=u'' else 10000
+                    education=searchForm.cleaned_data['education'] if searchForm.cleaned_data['education'] !=u'' else -1
+                    minIcome=searchForm.cleaned_data['minIcome'] if searchForm.cleaned_data['minIcome']!=u'' else 0
+                    maxIncome=searchForm.cleaned_data['maxIncome'] if searchForm.cleaned_data['maxIncome'] !=u'' else 100000 
+                    #最大收入为不限
+                    if maxIncome=='-1':
+                        maxIncome='100000'
+                    minHeigh=searchForm.cleaned_data['minHeigh'] if searchForm.cleaned_data['minHeigh']!=u'' else 0
+                    maxHeigh=searchForm.cleaned_data['maxHeigh'] if searchForm.cleaned_data['maxHeigh']!=u'' else 1000
+                    sunSign=request.REQUEST.get('sunSign','').rstrip()
+                    if len(sunSign)>0:
+                        sunSign=[int(sunSignBean)for sunSignBean in sunSign.split(',')]
+                        searchSql['sunSign__in']=sunSign
+                    jobIndustry=searchForm.cleaned_data['jobIndustry']
+                    if jobIndustry!='None' and jobIndustry!=u'':
+                        searchSql['jobIndustry']=jobIndustry
+                    userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
+                                               height__gte=minHeigh,height__lte=maxHeigh,avatar_name_status='3',**searchSql).exclude(gender=userProfile.gender,user=request.user)
+                    searchList=get_recommend_list(request,userProfile,userProfileList)
+                    from pinloveweb.method import load_cards_by_ajax
+                    return load_cards_by_ajax(request,searchList)
+        
+        else:
+            userProfileList=UserProfile.objects.filter().exclude(user=request.user)
             searchList=get_recommend_list(request,userProfile,userProfileList)
-            from pinloveweb.method import load_cards_by_ajax
-            return load_cards_by_ajax(request,searchList)
-    else:
-        userProfileList=UserProfile.objects.exclude(gender=userProfile.gender)
-        searchList=get_recommend_list(request,userProfile,userProfileList)
-        if request.GET.get('ajax')=='true':
-            from pinloveweb.method import load_cards_by_ajax
-            return load_cards_by_ajax(request,searchList)
-        from apps.pojo.card import MyEncoder
-        searchList.object_list=simplejson.dumps(searchList.object_list,cls=MyEncoder)
-        args['pages']=searchList
-        initial=init_search_condition(request.user.id)
-        simpleSearchForm=SimpleSearchForm(initial=initial)
-        args['simpleSearchForm']=simpleSearchForm
-        return render(request, 'simple_search.html',args)
+            if request.GET.get('ajax')=='true':
+                from pinloveweb.method import load_cards_by_ajax
+                return load_cards_by_ajax(request,searchList)
+            from apps.pojo.card import MyEncoder
+            searchList.object_list=simplejson.dumps(searchList.object_list,cls=MyEncoder)
+            args['pages']=searchList
+            initial=init_search_condition(request.user.id)
+            searchForm=SearchForm(initial=initial)
+            args.update(get_disable_condition(userProfile))
+            args['searchForm']=searchForm
+            from apps.search_app.forms import SUN_SIGN_CHOOSICE
+            args['sunSign']=SUN_SIGN_CHOOSICE
+            return render(request, 'simple_search.html',args)
+    except Exception as e:
+        print e
 
+################################
 def get_recommend_list(request,userProfile,userProfileList,**kwargs):
-   
-    #相互关注的人的id
-    follows=Follow.objects.follow_each(request.user.id)
-    focusEachOtherList=[follow.my.id for follow in follows ]
     args=page(request,userProfileList)
     matchResultList=args['pages']
     from apps.pojo.card import userProfileList_to_CardList
     matchResultList.object_list=userProfileList_to_CardList(matchResultList.object_list)
     from pinloveweb.method import is_focus_each_other
-    matchResultList=is_focus_each_other(request,matchResultList,focusEachOtherList)
+    matchResultList=is_focus_each_other(request,matchResultList)
     return matchResultList
 '''
 简单搜索
@@ -70,16 +80,16 @@ def get_recommend_list(request,userProfile,userProfileList,**kwargs):
 def simple_search(request):
     args={}
     if request.method=='POST':
-        simpleSearchForm=SimpleSearchForm(request.POST)
-        if simpleSearchForm.is_valid():
-            minAge=simpleSearchForm.cleaned_data['minAge']
-            maxAge=simpleSearchForm.cleaned_data['maxAge']
-            education=simpleSearchForm.cleaned_data['education']
-            minIcome=simpleSearchForm.cleaned_data['minIcome']
-            maxIncome=simpleSearchForm.cleaned_data['maxIncome']
-            minHeigh=simpleSearchForm.cleaned_data['minHeigh']
-            maxHeigh=simpleSearchForm.cleaned_data['maxHeigh']
-            isAvatar=simpleSearchForm.cleaned_data['isAvatar']
+        searchForm=SearchForm(request.POST)
+        if searchForm.is_valid():
+            minAge=searchForm.cleaned_data['minAge']
+            maxAge=searchForm.cleaned_data['maxAge']
+            education=searchForm.cleaned_data['education']
+            minIcome=searchForm.cleaned_data['minIcome']
+            maxIncome=searchForm.cleaned_data['maxIncome']
+            minHeigh=searchForm.cleaned_data['minHeigh']
+            maxHeigh=searchForm.cleaned_data['maxHeigh']
+            isAvatar=searchForm.cleaned_data['isAvatar']
             userProfile=UserProfile.objects.get(user=request.user)
             if isAvatar==True:
                 userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
@@ -92,47 +102,47 @@ def simple_search(request):
             json=simplejson.dumps(searchRsultList,cls=SearchRsultEncoder)
         return HttpResponse(json, mimetype='application/json')
     else:
-        initial=init_search_condition(request.user.id)
-        simpleSearchForm=SimpleSearchForm(initial=initial)
-        args['simpleSearchForm']=simpleSearchForm
+        initial=SearchForm(request.user.id)
+        searchForm=SearchForm(initial=initial)
+        args['searchForm']=searchForm
     return render(request, 'search.html',args)
 
 
-def advance_search(request):
-    args={}
-    if request.method=='POST':
-        advanceSearchForm=AdvanceSearchForm(request.POST)
-        if advanceSearchForm.is_valid():
-            searchSql={}
-            minAge=advanceSearchForm.cleaned_data['minAge']
-            maxAge=advanceSearchForm.cleaned_data['maxAge']
-            education=advanceSearchForm.cleaned_data['education']
-            minIcome=advanceSearchForm.cleaned_data['minIcome']
-            maxIncome=advanceSearchForm.cleaned_data['maxIncome']
-            minHeigh=advanceSearchForm.cleaned_data['minHeigh']
-            maxHeigh=advanceSearchForm.cleaned_data['maxHeigh']
-            isAvatar=advanceSearchForm.cleaned_data['isAvatar']
-            searchFields=['sunSign','jobIndustry','hasHouse','hasCar']
-            for field in searchFields:
-                if advanceSearchForm.cleaned_data[field]!='None':
-                    searchSql[field]=advanceSearchForm.cleaned_data[field]
-            for field in ['stateProvince','country','city']:
-                if not advanceSearchForm.cleaned_data[field] in [u'None',u'国家',u'省份、州',u'地级市、县']:
-                    searchSql[field]=advanceSearchForm.cleaned_data[field]
-            if isAvatar==True:
-                searchSql['avatar_name_status']='3'
-            userProfile=UserProfile.objects.get(user=request.user)
-            userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender)
-            searchRsultList=searchRsultBeanList_to_searchRsultList(userProfileList)
-            from apps.pojo.search import SearchRsultEncoder
-            json=simplejson.dumps(searchRsultList,cls=SearchRsultEncoder)
-        return HttpResponse(json, mimetype='application/json')
-    else:
-        initial=init_search_condition(request.user.id)
-        advanceSearchForm=AdvanceSearchForm(initial=initial)
-        args['advanceSearchForm']=advanceSearchForm
-        return render(request,'advanced_search.html',args)
+# def advance_search(request):
+#     args={}
+#     if request.method=='POST':
+#         advanceSearchForm=searchForm(request.POST)
+#         if advanceSearchForm.is_valid():
+#             searchSql={}
+#             minAge=advanceSearchForm.cleaned_data['minAge']
+#             maxAge=advanceSearchForm.cleaned_data['maxAge']
+#             education=advanceSearchForm.cleaned_data['education']
+#             minIcome=advanceSearchForm.cleaned_data['minIcome']
+#             maxIncome=advanceSearchForm.cleaned_data['maxIncome']
+#             minHeigh=advanceSearchForm.cleaned_data['minHeigh']
+#             maxHeigh=advanceSearchForm.cleaned_data['maxHeigh']
+#             isAvatar=advanceSearchForm.cleaned_data['isAvatar']
+#             searchFields=['sunSign','jobIndustry','hasHouse','hasCar']
+#             for field in searchFields:
+#                 if advanceSearchForm.cleaned_data[field]!='None':
+#                     searchSql[field]=advanceSearchForm.cleaned_data[field]
+#             for field in ['stateProvince','country','city']:
+#                 if not advanceSearchForm.cleaned_data[field] in [u'None',u'国家',u'省份、州',u'地级市、县']:
+#                     searchSql[field]=advanceSearchForm.cleaned_data[field]
+#             if isAvatar==True:
+#                 searchSql['avatar_name_status']='3'
+#             userProfile=UserProfile.objects.get(user=request.user)
+#             userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
+#                                                height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender)
+#             searchRsultList=searchRsultBeanList_to_searchRsultList(userProfileList)
+#             from apps.pojo.search import SearchRsultEncoder
+#             json=simplejson.dumps(searchRsultList,cls=SearchRsultEncoder)
+#         return HttpResponse(json, mimetype='application/json')
+#     else:
+#         initial=init_search_condition(request.user.id)
+#         advanceSearchForm=AdvanceSearchForm(initial=initial)
+#         args['advanceSearchForm']=advanceSearchForm
+#         return render(request,'advanced_search.html',args)
 
 '''
 初始化搜索条件
@@ -144,13 +154,16 @@ def init_search_condition(user_id):
     initial={}
     userProfile=UserProfile.objects.get(user_id=user_id)
     initial['isAvatar']=True
-    initial['maxIncome']=100000
+    initial['maxIncome']=-1
+    initial['minIcome']=-1
+    initial['jobIndustry']=None
     if userProfile.height==None:
         initial['minHeigh']=155
         initial['maxHeigh']=195
     if userProfile.age==None:
         initial['minAge']=18
         initial['maxAge']=30
+    initial['education']=-1
     if userProfile.gender=='F':
         if userProfile.height!=None:
             initial['minHeigh']=userProfile.height
@@ -158,18 +171,32 @@ def init_search_condition(user_id):
             if max>226:
                 initial['maxHeigh']=226
             else:
-                initial['maxHeigh']=max
+                initial['maxHeigh']=int(max)
         if userProfile.age!=None:
-            initial['minAge']=userProfile.age
-            initial['maxAge']=userProfile.age+10
+            initial['minAge']=int(userProfile.age)
+            initial['maxAge']=int(userProfile.age+10)
     else:
         if userProfile.height!=None:
-            initial['minHeigh']=userProfile.height-25
-            initial['maxHeigh']=userProfile.height
+            initial['minHeigh']=int(userProfile.height-25)
+            initial['maxHeigh']=int(userProfile.height)
         if userProfile.age!=None:
-            initial['minAge']=userProfile.age-10
-            initial['maxAge']=userProfile.age
+            initial['minAge']=int(userProfile.age-10)
+            initial['maxAge']=int(userProfile.age)
     return initial
+
+'''
+根据个人信息获得不可搜索条件
+条件age,heigh,education,icome,jobIndustry,sunSign
+attribute： 
+     userProfile 用户详细信息
+'''
+def get_disable_condition(userProfile):
+    args={}
+    fields=['age','height','education','income','jobIndustry','sunSign']
+    for field in fields:
+        if getattr(userProfile,field) in [None,-1,'-1']:
+            args['disable_'+field]=True
+    return args
 #########################################
 #以上是1.0版本
 #####################################
@@ -260,91 +287,6 @@ def searchRsultBeanList_to_searchRsultList(searchRsultBeanList):
        searchRsultList.append(searchRsult)
     return searchRsultList
 
-# def advance_search(request):
-#     arg={}
-#     arg['advance_search_form']=AdvanceSearchForm()
-#     return render(request,'advanced_search.html',arg)
-def advance_search_result(request):
-   if request.user.is_authenticated():
-     if request.method == 'POST':
-#        a_sex = request.POST['sex']
-       minAge = request.POST['minAge']
-       maxAge = request.POST['maxAge']
-       maxHeight = request.POST['maxHeight']
-       minHeight = request.POST['minHeight']
-       if request.POST.get('image')!= None:
-           image = ' and c2.avatar_name !="user_img/image.png" '
-       else:
-           image=' and c2.avatar_name ="user_img/image.png" '
-       advanceSearchForm=AdvanceSearchForm(request.POST)
-       if advanceSearchForm.is_valid() : 
-            user_basic=UserProfile.objects.get(user_id=request.user.id)
-            frends_flag = []  # 判断是否已经添加好友
-            sql=advance_search_sql(str(request.user.id),minAge,maxAge,image,user_basic.gender,maxHeight,minHeight,
-                             advanceSearchForm)
-            searchRsultList=UserProfile.objects.raw(sql)
-            request.session['advanceSearchSql']=sql 
-            # 需要映射到field choices 的字段
-            arg=page(request,searchRsultList)
-            searchRsultList=arg.get('pages')
-            searchRsultList.object_list=searchRsultBeanList_to_searchRsultList(searchRsultList.object_list)
-            friends = Follow.objects.filter(my=request.user.id)
-            i=0 
-            for user in searchRsultList:
-              for friend in friends:
-                if user.user_id == friend.friend.id:
-                   searchRsultList[i].isFriend=True
-              i+=1
-            arg['pages']=searchRsultList
-            return render(request, 'advanced_search_result.html',arg)
-     else:     
-       arg={}
-       searchRsultList=UserProfile.objects.raw(request.session['advanceSearchSql'])
-       arg=page(request,searchRsultList) 
-       searchRsultList=searchRsultBeanList_to_searchRsultList(arg.get('pages'))
-       friends = Follow.objects.filter(my=request.user.id)
-       i=0 
-       for user in searchRsultList:
-            for friend in friends:
-                if user.user_id == friend.friend.id:
-                   searchRsultList[i].isFriend=True
-            i+=1
-       arg['pages']=searchRsultList
-       return render(request, 'advanced_search_result.html', arg)
-   else:
-        arg={}
-        return render(request, 'login.html', arg)
-def advance_search_sql(id,minAge,maxAge,image,gender,maxHeight,minHeight,advanceSearchFrom):
-     sql='''select c1.id as id,c1.username as username,c2.age as age,c2.gender as gender,
-       c2.education as education,c2.height,c2.income as income,c2.jobIndustry,c2.avatar_name
-       from user_app_userprofile c2 
-       LEFT JOIN auth_user c1 on c1.id=c2.user_id 
-       where c1.id!='''+id+' and c2.age>='+minAge+' and c2.age<='+maxAge+image+' and c2.gender!='+"'"+gender+"'"\
-       +' and c2.height>='+minHeight+' and c2.height<='+maxHeight
-     education=advanceSearchFrom.cleaned_data['education']
-     income=advanceSearchFrom.cleaned_data['income']
-     sunSign=advanceSearchFrom.cleaned_data['sunSign']
-     jobIndustry=advanceSearchFrom.cleaned_data['jobIndustry']
-     companyType= advanceSearchFrom.cleaned_data['companyType']
-     hasCar = advanceSearchFrom.cleaned_data['hasCar']
-     hasHouse =  advanceSearchFrom.cleaned_data['hasHouse']
-     isOnlyChild = advanceSearchFrom.cleaned_data['isOnlyChild']
-     if not (education==None or education==-1):
-         sql+=" and c2.education ="+str(education)
-     if not (income==None or income==-1):
-        sql+=" and c2.income >="+ str(income)
-     if not (sunSign==None or sunSign==-1):
-        sql+=" and c2.sunSign ="+ str(sunSign)
-     if not (jobIndustry==None or jobIndustry==-1):
-        sql+=" and c2.jobIndustry ="+ str(jobIndustry)
-     if not (companyType==None or companyType=='N'):
-        sql+=" and c2.companyType ="+ str(companyType)
-     if not (hasCar==None or hasCar==0):
-        sql+=" and c2.hasCar ="+ str(hasCar)
-     if not (hasHouse==None or hasHouse==0):
-        sql+=" and c2.hasHouse ="+ str(hasHouse)
-     if not (isOnlyChild==None or isOnlyChild==0):
-        sql+=" and c2.isOnlyChild ="+str(isOnlyChild)
-     return sql
+
     
         

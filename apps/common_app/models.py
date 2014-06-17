@@ -22,6 +22,27 @@ class School(models.Model):
         verbose_name_plural = u'关注表'
         db_table = "school" 
 
+class AreaManager(models.Manager):
+    def get_country_list(self):
+        areaList=Area.objects.filter(area_level=0,status=1)
+        return [[area.area_id,area.area_name] for area in areaList]
+'''
+地区
+'''
+class Area(models.Model):
+    area_id=models.CharField(max_length=11,verbose_name=u'区域编号',primary_key=True)
+    area_name=models.CharField(max_length=50,verbose_name=u'地区名称')
+    parent=models.ForeignKey("self",verbose_name=u'父级编号')
+    AREA_LEVEL_CHOICES=((0,u'国'),(1,u'省'),(2,u'市'),(3,u'区县'))
+    area_level=models.SmallIntegerField(verbose_name=u'区域等级',choices=AREA_LEVEL_CHOICES)
+    STATUS_CHOICES=((1,u'可用'),(0,u'不可用'))
+    status=models.CharField(max_length=2,verbose_name=u'状态',choices=STATUS_CHOICES)
+    #定制管理器
+    objects = AreaManager()
+    class Meta:
+        verbose_name = u'地区表' 
+        verbose_name_plural = u'地区表'
+        db_table = "area" 
 '''
 标签表
 '''

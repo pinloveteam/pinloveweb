@@ -5,6 +5,7 @@ Created on 2014年4月22日
 @author: jin
 '''
 from apps.recommend_app.models import MatchResult
+import logging
 
 '''
 获取你对另一半的打分，如果没有返回None
@@ -39,18 +40,22 @@ def match_score(userId,otherUserId):
     matchResult=RecommendResult(kwargs=result)
     return matchResult
 
-def set_recommend_result_in_session(request,matchResult):
-    if not 'matchResultDict' in request.session.keys():
-        request.session['matchResultDict']={}
-    else:
-        matchResultDict=request.session['matchResultDict']
-        if not matchResult.userId in matchResultDict.keys():
-            matchResultDict[matchResult.userId]=matchResult
-        request.session['matchResultDict']=matchResultDict
-        
-def get_recommend_result_in_session(request,userId):
-    if not 'matchResultDict' in request.session.keys():
-        return None
-    else:
-        matchResultDict=request.session['matchResultDict']
-        return matchResultDict.get(userId,None)
+
+#============================
+#获得匹配结果
+#attribute：
+#     request
+#     otherId  ：被匹配的人
+#============================
+def get_matchresult(request,otherId):
+    try:
+            matchResult=get_match_score_other(request.user.id,otherId)
+            if matchResult is None:
+                matchResult=match_score(request.user.id,otherId)
+            else:
+                from apps.pojo.recommend import MarchResult_to_RecommendResult
+                matchResult=MarchResult_to_RecommendResult(matchResult)
+            return matchResult
+    except Exception as e:
+        logging.error('获得匹配结果get_matchresult:出现错误!'+e)
+     

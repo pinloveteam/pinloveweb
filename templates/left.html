@@ -1,0 +1,40 @@
+<div class="col-xs-3">
+			<div class="user_info card_panel" style="min-height: 150px;"> 
+				<div id="avatar" class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:60px;width:60px;">
+				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
+				</div>
+				<a href='/user/user_profile/#self_info'><div class="name">{{user.username}}</div></a>
+				<!-- {% ifequal member 0 %}
+				<a href='/user/member/'><div class="member">开通会员</div></a>
+				{%else%}
+				<a href='/user/member/'><div class="member">会员</div></a>
+				{% endifequal %} -->
+				
+				<hr/>
+				<p id="profile_dynamic" style="margin:20px 0 20px 20px;" title='{{dynamic.1|safe}}'>{{dynamic.0|safe}}</p>
+			</div>
+			<div class="sns_info card_panel">
+				<table class="table table-condensed">
+					<tbody>
+					  <tr class="js-follow">
+						<td><i class="icon_follow"></i></td>
+						<td><a href="/user/follow/1">关注</a></td>
+						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
+					  </tr>
+					  <tr>
+						<td><i class="icon_fans"></i></td>
+						<td><a href="/user/follow/2">粉丝</a></td>
+						<td><a id="fans" href="/user/follow/2">{{fans}}</a></td>
+					  </tr>
+					  <tr class="js-follow-each">
+						<td><i class="icon_mutual_like"></i></td>
+						<td><a href="/user/follow/3">相互关注</a></td>
+						<td><a id="follow" href="/user/follow/3">{{follow}}</a></td>
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="send_pic card_panel">
+			</div>
+		</div>

@@ -107,9 +107,44 @@ def use_score_by_other_score(userId,otherUserId):
     if result=='success':
         get_score_by_viewed_score(otherUserId)
     return result
-        
-        
-            
+ 
+'''
+玩拼图游戏消耗的积分
+attribute：
+   userId[long] 用户id
+return 
+    'success'|'less'
+'''    
+def use_score_by_pintu(userId):
+    return user_score_save(userId,'1010')
+     
+'''
+判断积分是否充足
+attribute：
+   userId[long] 用户id
+return 
+    True|False
+'''
+def has_score_by_pintu(userId,*args,**kwargs):
+    return has_score(userId,'1010',**kwargs)
+
+'''
+ 判断积分是否足够
+ attribute：
+ userId[long] 用户id
+ type[string] 用户类型
+ userScore[UserSocre] 用户积分类
+ userScoreExchangeRelate[UserScoreExchangeRelate]  积分映射关系类
+ '''       
+def has_score(userId,type,**kwargs):
+    args={}
+    userScoreExchangeRelate=kwargs.pop('userScoreExchangeRelate') if kwargs.get('userScoreExchangeRelate') else UserScoreExchangeRelate.objects.get(type=type)
+    userScore=kwargs.pop('userScore') if kwargs.get('userScore') else UserScore.objects.get(user_id=userId)
+    if userScoreExchangeRelate.amount+userScore.validScore<0:
+        return False
+    else:
+         return True
+              
 '''
 保存积分
 attridute:
@@ -124,7 +159,7 @@ return:
 def user_score_save(userId,type,*args,**kwargs):
     userScoreExchangeRelate=UserScoreExchangeRelate.objects.get(type=type)
     userScore=UserScore.objects.get(user_id=userId)
-    if userScoreExchangeRelate.amount+userScore.validScore<0:
+    if not has_score(userId,type,userScore=userScore,userScoreExchangeRelate=userScoreExchangeRelate):
         return 'less'
     userScore.validScore+=userScoreExchangeRelate.amount
     userScore.save()

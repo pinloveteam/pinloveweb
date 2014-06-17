@@ -8,6 +8,7 @@ from apps.user_app.models import UserProfile, BrowseOherScoreHistory
 from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
 from apps.recommend_app.models import MatchResult, Grade
 from django.utils import simplejson
+from apps.friend_dynamic_app.models import Picture
 '''
   卡片类
 '''
@@ -20,6 +21,9 @@ class Card(object):
         self.age=age
         self.education=education
         self.income=income
+        self.pictureList=[]
+        #初始化图片
+        self.get_pic()
 #         self.jobIndustry=jobIndustry
 #         self.heighScore=heighScore
 #         self.incomeScore=incomeScore
@@ -33,12 +37,24 @@ class Card(object):
         0 未关注
         1 我关注
         2 相互关注
+        3 关注我的
         '''
         self.followStatus=followStatus
         self.avatar_name=avatar_name
         self.isVote=isVote
         self.city=city
         
+    '''
+    获取用户图片
+    '''
+    def get_pic(self):
+        pictureList=Picture.objects.filter(user_id=self.user_id).order_by('-createTime')[:50]
+        for picture in pictureList:
+            from apps.friend_dynamic_app.dynamic_settings import IMAGE_SAVE_FORMAT,thumbnails
+            smailPic='%s%s%s%s%s'%(picture.picPath,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT)
+            pic='%s%s%s'%(picture.picPath,'.',IMAGE_SAVE_FORMAT)
+            self.pictureList.append({'description':picture.description,'pic':pic,'smailPic':smailPic,'createTime':picture.createTime.strftime("%Y-%m-%d-%H")}) 
+            
     def _dict_(self):
         dict=vars(self) 
         for key in dict.keys():

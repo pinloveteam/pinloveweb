@@ -25,7 +25,7 @@ class MessageBean(object):
         self.isRead=kwargs.pop('isRead',None)
         self.avatarName=None
         
-    def get_messagebean(self,obj,request,**kwargs):
+    def get_messagebean(self,obj,userId,**kwargs):
         self.id=getattr(obj,'id',None)
         self.senderId=getattr(obj,'sender_id',None)
         self.receiverId=getattr(obj,'receiver_id',None)
@@ -39,7 +39,13 @@ class MessageBean(object):
         self.isDeletereceiver=getattr(obj,'isDeletereceiver',None)
         self.isRead=getattr(obj,'isRead',None)
         if not kwargs.pop('type',None) is None:
-            if request.user.id==self.senderId:
+            self.senderName=getattr(obj,'senderName',False)
+            if not self.senderName:
+                self.senderName=obj.sender.username
+            self.receiverName=getattr(obj,'receiverName',False)
+            if not self.receiverName:
+                self.receiverName=obj.receiver.username
+            if userId==self.senderId:
                 kwargs['userId']=self.receiverId
             else:
                 kwargs['userId']=self.senderId
@@ -54,11 +60,11 @@ class MessageBeanEncoder(simplejson.JSONEncoder):
         dict=obj.__dict__
         return dict
     
-def Message_to_MessageBean(messageList,request,**kwargs):
+def Message_to_MessageBean(messageList,userId,**kwargs):
     messageBeanList=[]
     for message in messageList:
         messageBean=MessageBean()
-        messageBean.get_messagebean(message,request,**kwargs)
+        messageBean.get_messagebean(message,userId,**kwargs)
         messageBeanList.append(messageBean)
     return messageBeanList
     

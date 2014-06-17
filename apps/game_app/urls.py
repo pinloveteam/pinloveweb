@@ -3,6 +3,8 @@ from django.conf.urls import patterns, url
 urlpatterns=patterns('apps.game_app.views',
     url(r'^game_pintu/$','pintu'),
     url(r'^jigsaw/$','jigsaw',name="jigsaw"),
+    url(r'^jigsaw_web/$','jigsaw_web',name="jigsaw_web"),
+     url(r'^check_for_pintu/$','check_score_and_PLprice_for_pintu'),
     url(r'^jigsaw_mobi/$','jigsaw_mobi'),
     url(r'^confirm_request_life/$','confirm_request_life'),
 )

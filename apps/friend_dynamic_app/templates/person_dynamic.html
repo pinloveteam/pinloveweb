@@ -1,0 +1,9 @@
+﻿{% extends "dynamic.html" %}
+<title> {% block title %} 拼爱网--个人动态 {% endblock %} </title>
+{%block public_dynmaic %}
+<script type="text/javascript">
+      var dynamicUrl="/dynamic/person/"
+      var dynamicData={page:page,type:'ajax',userId:{{userId}}}
+ </script>
+{% endblock %}
+

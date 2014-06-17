@@ -3,8 +3,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
-from apps.game_app.models import Yuanfenjigsaw, get_count
+from apps.game_app.models import Yuanfenjigsaw, get_count, YuanfenjigsawWeb
 from apps.third_party_login_app.models import FacebookUser
+from apps.user_app.models import UserProfile
+from apps.pay_app.models import Charge, ChargeExchangeRelate
+from apps.user_score_app.models import UserScore, UserScoreExchangeRelate
+import logging
 
 
 @csrf_exempt
@@ -20,9 +24,41 @@ def jigsaw_mobi(request):
     return HttpResponse(json)
 
 def pintu(request):
-    username=FacebookUser.objects.get(uid=request.facebook.uid).username
-    count = get_count(username)
-    return render(request, 'pintu.html',{'count':count})
+    charge=Charge.objects.get(user=request.user)
+    userScore=UserScore.objects.get(user=request.user)
+    from apps.game_app.models import get_recommend_history_web
+    facebookUserListDcit=get_recommend_history_web(request.user.id)
+    return render(request, 'pintu.html',{'userScore':userScore,'charge':charge,'facebookUserListDcit':facebookUserListDcit})
+
+@csrf_exempt
+def jigsaw_web(request):
+    match_result = YuanfenjigsawWeb(request.user,filter=request.REQUEST.get('filter'),type=request.REQUEST.get('type')).get_match_result()
+    json=simplejson.dumps(match_result)
+    return HttpResponse(json, mimetype='application/javascript')
+
+'''
+判断积分拼爱币是都足够消费缘分拼图
+'''
+def check_score_and_PLprice_for_pintu(request):
+    try:
+        args={}
+        from apps.user_score_app.method import has_score_by_pintu
+        hasScore=has_score_by_pintu(request.user.id)
+        if hasScore:
+            userScoreExchangeRelate=UserScoreExchangeRelate.objects.get(type='1010')
+            args={'type':'score','amount':userScoreExchangeRelate.amount,}
+        else:
+            from apps.pay_app.method import has_charge_by_pintu
+            hasCharge=has_charge_by_pintu(request.user.id)
+            if hasCharge:
+                chargeExchangeRelate=ChargeExchangeRelate.objects.get(operateType='1004')
+                args={'type':'charge','amount':chargeExchangeRelate.PLPrice}
+            else:
+                args={'type':'less'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception as e:
+        logging.error('%s%s'%('check_score_and_PLprice_for_pintu,出错原因：',e))
 
 '''
 邀请好友确认，奖励

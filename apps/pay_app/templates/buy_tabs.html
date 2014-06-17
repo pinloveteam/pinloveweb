@@ -1,0 +1,180 @@
+
+			<div class="buy-nav">
+				<ul class=" list-inline">
+					<li href="#vip" class="active">会员增值服务</li>
+					<li href="#buy_coin">兑换拼爱币</li>
+					<li href="#redeem">拼爱币赎回</li>
+					<li href="#record">交易记录</li>
+				</ul>
+			</div>
+			<div class="col-xs-9" style="height: 0px; z-index: 10;">
+				<div class="card_panel" style="width: 100%; margin-top: 0;">
+					<div id="vip" class="vip-panel">
+						<p>
+							<b>想知道Ta对你的打分吗?</b>
+						</p>
+						<p>开通会员，展示机会提高8倍，推荐人数增加50%，更多推荐删选条件，告别单身几率提高10倍。</p>
+						<div class="buy-panel">
+							<div class="buy-panel-top">
+								<p class="buy-panel-text text-big">开通会员增值服务</p>
+								<p class="buy-panel-text">查看打分特权，提高脱单几率！</p>
+							</div>
+
+							<div class="form-row">
+								<label> <input type="radio" checked="checked" name="vip"
+									value="一个月"><span>一个月 </span>
+									<span>300拼爱币</span>
+								</label>
+							</div>
+
+							<div class="form-row">
+								<label> <input type="radio" checked="checked" name="vip"
+									value="三个月"><span>三个月 </span>
+									<span>800拼爱币</span>
+								</label>
+							</div>
+
+							<div class="form-row">
+								<button class="btn btn-info">立即开通</button>
+							</div>
+						</div>
+					</div>
+
+					<div id="buy_coin" class="vip-panel" style="display: none;">
+						<p>
+							<b>什么是拼爱币?</b>
+						</p>
+						<p>拼爱币可以购买增值服务，兑换越多越实惠。参加活动会获得拼爱积分，可以当拼爱币使用。</p>
+						<p>另外，只要你的魅力够高，别人查看你TA在你这里的分数，你就能获得拼爱币。</p>
+						<div class="buy-panel">
+							<div class="buy-panel-top">
+								<p class="buy-panel-text text-big">兑换拼爱币</p>
+								<p class="buy-panel-text">购买会员增值服务，享受更多特权。</p>
+							</div>
+
+							{% for chargeExchangeRelate in chargeExchangeRelateList%}
+							<div class="form-row">
+								<label> <input type="radio" name="PLprice" value={{chargeExchangeRelate.PLPrice|add:chargeExchangeRelate.PLPresentation}}>&nbsp;&nbsp;&nbsp;&nbsp;
+								        <input type="hidden" name="charge_id" value="{{chargeExchangeRelate.id}}"/>
+									<span>{{chargeExchangeRelate.PLPrice}}+<b class="text-danger">{{chargeExchangeRelate.PLPresentation}}</b></span>
+									<span name="price">
+									{%ifequal chargeExchangeRelate.currencyType 1%}${%else%}￥{%endifequal%}{{chargeExchangeRelate.currencyPrice}}</span>
+								</label>
+							</div>
+							{%endfor%}
+
+						</div>
+
+						<div style="position: absolute; top: 250px; left: 400px;">
+							<p>选择兑换方式：</p>
+							<div style="display: inline-block">
+								<label> <input type="radio" name="type" value="alipay">
+									<span>支付宝</span>
+								</label>
+							</div>
+
+							<div style="display: inline-block">
+								<label> <input type="radio" name="type" value="paypal">
+									<span>paypal</span>
+								</label>
+							</div>
+
+							<div class="form-row" style="position: relative; top: 30px;">
+								<button id='exchange' class="btn btn-info">立即兑换</button>
+							</div>
+
+						</div>
+					</div>
+
+					<div id="redeem" class="vip-panel" style="display: none;">
+						<p>
+							<b>想用品爱币赚钱吗？</b>
+						</p>
+						<p>拼爱币可以兑换成现金哦，想看看你的魅力吗，只要你的魅力够高，就能用品爱币来换取现金啦。</p>
+						<div class="buy-panel">
+							<div class="buy-panel-top">
+								<p class="buy-panel-text text-big">开通会员增值服务</p>
+								<p class="buy-panel-text">查看打分特权，提高脱单几率！</p>
+							</div>
+							<div class="form-row">拼爱币：{{charge.validAmount}} &nbsp;兑换比例：100：1</div>
+							<div class="form-row">
+								兑换数量： <input id='redeem_amount' type="text" class="form-input">
+							</div>
+
+							<div class="form-row">
+								<button id="redeem_button" class="btn btn-info">立即兑换</button>
+							</div>
+						</div>
+						
+						<div style="position: absolute; top: 250px; left: 400px;">
+							<p>选择兑换方式：</p>
+							<div style="display: inline-block">
+								<label> <input type="radio" name="redeem_type" value="alipay">
+									<span>支付宝</span>
+								</label>
+							</div>
+
+							<div style="display: inline-block">
+								<label> <input type="radio" name="redeem_type" value="paypal">
+									<span>paypal</span>
+								</label>
+							</div>
+							</div>
+
+						</div>
+
+					<div id="record" class="vip-panel" style="display: none;">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>日期</th>
+									<th>明细</th>
+									<th>数量</th>
+									<th>交易方式</th>
+									<th>交易状态</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>2014.5.10</td>
+									<td>拼爱币兑换</td>
+									<td>+100拼爱币</td>
+									<td>支付宝</td>
+									<td style="color: red;">交易失败</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="poplayer" style="display: none;">
+					<div class="poplayer-confirm">
+						<div class="poplayer-confirm-head">
+							<span class="poplayer-confirm-head-text text-white">购买服务确认</span>
+							<span class="poplayer-close-btn text-white">X</span>
+						</div>
+						<div class="poplayer-confirm-body">
+							<p>
+								购买服务：<span>会员</span>
+							</p>
+							p>服务价格：<b class="text-red">488</b>元
+							</p>
+							<p>
+								购买拼爱币：<b class="text-red">0</b>元
+							</p>
+							<p>
+								还需支付：<b class="text-red">488</b>元
+							</p>
+						</div>
+
+						<div class="poplayer-confirm-bottom">
+							<button class="btn btn-info">立即支付</button>
+						</div>
+					</div>
+			</div>
+			<div>
+			</div>
+
+

@@ -34,9 +34,6 @@ def the_people_nearby(request):
     arg = {}
     userProfile=UserProfile.objects.get_user_info(request.user.id)
     userProfileList =  UserProfile.objects.filter(lastLoginAddress=GetLocation(request)).exclude(user=request.user)
-    #相互关注的人的id
-    follows=Follow.objects.follow_each(request.user.id)
-    focusEachOtherList=[follow.my.id for follow in follows ]
     #分页
     from util.page import page
     arg=page(request,userProfileList)
@@ -44,7 +41,7 @@ def the_people_nearby(request):
     from apps.pojo.card import userProfileList_to_CardList
     userList.object_list=userProfileList_to_CardList(userList.object_list)
     from pinloveweb.method import is_focus_each_other
-    userList=is_focus_each_other(request,userList,focusEachOtherList)
+    userList=is_focus_each_other(request,userList)
     if request.GET.get('ajax')=='true':
         from pinloveweb.method import load_cards_by_ajax
         return load_cards_by_ajax(request,userList)
@@ -53,5 +50,5 @@ def the_people_nearby(request):
     userList.object_list=simplejson.dumps(userList.object_list,cls=MyEncoder)
     arg['pages']=userList
     from pinloveweb.method import init_person_info_for_card_page
-    arg.update(init_person_info_for_card_page(userProfile,followEachCount=len(focusEachOtherList)))
+    arg.update(init_person_info_for_card_page(userProfile))
     return render(request, 'the_people_nearby.html',arg )

@@ -7,8 +7,10 @@ $(function(){
 		//学校名称 激活状态
 		$("#id_educationSchool,#id_educationSchool_2").focus(function(){
 		 $("div[class='provinceSchool']").hide();
-		  var top = $(this).position().top+22;
-    	  var left = $(this).position().left;
+//		  var top = $(this).position().top+22;
+//    	  var left = $(this).position().left;
+		  var top = $(this).position().top-150;
+		  var left=200;
     	  provinceSchool=$(this).closest('.school_div').find('.provinceSchool')
     	  provinceSchool.css({top:top,left:left});
     	  provinceSchool.show();

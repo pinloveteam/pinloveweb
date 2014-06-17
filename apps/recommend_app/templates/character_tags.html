@@ -43,6 +43,10 @@ $(document).ready(function() {
 	
 	//提交事件
 	$("#character_tags").submit(function(){
+		      //检查tags
+		    if(check_tags()==false){
+		    	return false
+		    }
             data=$(this).serialize()
 		    var tagMyObj = new Array();
 		    var tagOtherObj = new Array();
@@ -70,7 +74,11 @@ $(document).ready(function() {
                     if(textStatus== 'success'){
                     	data=$.parseJSON(data)
                     	if(data.result=='success'){
-                    		alert('保存成功!')
+                    		var body = $("<p>保存成功!</p>")
+                			$.poplayer({body:body});
+                    	}else{
+                    		var body = $("<p>"+data.error_messge+"</p>")
+                			$.poplayer({body:body});
                     	}
                     }
                 },
@@ -83,11 +91,41 @@ $(document).ready(function() {
             return false;
         });
 });
-
+function check_tags(){
+	try{
+		tag_id=['my_tag','ta_tag']
+		flag=true;
+		for(var i=0;i<tag_id.length;i++){
+			if(flag==false){
+				return false
+			}
+			tags=$('#'+tag_id[i]).find('.tags-row')
+			if(tag_id[i]=='my_tag'){
+				error_msg='请将我的性格标签填写完整!'
+				active='.tag-active'
+			}else{
+				error_msg='请将我的ta的性格标签填写完整!'
+				active='.tag-active-g'
+			}
+			$.each(tags,function(){
+				if ($(this).find(active).length<=0){
+					var body = $("<p>"+error_msg+"</p>")
+					$.poplayer({body:body});
+					flag=false
+					return false;
+				}
+			});
+		}
+		if(flag==false){
+			return false
+		}
+	}catch(err){
+		return false;
+	}
+}
 </script>
 <form id='character_tags' action="" method="POST">{% csrf_token %}
-<img class="detail" src="{{STATIC_URL}}img/detail_information.png" />
-<div class="my_tag" class-data="tag-active">
+<div id="my_tag" class="my_tag" class-data="tag-active">
 	<img src="{{STATIC_URL}}img/my_character_tags.jpg"
 		style="margin-left: 50px;" />
 	<div class="tags"
@@ -103,7 +141,7 @@ $(document).ready(function() {
 	</div>
 </div>
 
-<div class="my_tag" class-data="tag-active-g">
+<div id="ta_tag" class="my_tag" class-data="tag-active-g">
 	<img src="{{STATIC_URL}}img/Ta_character_tags.jpg"
 		style="margin-left: 50px;" />
 	<div class="tags"
@@ -117,5 +155,5 @@ $(document).ready(function() {
         {% endfor %}
 	</div>
 </div>
-<button class="btn btn-pink btn-save">保存</button>
+<button class="btn btn-pink btn-save" style="left: 90%;">保存</button>
 </form>

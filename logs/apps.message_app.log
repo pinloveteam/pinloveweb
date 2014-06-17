@@ -1,0 +1,105 @@
+ERROR apps.message_app.views 2014-06-11 16:17:14 E:\eclipse_64\code\pinloveweb\apps\message_app\views.py views 147 获取我和指定异性之间所有私信出错，出错原因
+Traceback (most recent call last):
+  File "E:\eclipse_64\code\pinloveweb\apps\message_app\views.py", line 144, in notify_detail
+    json=simplejson.dumps(args,cls=MessageBeanEncoder)
+  File "E:\python\lib\site-packages\simplejson\__init__.py", line 369, in dumps
+    **kw).encode(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 264, in encode
+    chunks = list(chunks)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 612, in _iterencode
+    for chunk in _iterencode_dict(o, _current_indent_level):
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 568, in _iterencode_dict
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 455, in _iterencode_list
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 622, in _iterencode
+    o = _default(o)
+  File "E:\eclipse_64\code\pinloveweb\apps\pojo\message.py", line 55, in default
+    return super(MessageBeanEncoder, self).default(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 239, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+TypeError: <apps.pojo.notify.NotifyBean object at 0x0000000006109128> is not JSON serializable
+ERROR apps.message_app.views 2014-06-11 16:17:38 E:\eclipse_64\code\pinloveweb\apps\message_app\views.py views 147 获取我和指定异性之间所有私信出错，出错原因
+Traceback (most recent call last):
+  File "E:\eclipse_64\code\pinloveweb\apps\message_app\views.py", line 144, in notify_detail
+    json=simplejson.dumps(args,cls=MessageBeanEncoder)
+  File "E:\python\lib\site-packages\simplejson\__init__.py", line 369, in dumps
+    **kw).encode(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 264, in encode
+    chunks = list(chunks)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 612, in _iterencode
+    for chunk in _iterencode_dict(o, _current_indent_level):
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 568, in _iterencode_dict
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 455, in _iterencode_list
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 622, in _iterencode
+    o = _default(o)
+  File "E:\eclipse_64\code\pinloveweb\apps\pojo\message.py", line 55, in default
+    return super(MessageBeanEncoder, self).default(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 239, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+TypeError: <apps.pojo.notify.NotifyBean object at 0x00000000026A7AC8> is not JSON serializable
+ERROR apps.message_app.views 2014-06-11 16:17:54 E:\eclipse_64\code\pinloveweb\apps\message_app\views.py views 147 获取我和指定异性之间所有私信出错，出错原因
+Traceback (most recent call last):
+  File "E:\eclipse_64\code\pinloveweb\apps\message_app\views.py", line 144, in notify_detail
+    json=simplejson.dumps(args,cls=MessageBeanEncoder)
+  File "E:\python\lib\site-packages\simplejson\__init__.py", line 369, in dumps
+    **kw).encode(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 264, in encode
+    chunks = list(chunks)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 612, in _iterencode
+    for chunk in _iterencode_dict(o, _current_indent_level):
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 568, in _iterencode_dict
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 455, in _iterencode_list
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 622, in _iterencode
+    o = _default(o)
+  File "E:\eclipse_64\code\pinloveweb\apps\pojo\message.py", line 55, in default
+    return super(MessageBeanEncoder, self).default(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 239, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+TypeError: <apps.pojo.notify.NotifyBean object at 0x0000000002694860> is not JSON serializable
+ERROR apps.message_app.views 2014-06-11 16:20:03 E:\eclipse_64\code\pinloveweb\apps\message_app\views.py views 147 获取我和指定异性之间所有私信出错，出错原因
+Traceback (most recent call last):
+  File "E:\eclipse_64\code\pinloveweb\apps\message_app\views.py", line 144, in notify_detail
+    json=simplejson.dumps(args,cls=MessageBeanEncoder)
+  File "E:\python\lib\site-packages\simplejson\__init__.py", line 369, in dumps
+    **kw).encode(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 264, in encode
+    chunks = list(chunks)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 612, in _iterencode
+    for chunk in _iterencode_dict(o, _current_indent_level):
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 568, in _iterencode_dict
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 455, in _iterencode_list
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 622, in _iterencode
+    o = _default(o)
+  File "E:\eclipse_64\code\pinloveweb\apps\pojo\message.py", line 55, in default
+    return super(MessageBeanEncoder, self).default(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 239, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+TypeError: <apps.pojo.notify.NotifyBean object at 0x0000000005F1D6D8> is not JSON serializable
+ERROR apps.message_app.views 2014-06-11 16:20:17 <string> <string> 1 获取我和指定异性之间所有私信出错，出错原因
+Traceback (most recent call last):
+  File "E:\eclipse_64\code\pinloveweb\apps\message_app\views.py", line 144, in notify_detail
+    json=simplejson.dumps(args,cls=MessageBeanEncoder)
+  File "E:\python\lib\site-packages\simplejson\__init__.py", line 369, in dumps
+    **kw).encode(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 264, in encode
+    chunks = list(chunks)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 612, in _iterencode
+    for chunk in _iterencode_dict(o, _current_indent_level):
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 568, in _iterencode_dict
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 455, in _iterencode_list
+    for chunk in chunks:
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 622, in _iterencode
+    o = _default(o)
+  File "E:\eclipse_64\code\pinloveweb\apps\pojo\message.py", line 55, in default
+    return super(MessageBeanEncoder, self).default(obj)
+  File "E:\python\lib\site-packages\simplejson\encoder.py", line 239, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+TypeError: <apps.pojo.notify.NotifyBean object at 0x0000000005F1D6D8> is not JSON serializable

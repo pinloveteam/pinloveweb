@@ -5,7 +5,8 @@ function onUploadSuccess(id){
      $('#cer_'+id).children().remove()
      $('#cer_'+id).hide()
      $('#'+id).find('.cerbtn').attr('disabled',true).html('正在审核')
-    alert('提交成功!')
+     var body = $("<p>提交成功!</p>")
+     $.poplayer({body:body});
 }
 function onUploadError(data){
 	//the function after upload
@@ -140,6 +141,7 @@ function onUploadError(data){
 	{% endifequal %}
 </div>
 
+{% ifequal 1 0%}
 <div id="identity">
 	<ul class="list-inline">
 		<li><img src="{{STATIC_URL}}img/identity.png" class="icon" /></li>
@@ -184,10 +186,6 @@ function onUploadError(data){
 		<div>
 			<label class="form-label">证件照</label> 
 			{{IDcardValidForm.IDCardPicture}}<div id="IDCardPicture_error" style="display: inline-block;color:red;"></div>
-			<div class="text-muted">
-				<span>请上传您身份证的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。不能使用复印件。</span><br>
-				<span id="identity_error" style="color: red;"></span>
-			</div>
 		</div>
 
 		<button class="btn btn-info  cer_button">提交</button>
@@ -198,6 +196,7 @@ function onUploadError(data){
 		frameborder="0"></iframe>
 	{% endifequal %}
 </div>
+{% endifequal %}
 
 <div id="education">
 	<ul class="list-inline">

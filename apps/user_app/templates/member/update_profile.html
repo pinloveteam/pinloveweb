@@ -1,8 +1,7 @@
 {%load util_filter%}
 <SCRIPT src="/static/js/register.js" type=text/javascript></SCRIPT>
- <SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
+  <SCRIPT src="/static/js/area.js" type=text/javascript></SCRIPT>
  <SCRIPT src="/static/js/education.js" type=text/javascript></SCRIPT>
-  <SCRIPT src="/static/js/education.js" type=text/javascript></SCRIPT>
  <style>
 	  .provinceSchool { display:none;position:absolute;width:580px;height:310px;border:1px solid #72B9D7; background-color:#FFFFFF ;z-index: 1;}
 	  .provinceSchool .title { width:100%;height:30px;background:url({{STATIC_URL}}img/title-bg.png) repeat-x center left;}
@@ -12,7 +11,7 @@
 	  .provinceSchool .proSelect input { display:none;}
 	  .provinceSchool .schoolList { width:550px;height:200px;margin-left:15px;overflow-y:auto; border:1px solid #72B9D7;}
 	  .provinceSchool .schoolList ul { width:510px;}
-	  .provinceSchool .schoolList ul li { float:left;width:240px;height:22px;margin-left:6px;padding-left:6px;line-height:22px;cursor:pointer;}
+	  .provinceSchool .schoolList ul li { float:left;width:200px;height:22px;margin-left:6px;padding-left:6px;line-height:22px;cursor:pointer;}
 		.provinceSchool .schoolList ul li.DoubleWidthLi { width:328px;}
 	  .provinceSchool .schoolList ul li:hover { background:#72B9D7;}
 	  .provinceSchool .button { width:100%;height:40px;margin-top:8px;}
@@ -28,6 +27,7 @@
                         url: "/user/update_profile/",
                         data:data,
                         beforeSend: function(XMLHttpRequest){
+                        	 $(this).find('button').attr('disabled', 'disabled');
                         },
                         success: function(data, textStatus){
                            /*  if(response == 'success'){
@@ -36,10 +36,34 @@
                                 content.val('');
                             } */
                             if(textStatus== 'success'){
-                                alert('修改成功!')
+                            	if(data.result=='success'){
+                            		if (typeof(data.birth) != "undefined"){
+                            			label=$('#birth').find('.form-label')
+                            			$('#birth').html(data.birth)
+                            			$('#birth').prepend(label)
+                            			label=$('#age').find('.form-label')
+                            			$('#age').html(data.age)
+                            			$('#age').prepend(label)
+                            			
+                            		}
+                            		$('[id$="error"]').html("")
+                            		var body = $("<p>修改成功!</p>")
+        							$.poplayer({body:body});
+                            	}else{
+                            		errors=data.errors
+                            		for(i=0;i<errors.length;i++){
+                            			error=errors[i]
+                            			id=$('#'+error[0]+'_error')
+                            			if(id.length>0){
+                            				id.html(error[1])
+                            			}
+                            		}
+                            	}
+                            	
                             }
                         },
                         complete: function(XMLHttpRequest, textStatus){
+                        	$(this).find('button').removeAttr('disabled');
                         },
                         error: function(response){
                             $('#answer-list').html(response);
@@ -77,24 +101,32 @@
                 
                 <div class="form-row">
 					<label class="form-label">性别<span class="text-danger">*</span></label>
-							 {{user_profile_form.gender}}
+							 {{gender_name}}
 				</div>
 						
 				<div class="form-row">
 					<label class="form-label">身高<span class="text-danger">*</span></label>
-					{{user_profile_form.height}}
+					{{user_profile_form.height}}&nbsp;cm
 					<label class="form-label" style="margin-left: 75px;">体重</label>
-					 {{user_profile_form.weight}}
+					 {{user_profile_form.weight}}&nbsp;kg
 				</div>
 						
-				<div class="form-row">
-					<label class="form-label">生日<span class="text-danger">*</span></label>
-					{{user_profile_form.year_of_birth}}
-                    {{user_profile_form.month_of_birth}}
-                    {{user_profile_form.day_of_birth}}
-							
-					<label class="form-label" style="margin-left: 50px;">年龄</label>
-					 {{user_profile_form.age}}
+				<div class="form-row" id="birth">
+				  <label class="form-label">生日<span class="text-danger">*</span></label>
+				   {% if check_birth %}
+				   {{user_profile_form.year_of_birth.value}}&nbsp;年 
+				   {{user_profile_form.month_of_birth.value}}&nbsp;月
+                    {{user_profile_form.day_of_birth.value}}&nbsp;日
+				   {%else%}
+					{{user_profile_form.year_of_birth}}&nbsp;年 
+                    {{user_profile_form.month_of_birth}}&nbsp;月
+                    {{user_profile_form.day_of_birth}}&nbsp;日
+                    <label id='day_of_birth_error' style="color:red"></label>
+                    {%endif%}
+				</div>
+				<div class="form-row" id="age">
+				<label class="form-label">年龄</label>
+					 {%if age %}{{age}}{%else%}未填{%endif%}
 				</div>
 						
 				<div class="form-row ">
@@ -124,7 +156,7 @@
                      </div>
                      </div>
 					<div class="school_div" style="{% if  user_profile_form.educationSchool_2.value %} display: inline-block;{%else%} display: none;{%endif%}">	
-					   <label class="form-label" style="margin-left: 50px;">学校</label>
+					   <label class="form-label" style="margin-left: 10px;">学校</label>
 					   {{user_profile_form.educationSchool_2}}
 					   <div id="proSchool" class="provinceSchool">
                       <div class="title">
@@ -161,29 +193,29 @@
 				<div class="form-row">
 					<label class="form-label">现居地<span class="text-danger">*</span></label>
 					<select id="id_country" name="country" class="form-input"  style="width: 200px;">
-                        {%ifnotequal country  Null%}
-                        <option value="-1" >请选择</option>
+					{%ifnotequal country Null%}
+                        <option value="" >请选择</option>
                         <option value="{{country}}" selected="selected">{{country}}</option>
                         {% else %}
-                        <option value="-1" >请选择</option>
+                        <option value="" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                    <select id="id_stateProvince" name="stateProvince" class="form-input"  >
+                    <select id="id_stateProvince" name="stateProvince" class="form-input" >
                         {%ifnotequal stateProvince Null%}
-                        <option value="-1" >请选择</option>
+                        <option value="" >请选择</option>
                         <option value="{{stateProvince}}" selected="selected">{{stateProvince}}</option>
                         {% else %}
-                        <option value="-1" >请选择</option>
+                        <option value="" >请选择</option>
                         {%endifnotequal%}
                     </select>
                     <select id="id_city" name="city" class="form-input" >
                         {%ifnotequal city Null%}
-                        <option value="-1" >请选择</option>
+                        <option value="" >请选择</option>
                         <option value="{{city}}" selected="selected">{{city}}</option>
                         {% else %}
-                        <option value="-1" >请选择</option>
+                        <option value="" >请选择</option>
                         {%endifnotequal%}
-                    </select>
+                    </select><label id='city_error' style="color:red"></label>
 				</div>
   <button class="btn btn-pink btn_self_info btn-save">
   	保存

@@ -6,6 +6,9 @@ from apps.third_party_login_app.models import FacebookUser, FacebookPhoto,\
     FacebookUserInfo
 import simplejson
 import logging
+from apps.user_app.models import UserProfile
+from apps.friend_dynamic_app.models import Picture
+from django.core import serializers
 
 
 
@@ -63,7 +66,7 @@ class Yuanfenjigsaw:
         matching_uid=None
         filter=False
        
-        if self.filter!=None:
+        if self.filter!=None :
           uids=self.noRecommendList
           uids.append(self.uid)
           uidsstr="','".join(uids)
@@ -244,6 +247,156 @@ LIMIT 0,1
             temp.add(int(base[i])%7)
         return  temp
 
+
+'''
+缘分拼图网页版
+'''
+class YuanfenjigsawWeb:
+    pieces = set()
+    matching_pieces = set()
+    uid = ''
+    gender = ''
+    def __init__(self,user,**kwargs):
+        self.uid =user.id
+        userProfile=UserProfile.objects.get(user=user)
+        self.pieces = self.generate_pieces()
+        self.matching_pieces = self.pieces#与之互补的集合
+        self.gender = userProfile.gender
+        self.age=userProfile.age
+        self.location=userProfile.city
+        self.educationSchool=userProfile.educationSchool
+        self.educationSchool_2=userProfile.educationSchool_2
+        self.recommendList=get_pintu_web_recommendList(self.uid)
+        self.jobIndustry=userProfile.jobIndustry
+        self.filter=kwargs.pop('filter',None)
+        self.type=kwargs.pop('type',None)
+        #根据学校，学历，地点，匹配结果
+        self.filter_match=None
+        
+    def generate_pieces(self):
+        import random
+#         number = random.randint(1,3)
+        number = 1
+        year = int(str(datetime.date.today()).split("-")[0])
+        month = int(str(datetime.date.today()).split("-")[1])
+        day = int(str(datetime.date.today()).split("-")[2])
+        size = day*number%7
+        if size == 0:
+            size = 6
+        base = str(year*year*month*day*number)
+        temp = set()
+        for i in range(0,size):
+            temp.add(int(base[i])%7)
+        return  temp
+    
+
+    def get_match_user_uid(self,matching_uid_list):
+        matching_uid=None
+        filter=False
+       
+        if self.filter!=None and self.filter!='all':
+          uids=self.recommendList
+          uids.append(self.uid)
+          if self.filter=='age':
+            facebookUser=UserProfile.objects.filter(age=getattr(self,self.filter),user_id__in=matching_uid_list).exclude(user_id__in=uids)
+          elif self.filter=='location':
+            facebookUser=UserProfile.objects.filter(city=getattr(self,self.filter),user_id__in=matching_uid_list).exclude(user_id__in=uids)
+          elif self.filter=='work':
+              facebookUser=UserProfile.objects.filter(jobIndustry=getattr(self,self.filter),user_id__in=matching_uid_list).exclude(user_id__in=uids)
+          elif self.filter=='school':
+              facebookUser=UserProfile.objects.filter(educationSchool=getattr(self,'educationSchool'),user_id__in=matching_uid_list).exclude(user_id__in=uids)
+          if len(facebookUser)<=0:
+            filter=matching_uid
+          else:
+             set_pintu_web_recommendList(facebookUser[0].uid)
+             self.filter_match=facebookUser[0].city
+             return facebookUser[0].user_id
+    
+                      
+        if not filter:
+            for uid in matching_uid_list:
+               if not uid in self.recommendList: 
+                    matching_uid=uid
+                    set_pintu_web_recommendList(self.uid,uid)
+                    break;
+            return matching_uid
+        
+    def match_uid(self,gender,match_gender):
+        matching_uid=None
+        persons = cache.get(gender)
+        if not  str(self.pieces) in persons.keys():
+            persons[str(self.pieces)]=[self.uid,]
+        else:
+            if not self.uid in  persons[str(self.pieces)]:
+                persons[str(self.pieces)].append(self.uid)
+        cache.set(gender,persons)
+        if cache.get(match_gender).get(str(self.matching_pieces))==None:
+            return None
+        matching_uid_list=cache.get(match_gender).get(str(self.matching_pieces))
+        matching_uid=self.get_match_user_uid(matching_uid_list)
+        return matching_uid
+    
+    def get_matching_user(self):
+        if  self.gender == 'M':
+            matching_uid=self.match_uid('WEB_BOYS','WEB_GIRLS')
+        else : 
+           matching_uid=self.match_uid('WEB_GIRLS','WEB_BOYS')
+        if matching_uid != None:
+            matching_user =UserProfile.objects.select_related('user').get(user_id=matching_uid)
+        else :
+            return None
+        return matching_user
+    
+    def score_and_PLprice_for_pintu(self):
+        self.type ='score'
+        if self.type =='score':
+            from apps.user_score_app.method import use_score_by_pintu
+            return use_score_by_pintu(self.uid)
+        elif self.type =='charge':
+            from apps.pay_app.method import use_charge_by_pintu
+            return use_charge_by_pintu(self.uid)
+        else:
+            return 'error'
+    def get_match_result(self):
+         
+#         if self.data_unavailable() :
+#             return {'status_code':cache.get('DATA_UNAVAILABLE')}
+        #判断筛选条件是否存在
+        if self.filter=='age' and self.age==None:
+                return [4,'age']
+        if self.filter=='location' and self.age==None:
+                return [4,'location']
+        if self.filter=='school' and (self.educationSchool==None ):
+                return [4,'education']
+        if self.filter=='work' and self.jobIndustry==None :
+                return [4,'work']
+        matching_user = self.get_matching_user()
+        pieces = [i for i in self.pieces]
+        if matching_user != None :
+            buy=self.score_and_PLprice_for_pintu()
+            if buy=='less':
+                return 'less'
+            elif buy=='error':
+                return 'error'
+            username = matching_user.user.username
+            uid=matching_user.user.id
+            city = matching_user.city
+            age = matching_user.age
+            avatar = matching_user.get_avatar_image()
+            facebookPhotoList =serializers.serialize('json',Picture.objects.filter(user_id=uid))
+            filter_pic='';
+            if self.filter=='location' and self.filter_match!=None:
+                filter_pic='/static/img/facebook_location.png'
+            if self.filter=='school' and self.filter_match!=None:
+                filter_pic='/static/img/facebook_school.png'
+            if self.filter=='work' and self.filter_match!=None:
+                filter_pic='/static/img/facebook_work.png'
+            return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,'facebookPhotoList':facebookPhotoList,
+                                                       'avatar':avatar,'filter_pic':filter_pic,'filter_match':self.filter_match}]
+        else :  
+            return [cache.get('NO_MATCHING_USER'),pieces,{'filter':self.filter}]
+
+
 def get_count(uid):
     user_game_count = cache.get('USER_GAME_COUNT')
     if user_game_count.get(uid) == None :
@@ -365,3 +518,46 @@ def get_recommend_history(uid):
             if user.get('uid')==recommendUid:
                 facebookUserListDcit.append(user)
     return facebookUserListDcit
+
+
+
+'''
+获取历史记录返回字典列表web版
+'''
+def get_recommend_history_web(uid):
+    recommendHistoryList=get_pintu_web_recommendList(uid)
+    userProfileList=UserProfile.objects.select_related('user').filter(user_id__in=recommendHistoryList)
+    from util.util import model_to_dict
+    facebookUserListTemp=model_to_dict(userProfileList, fields=['user_id','user.username','avatar_name','city','age','avatar_name_status'])
+    return facebookUserListTemp
+
+
+'''
+
+获得拼图微博版的已经推荐过的列表
+    attridute:
+          uid 用户id
+'''
+def get_pintu_web_recommendList(uid):
+    recommendDict=cache.get('PINTU_WEB_RECOMMEND',False)
+    if recommendDict:
+        return recommendDict.get(uid,[])
+    else:
+        return []
+        
+'''
+插入拼图微博版的已经推荐过的列表
+attridute:
+        uid 用户id
+'''
+def set_pintu_web_recommendList(uid,ouid):
+    recommendDict=cache.get('PINTU_WEB_RECOMMEND',False)
+    if recommendDict:
+        if recommendDict.get(uid,None) is None:
+             recommendDict[uid]=[ouid]
+        else:
+            recommendDict[uid].append(ouid)
+    else:
+        recommendDict={}
+        recommendDict[uid]=[ouid]
+    cache.set('PINTU_WEB_RECOMMEND',recommendDict)

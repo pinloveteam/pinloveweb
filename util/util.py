@@ -44,7 +44,14 @@ def model_to_dict(instance,fields=None):
     for object in instance:
         args={}
         for field in fields:
-            args[field]=getattr(object,field)
+            if field.find('.')!=-1:
+                fieldList=field.split('.')
+                attr = object
+                for f in fieldList:
+                    attr = getattr(attr, f)
+                args[fieldList[len(fieldList)-1]]=attr
+            else:
+                args[field]=getattr(object,field)
         list.append(args)
     return list
 

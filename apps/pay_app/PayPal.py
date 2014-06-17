@@ -8,33 +8,37 @@ from pinloveweb import settings
 from django.core.urlresolvers import reverse
 from paypal.standard.forms import PayPalPaymentsForm
 import logging
-from apps.pay_app.models import Order, Charge
+from apps.pay_app.models import Order, Charge, ChargeDetail
 import uuid
 import datetime
 from django.db import transaction
-
-def asks_for_money(request):
-
+#===============================
+#生成paypal订单
+#===============================
+def asks_for_money(userId,amount=0,price=0.00,currency='USB',data=''):
+  try:
     # What you want the button to do.
-    orderId=('%s%s%s' %('DD',request.user.id,uuid.uuid4()))[0:10]
-    amount=0.01
-    from apps.pay_app.pay_setting import PAYPAL
+    order=Order(user_id=userId,currency=currency,amount=amount,price=price,status='initiated',type='2',channel='2',pattern='1')
+    order.data=order.get_pattern_display()
+    order.get_order_id(userId)
+    from pinloveweb.settings import PAYPAL_RECEIVER_EMAIL,DOMAIN
     paypal_dict = {
-        "business": PAYPAL['PAYPAL_RECEIVER_EMAIL'],
-        "amount":amount,
+        "business": PAYPAL_RECEIVER_EMAIL,
+        "amount":price,
         "item_name": "pinlove",
-        "invoice": orderId,
-        "notify_url": PAYPAL['PAYPAL_URL']+"/pay/paypal/",
-        "return_url": PAYPAL['PAYPAL_URL']+"/pay/paypal_success/",
-        "cancel_return": PAYPAL['PAYPAL_URL']+"/pay/paypal_cancel/",
-
+        "invoice": order.orderId,
+        "notify_url": '%s%s%s' %('http://',DOMAIN,"/pay/paypal/"),
+        "return": '%s%s%s' %('http://',DOMAIN,"/pay/member/"),
+        "cancel_return": '%s%s%s' %('http://',DOMAIN,"/pay/paypal_cancel/"),
     }
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
     context = {"form": form}
-    Order(user_id=request.user.id,orderId=orderId,amount=amount,status='initiated',type='2',data=u"拼爱币充值").save()
+    order.save()
     return context
+  except Exception as e:
+      print '%s%s' %('生成paypal订单出错，出错原因：',e)
 
 from paypal.standard.ipn.signals import payment_was_successful
 @transaction.commit_on_success  
@@ -42,16 +46,28 @@ def show_me_the_money(sender,**kwargs):
     ipn_obj = sender
     # You need to check 'payment_status' of the IPN
     if ipn_obj.payment_status == "Completed":
+        logging.error('============ipn_obj  Completed')
         if Order.objects.filter(orderId=ipn_obj.invoice).exists():
-            logging.error('orderId exists')
             order=Order.objects.get(orderId=ipn_obj.invoice)
-            order.currency=ipn_obj.mc_currency
-            order.status="completed"
-            order.updateTime=datetime.datetime.today()
-            order.save()
-            charge=Charge.objects.get(user_id=order.user_id)
-            charge.vailAmount+=order.amount
-            charge.save()
-            logging.error('保存完毕')
+            logging.error('============Order  exists')
+            if ipn_obj.mc_gross==order.price:
+                 logging.error('============price  222')
+                 order.status="completed"
+                 order.updateTime=datetime.datetime.today()
+                 order.save()
+                 #板寸交易详细
+                 ChargeDetail(user_id=order.user_id,amount=order.amount,time=order.updateTime,type='1001',orderId=order.orderId,
+                              data='%s%s%s'%('充值',order.amount,'拼爱币')).save()
+                 charge=Charge.objects.get(user_id=order.user_id)
+                 charge.validAmount+=order.amount
+                 charge.save()
+            else:
+               logging.error('============price  1111')
+               order.status="failed"
+               order.updateTime=datetime.datetime.today()
+               order.failReason=u'金额错误，金额不相等'
+               order.save()
+               
     
 payment_was_successful.connect(show_me_the_money) 
+

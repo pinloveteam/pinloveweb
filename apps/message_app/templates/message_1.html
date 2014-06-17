@@ -1,6 +1,15 @@
-{% extends "card.html" %}
+{% extends "base_later.html" %}
+ {% load util_filter %}
 		<title> {% block title %} 拼爱网 ---消息中心{% endblock %} </title>
-		{% block staticfiles %}
+{% block staticfiles %}
+<link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/jquery.jscrollpane.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.jscrollpane.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/Card.js"></script>
 		<script>
 		   //消息列表是否展开
 		   var userId={{user.id}}
@@ -43,27 +52,43 @@
 				$('#publishTextArea1').text('33');
 			};
 
-			function showMessage(senderId,receiverId,id) {
-				if ($(".hideable_"+id).is(":hidden")){
+			/* 信息消息
+			type:
+				1 message
+				2 notify */
+			function showMessage(senderId,receiverId,id,page,type) {
+				if(type==1){
+            		text=id
+            	}else{
+            		text='notify'
+            	}
+				if ($(".hideable_"+text).is(":hidden")||page>1){
+					if(type==1){
+						url='/message/detail/'
+						data={'senderId':senderId,'receiverId':receiverId,'id':id,'page':page}
+					}else{
+						url='/message/notify_detail/'
+						data={'senderId':senderId,'receiverId':receiverId,'id':id,'page':page}
+					}
 					$.ajax({
 						dataType:"json",
-						url:'/message/detail/',
-						data:{'senderId':senderId,'receiverId':receiverId,'id':id,'page':messageNextPage},
+						url:url,
+						data:data,
 						success:function(data, textStatus){
 	                        if(data.result== 'success'){
-	                        	$(".hideable_"+id).children().remove()
+	                        	$(".hideable_"+text).children().remove()
 	                        	userId=data.userId
-	                        	init_message_detail(data.messageList,id);
+	                        	init_message_detail(data.messageList,id,type);
 	                        	if (data.has_next== true){
-	                        		messageNextPage=data.next_page_number
-	                        		$(".hideable_"+id).append('<div class="card_panel next_page" style="text-align: center; width: 100%;"> <a onclick="next_message_detail('+senderId+','+receiverId+','+id+');" href="javascript:void(0);">下一页</a></div>	')
+	                        		$(".hideable_"+text).append('<div class="card_panel next_page" style="text-align: center; width: 100%;"> <a onclick="showMessage('+senderId+','+receiverId+','+id+','+data.next_page_number+','+type+');" href="javascript:void(0);">下一页</a></div>	')
 	                        	}else{
-	                        		 $(".hideable_"+id).append('<div id="message-self" class="message-self" style="font-size: 14px; text-align: center;">没有更多消息</div>')
+	                        		 $(".hideable_"+text).append('<div id="message-self" class="message-self" style="font-size: 14px; text-align: center;">没有更多消息</div>')
 	                        	}
 	                        }else if(data.result == 'error'){
-	                        	 alert(data.msg)
+	                        	 alert(data.error_message)
+	                        	 return;
 	                        }
-					    $('.hideable_'+id).show('slow');
+	                    $('.hideable_'+text).show('slow');
 					    isMessageListShow=true;
 						},
 	                    error: function(response){
@@ -71,44 +96,16 @@
 	                    },
 						
 					});
+					
 				}else{
-					$('.hideable_'+id).hide('slow');
+					$('.hideable_'+text).hide('slow');
 					isMessageListShow=false;
 				}
 				
 				
 			}
 			
-			function next_message_detail(senderId,receiverId,id){
-				$.ajax({
-					dataType:"json",
-					url:'/message/detail/',
-					data:{'senderId':senderId,'receiverId':receiverId,'id':id,'page':messageNextPage},
-					success:function(data, textStatus){
-                        if(data.result== 'success'){
-                        	userId=data.userId
-                        	init_message_detail(data.messageList,id);
-                        	if (data.has_next== true){
-                        		messageNextPage=data.next_page_number
-                        		$(".hideable_"+id).find('.next_page').remove()
-                        		$(".hideable_"+id).append('<div class="card_panel next_page" style="text-align: center; width: 100%;"> <a onclick="next_message_detail('+senderId+','+receiverId+','+id+');" href="javascript:void(0);">下一页</a></div>	')
-                        	}else{
-                        		 $(".hideable_"+id).append('<div id="message-self" class="message-self" style="font-size: 14px; text-align: center;">没有更多消息</div>')
-                        	}
-                        }else if(data.result == 'error'){
-                        	 alert(data.msg)
-                        }
-				    $('.hideable_'+id).show('slow');
-				    isMessageListShow=true;
-					},
-                    error: function(response){
-                        alert('网络异常！')
-                    },
-					
-				});
-			}
-			
-			function init_message_detail(messageList,id){
+			function init_message_detail(messageList,id,type){
 				$(messageList).each(function(){
             		if(userId==this.senderId){
             			message=$('.hideable_clone').find('.message-self').clone()
@@ -118,7 +115,12 @@
             		message.find('.message-head').attr('src','/media/'+this.avatarName+'-60.jpeg')
             		message.find('.content').html(this.content)
             		message.find('#time').html(this.sendTime)
-            		$(".hideable_"+id).append(message)
+            		if(type==1){
+            			$(".hideable_"+id).append(message)
+            		}else{
+            			$(".hideable_notify").append(message)
+            		}
+            		
             	});
 			}
 			function reply_close(){
@@ -128,8 +130,10 @@
 				$('#publishTextArea2').val('')
 			}
 			
-			function reply(receiverId){
+			function reply(receiverId,type){
 				$('#reply_receiverId').val(receiverId)
+				$('#reply_type').val(type)
+				$('#reply').find('#publishTextArea2').val('')
 				$('.masklayer').show();
 				$('#reply').show();
 			}
@@ -180,6 +184,7 @@
 					
 					   var data = $(this).serialize();
 					   var receiverId=$('#reply_receiverId').val()
+					   var type=$('#reply_type').val()
 						$.ajax({
 							url:'/message/reply/',
 							type:'POST',
@@ -191,22 +196,8 @@
 										reply_close()
 										alert(data.message)
 										messageBean=data.messageBean[0]
-										var message=$('#message_'+receiverId)
-										message.find('#showAll').attr('onclick','')
-										senderId=messageBean.senderId;
-										receiverId=messageBean.receiverId;
-										id=messageBean.id
-										message.find('#showAll').bind('click', function(){showMessage(senderId,receiverId,id)});  
-										/* message.find('#showAll').one('onclick',"showMessage("+this.senderId+","+this.receiverId+","+this.id+");") */
-										if(userId==senderId){
-											message.find('#replyNow').attr('onclick',"reply("+receiverId+");")
-										}else{
-											message.find('#replyNow').attr('onclick',"reply("+senderId+");")
-										}
-										message.find("[class^='hideable_']").attr('class','hideable_'+messageBean.id)
-										message.find('.message-head').attr('src','/media/'+messageBean.avatarName+'-60.jpeg')
-										message.find('.content').html(messageBean.content)
-										message.find('.sendTime').html(messageBean.sendTime)
+										add_mesaage(messageBean,receiverId,type)
+										
 									}else{
 										alert(data.error_message)
 									}
@@ -219,6 +210,46 @@
 						return false;
 					});
 			});
+			
+		function add_mesaage(messageBean,receiverId,type){
+			if(type==1){
+				var message=$('#message_'+receiverId)
+				message.find("[class^='hideable_']").attr('class','hideable_'+messageBean.id)
+			}else{
+				var message=$('#notify')
+			}
+			message.find('#showAll').attr('onclick','showMessage('+messageBean.senderId+','+receiverId+','+messageBean.id+',1,'+type+');')
+			senderId=messageBean.senderId;
+			receiverId=messageBean.receiverId;
+			content=message.find('.content').first().html().trim()
+			if(content[0]=="我"){
+				messageDetail=$('.hideable_clone').find('.message-self').clone()
+				avatarName=$('#avatar').find('img').attr("src")
+			}else{
+				messageDetail=$('.hideable_clone').find('.message').clone()
+				avatarName=message.find('.message-head').attr('src')
+			}
+			content=content.substring(content.indexOf(':&nbsp')+':&nbsp;'.length,content.length).trim()
+			if(userId==messageBean.senderId){
+				message.find('#replyNow').attr('onclick',"reply("+receiverId+','+type+");")
+				message.find('.content').first().html('我发送给'+messageBean.receiverName+':&nbsp'+messageBean.content)
+				
+			}else{
+				message.find('#replyNow').attr('onclick',"reply("+messageBean.senderId+','+type+");")
+				message.find('.content').first().html(messageBean.senderName+'发送给我:&nbsp'+messageBean.content)
+			}
+			sendTime=message.find('.sendTime').html()
+			message.find('.message-head').first().attr('src','/media/'+messageBean.avatarName+'-60.jpeg')
+			
+    		messageDetail.find('.message-head').attr('src',avatarName)
+    		messageDetail.find('.content').html(content)
+    		messageDetail.find('#time').html(sendTime)
+    		if(type==1){
+    			$(".hideable_"+messageBean.id).prepend(messageDetail)
+    		}else{
+    			$(".hideable_notify").prepend(messageDetail)
+    		}
+		}
 		</script>
 		<script type="text/javascript">
 		(function($){
@@ -264,7 +295,7 @@
 				init_dynamic(data) */
 				if(next_page_number==-1){
 					var no_more_message=$('#no_more_message')
-					$('.col-md-9').append($('#no_more_message'))
+					$('#message_content').append($('#no_more_message'))
 					no_more_message.show()
 					load_dynamic=false
 					return;
@@ -325,7 +356,7 @@
 				message.find('.message-head').attr('src','/media/'+this.avatarName+'-60.jpeg')
 				message.find('.content').html(this.content)
 				message.find('.sendTime').html(this.sendTime)
-				$('.col-md-9').append(message)
+				$('#message_content').append(message)
 			});
 		}
 	  </script>
@@ -580,17 +611,60 @@
 				display: none;
 			}
 		</style>
-	{% endblock %}
-	{% block right %}
+{% endblock %}
+{% block logo %}
+{% endblock %}
+{% block content %}
+<div class="wrap">
+ <div class="container">
+	<div class="row" style="margin-top:63px;">
+	{% include "left.html" %}
 	
-					<div class="col-md-9">
+					<div id="message_content" class="col-xs-9">
+					{%if notify%}
+					<div id="notify" class="card_panel trend-list">
+							<div id="112" class="message-area">
+								<a id='showAll' href="javascript:void(0);" onclick="showMessage({{notify.senderId}},{{notify.receiverId}},{{notify.id}},1,2);">
+									显示全部
+								</a>
+								<a  id='replyNow' href="javascript:void(0);" onclick="reply({%ifequal user.id notify.receiverId%}{{notify.senderId}}{%else%}{{notify.receiverId}}{%endifequal%},type=2);">
+									回复
+								</a>
+								<div class="message-list">
+									<div class="message">
+										<img class="message-head" src="{{MEDIA_URL}}{{notify.avatarName}}-60.jpeg"/>
+										<div class="message-text">
+											<div class="controlArrow"></div>
+											<p class="content">
+											{%ifequal user.id notify.receiverId%}
+											{{notify.senderName}}发送给我:&nbsp;
+											{%else%}
+											我发送给{{notify.receiverName}}:&nbsp;
+											{%endifequal%}
+											{{notify.content|safe}}
+											<p>
+										</div>
+
+										<ul class="list-inline message-edit">
+											<li>
+												<span style="color: #999999" class='sendTime'>{{notify.sendTime}}</span>
+											</li>
+										</ul>
+									</div>
+									<div class="hideable_notify" style="display: none;">
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					{%endif%}
 					{% for page in pages %}
 						<div id="message_{%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%}" class="card_panel trend-list">
 							<div id="112" class="message-area">
-								<a id='showAll' href="javascript:void(0);" onclick="showMessage({{page.senderId}},{{page.receiverId}},{{page.id}});">
+								<a id='showAll' href="javascript:void(0);" onclick="showMessage({{page.senderId}},{{page.receiverId}},{{page.id}},1,1);">
 									显示全部
 								</a>
-								<a  id='replyNow' href="javascript:void(0);" onclick="reply({%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%});">
+								<a  id='replyNow' href="javascript:void(0);" onclick="reply({%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%},1);">
 									回复
 								</a>
 								<div class="message-list">
@@ -598,7 +672,14 @@
 										<img class="message-head" src="{{MEDIA_URL}}{{page.avatarName}}-60.jpeg"/>
 										<div class="message-text">
 											<div class="controlArrow"></div>
-											<p class="content">{{page.content|safe}}<p>
+											<p class="content">
+											{%ifequal user.id page.receiverId%}
+											{{page.senderName}}发送给我:&nbsp;
+											{%else%}
+											我发送给{{page.receiverName}}:&nbsp;
+											{%endifequal%}
+											{{page.content|safe}}
+											<p>
 										</div>
 
 										<ul class="list-inline message-edit">
@@ -654,6 +735,7 @@
 		<div id="reply" class="card_panel">
 		<form id="reply_action" action="" method="POST">{% csrf_token %}
 		    <input type="hidden" value="" id='reply_receiverId' name='receiverId' >
+		    <input type="hidden" value="" id='reply_type' name='type' >
 			<a href="#"><i class="icon_dislike" title="不喜欢" onclick="reply_close();"></i></a>
 			<h4 class="reply-title">发送私信</h4>
 			<div class="publishInputArea" style="position: relative;top: 50%;">
@@ -682,5 +764,7 @@
 		<div id="emoji-layer" style="display: none;">
 			<ul class="emoji-list"></ul>
 		</div>
-		
+	</div>
+ </div>
+</div>
 {% endblock %}

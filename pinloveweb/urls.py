@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     url(r'^account/invalid/', 'pinloveweb.views.invalid_login'),
     url(r'^account/logout/', 'pinloveweb.views.logout'), 
     url(r'^account/loggedout/', 'pinloveweb.views.loggedout'),
-    url(r'^account/forgetpwdpage/', 'pinloveweb.views.forget_password'),
+    url(r'^account/forget_password/', 'pinloveweb.views.forget_password'),
     # Registration 
     url(r'^account/register/$', 'pinloveweb.views.register_user'), 
     url(r'^account/register_success/$', 'pinloveweb.views.register_success'),
@@ -67,6 +67,9 @@ urlpatterns = patterns('',
      url(r'^test/$', 'pinloveweb.views.test'),
      #paypal
     (r'^pay/paypal/', include('paypal.standard.ipn.urls')),
+    
+    
+    (r'^weixin', include('apps.weixin_app.urls')),
 )
 
 #禁止搜索引擎收录
@@ -77,6 +80,7 @@ urlpatterns+=patterns('',
 urlpatterns+=patterns('',
                        url(r'^web/privacy/$','pinloveweb.views.web',{'template_name': 'privacy.html'}),
                        url(r'^web/about/$','pinloveweb.views.web',{'template_name': 'about.html'}),
+                       url(r'^web/contactus/$','pinloveweb.views.web',{'template_name': 'contactus.html'})
                       
 )
 
