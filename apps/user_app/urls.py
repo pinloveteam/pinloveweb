@@ -19,7 +19,7 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^removeFriend/(.+)/$', 'removeFriend'),
      url(r'^reset_password/$', 'reset_password'),
      url(r'^commit_password/$', 'commit_password'),
-     url(r'^alter_password/$', 'alter_password'),
+     #url(r'^alter_password/$', 'alter_password'),
      url(r'^upload/$', 'upload'),
      url(r'^photo_check/$', 'photo_check'),
      #关注
