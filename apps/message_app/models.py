@@ -96,9 +96,11 @@ class Message(models.Model):
     序列化
     '''
     def as_json_for_id_conent(self):
+        from util.util import regex_expression
+        content=regex_expression(self.content)
         return dict(
             sender_id=self.sender.id,
-            content=self.content, 
+            content=content, 
             receiver_id=self.receiver.id,
            )
     class Meta:

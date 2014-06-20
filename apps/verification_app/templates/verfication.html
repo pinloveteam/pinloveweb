@@ -125,7 +125,9 @@ function onUploadError(data){
 				style="color: red;" id="income_error"></span>
 		</div>
 		<div>
-			<label class="form-label">收入</label> {{incomeValidForm.income}}<div id="income_error" style="display: inline-block;color:red;"></div>
+			<label class="form-label">收入</label> {{incomeValidForm.income}}
+			<span class="text-muted">现在填写的收入,有问题请修改!</span>
+			<div id="income_error" style="display: inline-block;color:red;"></div>
 		</div>
 
 		<div>
@@ -239,10 +241,7 @@ function onUploadError(data){
 		<div>
 			<label class="form-label">学历证明</label> 
 			{{educationValidForm.educationPicture}}<br> <div id="educationPicture_error" style="display: inline-block;color:red;"></div>
-			<div class="text-muted">
-				<span>请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br> 
-				<span id="education_error" style="color: red;"></span>
-			</div>
+			
 		</div>
 
 		<button class="btn btn-info  cer_button">提交</button>

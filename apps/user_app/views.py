@@ -231,9 +231,9 @@ def update_profile(request):
         oldUserProfile=copy.deepcopy(userProfile)
         POSTdata=request.POST.copy()
         #如果出生年月已经存在填充userProfileForm
-        if userProfile.check_birth():
-            for field in ['year_of_birth','month_of_birth','day_of_birth']:
-                POSTdata[field]=getattr(userProfile,field)
+#         if userProfile.check_birth():
+#             for field in ['year_of_birth','month_of_birth','day_of_birth']:
+#                 POSTdata[field]=getattr(userProfile,field)
         userProfileForm = UserProfileForm(POSTdata, instance=userProfile) 
         if userProfileForm.is_valid():
 #             tagList=request.REQUEST.get('tagList','').split(',')
@@ -247,12 +247,12 @@ def update_profile(request):
             userProfile=get_profile_finish_percent_and_score(userProfile,oldUserProfile)
             userProfile.save(oldUserProfile=oldUserProfile)
             data={}
-            if userProfile.check_birth():
-                year_of_birth=userProfile.year_of_birth
-                month_of_birth=userProfile.month_of_birth
-                day_of_birth=userProfile.day_of_birth
-                data['birth']='{0}年{1}月{2}日'.format(year_of_birth,month_of_birth,day_of_birth)
-                data['age']=userProfile.age
+#             if userProfile.check_birth():
+#                 year_of_birth=userProfile.year_of_birth
+#                 month_of_birth=userProfile.month_of_birth
+#                 day_of_birth=userProfile.day_of_birth
+#                 data['birth']='{0}年{1}月{2}日'.format(year_of_birth,month_of_birth,day_of_birth)
+#                 data['age']=userProfile.age
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
             cal_recommend(request.user.id,['userProfile'])     
@@ -294,25 +294,32 @@ def change_password(request,tempate_name):
 #reset the password
 def reset_password(request):
     args={}
-    if request.GET.get('username',False) and request.GET.get('user_code',False):
-      if request.method=="POST":
-        user_code=request.GET.get('user_code')
-        username=request.GET.get('username')
-        newpassword=request.GET.get('newpassword','')
+    if request.REQUEST.get('username',False) and request.REQUEST.get('user_code',False):
+      user_code=request.REQUEST.get('user_code')
+      username=request.REQUEST.get('username')
+      args={'user_code':user_code,'username':username}
+      if Verification.objects.filter(verification_code=user_code).exists():
+       if request.method=="POST":
+        newpassword=request.POST.get('newpassword','')
         import re
         match=re.match(r'^[0-9a-zA-Z\xff_]{6,20}$',newpassword)
-        if  match is None:
+        if newpassword!=request.POST.get('repassword',''):
+             args={'error_message':u'输入密码不相等!'}
+             return render(request,'reset_password.html',args)
+        elif  match is None :
             args={'error_message':u'密码个数错误!'}
-        if Verification.objects.filter(verification_code=user_code).exists():
-            Verification.objects.filter(verification_code=user_code).remove()
-            user=User.objects.get(username=username)
-            user.set_password(newpassword)
-            args['reset_result']=True
-            return render(request,'reset_password.thtml',args)
-        else:
-            args={'error_message':u'该连接已过期或被使用!'}
+            return render(request,'reset_password.html',args)
+        
+        Verification.objects.filter(verification_code=user_code).delete()
+        user=User.objects.get(username=username)
+        user.set_password(newpassword)
+        args['reset_result']=True
+        user.save()
+        return render(request,'reset_password.html',args)
+       else:
+          return render(request,'reset_password.html',args)
       else:
-          return render(request,'reset_password.thtml',args)
+            args={'error_message':u'该连接已过期或被使用!'}
     else:
         args={'error_message':u'该链接无效!'}
     return render(request,'error.html',args)

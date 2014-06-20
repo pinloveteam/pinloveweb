@@ -33,7 +33,7 @@
          {% ifequal gender 'F' %}
          s2=[['160',{{grade_for_other.heighty1}}],['165',{{grade_for_other.heighty2}}],['170',{{grade_for_other.heighty3}}],['175',{{grade_for_other.heighty4}}],['180',{{grade_for_other.heighty5}}],['185',{{grade_for_other.heighty6}}],['190',{{grade_for_other.heighty7}}],['195',{{grade_for_other.heighty8}}]]
       {%  else %}
-         s2=[['155',{{grade_for_other.heighty1}}],['160',{{grade_for_other.heighty2}}],['165',{{grade_for_other.heighty3}}],['170',{{grade_for_other.heighty4}}],['175',{{grade_for_other.heighty5}}],['180',{{grade_for_other.heighty6}}],['185',{{grade_for_other.heighty7}}],['190',{{grade_for_other.heighty8}}]]
+         s2=[['150',{{grade_for_other.heighty1}}],['155',{{grade_for_other.heighty2}}],['160',{{grade_for_other.heighty3}}],['165',{{grade_for_other.heighty4}}],['170',{{grade_for_other.heighty5}}],['175',{{grade_for_other.heighty6}}],['180',{{grade_for_other.heighty7}}],['185',{{grade_for_other.heighty8}}]]
       {% endifequal %}
        
       {% endifequal %} 
@@ -92,8 +92,8 @@
                  min:160,
 				 max:195,
                 {%  else %}
-                 min:155,
-				 max:190,
+                 min:150,
+				 max:185,
                 {% endifequal %}
                 {% endifequal %}
 				 numberTicks:8,

@@ -103,7 +103,6 @@ where u2.country=%s
 相用户貌投票
 '''
 def cal_user_vote(score,geadeInstance):
-     
      return (geadeInstance.appearancescore*100+score*(geadeInstance.appearancesvote+1))/(100+geadeInstance.appearancesvote+1)
  
 def cal_recommend(userId,fields=[]):

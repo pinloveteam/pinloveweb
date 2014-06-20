@@ -7,6 +7,13 @@
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/Card.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.follow.js"></script>
+<style>
+.publishInputExpression {
+background: url("/static/img/pop_expression.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+padding-left: 21px;
+display: inline;
+}
+</style>
 <!-- detail_info -->
 
 <script type="text/javascript">
@@ -241,8 +248,9 @@ interval = self.setInterval("polling()", time);
 				<div class="chat">
 				</div>
 					<textarea rows="1" class="chat_textarea"></textarea>
+					<!-- <p class="publishInputExpression">表情</p>  -->
 					<button class="btn btn-xs btn_send_msg">发送</button> 
-					<a href="#" class="venoboxframe" data-type="iframe">聊天记录</a>
+					<!--  <a href="#" class="venoboxframe" data-type="iframe">聊天记录</a>-->
 				</div>
 			</div>
 			<ul class="list-inline card-nav">

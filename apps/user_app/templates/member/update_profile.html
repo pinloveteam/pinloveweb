@@ -37,7 +37,7 @@
                             } */
                             if(textStatus== 'success'){
                             	if(data.result=='success'){
-                            		if (typeof(data.birth) != "undefined"){
+                            		/* if (typeof(data.birth) != "undefined"){
                             			label=$('#birth').find('.form-label')
                             			$('#birth').html(data.birth)
                             			$('#birth').prepend(label)
@@ -45,7 +45,7 @@
                             			$('#age').html(data.age)
                             			$('#age').prepend(label)
                             			
-                            		}
+                            		} */
                             		$('[id$="error"]').html("")
                             		var body = $("<p>修改成功!</p>")
         							$.poplayer({body:body});
@@ -106,36 +106,24 @@
 						
 				<div class="form-row">
 					<label class="form-label">身高<span class="text-danger">*</span></label>
-					{{user_profile_form.height}}&nbsp;cm
+					{{user_profile_form.height}}&nbsp;mm
 					<label class="form-label" style="margin-left: 75px;">体重</label>
 					 {{user_profile_form.weight}}&nbsp;kg
 				</div>
 						
 				<div class="form-row" id="birth">
 				  <label class="form-label">生日<span class="text-danger">*</span></label>
-				   {% if check_birth %}
-				   {{user_profile_form.year_of_birth.value}}&nbsp;年 
-				   {{user_profile_form.month_of_birth.value}}&nbsp;月
-                    {{user_profile_form.day_of_birth.value}}&nbsp;日
-				   {%else%}
 					{{user_profile_form.year_of_birth}}&nbsp;年 
                     {{user_profile_form.month_of_birth}}&nbsp;月
                     {{user_profile_form.day_of_birth}}&nbsp;日
                     <label id='day_of_birth_error' style="color:red"></label>
-                    {%endif%}
 				</div>
-				<div class="form-row" id="age">
-				<label class="form-label">年龄</label>
-					 {%if age %}{{age}}{%else%}未填{%endif%}
-				</div>
-						
 				<div class="form-row ">
-					<label class="form-label">学历<span class="text-danger">*</span></label>
+					<label class="form-label">最高学历<span class="text-danger">*</span></label>
 					{{user_profile_form.education}}
 					<div class="school_div" style="display: inline-block;">
-					<label class="form-label" style="margin-left: 75px;">学校<span class="text-danger">*</span></label>
+					<label class="form-label" style="margin-left: 75px;">国内学校<span class="text-danger">*</span></label>
 					{{user_profile_form.educationSchool}}
-					{% if  user_profile_form.educationSchool_2.value %} {%else%} <a href="javascript:void(0);"><img id="add_school" src="/static/img/拼图-62.png"> </a>{%endif%}
                      <div id="proSchool" class="provinceSchool">
                       <div class="title">
                         <span>已选择:</span>
@@ -155,8 +143,8 @@
                       </div>
                      </div>
                      </div>
-					<div class="school_div" style="{% if  user_profile_form.educationSchool_2.value %} display: inline-block;{%else%} display: none;{%endif%}">	
-					   <label class="form-label" style="margin-left: 10px;">学校</label>
+					<div class="school_div"  style=" display: inline-block;">	
+					   <label class="form-label" style="margin-left: 10px;">国外学校</label>
 					   {{user_profile_form.educationSchool_2}}
 					   <div id="proSchool" class="provinceSchool">
                       <div class="title">

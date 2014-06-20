@@ -11,7 +11,7 @@ from django.http.response import HttpResponse
 from apps.friend_dynamic_app.models import FriendDynamic
 def init_person_info_for_card_page(userProfile,**kwargs):
     arg={}
-    arg['avatar_name']=userProfile.get_avatar_image()
+    arg['avatar_name']=userProfile.avatar_name
     arg['age']=userProfile.age
     arg['gender']=userProfile.gender
     arg['height']=userProfile.height
@@ -172,7 +172,7 @@ def init_table_in_register(user,user_code):
 '''
 def send_active_email(user,user_code):
     from pinloveweb.settings import DEFAULT_FROM_EMAIL,DOMAIN
-    domain_name = '%s%s'%(DOMAIN,u'/account/verification/')
+    domain_name = '%s%s%s'%('www.',DOMAIN,u'/account/verification/')
     email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + user_code
     email_message = u"请您点击下面这个链接完成注册："
     email_message += email_verification_link

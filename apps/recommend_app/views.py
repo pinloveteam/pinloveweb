@@ -138,7 +138,7 @@ def get_socre_for_other(userId,otherId):
              if matchResult==None:
                  #判断是否可用匹配
                  from util.cache import get_has_recommend,get_recommend_status,has_recommend
-                 for field in ['userProfile','userExpect','grade','tag']:
+                 for field in ['userExpect','grade','tag']:
                      has_recommend(userId,field)
                  if get_has_recommend(userId):
                      from apps.recommend_app.method import match_score

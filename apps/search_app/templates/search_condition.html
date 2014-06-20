@@ -134,15 +134,20 @@ function init_search_condition(){
 
 function get_input(context) {
 	var str = '';
-	//var value = $(this).val();
-	var value=$(context).find("option:selected").text()
-	if ($(context).hasClass('condition-input-pre')) {
-		str = 'pre';
-	} else {
-		str = 'bak';
+	var select = $(context).find("option:selected")
+	var value=select.text()
+	var val=select.val()
+	if(val!='-1'&&val!='None'&&val!=''){
+		if ($(context).hasClass('condition-input-pre')) {
+			str = 'pre';
+		} else {
+			str = 'bak';
+			$(context).closest('.condition-panel').find('.range').show();
+		}
+		var range = $(context).parents('.condition-panel').find('.range-' + str);
+		range.html(value);
 	}
-	var range = $(context).parents('.condition-panel').find('.range-' + str);
-	range.html(value);
+	
 }
 </SCRIPT>
 <div class="col-xs-3">
@@ -160,8 +165,8 @@ function get_input(context) {
 			</div>
 		{%else%}
 		<div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre">{{simpleSearchForm.minAge.value}} </span> - <span
-					class="range-bak"> {{simpleSearchForm.maxAge.value}} </span>岁
+				&nbsp;&nbsp; <span class="range-pre">请选择年龄</span> <span class="range" style="display: none;">-</span>   <span
+					class="range-bak">  </span> <span class="range" style="display: none;">岁</span>
 				<div class="switch">
 					<div class="switch-btn"></div>
 				</div>
@@ -187,8 +192,8 @@ function get_input(context) {
 			</div>
 		{%else%}
 		<div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre"> {{searchForm.minHeigh.value}} </span> - <span
-					class="range-bak"> {{searchForm.maxHeigh.value}} </span>CM
+				&nbsp;&nbsp; <span class="range-pre"> 请选择身高 </span>  <span class="range" style="display: none;">-</span> <span
+					class="range-bak">  </span>  <span class="range" style="display: none;">CM</span> 
 				<div class="switch">
 					<div class="switch-btn"></div>
 				</div>
@@ -214,7 +219,7 @@ function get_input(context) {
 			</div>
         {%else%}
         <div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre"></span>
+				&nbsp;&nbsp; <span class="range-pre">请选择学历</span>
 				<div class="switch">
 					<div class="switch-btn"></div>
 				</div>
@@ -240,8 +245,8 @@ function get_input(context) {
 		 
 		 {%else%}
 		 <div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre"></span> - <span
-					class="range-bak"> </span>
+				&nbsp;&nbsp; <span class="range-pre">请选择月收入</span><span class="range" style="display: none;"> -</span> <span
+					class="range-bak"></span><span class="range" style="display: none;">万/年</span>
 				<div class="switch">
 					<div class="switch-btn"></div>
 				</div>
@@ -267,7 +272,7 @@ function get_input(context) {
 		</div>
 		{%else%}
 		<div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre"></span>
+				&nbsp;&nbsp; <span class="range-pre">请选择行业</span>
 				<div class="switch">
 					<div class="switch-btn"></div>
 				</div>

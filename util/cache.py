@@ -79,11 +79,11 @@ def int_user_score():
 def get_has_recommend(user_id):
     recommend=cache.get('HAS_RECOMMEND')
     if recommend.get(user_id)==None:
-        recommend[user_id]={'userProfile':False,'userExpect':False,'grade':False,'tag':False}
+        recommend[user_id]={'userExpect':False,'grade':False,'tag':False}
         return False
     else:
          user=recommend.get(user_id)
-         if user.get('userProfile') and user.get('userExpect') and user.get('grade') and user.get('tag'):
+         if user.get('userExpect') and user.get('grade') and user.get('tag'):
              return True
          else:
              return False
@@ -94,7 +94,7 @@ def get_has_recommend(user_id):
 def get_recommend_status(user_id):
     recommend=cache.get('HAS_RECOMMEND')
     if recommend.get(user_id)==None:
-        recommend[user_id]={'userProfile':False,'userExpect':False,'grade':False,'tag':False}
+        recommend[user_id]={'userExpect':False,'grade':False,'tag':False}
     user=recommend.get(user_id)
     return user
     
@@ -104,14 +104,9 @@ def get_recommend_status(user_id):
 def has_recommend(user_id,field):
     recommend=cache.get('HAS_RECOMMEND')
     if recommend.get(user_id)==None:
-        recommend[user_id]={'userProfile':False,'userExpect':False,'grade':False,'tag':False}
+        recommend[user_id]={'userExpect':False,'grade':False,'tag':False}
     user=recommend.get(user_id)
-    if field =='userProfile':
-        from apps.user_app.models import UserProfile
-        from django.db.models.query_utils import Q
-        if UserProfile.objects.filter(user_id=user_id).filter(height__gt=-1,avatar_name_status=3,income__gt=-1).filter(Q(education__gt=-1)|Q(educationSchool__isnull=False)).exists():
-            user['userProfile']=True
-    elif field =='userExpect':
+    if field =='userExpect':
         from apps.recommend_app.models import UserExpect
         if not (UserExpect.objects.filter(user_id=user_id ,heighty1=0.00,heighty2=0.00,heighty3=0.00,heighty4=0.00,heighty5=0.00,heighty6=0.00,heighty7=0.00,heighty8=0.00).exists()):
             user['userExpect']=True

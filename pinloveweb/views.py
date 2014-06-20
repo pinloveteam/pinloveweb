@@ -249,6 +249,8 @@ def register_verify(request) :
 '''
 def forget_password(request):
     args={}
+    #是否出错
+    flag=True
     #是否提交请求
     postResult=False
     if request.method == 'POST':
@@ -258,23 +260,32 @@ def forget_password(request):
             try :
                user = User.objects.get(email=querystr)
             except Exception:
-                error_message='该邮箱未注册!'
+                args['error_message']='该邮箱未注册!'
+                flag=False
                 pass
-         elif request.REQUEST.get('forget_type','') == 'nickname':
+         elif request.REQUEST.get('forget_type','') == 'username':
              try :
                user = User.objects.get(username=querystr)
              except Exception:
-               error_message='该用户未注册!'
+               args['error_message']='该用户未注册!'
+               flag=False
                pass
          else :
             return render(request, 'error.html') 
-         verification = Verification()
-         verification.username = user.username
-         from apps.verification_app.views import random_str
-         user_code=random_str()
-         verification.verification_code = user_code
-         verification.save()
-         postResult=True
+         if flag:
+            if Verification.objects.filter(username=user.username).exists():
+                Verification.objects.filter(username=user.username).delete()
+            verification = Verification()
+            verification.username = user.username
+            from apps.verification_app.views import random_str
+            user_code=random_str() 
+            verification.verification_code = user_code
+            verification.save()
+            #发送邮件
+            from pinloveweb.method import send_reset_password
+            send_reset_password(user,user_code)
+            args['email']=user.email
+            postResult=True
     args['postResult']=postResult
     return render(request, 'forget_password.html',args)   
  

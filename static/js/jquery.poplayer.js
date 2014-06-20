@@ -29,6 +29,8 @@
 			var dialog = loadConfirm(options);
 		} else if (options.type == 'frame') {
 			var dialog = loadFrame(options);
+		} else if (options.type == 'error'){
+			var dialog = options.body;
 		}
 
 		$(document.body).append(masklayer).append(dialog);
@@ -38,6 +40,7 @@
 			dialog.remove();
 		});
 	}
+	
 	function loadConfirm(options) {
 		var dialog = $('<div class="poplayer"><div class="poplayer-confirm"><div class="poplayer-confirm-head"><span class="poplayer-confirm-head-text text-white"></span><span class="poplayer-close-btn text-white">X</span></div><div class="poplayer-confirm-body"></div><div class="poplayer-confirm-bottom"><button class="btn btn-info btn-close"></button></div></div></div>');
 		dialog.find('.poplayer-confirm-head-text').html(options.head);
@@ -79,7 +82,6 @@
 		});
 		return dialog;
 	}
-
 
 	$.poplayer = function(options) {
 		var poplayer = new Poplayer(options);

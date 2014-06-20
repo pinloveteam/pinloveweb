@@ -438,16 +438,17 @@ window.Card = function(person){
 					 if(data.socreForOther.result=="success"){
 						 diaogList=[socreForOther.matchResult.edcationScore,socreForOther.matchResult.characterScore,socreForOther.matchResult.incomeScore,socreForOther.matchResult.appearanceScore,socreForOther.matchResult.heighScore,]
 						 $.poplayer({body:body,type:'frame',data:diaogList,data2:[]});
+						 $('.compare-btn').click(function(){
+							 compare(userId,1)
+						 })
 					 }else{
 						 detail_info=true
-						 diaogList=[0,0,0,0,0]
-						 $.poplayer({body:body,type:'frame',data:diaogList,data2:[]});
+						 $.poplayer({body:body,type:'error'});
+						 $('.compare-btn').attr('disable',true);
+						 $('.compare-btn').removeClass('btn-info')
 //							var body = $("<p>"+socreForOther.error_messge+"</p>")
 //							$.poplayer({body:body});
 					 }
-					 $('.compare-btn').click(function(){
-						 compare(userId,1)
-					 })
 					 
 				 }
 				 $('#radar').find('button').on('click',score_my);
@@ -512,7 +513,7 @@ window.Card = function(person){
 		
 	$('.card_row').append(this.template.html());
 	
-	$('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
+	$('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox,').unbind();
 	
 	$('.icon_dislike').on('click',dislike);
 	
@@ -526,6 +527,7 @@ window.Card = function(person){
 	$(".test_match").on('click',test_match);
 	$('.dafen').find('button').unbind();
 	$('.introBox').on('click',detail_info);
+	
 	$(function(){
 		 $('.icon_like_0,.icon_like_3').following();
 		});

@@ -230,8 +230,8 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
             scoreMyself='<button value="%s" >查<button>'%(scoreMatch['matchResult']['userId'])
         canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['characterScore']),compareCharacterScore,scoreMyself,compareScoreMyself)
     else:
-        canvasDiv=canvasDiv%('','','','')
-#         canvasDiv='<div class="col-xs-4">'+scoreMatch['error_messge']+'</div>'
+#         canvasDiv=canvasDiv%('','','','') 
+        canvasDiv='<div class="col-xs-4" id="radar" >'+scoreMatch['error_messge']+'</div>'
     return canvasDiv
         
     

@@ -8,7 +8,7 @@ import re
 from django.utils import simplejson
 class AuthenticationMiddleware(object):   
     def process_request(self, request):  
-        passList=['/account/forget_password/','/account/auth/','/account/register/','/','/game/jigsaw/','/game/pintu_for_facebook/','/pay_app/icon/','/pay_app/exchange_game_count/','/game/request_life/','/game/confirm_request_life/(.+)/']
+        passList=['/user/reset_password/','/account/forget_password/','/account/auth/','/account/register/','/','/game/jigsaw/','/game/pintu_for_facebook/','/pay_app/icon/','/pay_app/exchange_game_count/','/game/request_life/','/game/confirm_request_life/(.+)/']
         facebookPattern = re.compile(r'^/game/|/pay/|/weixin/')
         facebookMatch = facebookPattern.match(request.path)
         pattern = re.compile(r'^/admin/|/third_party_login/|/login/|/complete/')
