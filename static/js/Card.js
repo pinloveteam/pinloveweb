@@ -513,7 +513,7 @@ window.Card = function(person){
 		
 	$('.card_row').append(this.template.html());
 	
-	$('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox,').unbind();
+	$('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
 	
 	$('.icon_dislike').on('click',dislike);
 	
