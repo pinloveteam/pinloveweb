@@ -5,7 +5,9 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css" type="text/css" />
 <script type="text/javascript" src="{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.scrollUp.min.js"></script>
-<link href="/static/css/form.css" rel="stylesheet">
+<link href="{{ STATIC_URL }}css/form.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/hopscotch-0.1.2.min.css"/>
+<script src="{{ STATIC_URL }}js/hopscotch-0.1.2.min.js" type="text/javascript"></script>
 <style type="text/css">
 .vip-panel {
 				height: 491px;
@@ -194,6 +196,7 @@ $(document).ready(function() {
 		$('.vip-panel').hide();
 		$(href).show();
 		window.location.hash=href+'_'
+		init_weight_guide(href)
 	});
 	
 	$('.cerbtn').click(function(){
@@ -235,7 +238,24 @@ function init_tab(){
 	$('.vip-panel').hide();
 	$(tab).show();
 }
-
+function init_weight_guide(href){
+	if(href=='#weight'){
+	var tour = {
+			id : "hello-hopscotch",
+			steps : [{
+				title : "身高权重",
+				content : "拖动这里，可以设置对方的身高权重",
+				target : "heightweight",
+				placement : "top"
+			}]
+		};
+	x=$('#_x').html()
+	num=x.substring(0,x.indexOf('%'))
+	if(num=='100'){
+			hopscotch.startTour(tour);
+		}
+	}
+}
 </script>
 
 {% endblock %}

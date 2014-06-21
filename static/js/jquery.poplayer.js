@@ -38,6 +38,7 @@
 		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn').click(function() {
 			masklayer.remove();
 			dialog.remove();
+			$('.hopscotch-bubble').remove();
 		});
 	}
 	

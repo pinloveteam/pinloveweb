@@ -3,7 +3,7 @@
 				<div id="avatar" class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:60px;width:60px;">
 				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
 				</div>
-				<a href='/user/user_profile/#self_info'><div class="name">{{user.username}}</div></a>
+				<a href='/user/user_profile/#self_info_'><div  id="info_name" class="name">{{user.username}}</div></a>
 				<!-- {% ifequal member 0 %}
 				<a href='/user/member/'><div class="member">开通会员</div></a>
 				{%else%}

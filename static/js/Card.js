@@ -381,13 +381,32 @@ window.Card = function(person){
 	/*type:
 		1---对比
 		2--取消对比*/
-	function compare(userId,type){
+	function compare(userId,type,guide=false){
 		if(type==1){
 			compare_flag=true;
 			check_id=userId;
 		}else{
 			compare_flag=false;
 		}
+		
+		//引导
+		if(guide){
+			introBox=$('.card_row').children().not('#'+userId).first().find('.card-introBox')
+			if(introBox.length){
+				introBox.attr('id','compare_img')
+			}
+			 var tour = {
+						id : "hello-hopscotch",
+						steps : [{
+							title : "对比信息",
+							content : "点击头像就可以进行信息对比",
+							target : 'compare_img',
+							placement : "top"
+						}]
+					};
+			 
+			hopscotch.startTour(tour);
+		 }
 	}
 	
 	//对比用户中的取消对比
@@ -402,6 +421,7 @@ window.Card = function(person){
 	
 	//生成个人详细信息页面，对比页面
 	function detail_info(){
+		context=this
 		if ( $('.masklayer').length==0&&detail_info){
 		detail_info=false;
 		userId=$(this).closest('.card').attr('id');
@@ -434,13 +454,28 @@ window.Card = function(person){
 					 $('.compare-btn').click(function(){
 						 compare(userId,2)
 					 })
+					 
 				 }else{
+					 guide=false;
 					 if(data.socreForOther.result=="success"){
 						 diaogList=[socreForOther.matchResult.edcationScore,socreForOther.matchResult.characterScore,socreForOther.matchResult.incomeScore,socreForOther.matchResult.appearanceScore,socreForOther.matchResult.heighScore,]
 						 $.poplayer({body:body,type:'frame',data:diaogList,data2:[]});
+						 if(data.compare_button){
+							 var tour = {
+										id : "hello-hopscotch",
+										steps : [{
+											title : "对比雷达图",
+											content : "点击对比，可以对比两个人的个人信息以及雷达图",
+											target : "compare-button",
+											placement : "top"
+										}]
+									};
+							hopscotch.startTour(tour);
+							guide=true;
+						 }
 						 $('.compare-btn').click(function(){
-							 compare(userId,1)
-						 })
+							 compare(userId,1,guide)
+						 });
 					 }else{
 						 detail_info=true
 						 $.poplayer({body:body,type:'error'});

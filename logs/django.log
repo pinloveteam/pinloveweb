@@ -4662,3 +4662,136 @@ Traceback (most recent call last):
     if changePasswordForm.is_vaild():
 AttributeError: 'ChangePasswordForm' object has no attribute 'is_vaild'
 WARNING django.request 2014-06-17 18:01:47 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /account/forgetpwdpage/
+ERROR django.request 2014-06-18 10:46:02 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /account/forget_password/
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\pinloveweb\views.py", line 276, in forget_password
+    verification = Verification()
+  File "E:\eclipse_64\code\pinloveweb\pinloveweb\views.py", line 276, in forget_password
+    verification = Verification()
+  File "E:\eclipse_64\plugins\org.python.pydev_3.2.0.201312292215\pysrc\pydevd_frame.py", line 278, in trace_dispatch
+    self.doWaitSuspend(thread, frame, event, arg)
+  File "E:\eclipse_64\plugins\org.python.pydev_3.2.0.201312292215\pysrc\pydevd_frame.py", line 39, in doWaitSuspend
+    self._args[0].doWaitSuspend(*args, **kwargs)
+  File "E:\eclipse_64\plugins\org.python.pydev_3.2.0.201312292215\pysrc\pydevd.py", line 1067, in doWaitSuspend
+    time.sleep(0.01)
+  File "E:\eclipse_64\plugins\org.python.pydev_3.2.0.201312292215\pysrc\pydevd.py", line 495, in processInternalCommands
+    int_cmd.doIt(self)
+  File "E:\eclipse_64\plugins\org.python.pydev_3.2.0.201312292215\pysrc\pydevd_comm.py", line 714, in doIt
+    pydevd_reload.xreload(sys.modules[module_name])
+  File "E:\eclipse_64\plugins\org.python.pydev_3.2.0.201312292215\pysrc\pydevd_reload.py", line 80, in xreload
+    code = compile(source, filename, "exec")
+  File "E:\eclipse_64\code\pinloveweb\pinloveweb\views.py", line 279
+    user_code=random_str()
+                         ^
+IndentationError: unindent does not match any outer indentation level
+WARNING django.request 2014-06-18 10:46:04 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-18 10:46:04 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-18 10:46:05 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-18 11:28:28 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-18 11:28:28 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+ERROR django.request 2014-06-18 11:33:12 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/reset_password/
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\views.py", line 315, in reset_password
+    return render(request,'reset_password.thtml',args)
+  File "E:\python\lib\site-packages\django\shortcuts\__init__.py", line 53, in render
+    return HttpResponse(loader.render_to_string(*args, **kwargs),
+  File "E:\python\lib\site-packages\django\template\loader.py", line 170, in render_to_string
+    t = get_template(template_name)
+  File "E:\python\lib\site-packages\django\template\loader.py", line 146, in get_template
+    template, origin = find_template(template_name)
+  File "E:\python\lib\site-packages\django\template\loader.py", line 139, in find_template
+    raise TemplateDoesNotExist(name)
+TemplateDoesNotExist: reset_password.thtml
+ERROR django.request 2014-06-18 11:34:06 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/reset_password/
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\views.py", line 315, in reset_password
+    return render(request,'reset_password.thtml',args)
+  File "E:\python\lib\site-packages\django\shortcuts\__init__.py", line 53, in render
+    return HttpResponse(loader.render_to_string(*args, **kwargs),
+  File "E:\python\lib\site-packages\django\template\loader.py", line 170, in render_to_string
+    t = get_template(template_name)
+  File "E:\python\lib\site-packages\django\template\loader.py", line 146, in get_template
+    template, origin = find_template(template_name)
+  File "E:\python\lib\site-packages\django\template\loader.py", line 139, in find_template
+    raise TemplateDoesNotExist(name)
+TemplateDoesNotExist: reset_password.thtml
+ERROR django.request 2014-06-18 11:34:23 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/reset_password/
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\views.py", line 315, in reset_password
+    return render(request,'reset_password.thtml',args)
+  File "E:\python\lib\site-packages\django\shortcuts\__init__.py", line 53, in render
+    return HttpResponse(loader.render_to_string(*args, **kwargs),
+  File "E:\python\lib\site-packages\django\template\loader.py", line 170, in render_to_string
+    t = get_template(template_name)
+  File "E:\python\lib\site-packages\django\template\loader.py", line 146, in get_template
+    template, origin = find_template(template_name)
+  File "E:\python\lib\site-packages\django\template\loader.py", line 139, in find_template
+    raise TemplateDoesNotExist(name)
+TemplateDoesNotExist: reset_password.thtml
+ERROR django.request 2014-06-18 13:09:45 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/reset_password/
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\views.py", line 310, in reset_password
+    Verification.objects.filter(verification_code=user_code).remove()
+AttributeError: 'QuerySet' object has no attribute 'remove'
+WARNING django.request 2014-06-18 14:10:20 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /message/.\img\man_image5.jpeg
+WARNING django.request 2014-06-18 14:10:20 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/-60.jpeg
+WARNING django.request 2014-06-18 14:10:21 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /message/.\img\man_image5.jpeg
+WARNING django.request 2014-06-18 14:10:21 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/-60.jpeg
+WARNING django.request 2014-06-18 14:15:10 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /message/.\img\man_image5.jpeg
+WARNING django.request 2014-06-18 14:15:10 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/-60.jpeg
+WARNING django.request 2014-06-18 14:15:21 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/-60.jpeg
+WARNING django.request 2014-06-18 14:15:21 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /message/.\img\man_image5.jpeg
+WARNING django.request 2014-06-18 14:15:21 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /message/.\img\man_image5.jpeg
+WARNING django.request 2014-06-18 14:15:21 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/-60.jpeg
+WARNING django.request 2014-06-18 15:12:23 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /message/.\img\man_image5.jpeg
+WARNING django.request 2014-06-18 15:12:23 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/-60.jpeg
+WARNING django.request 2014-06-18 15:12:23 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/-60.jpeg
+WARNING django.request 2014-06-20 13:07:36 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-20 13:07:37 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-20 13:19:22 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-20 13:19:23 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-20 13:19:23 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-21 10:19:32 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-21 10:19:32 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+WARNING django.request 2014-06-21 10:19:32 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /favicon.ico
+ERROR django.request 2014-06-21 11:29:39 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/detailed_info/
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\views.py", line 78, in detailed_info
+    args=detailed_info_div(request.user.id,userId)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\method.py", line 195, in detailed_info_div
+    if not is_guide(myId,detailDict['guide'],'compareButton'):
+  File "E:\eclipse_64\code\pinloveweb\util\util.py", line 88, in is_guide
+    if guideDict.get(guideField,False):
+UnboundLocalError: local variable 'guideDict' referenced before assignment
+ERROR django.request 2014-06-21 11:30:28 E:\python\lib\site-packages\django\core\handlers\base.py base 212 Internal Server Error: /user/detailed_info/
+Traceback (most recent call last):
+  File "E:\python\lib\site-packages\django\core\handlers\base.py", line 115, in get_response
+    response = callback(request, *callback_args, **callback_kwargs)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\views.py", line 78, in detailed_info
+    args=detailed_info_div(request.user.id,userId)
+  File "E:\eclipse_64\code\pinloveweb\apps\user_app\method.py", line 195, in detailed_info_div
+    if not is_guide(myId,detailDict['guide'],'compareButton'):
+  File "E:\eclipse_64\code\pinloveweb\util\util.py", line 88, in is_guide
+    if guideDict.get(guideField,False):
+UnboundLocalError: local variable 'guideDict' referenced before assignment
+WARNING django.request 2014-06-21 13:06:05 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-21 13:06:06 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-21 13:06:25 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/3_20140621PRjbqGwFSZ-50.jpg
+WARNING django.request 2014-06-21 13:06:25 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-21 13:06:26 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /media/images/3_20140621PRjbqGwFSZ-50.jpg
+WARNING django.request 2014-06-21 13:06:26 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-21 13:07:58 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-21 13:10:13 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL
+WARNING django.request 2014-06-21 13:10:14 E:\python\lib\site-packages\django\core\handlers\base.py base 146 Not Found: /dynamic/{{MEDIA_URL

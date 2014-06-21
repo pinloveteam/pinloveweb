@@ -106,7 +106,7 @@ def detailed_info_div(myId,userId,compareId=None):
 <span>%s</span>
 </div>
 <br>
-<button class="btn btn-info compare-btn">
+<button id="compare-button" class="btn btn-info compare-btn">
 %s
 </button>
 </div>
@@ -183,6 +183,11 @@ def detailed_info_div(myId,userId,compareId=None):
          detail+=canvasDiv
 #          print detail
     args['detail']=detail.replace('\n', '')
+    if args['socreForOther']['result']=='success':
+         from util.util import is_guide
+         guide=UserProfile.objects.get_user_info(myId).guide
+         if not is_guide(myId,guide,'compareButton'):
+             args['compare_button']=True
     return args  
 
 '''

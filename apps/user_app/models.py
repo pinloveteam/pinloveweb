@@ -239,6 +239,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     lastLoginAddress=models.CharField(verbose_name=r'最后登录地点',max_length=100,null=True,blank=True,)
     profileFinsihPercent=models.SmallIntegerField(verbose_name=r'资料完成度',default=0,null=True,blank=True,)
     member=models.SmallIntegerField(verbose_name=r'资料完成度',default=0,choices=((0,u'普通用户'),(1,u'会员'),),null=True,blank=True,)
+    guide=models.CharField(verbose_name=r'引导',max_length=255,null=True,blank=True,)
     #定制管理器
     objects = UserProfileManager()
     

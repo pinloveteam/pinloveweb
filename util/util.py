@@ -11,6 +11,8 @@ from json import loads, JSONEncoder
 
 from django.core.serializers import serialize
 from django.db.models.query import QuerySet
+from django.utils import simplejson
+from apps.user_app.models import UserProfile
 '''
 生成长度固定的字符串
 '''
@@ -68,3 +70,25 @@ def dashrepl(matchobj):
     s=matchobj.group(0)
     num=s[10:-2]
     return '%s%s%s' % ('<img src="/static/img/48x48/',num,'.gif" style="width: 25px; height: 25px;">')
+
+'''
+判断是否引导过
+attridute:
+guide[UserProfile.guide] UserProfile的引导字段
+guideField[string]  引导类型    
+                     value: 对比 compareButton
+return
+  false 未引导
+'''
+def is_guide(userId,guide,guideField):
+    if guide==None:
+        guideDict={}
+    else:
+        guideDict=simplejson.loads(guide)
+    if not guideDict.get(guideField,False):
+        guideDict[guideField]=True
+        guideDict=simplejson.dumps(guideDict)
+        UserProfile.objects.filter(user_id=userId).update(guide=guideDict)
+        return False
+    else:
+        return True

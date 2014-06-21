@@ -128,6 +128,9 @@ def loggedin(request,**kwargs) :
     from django.utils import simplejson
     matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
     arg['pages']=matchResultList
+    #判断是否是从注册页面过来
+    if request.GET.get('previous_page','')=='register':
+        arg['first']=True
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
     return render(request, 'index.html',arg )
@@ -220,7 +223,7 @@ def register_user(request) :
                 get_score_by_invite_friend_register(link)
             user = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
             auth.login(request, user)
-            return HttpResponseRedirect('/account/loggedin/')
+            return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         else : 
             args['user_form'] = userForm
     else : 
