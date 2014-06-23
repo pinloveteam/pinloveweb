@@ -186,8 +186,10 @@
             };
         {% endfor %}
         
-        function crop_avatar_success(msg) {
-            $('#uploadAvatarCropResult').hide().text(msg).show(200);
+        function crop_avatar_success(msg,avatar_name) {
+        	var body = $('<p>'+msg+'</p>');
+        	$.poplayer({body:body});
+        	$('#avatar').find('img').attr('src',avatar_name+'-60.jpeg')
         };
     </script>
     <div class="tip">

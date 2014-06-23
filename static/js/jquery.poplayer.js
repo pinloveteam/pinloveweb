@@ -38,7 +38,9 @@
 		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn').click(function() {
 			masklayer.remove();
 			dialog.remove();
-			$('.hopscotch-bubble').remove();
+			if($('.hopscotch-bubble-close').length!=0){
+				$('.hopscotch-bubble-close')[0].click();
+			}
 		});
 	}
 	

@@ -7,11 +7,15 @@ $(function(){
 		//学校名称 激活状态
 		$("#id_educationSchool,#id_educationSchool_2").focus(function(){
 		 $("div[class='provinceSchool']").hide();
+		 provinceSchool=$(this).closest('.school_div').find('.provinceSchool')
+		 if(this.id=='id_educationSchool_2'){
+			 provinceSchool.find('.proSelect  option[value="98"]').attr("selected",true)
+			 change_pro(98)
+		 }
 //		  var top = $(this).position().top+22;
 //    	  var left = $(this).position().left;
 		  var top = $(this).position().top-150;
 		  var left=200;
-    	  provinceSchool=$(this).closest('.school_div').find('.provinceSchool')
     	  provinceSchool.css({top:top,left:left});
     	  provinceSchool.show();
 		});
@@ -39,29 +43,34 @@ $(function(){
 		  }
 		}
 		$("div[class='schoolList'] ul").html(schoolUlStr);
+		
 		//省切换事件
-		$("div[class='proSelect'] select").change(function(){
-		  if("99"!=$(this).val()){
-		    $("div[class='proSelect'] span").show();
-		    $("div[class='proSelect'] input").hide();
-		  	schoolUlStr = "";
-		    schoolListStr = new String(proSchool[$(this).val()]);
-		    schoolListArray = schoolListStr.split(",");
-		    for(var i=0,len=schoolListArray.length;i<len;i++){
-		  	  tempSchoolName = schoolListArray[i];
-			  if(tempSchoolName.length>13){
-			  	schoolUlStr = schoolUlStr + "<li class='DoubleWidthLi'>"+schoolListArray[i]+"</li>"
-			  }else {
-			  	schoolUlStr = schoolUlStr + "<li>"+schoolListArray[i]+"</li>"
+		function change_pro(num=''){
+			  if(num==''){
+				  num=$(this).val()
 			  }
-		    }
-		    $("div[class='schoolList'] ul").html(schoolUlStr);
-		  }else {
-		    $("div[class='schoolList'] ul").html("");
-		    $("div[class='proSelect'] span").hide();
-		    $("div[class='proSelect'] input").show();
-		  }
-		});
+			  if("99"!=num){
+			    $("div[class='proSelect'] span").show();
+			    $("div[class='proSelect'] input").hide();
+			  	schoolUlStr = "";
+			  	schoolListStr = new String(proSchool[num]);
+			    schoolListArray = schoolListStr.split(",");
+			    for(var i=0,len=schoolListArray.length;i<len;i++){
+			  	  tempSchoolName = schoolListArray[i];
+				  if(tempSchoolName.length>13){
+				  	schoolUlStr = schoolUlStr + "<li class='DoubleWidthLi'>"+schoolListArray[i]+"</li>"
+				  }else {
+				  	schoolUlStr = schoolUlStr + "<li>"+schoolListArray[i]+"</li>"
+				  }
+			    }
+			    $("div[class='schoolList'] ul").html(schoolUlStr);
+			  }else {
+			    $("div[class='schoolList'] ul").html("");
+			    $("div[class='proSelect'] span").hide();
+			    $("div[class='proSelect'] input").show();
+			  }
+			}
+		$("div[class='proSelect'] select").change();
 		//学校列表mouseover事件
 		$("div[class='schoolList'] ul").on("mouseover","li",function(){
 		  $(this).css("background-color","#72B9D7");

@@ -8,6 +8,8 @@ var compare_flag=false;
 //选择用户
 var check_id=null;
 var diaogList=[];
+var mgr = hopscotch.getCalloutManager(),
+state = hopscotch.getState();
 window.Card = function(person){
 	var test_match= function(){
 			var userId=$(this).parent().attr("id")
@@ -395,17 +397,20 @@ window.Card = function(person){
 			if(introBox.length){
 				introBox.attr('id','compare_img')
 			}
-			 var tour = {
+			 var tours= {
 						id : "hello-hopscotch",
 						steps : [{
 							title : "对比信息",
 							content : "点击头像就可以进行信息对比",
 							target : 'compare_img',
-							placement : "top"
+							placement : "bottom"
 						}]
 					};
 			 
-			hopscotch.startTour(tour);
+			 if (!hopscotch.isActive) {
+						mgr.removeAllCallouts();
+						hopscotch.startTour(tours);
+					}
 		 }
 	}
 	
@@ -467,7 +472,7 @@ window.Card = function(person){
 											title : "对比雷达图",
 											content : "点击对比，可以对比两个人的个人信息以及雷达图",
 											target : "compare-button",
-											placement : "top"
+											placement : "bottom"
 										}]
 									};
 							hopscotch.startTour(tour);

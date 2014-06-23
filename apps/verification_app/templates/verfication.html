@@ -225,7 +225,9 @@ function onUploadError(data){
 		{% csrf_token %} <input type="hidden" name="type" value="education">
 	<div style="margin-top: -18px;">
 		<div class="text-muted">
-			<span>请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br> <span
+			<span>请上传您毕业证书或学校证明的扫描图片或用数码相机、手机拍摄的能够清晰辨认的图片。</span><br> 
+			<span>上传前请确认信息的正确性，如有错误请修改!</span><br> 
+			<span
 				style="color: red;" id="income_error"></span>
 		</div>
 		<div>
@@ -234,13 +236,62 @@ function onUploadError(data){
 		</div>
 
 		<div>
+		<div class="school_div" style="display: inline-block;">
 			<label class="form-label">毕业学校</label> 
-			{{educationValidForm.educationSchool}} <div id="educationSchool_error" style="display: inline-block;color:red;"></div>
+			国内：{{educationValidForm.educationSchool}} 
+			<div id="proSchool" class="provinceSchool">
+                      <div class="title">
+                        <span>已选择:</span>
+                       </div>
+                      <div class="proSelect">
+                        <select></select>
+                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
+                        <input type="text" >
+                      </div>
+                      <div class="schoolList">
+                        <ul>
+                        </ul>
+                      </div>
+                      <div class="button">
+                       <input type="button" flag='0' value="取消">
+                       <input type="button" flag='1' value="确定">
+                      </div>
+                     </div>
+             </div>
+			<div id="educationSchool_error" style="display: inline-block;color:red;"></div>
+			
+			<div class="school_div" style="display: inline-block;">
+			国外：{{educationValidForm.educationSchool_2}} 
+			<div id="proSchool" class="provinceSchool">
+                      <div class="title">
+                        <span>已选择:</span>
+                       </div>
+                      <div class="proSelect">
+                        <select></select>
+                        <span>没有自己的学校？<a class="" id="writeShcool" href="javascript:;">点击直接输入</a></span>
+                        <input type="text" >
+                      </div>
+                      <div class="schoolList">
+                        <ul>
+                        </ul>
+                      </div>
+                      <div class="button">
+                       <input type="button" flag='0' value="取消">
+                       <input type="button" flag='1' value="确定">
+                      </div>
+                     </div>
+             </div>
+			<div id="educationSchool_error" style="display: inline-block;color:red;"></div>
 		</div>
 
 		<div>
 			<label class="form-label">学历证明</label> 
 			{{educationValidForm.educationPicture}}<br> <div id="educationPicture_error" style="display: inline-block;color:red;"></div>
+			
+		</div>
+		<div>
+			<label class="form-label" style="width: 105px;">学历证明2<span class="text-muted">(可选)</span></label> 
+			{{educationValidForm.educationPicture2}}<br> <div id="educationPicture_error" style="display: inline-block;color:red;"></div>
 			
 		</div>
 

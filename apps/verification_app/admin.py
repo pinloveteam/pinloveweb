@@ -73,6 +73,10 @@ class EducationCheck(UserVerification):
             return u'<img src="%s" />' %(settings.MEDIA_URL+self.educationPicture.name)
     image_img.short_description = '学历证明'
     image_img.allow_tags = True 
+    def image_img2(self):
+            return u'<img src="%s" />' %(settings.MEDIA_URL+self.educationPicture2.name)
+    image_img2.short_description = '学历证明2'
+    image_img2.allow_tags = True 
     class Meta:
         proxy = True
         verbose_name = u'学历审核' 
@@ -81,16 +85,19 @@ class EducationCheck(UserVerification):
 class EducationCheckAdmin(admin.ModelAdmin):
     list_display=('user','educationValid',)
     search_fields =('user__username',)
-    readonly_fields=('image_img','user','get_education','get_educationSchool')
+    readonly_fields=('image_img','image_img2','user','get_education','get_educationSchool_2','get_educationSchool')
     list_filter=('educationValid',)    
-    fields =('user','get_education','get_educationSchool','image_img','educationValid')
+    fields =('user','get_education','get_educationSchool','get_educationSchool_2','image_img','image_img2','educationValid')
        
     def get_education(self,obj):
         return UserProfile.objects.get(user=obj.user).get_education_display()
     get_education.short_description = '学历'
     def get_educationSchool(self,obj):
         return UserProfile.objects.get(user=obj.user).educationSchool
-    get_educationSchool.short_description = '毕业学校'
+    get_educationSchool.short_description = '国内学校'
+    def get_educationSchool_2(self,obj):
+        return UserProfile.objects.get(user=obj.user).educationSchool_2
+    get_educationSchool_2.short_description = '国外学校'
 
 
     #默认过滤

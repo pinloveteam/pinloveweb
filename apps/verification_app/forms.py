@@ -62,10 +62,12 @@ class EducationValidForm(ModelForm):
         self.fields['education'].choices=((u'',u'请选择'),(0,r'大专以下'),(1,r'大专'),(2,r'本科'),(3,r'硕士 '),(4,r'博士 '),)
         self.fields['education'].required=True
         self.fields['educationPicture'].widget.attrs["style"] = "display:inline-block;"
+        self.fields['educationPicture2'].widget.attrs["style"] = "display:inline-block;"
     educationPicture=forms.ImageField()
+    educationPicture2=forms.ImageField()
     class Meta:
         model=UserProfile
-        fields = ('education','educationSchool',)
+        fields = ('education','educationSchool','educationSchool_2',)
         exclude = ('gender', 'year_of_birth', 'month_of_birth', 'day_of_birth', 'income','ethnicGroup','bloodType',
         'height', 'maritalStatus', 'hasChild' ,'stateProvince','avatar_name','city', 'country', 'age','sunSign', 'zodiac','avatar_name_status',
                    'self_evaluation','weight','hairStyle','hairColor','face','eyeColor','bodyShape',

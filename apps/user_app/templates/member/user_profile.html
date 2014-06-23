@@ -11,7 +11,7 @@
 <style type="text/css">
 .vip-panel {
 				height: 491px;
-				padding: 30px;
+				padding: 15px;
 			}
 
 			.buy-nav {
@@ -73,13 +73,13 @@
 			}
 
 			.cer_tab {
-				height: 130px;
+				height: 180px;
 				display: none;
 			}
 
 			.cer_button {
 				position: absolute;
-				top: 70px;
+				bottom: 10px;
 				left: 400px;
 			}
 
@@ -254,6 +254,8 @@ function init_weight_guide(href){
 	if(num=='100'){
 			hopscotch.startTour(tour);
 		}
+	}else{
+		$('.hopscotch-bubble-close')[0].click();
 	}
 }
 </script>

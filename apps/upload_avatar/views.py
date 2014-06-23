@@ -33,6 +33,7 @@ from .signals import avatar_crop_done
 from .models import UploadedImage
 from apps.upload_avatar.models import _delete_avatar_on_disk
 from apps.user_app.models import _delete_crop_avatar_on_disk, UserProfile
+from pinloveweb.settings import MEDIA_URL
 
 
 border_size = UPLOAD_AVATAR_WEB_LAYOUT['crop_image_area_size']
@@ -165,5 +166,5 @@ def crop_avatar(request):
         upim.delete()
         
     return HttpResponse(
-        "<script>window.parent.crop_avatar_success('%s')</script>"  % UPLOAD_AVATAR_TEXT['SUCCESS']
+        "<script>window.parent.crop_avatar_success('%s','%s')</script>"  % (UPLOAD_AVATAR_TEXT['SUCCESS'],MEDIA_URL+avatar_name)
     )

@@ -1,4 +1,3 @@
-
 html, body {
 	background-size: 100%;
 	height: 100%;
@@ -88,6 +87,10 @@ li {
 	position: absolute;
 	right: 10px;
 	top: 8px;
+}
+
+.header-info a{
+	color: #fff;
 }
 
 .header-info-mess, .header-info-user {
@@ -232,7 +235,7 @@ li {
 .indexFooter .follow {
 	width: 100px;
 	height: 100px;
-	background: no-repeat url(../img/weixin.jpg);
+	background: no-repeat url(../img/erweima.jpg);
 	border: solid 1px #D1D3D3;
 }
 

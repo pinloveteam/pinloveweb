@@ -98,8 +98,9 @@ def valid(request):
             educationValidForm=EducationValidForm(request.POST,request.FILES,instance=userProfile)
             if educationValidForm.is_valid():
                 userVerification=UserVerification.objects.get(user=request.user)
-                userVerification.educationPicture=educationValidForm.cleaned_data['educationPicture']
                 userVerification.educationValid=2
+                userVerification.educationPicture=educationValidForm.cleaned_data['educationPicture']
+                userVerification.educationPicture2=educationValidForm.cleaned_data['educationPicture2']
                 userProfile=educationValidForm.save(commit=False)
                 userVerification.save()
                 userProfile.save()

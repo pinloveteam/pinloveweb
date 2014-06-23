@@ -333,6 +333,7 @@ class UserVerification(models.Model):
     incomePicture=models.ImageField(verbose_name=r"收入证明",max_length=128,upload_to='verfication_img/income',null=True)
     educationValid=models.CharField(verbose_name=r"学历验证",max_length=2,choices=STATUS_CHOICES,default='1',)
     educationPicture=models.ImageField(verbose_name=r"学历证明",max_length=128,upload_to='verfication_img/education',null=True)
+    educationPicture2=models.ImageField(verbose_name=r"学历证明",max_length=128,upload_to='verfication_img/education',null=True)
     class Meta:
         verbose_name=u'用户信息验证'
         verbose_name_plural = u'用户信息验证'
