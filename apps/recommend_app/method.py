@@ -35,7 +35,7 @@ def match_score(userId,otherUserId):
 #     connection.commit()
     desc = cursor.description 
     result=[dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()][0]
-    cursor.close()
+#     cursor.close()
     from apps.pojo.recommend import RecommendResult
     matchResult=RecommendResult(kwargs=result)
     return matchResult
