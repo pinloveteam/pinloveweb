@@ -187,9 +187,11 @@ $(document).ready(function() {
 	$('.buy-nav').find('li').click(function() {
 		href = $(this).attr('href');
 		if(href=="#upload_head"){
-			$('[class^="imgareaselect"]').show()
+			$('[class^="imgareaselect"]').show();
+			$('.imgareaselect-selection').parent().show();
 		}else{
-			$('[class^="imgareaselect"]').hide()
+			$('[class^="imgareaselect"]').hide();
+			$('.imgareaselect-selection').parent().hide();
 		}
 		$('.buy-nav').find('li').removeClass('active');
 		$(this).addClass('active');

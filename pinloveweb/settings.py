@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'apps.the_people_nearby',
     'apps.third_party_login_app',
     'apps.pay_app',
+    'util'
     #监控memcahe
 #     'django_memcached',
 #     'social_auth',

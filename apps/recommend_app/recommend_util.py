@@ -97,6 +97,9 @@ where u2.country=%s
     cursor.execute(sql1,[school.country])
     shcoolCount=cursor.fetchone()[0]
     cursor.close()
+    #第一个用户
+    if shcoolCount==0:
+        return 100
     return int((schoolRankingCount+0.01)/shcoolCount*100)
     
 '''
