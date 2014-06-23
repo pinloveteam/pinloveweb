@@ -142,7 +142,7 @@ INSTALLED_APPS = (
     'apps.the_people_nearby',
     'apps.third_party_login_app',
     'apps.pay_app',
-    'util'
+    'util',
     #监控memcahe
 #     'django_memcached',
 #     'social_auth',
@@ -347,7 +347,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                        
+#                         
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -372,7 +372,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-                         
+                          
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
