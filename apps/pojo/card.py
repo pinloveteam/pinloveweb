@@ -120,7 +120,7 @@ def userProfileList_to_CardList(userProfileList):
        age=userProfile.age
        education=userProfile.get_education_display()
        income=userProfile.get_income_display()
-       jobIndustry=userProfile.get_jobIndustry_display()
+       jobIndustry=userProfile.jobIndustry
        followStatus=0
        city=userProfile.city
        #判断头像是否通过审核

@@ -93,6 +93,18 @@ li {
 	color: #fff;
 }
 
+.notice{
+	display: inline-block;
+	background-color: #F82C2C;
+	color: #fff;
+	width: 15px;
+	text-align: center;
+	font-size: 10px;
+	border-radius: 50%;
+	position: absolute;
+	left: 18px;
+}
+
 .header-info-mess, .header-info-user {
 	float: left;
 	height: 34px;
@@ -105,12 +117,8 @@ li {
 .header-info-mess{
 	background:no-repeat url(../img/小图标-07.png);
 }
-.header-info-mess div, .header-info-user div {
+.header-info-user div {
 	display: none;
-}
-
-.header-info-mess:hover div {
-	display: block;
 }
 
 .header-info-user:hover div {

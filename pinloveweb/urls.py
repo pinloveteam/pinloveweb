@@ -78,9 +78,10 @@ urlpatterns+=patterns('',
 )
 #网站信息
 urlpatterns+=patterns('',
-                       url(r'^web/privacy/$','pinloveweb.views.web',{'template_name': 'privacy.html'}),
-                       url(r'^web/about/$','pinloveweb.views.web',{'template_name': 'about.html'}),
-                       url(r'^web/contactus/$','pinloveweb.views.web',{'template_name': 'contactus.html'})
+                       url(r'^web/$','pinloveweb.views.web',{'template_name': 'about.html'}),
+#                        url(r'^web/privacy/$','pinloveweb.views.web',{'template_name': 'privacy.html'}),
+#                        url(r'^web/about/$','pinloveweb.views.web',{'template_name': 'about.html'}),
+#                        url(r'^web/contactus/$','pinloveweb.views.web',{'template_name': 'contactus.html'})
                       
 )
 

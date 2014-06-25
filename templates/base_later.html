@@ -41,7 +41,11 @@
 			</a></li>
 		</ul>
 		<div class="header-info js-header-info">
-			<a  href="/message/" title="消息"><div class="header-info-mess js-info-mess glyphicon" id="newMessage">
+			<a  href="/message/" title="消息">
+			<div class="header-info-mess js-info-mess glyphicon" id="newMessage">
+			<div class="notice">
+								3
+							</div>
 				<!-- <div class="header-info-list js-list">
 					<ul>
 						<li class="js-message"><a href="/messages"> <em
@@ -59,7 +63,7 @@
 					<ul>
 						<li><a href="/user/user_profile/#self_info"> <span>个人信息</span>
 						</a></li>
-						<li><a href="/user/reset_password/"> <span>修改密码</span>
+						<li><a href="/user/change_password/"> <span>修改密码</span>
 						</a></li>
 						<li><a href="/pay/member/"> <span>会员中心</span>
 						</a></li>
@@ -111,6 +115,20 @@ function change_navi(){
 		$('#game_pintu').addClass('active')
 	}
 }
+
+//拉取信息数量
+var time=1000*10;
+interval = self.setInterval("polling()", time);
+ var polling=function(){
+	   $.getJSON('/message/newCount/',function(data){
+		   data=$.parseJSON(data)
+		   message=$('#messageCount');
+		   messageCount=parseInt(messageCount.html().trim());
+		   if(messageCount!=data.count){
+			   message.html(data.count)
+		   }
+			   });  
+   };
 </script>
 
 {% endblock %}
@@ -150,14 +168,14 @@ function change_navi(){
 				<span style="background-color: #56CC99;"></span> 关注我们
 			</dt>
 			<dd>
-				<div class="follow"></div>
+				<div class="follow"><a><img src="{{STATIC_URL}}img/weixin.jpg"/></a></div>
 			</dd>
 		</dl>
 	</div>
 	<div class="footer-ft">
 		<div class="ft">
 			<p>
-				<a href="/web/about/">关于我们</a> - <a href="/web/contactus/">联系我们</a> - <a href="#">拼爱特色服务</a> -
+				<a href="/web/">关于我们</a> - <a href="/web/#contactus">联系我们</a> - <a href="/web/#features_service">拼爱特色服务</a> -
 				<a href="#">意见反馈</a> <span class="cRed"> Copyright &copy;
 					2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;浙ICP备14016914号</span>
 			</p>

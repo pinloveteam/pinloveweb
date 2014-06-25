@@ -54,7 +54,7 @@ def search(request):
             searchList.object_list=simplejson.dumps(searchList.object_list,cls=MyEncoder)
             args['pages']=searchList
             initial=init_search_condition(request.user.id)
-            searchForm=SearchForm()
+            searchForm=SearchForm(initial=initial)
             args.update(get_disable_condition(userProfile))
             args['searchForm']=searchForm
             from apps.search_app.forms import SUN_SIGN_CHOOSICE

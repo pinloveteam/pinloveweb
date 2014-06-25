@@ -383,7 +383,7 @@ window.Card = function(person){
 	/*type:
 		1---对比
 		2--取消对比*/
-	function compare(userId,type,guide=false){
+	function compare(userId,type,guide){
 		if(type==1){
 			compare_flag=true;
 			check_id=userId;
@@ -457,7 +457,7 @@ window.Card = function(person){
 					 compareList=[compareSocreForOther.matchResult.edcationScore,compareSocreForOther.matchResult.characterScore,compareSocreForOther.matchResult.incomeScore,compareSocreForOther.matchResult.appearanceScore,compareSocreForOther.matchResult.heighScore,]
 					 $.poplayer({body:body,type:'frame',data:diaogList,data2:compareList});
 					 $('.compare-btn').click(function(){
-						 compare(userId,2)
+						 compare(userId,2,false)
 					 })
 					 
 				 }else{

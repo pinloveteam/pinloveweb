@@ -17,7 +17,7 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['height']=userProfile.height
     arg['income']=userProfile.income
     arg['education']=userProfile.get_education_display()
-    arg['jobIndustry']=userProfile.get_jobIndustry_display()
+    arg['jobIndustry']=userProfile.jobIndustry
     arg['member']=userProfile.member
     dynamic=FriendDynamic.objects.filter(publishUser_id=userProfile.user_id).order_by('-publishTime')[:1]
     if len(dynamic)>0:
