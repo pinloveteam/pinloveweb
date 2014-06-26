@@ -72,6 +72,10 @@ def message_detail(request):
                 args['next_page_number']=messageList.next_page_number()
             args['result']='success'
             args['userId']=request.user.id
+            #标记已读
+            from apps.message_app.method import clean_message_by_user,get_no_read_message_count
+            clean_message_by_user(senderId,receiverId,'message')
+            args['messageCount']=get_no_read_message_count(receiverId)
         else:
             args={'result':'error','error_message':'传递参数出错!'}
         from apps.pojo.message import MessageBeanEncoder
@@ -146,40 +150,53 @@ def notify_detail(request):
                 args['next_page_number']=notifyList.next_page_number()
             args['result']='success'
             args['userId']=request.user.id
+            #标记已读
+            from apps.message_app.method import clean_message_by_user,get_no_read_message_count
+            clean_message_by_user(receiverId,'notify')
+            args['messageCount']=get_no_read_message_count(receiverId)
         else:
             args={'result':'error','error_message':'传递参数出错!'}
         from apps.pojo.notify import NotifyBeanEncoder
         json=simplejson.dumps(args,cls=NotifyBeanEncoder)
         return HttpResponse(json)
-    except :
+    except Exception as e:
         logger.exception('获取我和指定异性之间所有私信出错，出错原因')
         args={'result':'error','error_message':'获取我和指定异性之间所有私信出错!'}
         json=simplejson.dumps(args)
         return HttpResponse(json)
-
-##############################
 
 '''
 获取信息数量
 '''
 def count(request):
     arg={}
-    if request.user.is_authenticated():
-        #获取未读系统消息的数量
-        systemNoReadCount=Notify.objects.filter(type='0',receiver=request.user,isRead=False).count()
-        #获取系统消息的总数
-        systemCount=Notify.objects.filter(type='0',receiver=request.user).count()
-        #获取未读私信消息的数量
-        messageNoReadCount=Message.objects.filter(receiver=request.user,isRead=False,isDeletereceiver=False).count()
-        #获取未读私信消息的数量
-        messageCount=Message.objects.filter(receiver=request.user,isDeletereceiver=False).count()
-        arg['systemNoReadCount']=systemNoReadCount
-        arg['systemCount']=systemCount
-        arg['messageNoReadCount']=messageNoReadCount
-        arg['messageCount']=messageCount
-        return render(request,'count.html',arg)
+    if request.is_ajax():
+        from apps.message_app.method import get_no_read_message_count
+        count=get_no_read_message_count(request.user.id)
+        arg['count']=count
+        json=simplejson.dumps(arg)
+        return HttpResponse(json)
     else:
-        return render(request,'login.html',arg)
+        return render(request,'error.html')
+    
+'''
+全部标记成已读
+'''    
+def clean(request):
+    args={}
+    try:
+        from apps.message_app.method import clean_message
+        clean_message(request.user.id)
+        args={'result':'success'}
+    except Exception as e:
+       logger.exception('全部标记成已读,出错!')
+       args={'result':'error','error_message':e.message}
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
+       
+##############################
+
+
 '''
 过去消息列表
 attribute： 

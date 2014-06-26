@@ -257,7 +257,10 @@ function init_weight_guide(href){
 			hopscotch.startTour(tour);
 		}
 	}else{
-		$('.hopscotch-bubble-close')[0].click();
+		var bubble_close=$('.hopscotch-bubble-close');
+		if(bubble_close.length>0){
+			bubble_close[0].click();
+		}
 	}
 }
 </script>

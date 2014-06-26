@@ -39,6 +39,10 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['myFollow']=myFollowCount
     arg['fans']=fansCount
     arg['follow']=followEachCount
+    
+    #获取未读信息
+    from apps.message_app.method import get_no_read_message_count
+    arg['messageNoReadCount']=get_no_read_message_count(userProfile.user_id)
     return arg
 
 '''

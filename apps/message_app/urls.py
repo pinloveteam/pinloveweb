@@ -19,4 +19,5 @@ urlpatterns = patterns('apps.message_app.views',
     url(r'^$','message',{'template_name': 'message_1.html'}),
      url(r'^detail/$', 'message_detail'),
      url(r'^notify_detail/$', 'notify_detail'),
+     url(r'^clean/$', 'clean'),
     )

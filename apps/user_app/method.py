@@ -22,7 +22,7 @@ def user_info_card(userProfile,userTagBeanList):
             'age':userProfile.age,
             'education':userProfile.get_education_display(),
             'income':userProfile.income,
-            'jobIndustry':userProfile.get_jobIndustry_display(),
+            'jobIndustry':userProfile.jobIndustry,
             'city':userProfile.city,
             'sunSign':userProfile.get_sunSign_display()
             }

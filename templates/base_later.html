@@ -42,9 +42,9 @@
 		</ul>
 		<div class="header-info js-header-info">
 			<a  href="/message/" title="消息">
-			<div class="header-info-mess js-info-mess glyphicon" id="newMessage">
-			<div class="notice">
-								3
+			<div class="header-info-mess js-info-mess glyphicon" id="newMessage" >
+			<div id="messageCount" class="notice" {%ifequal messageNoReadCount 0%}style="display: none;"{%endifequal%}>
+								{%ifequal messageNoReadCount 0%}0{%else%}{{messageNoReadCount}}{%endifequal%}
 							</div>
 				<!-- <div class="header-info-list js-list">
 					<ul>
@@ -120,15 +120,19 @@ function change_navi(){
 var time=1000*10;
 interval = self.setInterval("polling()", time);
  var polling=function(){
-	   $.getJSON('/message/newCount/',function(data){
-		   data=$.parseJSON(data)
-		   message=$('#messageCount');
-		   messageCount=parseInt(messageCount.html().trim());
-		   if(messageCount!=data.count){
-			   message.html(data.count)
-		   }
+	   $.getJSON('/message/count/',function(data){
+		   set_no_read_message(data.count)
 			   });  
    };
+   
+function set_no_read_message(count){
+	message=$('#messageCount');
+	   messageCount=parseInt(message.html().trim());
+	   if(messageCount!=count){
+		   message.html(count);
+		   message.show();
+	   }
+}
 </script>
 
 {% endblock %}

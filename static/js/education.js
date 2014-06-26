@@ -45,9 +45,9 @@ $(function(){
 		$("div[class='schoolList'] ul").html(schoolUlStr);
 		
 		//省切换事件
-		function change_pro(num=''){
-			  if(num==''){
-				  num=$(this).val()
+		function change_pro(num){
+			  if(typeof(num)=="object"){
+				  num=num.val()
 			  }
 			  if("99"!=num){
 			    $("div[class='proSelect'] span").show();
@@ -70,7 +70,10 @@ $(function(){
 			    $("div[class='proSelect'] input").show();
 			  }
 			}
-		$("div[class='proSelect'] select").change();
+		$("div[class='proSelect'] select").change(function(){
+			change_pro($(this))
+		}
+		);
 		//学校列表mouseover事件
 		$("div[class='schoolList'] ul").on("mouseover","li",function(){
 		  $(this).css("background-color","#72B9D7");

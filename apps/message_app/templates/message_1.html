@@ -90,6 +90,7 @@
 	                        }
 	                    $('.hideable_'+text).show('slow');
 					    isMessageListShow=true;
+					    set_no_read_message(data.messageCount)
 						},
 	                    error: function(response){
 	                        alert('网络异常！')
@@ -250,6 +251,26 @@
     			$(".hideable_notify").prepend(messageDetail)
     		}
 		}
+		
+		//全部标记已读
+		function mark_read (){
+				$.ajax({
+					url:'/message/clean/',
+					type:'get',
+					dataType:'json',
+					success:function(data,textStatus){
+						if (textStatus='success'){
+							set_no_read_message(0)
+							}else{
+								alert(data.error_message)
+							}
+					},
+					error:function(response){
+						 alert('网络异常！')
+					}
+				});
+		};
+		
 		</script>
 		<script type="text/javascript">
 		(function($){
@@ -621,6 +642,7 @@
 	{% include "left.html" %}
 	
 					<div id="message_content" class="col-xs-9">
+					<a id="mark_read" href="javascript:void(0);" onclick="mark_read();"><span style="color: rgb(127, 151, 180); font-size: 13px;">全部标记为已读</span></a>
 					{%if notify%}
 					<div id="notify" class="card_panel trend-list">
 							<div id="112" class="message-area">
