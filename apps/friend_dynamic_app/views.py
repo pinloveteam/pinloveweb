@@ -181,6 +181,8 @@ def del_dynamic(request):
         type=int(request.GET.get('type'))
         if type==1:
             FriendDynamic.objects.get(id=id).delete()
+            from pinloveweb.method import get_dymainc_late
+            arg['dynamic']= get_dymainc_late(request.user.id)
             arg['type']='success'
         elif type==2:
 #             Picture.objects.filter(friendDynamic_id=id).delete()

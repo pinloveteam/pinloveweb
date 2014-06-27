@@ -19,10 +19,6 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['education']=userProfile.get_education_display()
     arg['jobIndustry']=userProfile.jobIndustry
     arg['member']=userProfile.member
-    dynamic=FriendDynamic.objects.filter(publishUser_id=userProfile.user_id).order_by('-publishTime')[:1]
-    if len(dynamic)>0:
-        dynamic=dynamic[0]
-        arg['dynamic']=get_dymainc_late(dynamic)
     if kwargs.get('myFollowCount')==None:
         myFollowCount=Follow.objects.filter(my=userProfile.user).count()
     else:
@@ -39,7 +35,8 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['myFollow']=myFollowCount
     arg['fans']=fansCount
     arg['follow']=followEachCount
-    
+    #获得最近一条动态
+    arg['dynamic']=get_dymainc_late(userProfile.user_id)
     #获取未读信息
     from apps.message_app.method import get_no_read_message_count
     arg['messageNoReadCount']=get_no_read_message_count(userProfile.user_id)
@@ -118,7 +115,12 @@ def create_invite_code(userId):
 '''
 获得最近一条动态
 '''
-def get_dymainc_late(dynamic):
+def get_dymainc_late(userId):
+    dynamic=FriendDynamic.objects.filter(publishUser_id=userId).order_by('-publishTime')[:1]
+    if len(dynamic)>0:
+        dynamic=dynamic[0]
+    else:
+        return None
     data=[]
     LEN=60
     EXPRESSION_LEN=14

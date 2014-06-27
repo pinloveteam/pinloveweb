@@ -131,6 +131,8 @@ function set_no_read_message(count){
 	   if(messageCount!=count){
 		   message.html(count);
 		   message.show();
+	   }else if(count==0&&(message.is('hide')==false)){
+		   message.hide();
 	   }
 }
 </script>

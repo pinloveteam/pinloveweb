@@ -334,6 +334,13 @@ function confirm_del_dynamic(id,type){
 function del_dynamic(id,type){
     $.getJSON('/dynamic/delDynamic/',{id:id,type:type},function(data){
         if (data['type']=='success'){
+        	if (data.dynamic!=null){
+        		profile_dynamic=$('#profile_dynamic');
+            	profile_dynamic.attr('title',data['dynamic'][1]);
+            	profile_dynamic.html(data['dynamic'][0]);
+        	}else{
+        		profile_dynamic.remove();
+        	}
             $('#dynamic_'+id).remove()
         }else if(data['type']=='error'){
             alert("删除失败")

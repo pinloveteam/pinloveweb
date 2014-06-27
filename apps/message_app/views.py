@@ -74,7 +74,7 @@ def message_detail(request):
             args['userId']=request.user.id
             #标记已读
             from apps.message_app.method import clean_message_by_user,get_no_read_message_count
-            clean_message_by_user(senderId,receiverId,'message')
+            clean_message_by_user(senderId,'message',receiverId)
             args['messageCount']=get_no_read_message_count(receiverId)
         else:
             args={'result':'error','error_message':'传递参数出错!'}
