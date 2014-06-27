@@ -93,7 +93,7 @@ def matchResultList_to_CardList(matchResultList):
        age=userBaiscProfile.age
        education=userBaiscProfile.get_education_display()
        income=userBaiscProfile.get_income_display()
-       jobIndustry=userBaiscProfile.get_jobIndustry_display()
+       jobIndustry=userBaiscProfile.jobIndustry
        city=userBaiscProfile.city
        followStatus=0
        #判断头像是否通过审核
@@ -167,7 +167,7 @@ def fllowList_to_CardList(user,fllowList,type):
         age=userProfile.age
         education=userProfile.get_education_display()
         income=userProfile.get_income_display()
-        jobIndustry=userProfile.get_jobIndustry_display()
+        jobIndustry=userProfile.jobIndustry
         followStatus=0
         if userProfile.avatar_name_status=='3':
            avatar_name=userProfile.avatar_name

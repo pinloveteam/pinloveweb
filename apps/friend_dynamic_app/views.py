@@ -421,6 +421,6 @@ def init_card(arg,userProfile):
     arg['height']=userProfile.height
     arg['income']=userProfile.income
     arg['education']=userProfile.get_education_display()
-    arg['jobIndustry']=userProfile.get_jobIndustry_display()
+    arg['jobIndustry']=userProfile.jobIndustry
     return arg
    

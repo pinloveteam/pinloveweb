@@ -272,7 +272,7 @@ def searchRsultBeanList_to_searchRsultList(searchRsultBeanList):
        age=searchRsult.age
        education=searchRsult.get_education_display()
        income=searchRsult.income
-       jobIndustry=searchRsult.get_jobIndustry_display()
+       jobIndustry=searchRsult.jobIndustry
        if searchRsult.avatar_name_status=='3':
            avatar_name=searchRsult.avatar_name
        else:
