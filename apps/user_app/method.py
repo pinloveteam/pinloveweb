@@ -24,7 +24,8 @@ def user_info_card(userProfile,userTagBeanList):
             'income':userProfile.income,
             'jobIndustry':userProfile.jobIndustry,
             'city':userProfile.city,
-            'sunSign':userProfile.get_sunSign_display()
+            'sunSign':userProfile.get_sunSign_display(),
+            'gender':userProfile.gender,
             }
     #获取标签信息
     tagTupe=()
@@ -69,6 +70,7 @@ def detailed_info_div(myId,userId,compareId=None):
     detailDict=get_detail_info(userId)
     from apps.recommend_app.views import get_socre_for_other
     args['socreForOther']=get_socre_for_other(myId,userId)
+    head_color = 'head_girl' if detailDict['gender']=='F' else 'head_boy'
 #     keys=''
 #     for key in args['socreForOther'].keys():
 #         keys+=key+'====='
@@ -97,7 +99,7 @@ def detailed_info_div(myId,userId,compareId=None):
 <div class="col-xs-4" style="border-right: solid 2px #00CCCC;">
 
 <div class="main">
-<div class="head head_girl">
+<div class="head %s">
 <img src="/media/%s-110.jpeg" alt="当前头像">
 </div>
 <div style="display: inline-block;width: 260px;position: relative;top:-40px;">
@@ -131,16 +133,17 @@ def detailed_info_div(myId,userId,compareId=None):
 </tbody>
 </table>
 </div>
-'''%(left,width,detailDict['avatar_name'],detailDict['username'],detailDict['city'],compareTag,tags,detailDict['height'],detailDict['education'],detailDict['age'],detailDict['income'],detailDict['jobIndustry'],detailDict['sunSign'],)
+'''%(left,width,head_color,detailDict['avatar_name'],detailDict['username'],detailDict['city'],compareTag,tags,detailDict['height'],detailDict['education'],detailDict['age'],detailDict['income'],detailDict['jobIndustry'],detailDict['sunSign'],)
 
     if flag:
+        head_color = 'head_girl' if data['gender']=='F' else 'head_boy'
         canvasDiv=canvas_div(args['socreForOther'],flag,args['compareSocreForOther'])
         detail+=canvasDiv
         compare='''
         <div class="col-xs-4" style="border-left: solid 2px #00CCCC;">
 
 <div class="main">
-<div class="head head_girl">
+<div class="head %s">
 <img src="/media/%s-110.jpeg" alt="当前头像">
 </div>
 <div style="display: inline-block;width: 260px;position: relative;top:-40px;">
@@ -175,7 +178,7 @@ def detailed_info_div(myId,userId,compareId=None):
 </table>
 </div>
 </div>
-</div>'''%(data['avatar_name'],data['username'],data['city'],compareTag,compareTags,data['height'],data['education'],data['age'],data['income'],data['jobIndustry'],data['sunSign'],)
+</div>'''%(head_color,data['avatar_name'],data['username'],data['city'],compareTag,compareTags,data['height'],data['education'],data['age'],data['income'],data['jobIndustry'],data['sunSign'],)
         detail+=compare
         
     else:

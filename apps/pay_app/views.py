@@ -56,7 +56,7 @@ def member(request):
     try:
         args={}
         userProfile=UserProfile.objects.get(user=request.user)
-        chargeExchangeRelateList=ChargeExchangeRelate.objects.filter(currencyType=1)
+        chargeExchangeRelateList=ChargeExchangeRelate.objects.filter(currencyType=2)
         charge=Charge.objects.get(user_id=request.user.id)
         args['chargeExchangeRelateList']=chargeExchangeRelateList
         args['charge']=charge
@@ -83,6 +83,9 @@ def pay_icon_order(request):
 #                args['type']='paypal'
                from apps.pay_app.PayPal import asks_for_money
                args=asks_for_money(userId=request.user.id,amount=chargeExchangeRelate.get_amount(),price=chargeExchangeRelate.currencyPrice,currency=chargeExchangeRelate.currencyType,data=u'购买拼爱币')
+           elif type=='alipay':
+               from apps.alipay_app.alipay import build_aplipay_order
+               args=build_aplipay_order(userId=request.user.id,amount=chargeExchangeRelate.get_amount(),price=chargeExchangeRelate.currencyPrice,currency=chargeExchangeRelate.currencyType,data=u'购买拼爱币')
            return render(request,'redirect_to_pay.html',args)
        else:
             return HttpResponseRedirect('/pay/member/')

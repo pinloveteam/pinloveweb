@@ -23,7 +23,7 @@
 		};
 		var options = $.extend(defaults, options);
 
-		var masklayer = $('<div class="masklayer"></div>');
+		var masklayer = $('<div class="masklayer"><div class="poplayer-close">X</div></div>');
 
 		if (options.type == 'confirm') {
 			var dialog = loadConfirm(options);

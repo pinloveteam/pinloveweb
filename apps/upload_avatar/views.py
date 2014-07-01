@@ -34,6 +34,8 @@ from .models import UploadedImage
 from apps.upload_avatar.models import _delete_avatar_on_disk
 from apps.user_app.models import _delete_crop_avatar_on_disk, UserProfile
 from pinloveweb.settings import MEDIA_URL
+from apps.upload_avatar.app_settings import UPLOAD_AVATAR_MIX_SIZE,\
+    UPLOAD_AVATAR_FORMAT
 
 
 border_size = UPLOAD_AVATAR_WEB_LAYOUT['crop_image_area_size']
@@ -66,9 +68,13 @@ def upload_avatar(request):
         uploaded_file = request.FILES['uploadavatarfile']
     except KeyError:
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['INVALID_IMAGE'])
-    
+    imageName=uploaded_file.name
     if uploaded_file.size > UPLOAD_AVATAR_MAX_SIZE:
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['TOO_LARGE'])
+    elif uploaded_file.size < UPLOAD_AVATAR_MIX_SIZE:
+        raise UploadAvatarError(UPLOAD_AVATAR_TEXT['TOO_SMALL'])
+    elif not imageName[imageName.rindex('.')+1:] in UPLOAD_AVATAR_FORMAT:
+        raise UploadAvatarError(UPLOAD_AVATAR_TEXT['UPLOAD_FORMAT_ERROR'])
     
     
     name, ext = os.path.splitext(uploaded_file.name)

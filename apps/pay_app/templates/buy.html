@@ -14,11 +14,6 @@ $(document).ready(function() {
 		var id=content.find('input[name="charge_id"]').val();
 		price=content.find('span[name="price"]').html().trim();
 		var type=$('input:radio[name="type"]:checked').val()
-		if(type == 'alipay'){
-			var body = $("<p>支付宝暂未开通</p>")
-			$.poplayer({body:body,btnFunc:function(){}});
-			return;
-		}
 		inputs="<input id='id_"+id+"' type='hidden' value='"+id+"' name='id'><input id='id_"+type+"' type='hidden' value='"+type+"' name='type'>"
 		var hehe = function(){$('#buyCion').submit()}
 		var body = $("<form id='buyCion' method='POST' action='/pay/pay_icon_order/'>{% csrf_token%}"+inputs+"<p>购买服务：<span>拼爱币</span></p><p>服务价格：<b class='text-red'>"+price+"</b></p><p>购买拼爱币：<b class='text-red'>"+PLprice+"</b></p><p>支付方式：<b class='text-red'>"+type+"</b></p></from>");

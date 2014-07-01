@@ -33,7 +33,7 @@ def GetLocation(request):
 def the_people_nearby(request):
     arg = {}
     userProfile=UserProfile.objects.get_user_info(request.user.id)
-    userProfileList =  UserProfile.objects.filter(lastLoginAddress=GetLocation(request)).exclude(user=request.user)
+    userProfileList =  UserProfile.objects.filter(lastLoginAddress=GetLocation(request)).exclude(user=request.user).exclude(gender=userProfile.gender)
     #分页
     from util.page import page
     arg=page(request,userProfileList)

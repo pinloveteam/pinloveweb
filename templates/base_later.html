@@ -117,7 +117,7 @@ function change_navi(){
 }
 
 //拉取信息数量
-var time=1000*10;
+var time=1000*1000;
 interval = self.setInterval("polling()", time);
  var polling=function(){
 	   $.getJSON('/message/count/',function(data){
