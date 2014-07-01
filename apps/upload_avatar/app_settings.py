@@ -32,8 +32,11 @@ UPLOAD_AVATAR_URL_PREFIX_CROPPED = settings.UPLOAD_AVATAR_URL_PREFIX_CROPPED
 
 
 # Default max allowed size is 3MB
-UPLOAD_AVATAR_MAX_SIZE = getattr(settings, 'UPLOAD_AVATAR_MAX_SIZE', 1024 * 1024 *3)
+UPLOAD_AVATAR_MAX_SIZE = getattr(settings, 'UPLOAD_AVATAR_MAX_SIZE', 1024 * 1024 *8)
 
+UPLOAD_AVATAR_MIX_SIZE = getattr(settings, 'UPLOAD_AVATAR_MIX_SIZE',1024*8)
+#上传格式
+UPLOAD_AVATAR_FORMAT = getattr(settings, 'UPLOAD_AVATAR_FORMAT',['jpg','jpeg','gif','png'])
 # You should custom the test function.
 # test function take 'request' as the only argument.
 # It controls whether this request is valid and call the view function
@@ -104,6 +107,8 @@ UPLOAD_AVATAR_TEXT = {
     'TOO_LARGE': u'文件过大，请选择小一点的文件',   #File Too Large, choose a smaller one
     'SUCCESS': u'上传成功!',
     'ERROR': u'出错!请重试',
+    'TOO_SMALL': u'文件太小', 
+    'UPLOAD_FORMAT_ERROR':u'上传格式出错',
 }
 
 UPLOAD_AVATAR_WEB_LAYOUT.update(
