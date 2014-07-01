@@ -96,14 +96,16 @@ class ChargeExchangeRelate(models.Model):
     PLPrice=models.IntegerField(verbose_name=u'拼爱币价格',default=0)
     PLPresentation=models.IntegerField(verbose_name=u'赠送拼爱币个数',default=0)
     currencyPrice=models.DecimalField(verbose_name=u'货币价格',max_digits=11,decimal_places=2,default=0.00,null=True,blank=True)
-    discount=models.DecimalField(verbose_name=u'折扣',max_digits=11,decimal_places=2,default=0.00,null=True,blank=True)
+    discount=models.DecimalField(verbose_name=u'折扣',max_digits=11,decimal_places=2,default=1.00,null=True,blank=True)
     CURRENCY_TYPE_CHOICE=((1,'USB'),(2,'RMB'))
     currencyType=models.SmallIntegerField(verbose_name=u'货币类型',choices=CURRENCY_TYPE_CHOICE,null=True,blank=True)
     OPERATE_TYPE_CHIOCE=(('1001',u'购买拼爱币'),('1002',u'查看别人对你的打分'),)
     operateType=models.CharField(verbose_name=u'操作类型',choices=CURRENCY_TYPE_CHOICE,max_length=11)
     instruction=models.CharField(verbose_name=u'说明',max_length=255,null=True,blank=True)
     def get_amount(self):
-        return self.PLPrice*self.discount+self.PLPresentation
+        return int(self.PLPrice+self.PLPresentation)
+    def get_price(self):
+        return self.currencyPrice*self.discount
     class Meta:
         verbose_name = u'拼爱币兑换关系表' 
         verbose_name_plural = u'拼爱币兑换关系表'

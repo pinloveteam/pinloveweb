@@ -292,6 +292,21 @@ def forget_password(request):
     args['postResult']=postResult
     return render(request, 'forget_password.html',args)   
  
+'''
+检查用户名
+'''
+def check_username(request):
+    args={}
+    try:
+        username=request.GET.get('username','')
+        if User.objects.filter(username=username).exists():
+            args={'result':u'error','error_message':u'用户名义存在!'}
+        else:
+            args['result']=u'success'
+    except Exception as e:
+        pass
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
                           
 def test(request):
    try:

@@ -327,7 +327,7 @@ window.Card = function(person){
 			data:data
 		}
 		var data = {
-				labels : ["教育程度", "性格", "收入情况", "样貌", "身高"],
+				labels : ["学历", "性格", "收入", "样貌", "身高"],
 				datasets : [datasets]
 			};
 		var myNewChart = new Chart(ctx).Radar(data, {
