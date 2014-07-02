@@ -89,7 +89,7 @@ $(document).ready(function(){
 	     });
 	 }
 	 //searchAvailable
-	 var conditionHead = $('.searchAvailable .condition-head');
+	 /* var conditionHead = $('.searchAvailable .condition-head');
 				conditionHead.click(function() {
 					var searchPanel = $(this).next();
 					if (searchPanel.css('display')=='none') {
@@ -99,7 +99,7 @@ $(document).ready(function(){
 						$(this).find('.switch-btn').css('transform', 'rotate(90deg)');
 						searchPanel.slideUp(400);
 					}
-				});
+				}); */
 
 				$('.condition-input').change(function() {
 					var str = '';
@@ -159,21 +159,14 @@ function get_input(context) {
 		{%if disable_age%}
 		<div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">年龄不可选 </span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
 		{%else%}
 		<div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">请选择年龄</span> <span class="range" style="display: none;">-</span>   <span
 					class="range-bak">  </span> <span class="range" style="display: none;">岁</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					<p>请选择年龄</p>
 					{{searchForm.minAge}}
 					{{searchForm.maxAge}}
 				</div>
@@ -186,21 +179,14 @@ function get_input(context) {
 		{%if disable_height%}
 		<div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">身高不可选</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
 		{%else%}
 		<div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre"> 请选择身高 </span>  <span class="range" style="display: none;">-</span> <span
 					class="range-bak">  </span>  <span class="range" style="display: none;">CM</span> 
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					<p>请选择身高</p>
 					{{searchForm.minHeigh}}
 					{{searchForm.maxHeigh}}
 				</div>
@@ -213,20 +199,13 @@ function get_input(context) {
         {%if disable_education%}
         <div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">学历不可选</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
         {%else%}
         <div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">请选择学历</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					<p>请选择学历</p>
 					{{searchForm.education}}
 				</div>
 			</div>
@@ -238,22 +217,15 @@ function get_input(context) {
 		 {%if disable_income%}
 		  <div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">收入不可选</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
 		 
 		 {%else%}
 		 <div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">请选择月收入</span><span class="range" style="display: none;"> -</span> <span
 					class="range-bak"></span><span class="range" style="display: none;">万/年</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 			</div>
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					<p>请选择月收入</p>
 					{{searchForm.minIcome}}
 					{{searchForm.maxIncome}}
 				</div>
@@ -266,20 +238,13 @@ function get_input(context) {
 		{%if disable_jobIndustry%}
 		<div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">行业不可选</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 		</div>
 		{%else%}
 		<div class="condition-head">
 				&nbsp;&nbsp; <span class="range-pre">请选择行业</span>
-				<div class="switch">
-					<div class="switch-btn"></div>
-				</div>
 		</div>
 		<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					<p>请选择行业</p>
 					{{searchForm.jobIndustry}}
 				</div>
 			</div>

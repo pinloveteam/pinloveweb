@@ -224,10 +224,10 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
 </div>
 </div>'''
     if scoreMatch['result']=='success':
-        compareCharacterScore=''
+        compareScoreOther=''
         compareScoreMyself=''
         if compareFlag:
-            compareCharacterScore=int(compareScoreMatch['matchResult']['characterScore'])
+            compareScoreOther=int(compareScoreMatch['matchResult']['scoreOther'])
             if compareScoreMatch['matchResult'].get('scoreMyself',None)!=None:
                 compareScoreMyself=int(compareScoreMatch['matchResult'].get('scoreMyself'))
             else:
@@ -236,7 +236,7 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
             scoreMyself= int(scoreMatch['matchResult'].get('scoreMyself'))
         else:
             scoreMyself='<button value="%s" >查<button>'%(scoreMatch['matchResult']['userId'])
-        canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['characterScore']),compareCharacterScore,scoreMyself,compareScoreMyself)
+        canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['scoreOther']),compareScoreOther,scoreMyself,compareScoreMyself)
     else:
 #         canvasDiv=canvasDiv%('','','','') 
         canvasDiv='<div class="col-xs-4" id="radar" >'+scoreMatch['error_messge']+'</div>'

@@ -2,7 +2,6 @@
 # Django settings for pinlove project.
 import os
 PATH=os.path.dirname(os.path.dirname(__file__))
-DOMAIN='pinlove.com'
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -155,6 +154,7 @@ INSTALLED_APPS = (
 #     'apps.task_app',    
 'apps.user_score_app', 
 'paypal.standard.ipn',
+'apps.alipay_app',
 )
 PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
 # PAYPAL_TEST=False
@@ -210,7 +210,7 @@ PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
 #     }
 # }
 logger_app=['pinloveweb','apps.friend_dynamic_app','apps.game_app','apps.message_app',
-            'apps.pay_app','apps.recommend_app','apps.search_app','the_people_nearby','apps.third_party_login_app','apps.user_app','apps.user_score_app','apps.verification_app']
+            'apps.pay_app','apps.recommend_app','apps.search_app','the_people_nearby','apps.third_party_login_app','apps.user_app','apps.user_score_app','apps.verification_app','apps.alipay_app']
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -347,7 +347,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                         
+#                          
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -367,12 +367,12 @@ CACHES = {
 # UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
 # UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 # UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
-
+# DOMAIN='pinlove.xicp.net'
 
 
 #---服务器环境-----
 DATABASES = {
-                          
+                           
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -397,6 +397,7 @@ UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 #grappelli
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
+DOMAIN='pinlove.com'
 
 ###################for tests##########
 # import djcelery

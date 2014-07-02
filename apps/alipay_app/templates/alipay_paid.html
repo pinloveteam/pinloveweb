@@ -1,5 +1,5 @@
 {% extends "base_later.html" %}
-{% block title %} 拼爱网 --{{tittle}}!{% endblock %}
+{% block title %} 拼爱网 --{{title}}!{% endblock %}
 {% block css %}
 <link href="{{STATIC_URL}}css/form.css" rel="stylesheet">
 <style>
@@ -17,7 +17,7 @@
 					<form class="form-horizontal" role="form">
 						<fieldset >
 							<div class="form-head">
-								<h4 class="h4_text">{{tittle}}</h4>
+								<h4 class="h4_text">{{title}}</h4>
 							</div>
 							<div class="form-group text-center"   >
 								<div >
@@ -32,7 +32,7 @@
 								<!-- Button -->
 								<div >
 									<button class="btn btn-pink" onclick="javascript:window.location.href='{{url}}'">
-										返回
+										到购买页面
 									</button>
 								</div>
 							</div>

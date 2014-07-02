@@ -71,7 +71,7 @@ urlpatterns = patterns('',
     
     
     (r'^weixin', include('apps.weixin_app.urls')),
-#     (r'^alipay', include('apps.alipay_app.urls')),
+    (r'^alipay', include('apps.alipay_app.urls')),
 )
 
 #禁止搜索引擎收录

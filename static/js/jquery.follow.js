@@ -3,7 +3,6 @@
 		following : function(options) {
 			var self = this;
 			$follow = $('.'+$(self).attr('move-to'));
-			$img = $(self).attr('move-data');
 			var F = {
 				init : function() {
 					$(self).data('click', true).on('click', this.addfollowing);
@@ -11,6 +10,7 @@
 				addfollowing : function(e) {
 					e.stopPropagation();
 					var $target = $(e.target), 
+					$img = $target.attr('move-data');
 					id = $target.attr('id'), 
 					dis = $target.data('click'),
 					x = $target.offset().left + 30, 
