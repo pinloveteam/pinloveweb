@@ -13,12 +13,12 @@ from django.http.response import HttpResponse
 from django.utils import simplejson
 logger=logging.getLogger(__name__)
 # @require_POST
-# @csrf_exempt
+@csrf_exempt
 def dpn(request, item_check_callable=None):
    try:
     flag=None
     obj=None
-    post_data=request.POST.copy()
+    post_data=request.GET.copy()
     logger.error(simplejson.dumps(post_data))
     data={}
     for i,v in post_data.items():
@@ -34,13 +34,13 @@ def dpn(request, item_check_callable=None):
     if obj==None:
         obj = AliPayDPN()
         #Set query params and sender's IP address
-        obj.initialize(request)
+    obj.initialize(request)
         
-        if flag is not None:
-            #We save errors in the flag field
-            obj.set_flag(flag)
-        else:
-            obj.verify(item_check_callable)
+    if flag is not None:
+        #We save errors in the flag field
+        obj.set_flag(flag)
+    else:
+        obj.verify(item_check_callable)
     obj.save()
 
     return HttpResponse('success')

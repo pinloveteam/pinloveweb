@@ -117,30 +117,30 @@ text-align: center;
 	background: no-repeat;
 }
 .poplayer .icon-height {
-	background: url("./img/身高.png");
+	background: url("../img/身高.png");
 }
 .poplayer .icon-education {
-	background: url("./img/学历.png");
+	background: url("../img/学历.png");
 }
 
 .poplayer .icon-age {
-	background: url("./img/年龄.png");
+	background: url("../img/年龄.png");
 }
 
 .poplayer .icon-income {
-	background: url("./img/收入.png");
+	background: url("../img/收入.png");
 }
 
 .poplayer .icon-trade {
-	background: url("./img/行业.png");
+	background: url("../img/行业.png");
 }
 
 .poplayer .icon-constellation {
-	background: url("./img/星座.png");
+	background: url("../img/星座.png");
 }
 
 .poplayer .icon-eye {
-	background: url("./img/个人信息新-08.png");
+	background: url("../img/个人信息新-08.png");
 	cursor: pointer;
 }
 

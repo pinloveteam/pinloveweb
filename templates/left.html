@@ -1,5 +1,6 @@
 <div class="col-xs-3">
 			<div class="user_info card_panel" style="min-height: 150px;"> 
+			    <div class="card-top {% ifequal gender 'M'%}top-boy{%else%}top-girl{%endifequal%}"></div>
 				<div id="avatar" class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:63px;width:63px;">
 				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
 				</div>
@@ -14,6 +15,7 @@
 				<p id="profile_dynamic" style="margin:20px 0 20px 20px;" title='{{dynamic.1|safe}}'>{{dynamic.0|safe}}</p>
 			</div>
 			<div class="sns_info card_panel">
+			   <div class="card-top  {% ifequal gender 'M'%}top-boy{%else%}top-girl{%endifequal%}"></div>
 				<table class="table table-condensed">
 					<tbody>
 					  <tr class="js-follow">
@@ -36,5 +38,6 @@
 			</div>
 			
 			<div class="send_pic card_panel">
+			  <div class="card-top  {% ifequal gender 'M'%}top-boy{%else%}top-girl{%endifequal%}"></div>
 			</div>
 		</div>

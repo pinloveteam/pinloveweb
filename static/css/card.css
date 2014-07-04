@@ -329,13 +329,13 @@ hr {
 }
 
 .icon_ding {
-	top: 0px;
+	top: 10px;
 	left: 0px;
 	background-image: url("../img/ping.png");
 }
 
 .icon_dislike {
-	top: 0px;
+	top: 10px;
 	right: 0px;
 	background-image: url("../img/dislike.png");
 }
@@ -387,5 +387,5 @@ hr {
 
 .ding{
 	opacity:1;
-	background-image: url("/static/img/ding1.png");
+	background-image: url("../img/ding1.png");
 }

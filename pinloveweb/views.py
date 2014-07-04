@@ -293,16 +293,24 @@ def forget_password(request):
     return render(request, 'forget_password.html',args)   
  
 '''
-检查用户名
+注册检查
 '''
-def check_username(request):
+def check_register(request):
     args={}
     try:
-        username=request.GET.get('username','')
-        if User.objects.filter(username=username).exists():
-            args={'result':u'error','error_message':u'用户名义存在!'}
-        else:
-            args['result']=u'success'
+        if request.GET.get('type','')==u'check_username':
+            username=request.GET.get('username','')
+            if User.objects.filter(username=username).exists():
+                args={'result':u'error','error_message':u'用户名已存在!'}
+            else:
+                args['result']=u'success'
+        elif request.GET.get('type','')==u'check_email':
+            email=request.GET.get('email','')
+            if User.objects.filter(email=email).exists():
+                args={'result':u'error','error_message':u'邮箱已存在!'}
+            else:
+                args['result']=u'success'
+        
     except Exception as e:
         pass
     json=simplejson.dumps(args)

@@ -693,27 +693,49 @@ function del_comment(){
 			}
 			
 			$('.publishInputExpression').click(publishInputExpression);
-			function publishInputExpression(){
-				var obj = $(this);
-				var offset = obj.offset();   
-				var left = offset.left+10;
-				var top = offset.top+30;
-				var target = obj.attr('target');
-				if(($('.emoji-list').html())==''){
-					for(i=0;i<=95;i++){
-						$('.emoji-list').append('<li action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/'+i+'.gif"/></li>');
-					}
-					//表情选择
-					$('.emoji-list').find('li').click(function(){
-						var target = $('#emoji-layer').attr('target');
-						var targettext = $(target);
-						targettext.insertAtCaret($(this).attr('action-text'));
-					});
+			function publishInputExpression(event){
+				var e=window.event || event;
+				if(e.stopPropagation){
+					e.stopPropagation();
+				}else{
+					e.cancelBubble = true;
 				}
-				$('#emoji-layer').css({left:left,top:top});
-				$('#emoji-layer').attr('target',target);
+				var obj = $(this);
+				var offset = obj.offset();
+				var left = offset.left + 10;
+				var top = offset.top + 30;
+				var target = obj.attr('target');
+				if (($('.emoji-list').html()) == '') {
+					for ( i = 0; i <= 95; i++) {
+						$('.emoji-list').append('<li onclick="sendExpression(this);" action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/' + i + '.gif"/></li>');
+					}
+				}
+				$('#emoji-layer').css({
+					left : left,
+					top : top
+				});
+				$('#emoji-layer').attr('target', target);
 				$('#emoji-layer').toggle();
 			}
+			
+			$("#emoji-layer").click(function(event){
+				var e=window.event || event;
+				if(e.stopPropagation){
+					e.stopPropagation();
+				}else{
+					e.cancelBubble = true;
+				}
+			});
+			
+			document.onclick = function(){
+				$("#emoji-layer").hide();
+			};
+			function sendExpression(e) {
+				var target = $('#emoji-layer').attr('target');
+				var targettext = $(target);
+				targettext.insertAtCaret($(e).attr('action-text'));
+			};
+				
 		</script>
 		<script type="text/javascript">
 		(function($){

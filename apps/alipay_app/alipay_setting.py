@@ -32,7 +32,7 @@ class config:
     # 合作身份者ID，以2088开头的16位纯数字
     ALIPAY_PARTNER = 2088411296074165
     #卖家支付账号
-    ALIPAY_SELLER_ID = getattr(settings, 'ALIPAY_SELLER_ID', 2088411296074165)
+    ALIPAY_SELLER_ID = getattr(settings, 'ALIPAY_SELLER_ID', u'2088411296074165')
 
     # 签约支付宝账号或卖家支付宝帐户
     ALIPAY_SELLER_EMAIL = 'liuye65426@sina.cn'

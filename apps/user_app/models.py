@@ -191,7 +191,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
                         (6,r'生产/工艺/制造'),(8,r'商业/服务业/个体经营'),(9,r'文化/广告/传媒'),(10,r'娱乐/艺术/表演'),
                         (11,r'律师/法务'),(12,r'教育/培训/管理咨询'),(13,r'建筑/房地产/物业'),(14,r'消费零售/贸易/交通物流'),(15,r'酒店旅游'),
                         (16,r'现代农业'),(17,r'在校学生'))
-    jobIndustry = models.IntegerField(verbose_name=r"职业领域",max_length=50,null=True,blank=True) 
+    jobIndustry = models.CharField(verbose_name=r"职业领域",max_length=125,null=True,blank=True) 
     
     jOB_TITLE=((-1,r'未填'),(0,r'普通职员'),(1,r'中层管理者'),(2,r'高层管理者'),(3,r'企业主'),)
     jobTitle = models.IntegerField(verbose_name=r"目前职位",choices=jOB_TITLE, max_length=50,null=True,blank=True,default=-1) 

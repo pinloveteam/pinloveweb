@@ -65,3 +65,4 @@ def charge_save(userId,type,*args,**kwargs):
         data=chargeExchangeRelate.instruction
     ChargeDetail(user_id=userId,amount=chargeExchangeRelate.PLPrice,data=data,time=time,type=type).save()
     charge.save()
+

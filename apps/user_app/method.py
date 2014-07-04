@@ -80,12 +80,12 @@ def detailed_info_div(myId,userId,compareId=None):
         data=get_detail_info(compareId)
         compareTags=''
         for tag in data['tagTupe']:
-            compareTags+='%s%s%s'%('<span class="label label-info">',tag,'</span>')
+            compareTags+='%s%s%s'%('<span class="label label-info">',tag,'</span>\r')
             
         args['compareSocreForOther']=get_socre_for_other(myId,compareId)
     tags=''
     for tag in detailDict['tagTupe']:
-        tags+='%s%s%s'%('<span class="label label-info">',tag,'</span>')
+        tags+='%s%s%s'%('<span class="label label-info">',tag,'</span>\r')
     if flag:
         compareTag='取消对比'
         left=8
@@ -238,8 +238,9 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
             scoreMyself='<button value="%s" >查<button>'%(scoreMatch['matchResult']['userId'])
         canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['scoreOther']),compareScoreOther,scoreMyself,compareScoreMyself)
     else:
-#         canvasDiv=canvasDiv%('','','','') 
-        canvasDiv='<div class="col-xs-4" id="radar" >'+scoreMatch['error_messge']+'</div>'
+        canvasDiv='<div class="col-xs-4" id="radar" >为了显示雷达图，请您首先填写完整的个人信息</div>'
+#         canvasDiv='<div class="col-xs-4" id="radar" >'+scoreMatch['error_messge']+'</div>'
+
     return canvasDiv
         
     
