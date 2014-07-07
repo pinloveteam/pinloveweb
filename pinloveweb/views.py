@@ -316,6 +316,27 @@ def check_register(request):
     json=simplejson.dumps(args)
     return HttpResponse(json)
                           
+'''
+检查是否有新未读消息，有则返回数量
+'''                      
+def newcount(request):
+    args={}
+    try:
+        userId=request.user.id
+        #获取未读信息
+        from apps.message_app.method import get_no_read_message_count
+        args['messageNoReadCount']=get_no_read_message_count(userId)
+        #读取未读动态评论
+        from apps.friend_dynamic_app.method import get_no_read_comment_count
+        args['dynamicCommentCount']=get_no_read_comment_count(userId)
+        args['noReadCount']= args['messageNoReadCount']+args['dynamicCommentCount']
+        args['result']='success'
+    except Exception,e:
+        logger.exception('检查是否有新未读消息,出错')
+        args['result']='error'
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
+    
 def test(request):
    try:
        int('wewf')
