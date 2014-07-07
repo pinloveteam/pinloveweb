@@ -193,7 +193,40 @@ def clean(request):
        args={'result':'error','error_message':e.message}
     json=simplejson.dumps(args)
     return HttpResponse(json)
-       
+    
+'''
+获取用户未读消息
+'''   
+def no_read_message(request,template_name):
+    args={}
+    try:
+        messageList=Message.objects.get_no_read_message_by_user_id(request.user.id)
+        args=page(request,messageList)
+        messageList=args['pages']
+        from apps.pojo.message import Message_to_MessageBean
+        messageList.object_list=Message_to_MessageBean(messageList.object_list,request.user.id,type=1)
+        #用户消息标记为已读
+        messageIds=[message.id for message in messageList.object_list]
+        Message.objects.filter(id__in=messageIds).update(isRead=True)
+        if request.is_ajax():
+            data={}
+            data['messageList']=messageList.object_list
+            data['has_next']=messageList.has_next()
+            if messageList.has_next():
+                data['next_page_number']=messageList.next_page_number()
+            from apps.pojo.message import MessageBeanEncoder
+            json=simplejson.dumps(data,cls=MessageBeanEncoder)
+            return HttpResponse(json)
+        args['pages']=messageList
+        userProfile=UserProfile.objects.get(user_id=request.user.id)
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(userProfile))
+        args['from']='no_read_message'
+        return render(request,template_name,args)
+    except Exception,e:
+        error_mesage='获取用户未读消息,出错!'
+        logger.exception(error_mesage)
+    
 ##############################
 
 

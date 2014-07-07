@@ -6,7 +6,6 @@ Created on Oct 25, 2013
 '''
 from django.conf.urls import patterns, url
 urlpatterns = patterns('apps.message_app.views',
-    url(r'^count/$', 'count'), 
     url(r'^list/$', 'list'), 
     url(r'^delete_notify/', 'delete_notify'), 
     
@@ -20,4 +19,6 @@ urlpatterns = patterns('apps.message_app.views',
      url(r'^detail/$', 'message_detail'),
      url(r'^notify_detail/$', 'notify_detail'),
      url(r'^clean/$', 'clean'),
+    url(r'^count/$', 'count'), 
+    url(r'^no_read_message/$', 'no_read_message',{'template_name': 'message_1.html'}), 
     )

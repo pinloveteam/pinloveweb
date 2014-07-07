@@ -40,6 +40,10 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     #获取未读信息
     from apps.message_app.method import get_no_read_message_count
     arg['messageNoReadCount']=get_no_read_message_count(userProfile.user_id)
+    #读取未读动态评论
+    from apps.friend_dynamic_app.method import get_no_read_comment_count
+    arg['dynamicCommentCount']=get_no_read_comment_count(userProfile.user_id)
+    arg['noReadCount']= arg['messageNoReadCount']+arg['dynamicCommentCount']
     return arg
 
 '''
@@ -130,7 +134,8 @@ def get_dymainc_late(userId):
     from util.util import regex_expression
     if len(dynamic.content)>LEN:
         flag=True
-        regex=u'{:pinlove_[0-9]{1,2}:}'
+        from util.util_settings import EXPRESSION_REGEX
+        regex=EXPRESSION_REGEX
         import re
         result=re.search(regex, dynamic.content[(LEN-EXPRESSION_LEN):(LEN+EXPRESSION_LEN)])
         if result is None:

@@ -16,5 +16,6 @@ urlpatterns = patterns('apps.friend_dynamic_app.views',
      url(r'^show_comment/$', 'show_comment'),
      url(r'^comment/$', 'comment'),
      url(r'^del_comment/$', 'del_comment'),
+     url(r'^no_read_coment/$', 'no_read_comment_list',{'template_name':'no_read_comment.html'}), 
       url(r'^$', 'dynamic'), 
 )

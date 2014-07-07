@@ -25,7 +25,6 @@ class DynamicComment(object):
         self.commentTime=commentTime.strftime("%Y-%m-%d %H:%M:%S")
         self.reviewerAvatarName=reviewerAvatarName
         
-        
 class DynamicCommentEncoder(simplejson.JSONEncoder):
     def default(self, obj):
         if not isinstance(obj, DynamicComment):
@@ -94,3 +93,36 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
     return DynamicList
 
 
+'''
+评论和动态类
+'''        
+class  CommentDynamic(DynamicComment):
+    def __init__(self,id,reviewer,receiver,content,commentTime,reviewerAvatarName,dynamic):
+        super(CommentDynamic,self).__init__(id,reviewer,receiver,content,commentTime,reviewerAvatarName)
+        self.dynamicId=dynamic.id
+        self.dynamicConent=regex_expression(dynamic.content)
+        if dynamic.type==2:
+            pics=(u'[图片]'*len(simplejson.loads(dynamic.data)))
+            self.dynamicConent='%s%s'%(self.dynamicConent,pics)
+        self.dynamicPublishTime=dynamic.publishTime
+        self.dynamicCommentNum=dynamic.commentNum
+
+'''
+动态评论类转化成评论和动态类
+'''     
+def FriendDynamicCommentList_to_CommentDynamicList(friendDynamicCommentList):
+    dynamicCommentList=[]
+    for friendDynamicComment in friendDynamicCommentList:
+        id=friendDynamicComment.id
+        reviewer=friendDynamicComment.reviewer
+        from apps.friend_dynamic_app.models import FriendDynamicComment
+        try:
+            receiver=friendDynamicComment.receiver
+        except FriendDynamicComment.DoesNotExist: 
+            receiver=None
+        content=friendDynamicComment.content
+        commentTime=friendDynamicComment.commentTime
+        reviewerAvatarName=friendDynamicComment.get_avatar_name(friendDynamicComment.reviewer.id)
+        dynamicComment=CommentDynamic(id,reviewer,receiver,content,commentTime,reviewerAvatarName,friendDynamicComment.friendDynamic)
+        dynamicCommentList.append(dynamicComment)
+    return dynamicCommentList

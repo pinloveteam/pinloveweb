@@ -1,3 +1,20 @@
+ <link href="{{STATIC_URL}}css/dropzone.css" type="text/css" rel="stylesheet"/>
+  <script src="{{STATIC_URL}}js/dropzone.js"></script>
+<script type="text/javascript">
+function upload_pic(){
+	$('#publishInputUploadPhotoArea').show();
+}
+function hide_pic(){
+	$('#publishInputUploadPhotoArea').hide();
+}
+</script>
+<div class="publishInputUploadPhotoArea" id="publishInputUploadPhotoArea" style="width: 500px;position: absolute;top: 100px;left: 320px;display: none;">
+                            <form class="dropzone" id="my-dropzone" action="/dynamic/updatePhoto/" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                             <input type="hidden" name="type" value="1">
+                             </form>
+<button onclick="hide_pic();" style="float: right;position:absolute;z-index: 1">完成</button>
+</div>
 <div class="col-xs-3">
 			<div class="user_info card_panel" style="min-height: 150px;"> 
 			    <div class="card-top {% ifequal gender 'M'%}top-boy{%else%}top-girl{%endifequal%}"></div>
@@ -5,6 +22,7 @@
 				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
 				</div>
 				<a href='/user/user_profile/#self_info_'><div  id="info_name" class="name">{{user.username}}</div></a>
+				<a onclick="upload_pic()" href="javascript:void(0);">上传图片</a>
 				<!-- {% ifequal member 0 %}
 				<a href='/user/member/'><div class="member">开通会员</div></a>
 				{%else%}

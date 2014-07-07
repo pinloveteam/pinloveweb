@@ -15,6 +15,7 @@ from django.utils import simplejson
 from django.http import HttpResponse
 import logging
 from django.http.response import HttpResponseRedirect
+from util.page import page
 logger=logging.getLogger(__name__)
 '''
 卡片界面动态
@@ -95,7 +96,6 @@ def init_dynamic(request,userId,arg,type=None):
         friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
     else:
         friendDynamicList=FriendDynamic.objects.filter(publishUser_id=userId).order_by('-publishTime')
-    from util.page import page
     arg.update(page(request,friendDynamicList))
     from apps.pojo.dynamic import friendDynamicList_to_Dynamic
     friendDynamicList=friendDynamicList_to_Dynamic(arg['pages'].object_list, userId)
@@ -120,7 +120,33 @@ def init_dynamic(request,userId,arg,type=None):
 #     arg['argeeList']=argeeList
     return  arg
 
-
+'''
+获取未读评论列表
+'''
+def no_read_comment_list(request,template_name):
+    args={}
+    try:
+        user=request.user
+        userProfile=UserProfile.objects.get(user=user)
+        commentList=FriendDynamicComment.objects.get_no_read_comment_by_user_id(user.id)
+        args=page(request,commentList)
+        from apps.pojo.dynamic import FriendDynamicCommentList_to_CommentDynamicList
+        args['pages'].object_list=FriendDynamicCommentList_to_CommentDynamicList(args['pages'].object_list)
+        commentList.update(isRead=True)
+        if args['pages'].has_next():
+            args['next_page_number']=args['pages'].next_page_number()
+        else:
+            args['next_page_number']=-1
+        #初始化个人信息模块
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(userProfile))
+        if request.is_ajax():
+            from django.core.serializers.json import DjangoJSONEncoder
+            json=simplejson.dumps( {'friendDynamicCommentList':args['pages'].object_list,'next_page_number':args['next_page_number']},cls=DjangoJSONEncoder)
+            return HttpResponse(json, mimetype='application/json')
+        return render(request,template_name,args)
+    except Exception,e:
+        logger.exception('获取未读评论列表,出错')
 ###############################################
 ##以上用用于1.0版
 ########################################
@@ -211,6 +237,7 @@ def update_photo(request):
         arg={}
         # uppload image
         f = request.FILES["file"]
+        type=request.POST.get('type',False)
         parser = ImageFile.Parser()  
         for chunk in f.chunks():
             parser.feed(chunk)  
@@ -218,11 +245,12 @@ def update_photo(request):
         from util import util_settings
         from util.util import random_str
         pictureName='%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10))
-        if 'images_path' in request.session.keys():
+        if not  type:
+         if 'images_path' in request.session.keys():
             list=simplejson.loads(request.session['images_path'])
             list.append(pictureName)
             request.session['images_path']=simplejson.dumps(list)
-        else:
+         else:
             request.session['images_path']=simplejson.dumps([pictureName,])
         name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
         from apps.friend_dynamic_app.dynamic_settings import thumbnails,IMAGE_SAVE_FORMAT
@@ -315,28 +343,11 @@ def show_comment(request):
     else:
         from django.db.models.query_utils import Q
         commentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(Q(friendDynamic_id=dynamicId,reviewer_id__in=[request.user.id,publishUserId],receiver_id__in=[request.user.id,publishUserId])|Q(friendDynamic_id=dynamicId,receiver_id__isnull=True)).order_by('-commentTime')
+    #标记为已读
+    commentIds=[comment.id for comment in commentList if comment.receiver_id==request.user.id]
+    FriendDynamicComment.objects.filter(id__in=commentIds).update(isRead=True)
     from apps.pojo.dynamic import FriendDynamicCommentList_to_DynamicCommentList
     dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList(commentList)
-#     arg['commentList']=commentList
-#     for comment in incommentList:
-#     comentHtml=""
-#     for comment in commentList:
-#        comentHtml=comentHtml+''' <div id="comment_content_'''+str(comment.id)+'''" class="msgCnt" style="padding-bottom:0; font-size:16px">
-#         <a class="fn" target="_self" uid="2"  href="">'''+str(comment.reviewer.username)+'''</a>
-#         回复<a class="null" target="_blank" uid="2" rel="face" href="">'''+str(comment.receiver.username)+''''</a>
-#          : '''+comment.content.encode("utf-8")+'''<em>('''+comment.commentTime.strftime("%Y-%m-%d:%H")+''')</em>
-#       
-#         <p class="info"><span class="right">'''
-#        if comment.reviewer==request.user:
-#             comentHtml=comentHtml+'''<a id="de_comment_'''+str(comment.id)+'''" onclick="del_comment('''+str(comment.id)+''')" href="javascript:void(0)">删除</a>'''
-#        comentHtml=comentHtml+'''' <a onclick='reply("'''+str(comment.reviewer.username)+'''",'''+str(dynamicId)+''')' href="javascript:void(0)">回复</a></span>
-#                                   </p> </div>
-#        '''
-#     html='%s%s%s%s%s%s%s%s%s%s%s' % ('''<div class="q_con"><div  class="new_position">
-#      <textarea id="comment_''',dynamicId,'''"  class="left text" style="resize: none; overflow: hidden;" rows="1" name="comment_content" wrap="virtual"></textarea>
-#     <input class="N_but" type="button" onclick="send_coment(''',dynamicId,''',''',publishUserId,''')" style="*vertical-align:middle;" value="确定">
-#     <dl id="comment_list_c_''',dynamicId,'''" class="comment_list">
-#     ''',comentHtml,'''</dl></div></div>''')
     from apps.pojo.dynamic import DynamicCommentEncoder
     json=simplejson.dumps(dynamicCommentList,cls=DynamicCommentEncoder)
     return HttpResponse(json)
@@ -372,7 +383,19 @@ def comment(request):
             comment.content=content
         comment.friendDynamic_id=dynamicId
         comment.reviewer=request.user
-        comment.save()
+        #如果对自己的动态回复，则向每个回复过你的人发送动态
+        if comment.reviewer_id==request.user.id:
+            myComments=FriendDynamicComment.objects.filter(friendDynamic_id=dynamicId)
+            reviewerIds=[]
+            for commentI in myComments:
+                if not (commentI.reviewer_id in reviewerIds or commentI.reviewer_id ==request.user.id):
+                    reviewerIds.append(commentI.reviewer_id)
+            for reviewerId in reviewerIds:
+               comment.receiver_id=reviewerId
+               comment.id=None
+               comment.save()
+        else:
+            comment.save()
         commentNum=FriendDynamic.objects.get(id=dynamicId).commentNum
         FriendDynamic.objects.filter(id=dynamicId).update(commentNum=commentNum+1)
         from apps.pojo.dynamic import FriendDynamicCommentList_to_DynamicCommentList

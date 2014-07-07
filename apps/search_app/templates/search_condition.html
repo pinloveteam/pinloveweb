@@ -121,34 +121,11 @@ $(document).ready(function(){
 			$.poplayer({body:body},e);
 		})
 		
-		init_search_condition();
 
 });
 
-function init_search_condition(){
-	data=$('.condition-input')
-	data.each(function(){
-		get_input(this)
-	})
-}
 
-function get_input(context) {
-	var str = '';
-	var select = $(context).find("option:selected")
-	var value=select.text()
-	var val=select.val()
-	if(val!='-1'&&val!='None'&&val!=''){
-		if ($(context).hasClass('condition-input-pre')) {
-			str = 'pre';
-		} else {
-			str = 'bak';
-			$(context).closest('.condition-panel').find('.range').show();
-		}
-		var range = $(context).parents('.condition-panel').find('.range-' + str);
-		range.html(value);
-	}
-	
-}
+
 </SCRIPT>
 <div class="col-xs-3">
 	<div class="card_panel">

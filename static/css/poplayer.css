@@ -108,6 +108,7 @@ text-align: center;
 
 .poplayer td {
 	border: none !important;
+	vertical-align: middle !important;
 }
 
 .poplayer .icon {

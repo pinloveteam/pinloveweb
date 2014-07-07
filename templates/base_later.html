@@ -41,21 +41,32 @@
 			</a></li>
 		</ul>
 		<div class="header-info js-header-info">
-			<a  href="/message/" title="消息">
-			<div class="header-info-mess js-info-mess glyphicon" id="newMessage" >
-			<div id="messageCount" class="notice" {%ifequal messageNoReadCount 0%}style="display: none;"{%endifequal%}>
+			<div class="header-info-mess js-info-mess glyphicon" id="message_icon" >
+			<div id="count" class="notice" {%ifequal noReadCount 0%}style="display: none;"{%endifequal%}>
+								{%ifequal noReadCount 0%}0{%else%}{{noReadCount}}{%endifequal%}
+							</div>
+				 <div id='count-list' class="header-info-list js-list" style="{%ifequal noReadCount 0%}display: none;{%endifequal%}">
+					<ul>
+						<li class="js-message" style="width: 80px;{%ifequal messageNoReadCount 0%}display: none;{%endifequal%}"  >
+						  <a href="/message/no_read_message/">
+						     <span>未读消息
+						     <div id="messageCount" class="notice" style="left: 76px;" >
 								{%ifequal messageNoReadCount 0%}0{%else%}{{messageNoReadCount}}{%endifequal%}
 							</div>
-				<!-- <div class="header-info-list js-list">
-					<ul>
-						<li class="js-message"><a href="/messages"> <em
-								class="js-item"></em> <span>系统消息</span>
-						</a></li>
-						<li class="js-heed"><a href="/message/"> <em
-								class="js-item"></em> <span>查看私信</span>
-						</a></li>
+							</span>
+						  </a>
+						</li>
+						<li class="js-message" style="width: 80px;{%ifequal dynamicCommentCount 0%}display: none;{%endifequal%}">
+						  <a href="/dynamic/no_read_coment/">
+						     <span>未读评论
+						     <div id="dynamicCommentCount" class="notice" style="left: 76px;" >
+								{{dynamicCommentCount}}
+							</div>
+							</span>
+						  </a>
+						</li>
 					</ul>
-				</div> -->
+				</div>
 			</div>
 			</a>
 			<div class="header-info-user js-info-user glyphicon ">
@@ -64,8 +75,6 @@
 						<li><a href="/user/user_profile/#self_info"> <span>个人信息</span>
 						</a></li>
 						<li><a href="/user/change_password/"> <span>修改密码</span>
-						</a></li>
-						<li><a href="/pay/member/"> <span>会员中心</span>
 						</a></li>
 						<li class="line"></li>
 						<li><a href="/account/logout/" id="logOut"> <span>退出</span>
@@ -98,6 +107,10 @@ $(document).ready(function() {
 			});
 		}
 	});
+	//点击信息图标事件
+	$('#message_icon').click(function(){
+		window.location.href='/message/'
+	})
 });
 
 //切换导航栏
@@ -113,26 +126,54 @@ function change_navi(){
 		$('#search').addClass('active')
 	}else if(pathname=='/game/game_pintu/'){
 		$('#game_pintu').addClass('active')
+	}else if(pathname=='/pay/member/'){
+		$('#member').addClass('active');
 	}
 }
-
 //拉取信息数量
-var time=1000*1000;
+var time=1000*10;
 interval = self.setInterval("polling()", time);
  var polling=function(){
-	   $.getJSON('/message/count/',function(data){
-		   set_no_read_message(data.count)
+	   $.getJSON('/newCount/',function(data){
+		   if(data.result=='success'){
+			   if(data.noReadCount==0){
+				   $('#count,#count-list').hide();
+			   }else{
+				   $('#count,#count-list').show();
+				   set_no_read_message(data.messageNoReadCount);
+				   set_no_read_dynamic_comment(data.dynamicCommentCount);
+				   $('#count').html(data.noReadCount)
+			   }
+		   }else{
+			   clearTimeout(interval)
+		   }
 			   });  
    };
    
+
+
 function set_no_read_message(count){
 	message=$('#messageCount');
+	messageLi=message.closest('li');
 	   messageCount=parseInt(message.html().trim());
 	   if(messageCount!=count){
 		   message.html(count);
-		   message.show();
-	   }else if(count==0&&(message.is('hide')==false)){
-		   message.hide();
+		   messageLi.show();
+	   }
+	   if(count==0&&(message.is('hide')==false)){
+		   messageLi.hide();
+	   }
+}
+function set_no_read_dynamic_comment(count){
+	dynamicComment=$('#dynamicCommentCount');
+	dynamicCommentLi=dynamicComment.closest('li')
+	   dynamicCommentCount=parseInt(dynamicComment.html().trim());
+	   if(dynamicCommentCount!=count){
+		   dynamicComment.html(count);
+		   dynamicCommentLi.show();
+	   }
+	   if(count==0&&(dynamicComment.is('hide')==false)){
+		   dynamicCommentLi.hide();
 	   }
 }
 </script>

@@ -6,6 +6,8 @@
 <link href="{{STATIC_URL}}css/form.css"rel="stylesheet">
 <script>
 $(document).ready(function() {
+	//切换比导航栏
+	change_navi();
 	//充值
 	$('#exchange').click(function(){
 		checked=$('input:radio[name="PLprice"]:checked')

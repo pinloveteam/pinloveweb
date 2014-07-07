@@ -646,9 +646,11 @@
 					{%if notify%}
 					<div id="notify" class="card_panel trend-list">
 							<div id="112" class="message-area">
+							   {%ifnotequal from 'no_read_message' %}
 								<a id='showAll' href="javascript:void(0);" onclick="showMessage({{notify.senderId}},{{notify.receiverId}},{{notify.id}},1,2);">
 									显示全部
 								</a>
+								{%endifnotequal %}
 								<a  id='replyNow' href="javascript:void(0);" onclick="reply({%ifequal user.id notify.receiverId%}{{notify.senderId}}{%else%}{{notify.receiverId}}{%endifequal%},type=2);">
 									回复
 								</a>
@@ -683,9 +685,11 @@
 					{% for page in pages %}
 						<div id="message_{%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%}" class="card_panel trend-list">
 							<div id="112" class="message-area">
+							{%ifnotequal from 'no_read_message' %}
 								<a id='showAll' href="javascript:void(0);" onclick="showMessage({{page.senderId}},{{page.receiverId}},{{page.id}},1,1);">
 									显示全部
 								</a>
+							{%endifnotequal  %}
 								<a  id='replyNow' href="javascript:void(0);" onclick="reply({%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%},1);">
 									回复
 								</a>

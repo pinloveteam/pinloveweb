@@ -62,6 +62,12 @@ LEFT JOIN  auth_user u4 on u.receiver_id=u4.id
 WHERE sendTime>sendTime2 or sendTime2 is NULL
     '''
         return Message.objects.raw(sql,[userId,userId,userId,userId,userId,userId])
+    
+    '''
+    根据userid获得未读信息
+    '''
+    def get_no_read_message_by_user_id(self,userId):
+        return Message.objects.filter(receiver_id=userId,isRead=False,isDeletereceiver=False)
  
 class Message(models.Model):
     sender=models.ForeignKey(User,verbose_name=u'发信人',related_name="message_from")

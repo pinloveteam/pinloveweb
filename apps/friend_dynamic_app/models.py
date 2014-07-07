@@ -33,7 +33,8 @@ class FriendDynamicManage(models.Manager):
     
 class FriendDynamic(models.Model):
     publishUser=models.ForeignKey(User,verbose_name='发布用户',)
-    type=models.SmallIntegerField(verbose_name=r"类型",)
+    TYPE_CHOICE=((1,u'纯文字动态'),(2,u'图片动态'))
+    type=models.SmallIntegerField(verbose_name=r"类型",choices=TYPE_CHOICE)
     content=models.CharField(verbose_name=r"内容",max_length=255)
     data=models.TextField(verbose_name=r"图片或视频数据",)
     publishTime=models.DateTimeField(verbose_name="发表时间")
@@ -75,6 +76,19 @@ class FriendDynamicArgee(models.Model):
         verbose_name = u'点赞表' 
         verbose_name_plural = u'点赞表'
         db_table = "friend_dynamic_argee" 
+        
+class FriendDynamicCommentManage(models.Manager):
+    '''
+    根据用户id获取未读评论
+    '''
+    def get_no_read_comment_by_user_id(self,userId):
+        return FriendDynamicComment.objects.select_related('friendDynamic','reviewer').filter(receiver_id=userId,isRead=False)
+    
+    '''
+    根据用户id获取未读评论数量
+    '''
+    def get_no_read_comment_count(self,userId):
+        return FriendDynamicComment.objects.filter(receiver_id=userId,isRead=False).count()
 
 class FriendDynamicComment(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)
@@ -83,6 +97,9 @@ class FriendDynamicComment(models.Model):
     content=models.CharField(verbose_name="评论内容",max_length=255)
     isDelete=models.NullBooleanField(verbose_name="是否删除",default=False)
     commentTime=models.DateTimeField(verbose_name="评论时间")
+    isRead=models.NullBooleanField(verbose_name="是否阅读",default=False)
+    objects=FriendDynamicCommentManage()
+    
     def get_avatar_name(self,userId):
         userProfile=UserProfile.objects.get(user_id=userId)
         if userProfile.avatar_name_status=='3':
