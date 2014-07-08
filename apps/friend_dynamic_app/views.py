@@ -371,6 +371,7 @@ def comment(request):
             if friendDynamic.publishUser.id!=request.user.id:
                 comment.receiver_id=friendDynamic.publishUser.id
         elif int(receiverId)==request.user.id:
+            arg={'type':'error','msg':'能自己对自己评论'}
             arg['type']='error' 
             arg['msg']='不能自己对自己评论'
             json=simplejson.dumps(arg)
@@ -384,7 +385,7 @@ def comment(request):
         comment.friendDynamic_id=dynamicId
         comment.reviewer=request.user
         #如果对自己的动态回复，则向每个回复过你的人发送动态
-        if comment.reviewer_id==request.user.id:
+        if comment.receiver_id==request.user.id:
             myComments=FriendDynamicComment.objects.filter(friendDynamic_id=dynamicId)
             reviewerIds=[]
             for commentI in myComments:
@@ -405,17 +406,6 @@ def comment(request):
         from apps.pojo.dynamic import DynamicCommentEncoder
         json=simplejson.dumps(arg,cls=DynamicCommentEncoder)
         return HttpResponse(json)  
-#         comentHtml=''' <div id="comment_content_'''+str(comment.id)+'''" class="msgCnt" style="padding-bottom:0; font-size:16px">
-#         <a class="fn" target="_self" uid="2"  href="">'''+str(comment.reviewer.username)+'''</a>
-#         回复<a class="null" target="_blank" uid="2" rel="face" href="">'''+str(comment.receiver.username)+''''</a>
-#          : '''+content.encode("utf-8")+'''<em>('''+comment.commentTime.strftime("%Y-%m-%d:%H")+''')</em>
-#         <p class="info"><span class="right">'''
-#         if comment.reviewer==request.user:
-#             comentHtml=comentHtml+'''<a id="de_comment_'''+str(comment.id)+'''" onclick="del_comment('''+str(comment.id)+''')" href="javascript:void(0)">删除</a>'''
-#         comentHtml=comentHtml+'''' <a onclick='reply("'''+str(comment.reviewer.username)+'''",'''+str(dynamicId)+''')' href="javascript:void(0)">回复</a></span>
-#                                   </p> </div>
-#        '''
-#         arg['conent']=comentHtml
 
 '''
 删除评论
