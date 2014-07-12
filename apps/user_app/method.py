@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys   
 import time
-from apps.user_app.models import UserProfile, UserTag
+from apps.user_app.models import UserProfile, UserTag, Follow,\
+    BrowseOherScoreHistory
 import logging
 from django.utils import simplejson
 reload(sys) # Python2.5 初始化后会删除 sys.setdefaultencoding 这个方法，我们需要重新载入   
@@ -58,11 +59,56 @@ def get_profile_finish_percent_and_score(userProfile,oldUserProfile):
         userProfile.profileFinsihPercent=profileFinsihPercent
     return userProfile
 
-
+'''
+职员员名单
+'''
+def get_staff_list():
+    from django.contrib.auth.models import User
+    return [user.id for user in User.objects.all()if user.is_staff]
+'''
+根据用户id列表查看聊天权限
+myId  我的用户id
+oherIdList 另外用户id列表，如果为None则查询所有用户
+followIdList 相互关注用户id列表 如果为空则查询
+historyIdList 相互购买对方对我的打分用户id列表，如果为空则查询
+'''
+def get_chat_permission_by_user_ids(myId,oherIdList=None,followIdList=None,historyIdList=None):
+    if followIdList is None:
+        followIdList=[follow.my_id for follow in Follow.objects.follow_each(myId,oherIdList=oherIdList)]
+    if historyIdList is None:
+        historyIdList=[history.other_id for history in BrowseOherScoreHistory.objects.browse_score_each_other(myId,oherIdList=oherIdList)]
+    for id in historyIdList:
+        if not id in followIdList:
+            followIdList.append(id)
+    return followIdList
+        
+'''
+根据用户id列表查看是否聊天权限
+myId  我的用户id
+followIdList 相互关注用户id列表 如果为空则查询
+historyIdList 相互购买对方对我的打分用户id列表，如果为空则查询
+'''
+def is_chat(myId,cardList,followIdList=None,historyIdList=None):
+    oherIdList=[card.user_id for card in cardList]
+    userIdList=get_chat_permission_by_user_ids(myId,oherIdList=oherIdList,followIdList=followIdList,historyIdList=historyIdList)
+    for card in cardList:
+        if card.user_id in userIdList:
+            card.isChat=True
+    return cardList
+    
+'''
+详细信息页面
+'''
 def get_detail_info(userId):
     userProfile=UserProfile.objects.get_user_info(userId)
     tagList=UserTag.objects.select_related('tag').filter(user_id=userId,type=0)
     return user_info_card(userProfile,tagList)
+
+'''
+获取用户头像
+'''
+def get_avatar_name(myId,userId):
+    return UserProfile.objects.get_avatar_name(myId, userId)
 
 def detailed_info_div(myId,userId,compareId=None):
     args={}
@@ -94,7 +140,7 @@ def detailed_info_div(myId,userId,compareId=None):
         compareTag='对比'
         left=25
         width='width:780px'
-    detail='''<div class="container poplayer" style="top:10%%;left: %s%%;padding: 0;%s">
+    detail='''<div id="detail_info_div" class="container poplayer" style="top:10%%;left: %s%%;padding: 0;%s">
 <div class="row">
 <div class="col-xs-4" style="border-right: solid 2px #00CCCC;">
 
@@ -110,6 +156,10 @@ def detailed_info_div(myId,userId,compareId=None):
 <br>
 <button id="compare-button" class="btn btn-info compare-btn">
 %s
+</button>
+<input id="vote" name="vote" >
+<button id="vote-button" class="btn btn-info">
+打分
 </button>
 </div>
 
@@ -205,10 +255,10 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
 <div class="">
 <div class="score">
 <span>%s</span>
-<i title="让对方看见" class="icon icon-eye"></i>
+<a onclick="buy_score_for_other(%s)"><i title="让对方看见" class="icon icon-eye"></i></a>
 </div>
 <div class="score score_other">
-<i class="icon icon-eye"></i>
+%s
 <span>%s</span>
 </div>
 </div>
@@ -226,6 +276,7 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
     if scoreMatch['result']=='success':
         compareScoreOther=''
         compareScoreMyself=''
+        compareEye=''
         if compareFlag:
             compareScoreOther=int(compareScoreMatch['matchResult']['scoreOther'])
             if compareScoreMatch['matchResult'].get('scoreMyself',None)!=None:
@@ -234,9 +285,10 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
                 compareScoreMyself='<button value="%s">查<button>'%(compareScoreMatch['matchResult']['userId'])
         if scoreMatch['matchResult'].get('scoreMyself',None)!=None:
             scoreMyself= int(scoreMatch['matchResult'].get('scoreMyself'))
+            compareEye='<a onclick="buy_score_for_other(%s)"><i class="icon icon-eye" ></i></a>'%(scoreMatch['matchResult']['userId'])
         else:
             scoreMyself='<button value="%s" >查<button>'%(scoreMatch['matchResult']['userId'])
-        canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['scoreOther']),compareScoreOther,scoreMyself,compareScoreMyself)
+        canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['scoreOther']),scoreMatch['matchResult']['userId'],compareEye,compareScoreOther,scoreMyself,compareScoreMyself)
     else:
         canvasDiv='<div class="col-xs-4" id="radar" >为了显示雷达图，请您首先填写完整的个人信息</div>'
 #         canvasDiv='<div class="col-xs-4" id="radar" >'+scoreMatch['error_messge']+'</div>'

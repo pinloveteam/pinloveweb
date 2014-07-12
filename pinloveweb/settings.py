@@ -347,7 +347,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                          
+#                           
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -372,7 +372,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-                           
+                             
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -438,5 +438,5 @@ FACEBOOK_DEBUG_UID = '100007203789389'
 FACEBOOK_DEBUG_COOKIE ='AzIUY1rpSMWthv3CUdBFebFV8Z_clRlDazXq1sHPzjQ.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImNvZGUiOiJBUUJ2WnFSSXp5YnEzX0JCZngyYUdyLXB0S0VZZk5xQ2dNOHg2MXd3QVF3U3dvMkdJRUlwSi1MLW13bEtHbHhzbkd6Y2JveV8teFdhb1NHZEhwUzIxTmo0azU2WHJNSmdnSmZhdHI5VVhWRlRuZUxWelV5eURYYnNIV2dzM0h5QjVkTnI2ajI2ckhxbDQxV3lmMFIyRl9INkZQTEdNdXBpS3VKMm14TzhGUXBlQ0tvNGRlQzBjSlN3Slo1RmFhMDZsNmhCZ1A1OEMxQ2NLQlJEUktzVWJ4aFNCcVdqN0xjMkhZZUM3WHRQZGF4WWhUU2Nkby11cThWVzlQdkszOUdWMjlnc1daMnFNbEFkWEQ3Y0ROQjk2S1lEZ2tWbkk4S00wSW9QMnNyU1NsNXU4ODZONGR0LUVYS05NOER6dTdiQng3QXlPeU9nVWZLTWpmTk5Id1l0VW43RSIsImlzc3VlZF9hdCI6MTM5MjYxODc2NCwidXNlcl9pZCI6IjEwMDAwNzIwMzc4OTM4OSJ9'
 FACEBOOK_DEBUG_SIGNEDREQ ='6sZoh3-0-nHQejXO-gAIrtMel76FWQR7OupEkqAS0TU.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTQwMTM2MDAsImlzc3VlZF9hdCI6MTM5NDAwNjY0NCwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFETlJaQUpqMHRmbVdsMTJiQ2ppN0tkczhaQlpBSUVjYzM4NEc5cDlmRDNPZVZDMVpCbFY3cXJZU2llNDkyS3pSZzVjWkJJQjZkRlVzcHNCVUxzMjJqYnVQNnEyMHRtOUV3Y2tNR1NLZmdaQjRhUllFRzBvWkNYVWd0VldlTjBEYzBKZzVhb0hZNjdPWkJJZk5OdERwR3lzUWZxNEhSQXZscTlqaXpmdnBpVjUxY3ZqQkhuaXhNdHQ3a0ZXSWtrZHl3WkRaRCIsInVzZXIiOnsiY291bnRyeSI6InVzIiwibG9jYWxlIjoiZW5fVVMiLCJhZ2UiOnsibWluIjoxMywibWF4IjoxN319LCJ1c2VyX2lkIjoiMTAwMDA3MjQ3NDcwMjg5In0'
 # FACEBOOK_DEBUG_SIGNEDREQ ='RoHqy693wl3t917auOIyLYavI8ZDUP5L3RKj4T_01IU.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTUzNzQ0MDAsImlzc3VlZF9hdCI6MTM5NTM2OTQ2MCwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFOcEZ0QWdMVzJqWkFwejliNG93S3BYYUVOd2F0aWlGWkFRZzlpU1FzbGxUMmZrb21oQkYzVzhTdkpnWkMwa2tZdllMNVU4Q1JDNG5INDg4ek9WenJ6NEdXeThaQnNnVjhZWkNoUTU4SGNzMnZMNnc4S2FXd0RFZFpBdFpCa3ZvbVpCQnptR0g1WkJWMndMUXZHMlc2ZUVxV1RIbnhTVWRuZXRPR1ZZZW5tekxLOUI3cUM5cEtQakNWRFpCNkFVeWdRVmdaRFpEIiwidXNlciI6eyJjb3VudHJ5IjoianAiLCJsb2NhbGUiOiJlbl9VUyIsImFnZSI6eyJtaW4iOjEzLCJtYXgiOjE3fX0sInVzZXJfaWQiOiIxMDAwMDcyNDc0NzAyODkifQ'
-
-
+#admin id
+ADMIN_ID=1

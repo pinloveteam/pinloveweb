@@ -136,14 +136,7 @@ interval = self.setInterval("polling()", time);
  var polling=function(){
 	   $.getJSON('/newCount/',function(data){
 		   if(data.result=='success'){
-			   if(data.noReadCount==0){
-				   $('#count,#count-list').hide();
-			   }else{
-				   $('#count,#count-list').show();
-				   set_no_read_message(data.messageNoReadCount);
-				   set_no_read_dynamic_comment(data.dynamicCommentCount);
-				   $('#count').html(data.noReadCount)
-			   }
+			   set_count(data.messageNoReadCount,data.dynamicCommentCount)
 		   }else{
 			   clearTimeout(interval)
 		   }
@@ -151,7 +144,22 @@ interval = self.setInterval("polling()", time);
    };
    
 
-
+function set_count(messageNoReadCount,dynamicCommentCount){
+	if(messageNoReadCount==null){
+		messageNoReadCount=get_no_read_message();
+	}else if(dynamicCommentCount==null){
+		dynamicCommentCount=get_no_read_dynamic_comment();
+	}
+	noReadCount=messageNoReadCount+dynamicCommentCount;
+	set_no_read_message(messageNoReadCount);
+	set_no_read_dynamic_comment(dynamicCommentCount);
+	$('#count').html(noReadCount);
+	if(noReadCount==0){
+		$('#count,#count-list').hide();
+	}else{
+		$('#count,#count-list').show();
+	}
+}
 function set_no_read_message(count){
 	message=$('#messageCount');
 	messageLi=message.closest('li');
@@ -164,6 +172,16 @@ function set_no_read_message(count){
 		   messageLi.hide();
 	   }
 }
+function get_no_read_message(){
+	message=$('#messageCount');
+	messageCount=parseInt(message.html().trim());
+	return messageCount
+};
+function get_no_read_dynamic_comment(){
+	dynamicComment=$('#dynamicCommentCount');
+	dynamicCommentCount=parseInt(dynamicComment.html().trim());
+	return dynamicCommentCount
+};
 function set_no_read_dynamic_comment(count){
 	dynamicComment=$('#dynamicCommentCount');
 	dynamicCommentLi=dynamicComment.closest('li')

@@ -120,10 +120,16 @@ window.Card = function(person){
 		var receiver_id=$(this).parents('.card_panel').attr('id');
 		if(send_content!=''){
 		   $.getJSON('/message/send/',{receiver_id:receiver_id,reply_content:send_content},function(data){
-			  chat.append('<div class="chat_content_group self"><div class="chat_content">'+send_content+'<div class="cloudArrow"></div></div></div>');
-			  content.val('');
-			  pane.jScrollPane();
-		      api.scrollTo(0,9999);
+			   if(data.result=='success'){
+				   chat.append('<div class="chat_content_group self"><div class="chat_content">'+send_content+'<div class="cloudArrow"></div></div></div>');
+					content.val('');
+					pane.jScrollPane();
+				    api.scrollTo(0,9999);
+			   }else{
+				   var body=$('<p>'+data.error_message+'</p>')
+				   $.poplayer({body:body});
+			   }
+			 
 		  });
 	}
 		
@@ -423,7 +429,33 @@ window.Card = function(person){
 		$('.poplayer').css('left','25%').css('width','780px');
 		 $('.compare-btn').click(function(){compare(userId,1)})
 	}
-	
+	//投票
+	function vote(userId){
+		score=$('#vote').val().trim();
+		$.ajax({
+			type:'GET',
+			url:'/recommend/user_vote/',
+			dataType:"json",
+			data:{score:score,userId:userId},
+			success:function(data, textStatus){
+				if(textStatus=='success'){
+					if(data['result']=='success'){
+						var body = $("<p>投票成功!</p>")
+					}else if(data['result']=='error'){
+						var body = $("<p>"+data['error_message']+"<p>")
+					}
+					$.poplayer({body:body});
+					
+				}
+				
+			},
+			error:function(response){
+				var body = $("<p>网络异常!</p>")
+	       	    $.poplayer({body:body});
+			},
+	});
+	};
+
 	//生成个人详细信息页面，对比页面
 	function detail_info(){
 		context=this
@@ -496,6 +528,9 @@ window.Card = function(person){
 					 cancel_compare(userId)
 				 })
 				 detail_info=true;
+				 $('#vote-button').click(function(){
+						vote(userId);
+					});  
 			 } catch (e) {
 					detail_info=true
 					var body = $("<p>异常错误!</p>")
@@ -558,8 +593,13 @@ window.Card = function(person){
 	$('.icon_dislike').on('click',dislike);
 	
 	$('.icon_ding').on('click',ding);
+	//发送私信
+	if(person.isChat){
+		$('.btn_send_msg').on('click',sendMsg);
+	}else{
+		$('#chat_tab').html('只有相互关注或者相互看过对方对我的打分才能聊天!')
+	}
 	
-	$('.btn_send_msg').on('click',sendMsg);
 	
 	$("[class^='icon_like']").on('click',like);
 	
@@ -573,7 +613,7 @@ window.Card = function(person){
 		});
 }
 
-function Person(username,age,city,headImg,userId,isFriend,pictureList){
+function Person(username,age,city,headImg,userId,isFriend,pictureList,isChat){
 	this.username = username;
 	this.age = age;
 	this.city = city;
@@ -581,5 +621,30 @@ function Person(username,age,city,headImg,userId,isFriend,pictureList){
 	this.userId=userId;
 	this.isFriend=isFriend;
 	this.pictureList=pictureList;
+	this.isChat=isChat
 	
+}
+function buy_score_for_other(userId){
+	$.ajax({
+		type:'GET',
+		url:'/recommend/buy_score_for_other/',
+		dataType:"json",
+		data:{otherId:userId},
+		success:function(data, textStatus){
+			if(textStatus=='success'){
+				if(data['result']=='success'){
+					var body = $("<p>购买成功!</p>")
+				}else if(data['result']=='error'){
+					var body = $("<p>"+data['error_message']+"<p>")
+				}
+				$.poplayer({body:body});
+				
+			}
+			
+		},
+		error:function(response){
+			var body = $("<p>网络异常!</p>")
+       	    $.poplayer({body:body});
+		},
+});
 }

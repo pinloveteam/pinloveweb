@@ -12,7 +12,7 @@ from apps.user_app.models import  UserVerification, Verification
 from apps.user_app.models import UserProfile
 
 from forms import RegistrationForm 
-from pinloveweb import settings
+from pinloveweb import settings, STAFF_MEMBERS
 from apps.user_app.views import isIdAuthen
 from util.page import page
 from apps.the_people_nearby.views import GetLocation
@@ -23,6 +23,7 @@ from apps.recommend_app.models import MatchResult
 from django.db import transaction
 from django.utils import simplejson
 from pinloveweb.method import create_invite_code
+from apps.user_app.method import is_chat
 logger = logging.getLogger(__name__)
 ####################
 ######1.0
@@ -146,24 +147,25 @@ attribute：
 def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):
     if flag:
          if disLikeUserIdList is None:
-             matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id)
+             matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id).exclude(other_id__in=STAFF_MEMBERS)
          else:
-            matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id).exclude(other_id__in=disLikeUserIdList)
+            matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id).exclude(other_id__in=disLikeUserIdList).exclude(other_id__in=STAFF_MEMBERS)
          arg=page(request,matchResultList,**kwargs)
          matchResultList=arg['pages']
          from apps.pojo.card import matchResultList_to_CardList
          matchResultList.object_list=matchResultList_to_CardList(matchResultList.object_list)
     else:
           if disLikeUserIdList is None: 
-              userProfileList=UserProfile.objects.exclude(gender=userProfile.gender)
+              userProfileList=UserProfile.objects.exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)
           else:
-              userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender)
+              userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)
           arg=page(request,userProfileList,**kwargs)   
           matchResultList=arg['pages']
           from apps.pojo.card import userProfileList_to_CardList
           matchResultList.object_list=userProfileList_to_CardList(matchResultList.object_list)
     from pinloveweb.method import is_focus_each_other
     matchResultList=is_focus_each_other(request,matchResultList)
+    matchResultList=is_chat(request.user.id,matchResultList,)
     return matchResultList
 
      

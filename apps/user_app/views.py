@@ -28,6 +28,8 @@ from django.core import serializers
 from django.utils import simplejson
 from django.db import transaction
 from pinloveweb.forms import ChangePasswordForm
+from apps.message_app.method import add_system_message_121
+from pinloveweb.settings import ADMIN_ID
 
 '''
 推荐页面移除不喜欢用户
@@ -161,6 +163,10 @@ def update_follow(request):
         arg['content'] = "取消关注"
     else:
         Follow(my_id=request.user.id,follow_id=offset).save()
+        #发送消息费被关注的人
+        from apps.user_app.user_settings import FOLLOW_MESSAGE
+        reply_content=FOLLOW_MESSAGE%(request.user.username,request.user.id)
+        add_system_message_121(ADMIN_ID,offset,reply_content)
         if Follow.objects.filter(my_id=offset,follow=request.user).exists():
             arg['type']=2
         else:

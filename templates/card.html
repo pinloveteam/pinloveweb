@@ -77,7 +77,7 @@ $(document).ready(function(){
 					 choseCardsSize=0
 				 }
 				 for(x=0;x<cards.length-choseCardsSize;x++){
-						 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus,cards[x].pictureList));
+						 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus,cards[x].pictureList,cards[x].isChat));
 					 } 
 				 preCard.remove();
 				 venobox();
@@ -116,7 +116,7 @@ $(document).ready(function(){
 					 choseCardsSize=0
 				 }
 				 for(x=0;x<cards.length-choseCardsSize;x++){
-					 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus,cards[x].pictureList));
+					 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus,cards[x].pictureList,cards[x].isChat));
 					 } 
 				 nextCard.remove();
 				 venobox();
@@ -135,7 +135,7 @@ $(document).ready(function(){
 });
 function init_card(cards){
 	for(y=0;y<cards.length;y++){
-		new Card(new Person(cards[y].username,cards[y].age,cards[y].city,'/media/'+cards[y].avatar_name,cards[y].user_id,cards[y].followStatus,cards[y].pictureList));
+		new Card(new Person(cards[y].username,cards[y].age,cards[y].city,'/media/'+cards[y].avatar_name,cards[y].user_id,cards[y].followStatus,cards[y].pictureList,cards[y].isChat));
 	}
 };
 
@@ -248,12 +248,14 @@ interval = self.setInterval("polling()", time);
 						<img alt="140x140" src=""/>
 					</div>
 					<span class="name username" style="position:absolute;top:10px;left:80px;"></span>
+				<div id="chat_tab">
 				<div class="chat">
 				</div>
 					<textarea rows="1" class="chat_textarea"></textarea>
 					<!-- <p class="publishInputExpression">表情</p>  -->
 					<button class="btn btn-xs btn_send_msg">发送</button> 
 					<!--  <a href="#" class="venoboxframe" data-type="iframe">聊天记录</a>-->
+				</div>
 				</div>
 			</div>
 			<ul class="list-inline card-nav">

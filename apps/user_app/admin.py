@@ -18,6 +18,7 @@ from django import forms
 class UserBasicProfile(UserProfile):
     class Meta:
         proxy = True
+        app_label = 'user_basic_profile'
         verbose_name = u'用户基本信息' 
         verbose_name_plural = u'用户基本信息'
         
@@ -39,6 +40,7 @@ class UserBasicProfileAdmin(admin.ModelAdmin):
 class UserAppearance(UserProfile):
     class Meta:
         proxy = True
+        app_label = 'user_appearance'
         verbose_name = u'外貌' 
         verbose_name_plural = u'外貌'
 class UserAppearanceAdmin(admin.ModelAdmin):    
@@ -104,6 +106,7 @@ class AvatarCheck(UserProfile):
     
     class Meta:
         proxy = True
+        app_label = 'avatar_check'
         verbose_name = u'头像审核' 
         verbose_name_plural = u'头像审核'
 #     appearancescore=models.FloatField(verbose_name=u"外貌分数",null=True)

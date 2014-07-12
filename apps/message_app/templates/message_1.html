@@ -11,6 +11,38 @@
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/Card.js"></script>
 		<script>
+		
+		//关注用户
+		function follow(obj){
+		    var userId=$(obj).attr('value');
+			$.getJSON("/user/update_follow/",{userId:userId},function(data) {
+				  if(data['type']==1){
+						myFollow=myFollow+1
+						$('#myFollow').html(myFollow)
+						alert('关注成功!')
+				  }else if(data['type']==2){
+						follow=follow+1
+						myFollow=myFollow+1
+						$('#follow').html(follow)
+						$('#myFollow').html(myFollow)
+						alert('关注成功!')
+					  }else{
+					     if(data['type']==-1){
+					    	 myFollow=myFollow-1
+						     $('#myFollow').html(myFollow)
+					     }else{
+					    	 follow=follow-1
+							 myFollow=myFollow-1
+							 $('#follow').html(follow)
+							 $('#myFollow').html(myFollow)
+					     }
+					     
+					  };
+			       
+			       
+			    });
+		};
+		
 		   //消息列表是否展开
 		   var userId={{user.id}}
 		   var isMessageListShow=false;
@@ -91,6 +123,10 @@
 	                    $('.hideable_'+text).show('slow');
 					    isMessageListShow=true;
 					    set_no_read_message(data.messageCount)
+					    $('.detail_info').click(function(){
+					    	show_detail_info(this);
+					    });
+					    
 						},
 	                    error: function(response){
 	                        alert('网络异常！')
@@ -210,8 +246,49 @@
 						});
 						return false;
 					});
+		
+				
 			});
 			
+			function show_detail_info(content){
+				userId=content.value;
+				$.ajax({
+					type:'GET',
+					url:'/user/detailed_info/',
+					data:{userId:userId},
+					dataType:"json",
+					success:function(data, textStatus){
+						try {
+						 var body = $(data.detail)
+						 var socreForOther=data.socreForOther
+							 if(data.socreForOther.result=="success"){
+								 diaogList=[socreForOther.matchResult.edcationScore,socreForOther.matchResult.characterScore,socreForOther.matchResult.incomeScore,socreForOther.matchResult.appearanceScore,socreForOther.matchResult.heighScore,]
+								 $.poplayer({body:body,type:'frame',data:diaogList,data2:[]});
+								 $('#detail_info_div').prev().show();
+
+							 }else{
+								 $.poplayer({body:body,type:'error'});
+								 $('.compare-btn').attr('disable',true);
+								 $('.compare-btn').removeClass('btn-info')
+//									var body = $("<p>"+socreForOther.error_messge+"</p>")
+//									$.poplayer({body:body});
+							 }
+
+					 } catch (e) {
+							var body = $("<p>异常错误!</p>")
+							$.poplayer({body:body});
+								}
+					},
+					error:function(response){
+						detail_info=true;
+						var body = $("<p>网络异常!</p>")
+			        	 $.poplayer({body:body});
+					},
+			});
+				
+			
+		}; 
+		
 		function add_mesaage(messageBean,receiverId,type){
 			if(type==1){
 				var message=$('#message_'+receiverId)

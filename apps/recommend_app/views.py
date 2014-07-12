@@ -4,7 +4,8 @@ Created on Sep 3, 2013
 
 @author: jin
 '''
-from apps.user_app.models import UserProfile, Follow, UserTag
+from apps.user_app.models import UserProfile, Follow, UserTag,\
+    BrowseOherScoreHistory
 from apps.recommend_app.models import MatchResult, Grade, UserExpect
 from util.page import page
 from django.shortcuts import render
@@ -18,6 +19,8 @@ import logging
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from apps.recommend_app.method import get_matchresult
+from pinloveweb.settings import ADMIN_ID
+from apps.recommend_app.recommend_settings import BUY_SCORE_FOR_OTHER_MESSAGE_TEMPLATE
 logger = logging.getLogger(__name__)  
 #######################################
 #1.0使用版本
@@ -188,6 +191,63 @@ def character_tags(request):
         args={'result':'error','error_messge':e.message}
         json=simplejson.dumps(args)
         return HttpResponse(json)
+    
+'''
+为对方买分，即对方将能看到我对对方的打分
+'''
+@transaction.commit_on_success  
+def buy_score_for_other(request):
+    args={}
+    try:
+        flag=False
+        otherId=int(request.REQUEST.get('otherId'))
+        from apps.user_score_app.method import use_score_by_other_score
+        result=use_score_by_other_score(request.user.id,otherId)
+        if result=='success':
+            flag=True
+        elif result=='less':
+            from apps.pay_app.method import use_charge_by_other_score
+            chargeResult=use_charge_by_other_score(request.user.id,otherId)
+            if chargeResult=='success':
+               flag=True
+            elif chargeResult=='less':
+                flag=False
+        if flag:
+            args={'result':'success'}
+            if not BrowseOherScoreHistory.objects.filter(my_id=otherId,other_id=request.user.id).exists():
+                BrowseOherScoreHistory(my_id=otherId,other_id=request.user.id).save()
+            #发系统消息给对应用户
+            from apps.message_app.method import add_system_message_121
+            add_system_message_121(ADMIN_ID, otherId, BUY_SCORE_FOR_OTHER_MESSAGE_TEMPLATE%(request.user.username,request.user.id))
+        else:
+            args={'result':'error','error_message':'请充值!'}
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception,e:
+        logger.exception('为对方买分,出错!')
+        
+        
+'''
+  用户投票
+'''    
+def user_vote(request):
+    args={}
+    try:
+        score = request.GET.get('score')
+        userId=request.GET.get('userId')
+        if score.strip()=='':
+            args={'result':'error','error_message':u'不能为空!'}
+        else:
+            geadeInstance=Grade.objects.get(user_id=userId)
+            from apps.recommend_app.recommend_util import cal_user_vote
+            score=cal_user_vote(float(score),geadeInstance)
+            Grade.objects.filter(user_id=userId).update(appearancescore=score,appearancesvote=geadeInstance.appearancesvote+1)
+            args={'result':'success'}
+        json = simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception,e:
+        logger.exception(' 用户投票,出错!')
+        
 ##########################################
 def recommend(request):
     arg={}
@@ -399,31 +459,7 @@ def grade_for_other_1(request):
              return render(request,'grade_for_other.html',arg)
     else:
         return render(request,'login.html',arg)
-'''
-  用户投票
-'''    
-def user_vote(request):
-     if request.user.is_authenticated() :
-         score = request.GET.get('score')
-         if score.strip()=='':
-              result = '不能为空!'
-              json = simplejson.dumps(result)
-              return HttpResponse(json)
-         try:
-            geadeInstance=Grade.objects.get(user=request.user)
-         except Grade.DoesNotExist:
-             print '相用户貌投票出错，没有找到对应的用户'
-             pass
-         from apps.recommend_app.recommend_util import cal_user_vote
-         score=cal_user_vote(float(score),geadeInstance)
-         Grade.objects.filter(user=request.user).update(appearancescore=score,appearancesvote=geadeInstance.appearancesvote+1)
-         result = '评价成功!'
-         json = simplejson.dumps(result)
-         return HttpResponse(json)
-     else:
-           args = {}
-           args.update(csrf(request))
-           return render(request, 'login.html', args) 
+
        
 def test_match(request):
     args={}

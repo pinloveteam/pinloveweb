@@ -23,4 +23,7 @@ urlpatterns+=patterns('apps.recommend_app.views',
     url(r'^grade_for_other/$', 'grade_for_other'),
     #性格标签
     url(r'^character_tags/$', 'character_tags'),
+    #为对方买分
+    url(r'^buy_score_for_other/$', 'buy_score_for_other'),
+    
 )                 

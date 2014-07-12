@@ -7,7 +7,7 @@ Created on Sep 8, 2013
 from django.shortcuts import render
 from django.core.exceptions import ValidationError
 from util.page import page
-from apps.message_app.models import Notify, Message
+from apps.message_app.models import  Message, MessageLog
 from django.http.response import Http404, HttpResponse
 from django.utils import simplejson
 import datetime
@@ -15,6 +15,8 @@ from apps.user_app.models import UserProfile
 import logging
 from django.db import transaction
 from django.db.models.query_utils import Q
+from pinloveweb.settings import ADMIN_ID
+from apps.message_app.method import add_system_message_121
 logger=logging.getLogger(__name__)
 ###############################
 ##1.0
@@ -26,17 +28,17 @@ def message(request,template_name):
     user=request.user
     userProfile=UserProfile.objects.get(user=user)
     #获得所有我和所有用户之间的最近私信一条不是我发送的私信
-    messageList=Message.objects.get_message_list(user.id)
+    messageList=MessageLog.objects.get_message_list(user.id)
     args=page(request,messageList)
     messageList=args['pages']
-    from apps.pojo.message import Message_to_MessageBean
-    messageList.object_list=Message_to_MessageBean(messageList.object_list,request.user.id,type=1)
+    from apps.pojo.message import MessageLog_to_MessageBean
+    messageList.object_list=MessageLog_to_MessageBean(messageList.object_list,request.user.id,type=1)
     #最近一条系统消息
-    notify=Notify.objects.select_related('sender','receiver').filter(Q(receiver_id=user.id,type='0')|Q(sender_id=user.id,type='0')).order_by('-sendTime')[:1]
-    if len(notify)>0:
-        from apps.pojo.notify import Notify_to_NotifyBean
-        notify=Notify_to_NotifyBean(notify,user.id,type=1)[0]
-    args['notify']=notify
+#     notify=Notify.objects.select_related('sender','receiver').filter(Q(receiver_id=user.id,type='0')|Q(sender_id=user.id,type='0')).order_by('-sendTime')[:1]
+#     if len(notify)>0:
+#         from apps.pojo.notify import Notify_to_NotifyBean
+#         notify=Notify_to_NotifyBean(notify,user.id,type=1)[0]
+#     args['notify']=notify
     if request.REQUEST.get('ajax',False):
         data={}
         data['messageList']=messageList.object_list
@@ -60,12 +62,12 @@ def message_detail(request):
     try:
         senderId=int(request.REQUEST.get('senderId',False))
         receiverId=int(request.REQUEST.get('receiverId',False))
-        id=int(request.REQUEST.get('id',False))
-        if senderId and senderId and id:
-            messageList=Message.objects.filter(sender_id__in=[senderId,receiverId],receiver_id__in=[senderId,receiverId]).exclude(id=id).order_by('-sendTime')
+#         id=int(request.REQUEST.get('id',False))
+        if senderId and senderId :
+            messageList=MessageLog.objects.get_message_list_with_first_row(senderId,receiverId)
             messageList=page(request,messageList)['pages']
-            from apps.pojo.message import Message_to_MessageBean
-            messageList.object_list=Message_to_MessageBean(messageList.object_list,request.user.id)
+            from apps.pojo.message import MessageLog_to_MessageBean
+            messageList.object_list=MessageLog_to_MessageBean(messageList.object_list,request.user.id,type=1)
             args['messageList']=messageList.object_list
             args['has_next']=messageList.has_next()
             if messageList.has_next():
@@ -74,7 +76,7 @@ def message_detail(request):
             args['userId']=request.user.id
             #标记已读
             from apps.message_app.method import clean_message_by_user,get_no_read_message_count
-            clean_message_by_user(senderId,'message',receiverId)
+            clean_message_by_user(senderId,receiverId)
             args['messageCount']=get_no_read_message_count(receiverId)
         else:
             args={'result':'error','error_message':'传递参数出错!'}
@@ -103,27 +105,21 @@ def message_reply(request):
         if request.method=="POST":
             receiver_id=request.POST.get('receiverId')
             content=request.POST.get('content')
-            type=int(request.POST.get('type'))
-            if type==1:
-                 message=Message(sender=request.user,receiver_id=receiver_id,content=content,sendTime=datetime.datetime.today())
-                 message.save()
-                 from apps.pojo.message import Message_to_MessageBean
-                 messageBean=Message_to_MessageBean([message,],request.user.id,type=1)
-                 from apps.pojo.message import MessageBeanEncoder
-            elif type==2:
-                 notify=Notify(sender=request.user,receiver_id=receiver_id,content=content,sendTime=datetime.datetime.today(),type='0')
-                 notify.save()
-                 from apps.pojo.notify import Notify_to_NotifyBean
-                 messageBean=Notify_to_NotifyBean([notify,],request.user.id,type=1)
-                 from apps.pojo.notify import NotifyBeanEncoder
+            type=1
+            if receiver_id==ADMIN_ID:
+                type=0
+            message=Message(sender_id=request.user.id,content=content,type=type)
+            message.save()
+            messageLog=MessageLog(receiver_id=receiver_id,message=message)
+            messageLog.save()
+            from apps.pojo.message import MessageLog_to_Message
+            messageBean=MessageLog_to_Message([messageLog,],request.user.id,type=1)
+            from apps.pojo.message import MessageBeanEncoder
                 
             args={'result':'success','message':'发送成功!','messageBean':messageBean}
         else:
             args={'result':'success','error_message':'提交参数出错!'}  
-        if type==1:
-             json=simplejson.dumps(args,cls=MessageBeanEncoder)
-        elif type==2:
-             json=simplejson.dumps(args,cls=NotifyBeanEncoder)
+        json=simplejson.dumps(args,cls=MessageBeanEncoder)
         return HttpResponse(json)
        
     except Exception as e:
@@ -133,37 +129,37 @@ def message_reply(request):
         return HttpResponse(json)
     
     
-def notify_detail(request):
-    args={}
-    try:
-        senderId=int(request.REQUEST.get('senderId',False))
-        receiverId=int(request.REQUEST.get('receiverId',False))
-        id=int(request.REQUEST.get('id',False))
-        if senderId and senderId and id:
-            notifyList=Notify.objects.filter(sender_id__in=[senderId,receiverId],receiver_id__in=[senderId,receiverId]).exclude(id=id).order_by('-sendTime')
-            notifyList=page(request,notifyList)['pages']
-            from apps.pojo.notify import Notify_to_NotifyBean
-            notifyList.object_list=Notify_to_NotifyBean(notifyList.object_list,request.user.id)
-            args['messageList']=notifyList.object_list
-            args['has_next']=notifyList.has_next()
-            if notifyList.has_next():
-                args['next_page_number']=notifyList.next_page_number()
-            args['result']='success'
-            args['userId']=request.user.id
-            #标记已读
-            from apps.message_app.method import clean_message_by_user,get_no_read_message_count
-            clean_message_by_user(receiverId,'notify')
-            args['messageCount']=get_no_read_message_count(receiverId)
-        else:
-            args={'result':'error','error_message':'传递参数出错!'}
-        from apps.pojo.notify import NotifyBeanEncoder
-        json=simplejson.dumps(args,cls=NotifyBeanEncoder)
-        return HttpResponse(json)
-    except Exception as e:
-        logger.exception('获取我和指定异性之间所有私信出错，出错原因')
-        args={'result':'error','error_message':'获取我和指定异性之间所有私信出错!'}
-        json=simplejson.dumps(args)
-        return HttpResponse(json)
+# def notify_detail(request):
+#     args={}
+#     try:
+#         senderId=int(request.REQUEST.get('senderId',False))
+#         receiverId=int(request.REQUEST.get('receiverId',False))
+#         id=int(request.REQUEST.get('id',False))
+#         if senderId and senderId and id:
+#             notifyList=Notify.objects.filter(sender_id__in=[senderId,receiverId],receiver_id__in=[senderId,receiverId]).exclude(id=id).order_by('-sendTime')
+#             notifyList=page(request,notifyList)['pages']
+#             from apps.pojo.notify import Notify_to_NotifyBean
+#             notifyList.object_list=Notify_to_NotifyBean(notifyList.object_list,request.user.id)
+#             args['messageList']=notifyList.object_list
+#             args['has_next']=notifyList.has_next()
+#             if notifyList.has_next():
+#                 args['next_page_number']=notifyList.next_page_number()
+#             args['result']='success'
+#             args['userId']=request.user.id
+#             #标记已读
+#             from apps.message_app.method import clean_message_by_user,get_no_read_message_count
+#             clean_message_by_user(receiverId,'notify')
+#             args['messageCount']=get_no_read_message_count(receiverId)
+#         else:
+#             args={'result':'error','error_message':'传递参数出错!'}
+#         from apps.pojo.notify import NotifyBeanEncoder
+#         json=simplejson.dumps(args,cls=NotifyBeanEncoder)
+#         return HttpResponse(json)
+#     except Exception as e:
+#         logger.exception('获取我和指定异性之间所有私信出错，出错原因')
+#         args={'result':'error','error_message':'获取我和指定异性之间所有私信出错!'}
+#         json=simplejson.dumps(args)
+#         return HttpResponse(json)
 
 '''
 获取信息数量
@@ -200,14 +196,13 @@ def clean(request):
 def no_read_message(request,template_name):
     args={}
     try:
-        messageList=Message.objects.get_no_read_message_by_user_id(request.user.id)
+        messageList=MessageLog.objects.get_no_read_messagelog(request.user.id)
         args=page(request,messageList)
         messageList=args['pages']
-        from apps.pojo.message import Message_to_MessageBean
-        messageList.object_list=Message_to_MessageBean(messageList.object_list,request.user.id,type=1)
+        from apps.pojo.message import MessageLog_to_Message
+        messageList.object_list=MessageLog_to_Message(messageList.object_list,request.user.id)
         #用户消息标记为已读
-        messageIds=[message.id for message in messageList.object_list]
-        Message.objects.filter(id__in=messageIds).update(isRead=True)
+        MessageLog.objects.clean_message(request.user.id)
         if request.is_ajax():
             data={}
             data['messageList']=messageList.object_list
@@ -227,6 +222,27 @@ def no_read_message(request,template_name):
         error_mesage='获取用户未读消息,出错!'
         logger.exception(error_mesage)
     
+'''
+私信   发送
+attribute：
+     receiver_id(int)： 接收者id
+     reply_content(text)： 回复内容
+return ：
+     
+'''   
+def message_send(request):  
+    args={}
+    try:
+        user=request.user
+        receiver_id=request.GET.get('receiver_id')
+        reply_content=request.GET.get('reply_content')
+        add_system_message_121(user.id,receiver_id,reply_content)
+        args={'result':'success'}   
+    except Exception ,e:    
+        logger.error('私信   发送,出粗')
+        args={'result':'error','error_message':'发送私信出错!'}   
+    json = simplejson.dumps(args)
+    return HttpResponse(json)
 ##############################
 
 
@@ -291,30 +307,7 @@ def delete_notify(request):
     
 
     
-'''
-私信   发送
-attribute：
-     receiver_id(int)： 接收者id
-     reply_content(text)： 回复内容
-return ：
-     
-'''   
-def message_send(request):  
-    arg={}
-    if request.user.is_authenticated():
-            receiver_id=request.GET.get('receiver_id')
-            reply_content=request.GET.get('reply_content')
-            message=Message()
-            message.sender=request.user
-            message.receiver_id=receiver_id
-            message.content=reply_content
-            message.sendTime=datetime.datetime.today()
-            message.save()
-            result="发送成功！"
-            json = simplejson.dumps(result)
-            return HttpResponse(json)
-    else:
-        return render(request, 'login.html', arg,)     
+
 '''
 获得未读的消息个数
 attribute：

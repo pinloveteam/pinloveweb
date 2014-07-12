@@ -14,7 +14,7 @@ import os
 # import MySQLdb
 from apps.recommend_app.models import  MatchResult
 # from apps.recommend_app.recommend_util import cal_recommend
-from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
+from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT, ADMIN_ID
 # from util.singal import cal_recommend_user
 from apps.common_app.models import Tag
 
@@ -32,6 +32,20 @@ class UserProfileManager(models.Manager):
     '''
     def get_march_result(self,my_id,other_id):
         return MatchResult.objects.filter(my_id=my_id,other_id=other_id)[:1]
+    
+    '''
+    获取用户头像，如果头像本人，则没有通过审核也可显示
+    '''
+    def get_avatar_name(self,myId,userId):
+        userProfile=UserProfile.objects.get(user_id=userId)
+        if myId==userId or userId==ADMIN_ID:
+            return userProfile.avatar_name
+        elif userProfile.avatar_name_status=='3':
+            return userProfile.avatar_name
+        else:
+            from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
+            return DEFAULT_IMAGE_NAME
+        
 class UserProfile(models.Model, UploadAvatarMixIn):
     
     user = models.ForeignKey(User)
@@ -339,13 +353,34 @@ class UserVerification(models.Model):
         verbose_name_plural = u'用户信息验证'
         db_table = "user_verification" 
 
-
+class BrowseOherScoreHistoryManage(models.Manager):
+    '''
+     相互查看过分数的用户列表
+     myId  我的用户id
+oherIdList 另外用户id列表，如果为None则查询所有用户
+    '''
+    def browse_score_each_other(self,myId,oherIdList=None):
+        sql='''
+        select * from 
+browse_oher_score_history where my_id= %s and 
+other_id in (SELECT my_id from browse_oher_score_history where other_id=%s) 
+'''
+        if oherIdList is None:
+            BrowseOherScoreHistoryList=BrowseOherScoreHistory.objects.raw(sql,[myId,myId])
+        else:
+            count=len(oherIdList)
+            sql=sql+'and other_id in(%s)'%(('%s,'*count)[:-1])
+            list=[myId,myId]
+            list.extend(oherIdList)
+            BrowseOherScoreHistoryList=BrowseOherScoreHistory.objects.raw(sql,list)
+        return BrowseOherScoreHistoryList
 '''
 浏览另一半分数表
 '''
 class BrowseOherScoreHistory(models.Model):
     my=models.ForeignKey(User,verbose_name=u"用户",related_name=u'browse_oher_score_history_my')
     other=models.ForeignKey(User,verbose_name=u"另一半用户",related_name=u'browse_oher_score_history_other')
+    objects=BrowseOherScoreHistoryManage()
     class Meta:
         verbose_name=u'浏览另一半得分记录表'
         verbose_name_plural = u'浏览另一半得分记录表'

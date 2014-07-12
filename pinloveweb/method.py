@@ -76,8 +76,6 @@ def is_focus_each_other(request,cardList):
         i+=1
     return cardList
 
-fansCount=Follow.objects.filter(follow=1).count()
-print fansCount
 
 
 '''

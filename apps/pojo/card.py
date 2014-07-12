@@ -4,17 +4,17 @@ Created on Sep 17, 2013
 
 @author: jin
 '''
-from apps.user_app.models import UserProfile, BrowseOherScoreHistory
-from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
-from apps.recommend_app.models import MatchResult, Grade
+
 from django.utils import simplejson
 from apps.friend_dynamic_app.models import Picture
+from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
+from apps.recommend_app.models import Grade
 '''
   卡片类
 '''
 empty_result_list=[-1,'N',None]
 class Card(object):
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city):
+    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,):
         self.user_id=userId
         self.username=username
         self.height=height
@@ -43,6 +43,7 @@ class Card(object):
         self.avatar_name=avatar_name
         self.isVote=isVote
         self.city=city
+        self.isChat=False
         
     '''
     获取用户图片
@@ -76,7 +77,9 @@ class MyEncoder(simplejson.JSONEncoder):
         if dict['age']!=u'未填':
             dict['age']=str(dict['age'])+u'岁'
         return dict
-        
+      
+
+    
 '''
  推荐结果MatchResultList转换CardList 卡片集合
  attribute：
@@ -134,6 +137,7 @@ def userProfileList_to_CardList(userProfileList):
        recommendResultList.append(recommendResult)
      return recommendResultList
  
+
 '''
 将用户详细信息userProfileList转换成卡片集合CardList
 attribute：

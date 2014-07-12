@@ -372,8 +372,6 @@ def comment(request):
                 comment.receiver_id=friendDynamic.publishUser.id
         elif int(receiverId)==request.user.id:
             arg={'type':'error','msg':'能自己对自己评论'}
-            arg['type']='error' 
-            arg['msg']='不能自己对自己评论'
             json=simplejson.dumps(arg)
             return HttpResponse(json)
         else:
