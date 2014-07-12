@@ -157,7 +157,7 @@ def update_follow(request):
     offset = request.GET.get('userId')
     if Follow.objects.filter(my=request.user,follow_id=offset).exists():
         if type==1:
-            return HttpResponse(simplejson.dumps({{'result':'follow'}}))
+            return HttpResponse(simplejson.dumps({'result':'follow'}))
         Follow.objects.filter(my=request.user,follow=offset).delete()
         if Follow.objects.filter(my_id=offset,follow=request.user).exists():
             arg['type']=-3

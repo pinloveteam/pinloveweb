@@ -18,22 +18,23 @@
 		//关注用户
 		function add_follow(obj){
 		    var userId=$(obj).attr('value');
-			$.getJSON("/user/update_follow/",{userId:userId},function(data) {
+			$.getJSON("/user/update_follow/",{userId:userId,type:1},function(data) {
 				  if(data['result']=='follow'){
 					  var body=$('<p>已经关注!</p>')
 					  $.poplayer({body:body});
+					  return;
 				  }
 				  if(data['type']==1){
 						myFollow=myFollow+1
 						$('#myFollow').html(myFollow)
-						var body=$('<p>已经关注!</p>')
+						var body=$('<p>关注成功!</p>')
 						 $.poplayer({body:body});
 				  }else if(data['type']==2){
 						follow=follow+1
 						myFollow=myFollow+1
 						$('#follow').html(follow)
 						$('#myFollow').html(myFollow)
-						var body=$('<p>已经关注!</p>')
+						var body=$('<p>关注成功!</p>')
 						 $.poplayer({body:body});
 					  }else{
 					     if(data['type']==-1){
