@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_protect
 from django.template.context import RequestContext
 from apps.user_app.models import UserProfile,UserContactLink,Follow,Verification,\
-    UserTag, UserVerification
+    UserTag
 from apps.user_app.forms import UserBasicProfileForm, UserContactForm,UserAppearanceForm, UserStudyWorkForm, UserPersonalHabitForm,\
     UserFamilyInformationForm, UserProfileForm
 from django.core.context_processors import csrf 
@@ -24,7 +24,6 @@ from util.page import page
 import logging
 from util.singal import cal_recommend_user
 from apps.pojo.card import MyEncoder
-from django.core import serializers
 from django.utils import simplejson
 from django.db import transaction
 from pinloveweb.forms import ChangePasswordForm
@@ -143,6 +142,7 @@ def follow(request,type,ajax='false'):
 修改关注情况：
 attribute：
     userId ：int 用户id
+    type:1 关注
 return：
     type：
         1 ,-1 我关注的
@@ -153,8 +153,11 @@ return：
 '''
 def update_follow(request):
     arg = {}
+    type=int(request.GET.get('type',False))
     offset = request.GET.get('userId')
     if Follow.objects.filter(my=request.user,follow_id=offset).exists():
+        if type==1:
+            return HttpResponse(simplejson.dumps({{'result':'follow'}}))
         Follow.objects.filter(my=request.user,follow=offset).delete()
         if Follow.objects.filter(my_id=offset,follow=request.user).exists():
             arg['type']=-3
@@ -172,7 +175,6 @@ def update_follow(request):
         else:
             arg['type']=1
         arg['content'] = '关注成功'
-    from django.utils import simplejson
     json = simplejson.dumps(arg)
     return HttpResponse(json)
 

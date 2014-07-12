@@ -140,7 +140,7 @@ class MessageLogManger(models.Manager):
     获得所有我和所有用户之间的私信
      
     '''
-    def get_message_list(self,userId): 
+    def get_message_list(self,userId,first=None,end=None): 
         sql='''
          SELECT * from (  
    SELECT * from (
@@ -155,10 +155,9 @@ where  (isDeletereceiver = False  AND receiver_id = %s and sender_id!=%s)
 ) s
 ORDER BY type,sendTime desc
 )s1
-GROUP BY sender_id
-
-
-    '''
+GROUP BY sender_id  '''
+        if first is not None:
+            sql=sql+'limit %s , %s'%(first,end)
         return  connection_to_db(sql,param=[userId,userId,userId],type=True)
     
     '''

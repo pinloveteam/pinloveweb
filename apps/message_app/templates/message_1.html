@@ -11,21 +11,30 @@
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/Card.js"></script>
 		<script>
-		
+		//关注
+		var myFollow={% if myFollow %}{{myFollow}}{%else%}0{% endif %}
+		var follow={% if follow %}{{follow}}{%else%}0{% endif %}
+		var fans={% if fans %}{{fans}}{%else%}0{% endif %}
 		//关注用户
-		function follow(obj){
+		function add_follow(obj){
 		    var userId=$(obj).attr('value');
 			$.getJSON("/user/update_follow/",{userId:userId},function(data) {
+				  if(data['result']=='follow'){
+					  var body=$('<p>已经关注!</p>')
+					  $.poplayer({body:body});
+				  }
 				  if(data['type']==1){
 						myFollow=myFollow+1
 						$('#myFollow').html(myFollow)
-						alert('关注成功!')
+						var body=$('<p>已经关注!</p>')
+						 $.poplayer({body:body});
 				  }else if(data['type']==2){
 						follow=follow+1
 						myFollow=myFollow+1
 						$('#follow').html(follow)
 						$('#myFollow').html(myFollow)
-						alert('关注成功!')
+						var body=$('<p>已经关注!</p>')
+						 $.poplayer({body:body});
 					  }else{
 					     if(data['type']==-1){
 					    	 myFollow=myFollow-1
@@ -123,10 +132,6 @@
 	                    $('.hideable_'+text).show('slow');
 					    isMessageListShow=true;
 					    set_no_read_message(data.messageCount)
-					    $('.detail_info').click(function(){
-					    	show_detail_info(this);
-					    });
-					    
 						},
 	                    error: function(response){
 	                        alert('网络异常！')

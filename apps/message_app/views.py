@@ -243,6 +243,20 @@ def message_send(request):
         args={'result':'error','error_message':'发送私信出错!'}   
     json = simplejson.dumps(args)
     return HttpResponse(json)
+
+'''
+获得最近三条消息
+'''
+def get_noread_messges_by_userid(request):
+    userId=request.GET.get('userId')
+    user=request.user
+    #获取未读的message和最近发出的三条message
+    sqlList=[user.id,userId,0,0,userId,user.id]
+    messageList=MessageLog.objects.get_message_list(userId,0,2)
+    from util.util import regex_expression
+    result=[{'sender_id':message['sender_id'],'receiver_id':message['receiver_id'],'content':regex_expression(message['content'])} for message in messageList ]
+    json = simplejson.dumps(result)
+    return HttpResponse(json, mimetype="application/json")
 ##############################
 
 
@@ -354,18 +368,4 @@ def get_messge_by_id(request):
     json = simplejson.dumps(result)
     return HttpResponse(json, mimetype="application/json")
 
-'''
-获得所有未读消息
-'''
-def get_noread_messges_by_userid(request):
-    userId=request.GET.get('userId')
-    user=request.user
-    #获取未读的message和最近发出的三条message
-    sqlList=[user.id,userId,0,0,userId,user.id]
-    messageList=Message.objects.raw('SELECT * from message where receiver_id=%s and sender_id=%s and isRead=%s and isDeletereceiver=%s or id in(select id from (SELECT id from message m where m.receiver_id=%s and m.sender_id=%s ORDER BY sendTime DESC  limit 3) as s) ORDER BY sendTime',
-                                sqlList)
-# messageList=Message.objects.filter(receiver_id=request.user,sender_id=userId,isRead=False,isDeletereceiver=False).order_by('sendTime')
-    result=[message.as_json_for_id_conent() for message in messageList ]
-    json = simplejson.dumps(result)
-    return HttpResponse(json, mimetype="application/json")
 
