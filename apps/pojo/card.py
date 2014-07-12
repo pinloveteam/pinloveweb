@@ -9,6 +9,7 @@ from django.utils import simplejson
 from apps.friend_dynamic_app.models import Picture
 from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
 from apps.recommend_app.models import Grade
+from apps.user_app.models import UserProfile
 '''
   卡片类
 '''
