@@ -23,7 +23,7 @@ class RegistrationForm (UserCreationForm) :
         # Use the parent's handling of required fields, etc.
         super(RegistrationForm, self).validate(value)
     email = forms.EmailField(required=True, label='邮件',widget=forms.TextInput(attrs={'placeholder': r'请输入常用邮箱'})) 
-    gender=forms.ChoiceField(required=True, label='性别', choices=((u'M', u'帅哥'), (u'F', u'美女'), ),
+    gender=forms.ChoiceField(required=True, label='性别', choices=((u'M', u'男'), (u'F', u'女'), ),
                              widget=forms.RadioSelect())
     username=forms.RegexField(label=_("Username"), max_length=30,
         regex=ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}$',
