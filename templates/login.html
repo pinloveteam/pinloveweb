@@ -1,95 +1,485 @@
-{% extends "base_later.html" %}
-{% block staticfiles %}
-<title> {% block title %} 拼爱网  {% endblock %} </title>
-<meta property="qc:admins" content="14302567776016016476563757" />
-<meta property="qc:admins" content="1430256361142166513066547" />
-<meta property="qc:admins" content="143025601647656375" />
-<meta property="wb:webmaster" content="e67843f5f9933b87" />
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta property="qc:admins" content="14302567776016016476563757" />
+        <meta property="qc:admins" content="1430256361142166513066547" />
+        <meta property="qc:admins" content="143025601647656375" />
+        <meta property="wb:webmaster" content="e67843f5f9933b87" />
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+		<title>拼爱网</title>
+		<style type="text/css">
+			*, *:before, *:after {
+				box-sizing: border-box;
+			}
+			
+			html,body{
+				height: 100%;
+			}
+			body {
+				overflow-y: auto;
+				font-size: 14px;
+				line-height: 1.42857;
+				margin: 0;
+				min-height: 650px;
+				min-width: 1024px;
+				font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
+			}
+			
+			p {
+				margin: 0 0 10px;
+			}
+			a {
+				text-decoration: none;
+			}
 
-<link href="{{STATIC_URL}}css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
+			a:hover {
+				color: #F1592A;
+			}
+			
+			.form-control{
+				padding: 7px 16px;
+				background-color: #fff;
+			    border: 1px solid #ccc;
+			    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+			    color: #555;
+			    height: 33px;
+			    line-height: 1.42857;
+			    font-size: 16px;
+			    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+			}
+			
+			.form{
+				line-height: 4;
+			}
+			
+			.btn,.btn-sm{
+				border: none;
+				cursor: pointer;
+			}
+			
+			.btn{
+				width: 208px;
+				padding: 6px 0;
+				font-size: 16px;
+			}
+			
+			.btn-sm{
+				width: 150px;
+				padding: 5px 0;
+			}
+			
+			#register{
+				background-color: #EE5B2F;
+			}
+			#login{
+				background-color: #50B62F;
+			}
+			
+			#qqlogin{
+				background-color: #175E88;
+			}
+			
+			#weibologin{
+				background-color: #EC0000;
+			}
+			.stage {
+				height: 100%;
+			}
+			.bgc-blue,.bcg-orange,a,.btn,.btn-sm{
+				color: #fff;
+			}
+			
+			.bgc-white,.bgc-gray{
+				color: #000;
+			}
+			
+			.bgc-blue{
+				background-color: #71BCE6;
+			}
+			
+			.bgc-gray{
+				background-color: #E6E6E6;
+			}
+			
+			.bgc-white{
+				background-color: #FFF;
+			}
+			
+			.bcg-orange{
+				background-color: #F1592A;
+			}
+			
+			.title{
+				font-size: 45px; 
+				text-align: center;
+			}
+			
+			.layer {
+				padding: 20px 80px;
+				height: 77%;
+			}
 
-<style type="text/css">
-.register{
-	padding:13px 0px !important;
-	margin: 5px !important;
-}
+			.layer-top div, .main-left,.main-right {
+				display: inline-block;
+			}
+			/*.login {
+				float: right;
+			}*/
+			.layer-main {
+				margin: 50px auto;
+			}
 
-.button_type_1 {
-	border:1px solid white;
-	float: right;
-	font-size:23px;
-	letter-spacing:10px;
-	text-align:center;
-	width: 148px;
-	padding:5px 0;
-	margin: 10px 0;
-}
+			.main-left,.main-right {
+				padding: 10px 50px;
+				width: 49.7%;
+			}
 
-a{color:white;}
+			.main-left {
+				border-right: solid 1px #fff;
+				text-align: right;
+			}
+			.btn-login {
+				background-color: #F4856A;
+				padding: 5px 10px;
+				font-size: 22px;
+				margin: 20px 0 5px 20px;
+				display: inline-block;
+				cursor: pointer;
+			}
 
-a:hover {text-decoration:none;}
+			.btn-login:hover {
+				background-color: #F1592A;
+			}
 
-.title{
-	font-size:40px;
-	color:#f45a1c;
-}
+			.layer-bottom {
+				border-radius: 50%;
+				width: 100px;
+				height: 60px;
+				margin: 0px auto;
+				position: relative;
+				top: -30px;
+			}
 
-.login_form{
-	position: absolute;
-	top:30%;
-	left:37%;
-	width:300px;
-}
+			.more {
+				position: relative;
+				left: 20px;
+				top: 30px;
+				cursor: pointer;
+			}
+			
+			#scrollUp {
+				background: url("{{STATIC_RUL}}}/img/top.png") no-repeat scroll 0 0 transparent;
+				bottom: 20px;
+				height: 38px;
+				right: 20px;
+				width: 38px;
+				cursor: pointer;
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+		function submit(){
+			$('#login').submit();
+			}
+			$(document).ready(function() {
+				$('.layer-bottom').click(function() {
+					$(this).parents('.stage').slideUp('slow').next().slideDown('slow');
+					if($('#scrollUp').css('display')=='none'){
+						$('#scrollUp').show('slow');
+					}
+				});
+				
+				$('.btn-login').click(function(){
+					$('#pinlove').slideUp('slow');
+					$('#reglogin').slideDown('slow');
+				});
+				
+				$('#scrollUp').click(function(){
+					$('.stage').slideUp('slow');
+					$(this).hide();
+					$('#fststage').slideDown('slow');
+				});
+				
+				$(".input-lg").keydown(function(e){
+					if(e.keyCode == 13){
+						submit();
+						};
+						});
+				
+				//检查用户名
+				$("input[name='username']").change(function(){
+			    	flag=true;
+			    	error_message=null
+			    	error=$('#username_error')
+			    	var username=$('#id_username').val().trim();
+			    	if (username.length==0){
+			    		error_message='用户名不能为空!';
+			    		flag=false;
+			    	}else{
+			    		re=/[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}/;
+			    		if(!re.test(username)){
+			    			error_message='用户名格式不正确!';
+				    		flag=false;
+			    		};
+			    	}
+			    	 if(this.id=='id_username'&&flag ){
+			    	  $.ajax({
+			    		type:'get',
+			    		data:{username:username,type:'check_username'},
+			    		url:'/account/check_register/',
+			    		beforeSend: function(XMLHttpRequest){
+				         },
+				         success: function(data, textStatus){
+					            if(textStatus == 'success'){
+					            	 data=$.parseJSON(data)
+					            	if(data.result=='error'){
+					            		error_message=data.error_message;
+					            		flag=false;
+					            		error.html(error_message)
+					             } 
+					            	}
+					    },
+					     complete: function(XMLHttpRequest, textStatus){
+					     },
+					     error: function(response){
+					    	 var body = $('<p>网络异常!</p>');
+					    	 $.poplayer({body:body});
+					     }
+			    	});
+			    	}
+			    	  if(flag){
+			    			  error.html('')
+			      	}else{
+			      		error.html(error_message)
+			      	}
+			      });
+				
+				$('#id_email').change(function(){
+			    	flag=true;
+			    	error_message=null
+			    	error=$('#email_error')
+			    	var email=$('#id_email').val().trim();
+			    	if (email.length==0){
+			    		error_message='邮箱不能为空!';
+			    		flag=false;
+			    	}else{
+			    	  $.ajax({
+			    		type:'get',
+			    		data:{email:email,type:'check_email'},
+			    		url:'/account/check_register/',
+			    		beforeSend: function(XMLHttpRequest){
+				         },
+				         success: function(data, textStatus){
+					            if(textStatus == 'success'){
+					            	 data=$.parseJSON(data)
+					            	if(data.result=='error'){
+					            		error_message=data.error_message;
+					            		flag=false;
+					            		error.html(error_message)
+					             } 
+					            	}
+					    },
+					     complete: function(XMLHttpRequest, textStatus){
+					     },
+					     error: function(response){
+					    	 var body = $('<p>网络异常!</p>');
+					    	 $.poplayer({body:body});
+					     }
+			    	});
+			    	}
+			    	  if(flag){
+			    			  error.html('')
+			      	}else{
+			      		error.html(error_message)
+			      	}
+			      });
+				
+				
+			});
 
-input{
-	background-color:transparent !important;
-}
-</style>
-{% endblock %}
-{% block navigation %}
-{% endblock %}
-{% block content %}
-<div class="register button_type_1"><a href="/account/register/{%if request.GET.link%}?link={{request.GET.link}}{%endif%}">注册 </a></div>
-	<form id="login" class="login_form" action="/account/auth/" method="post" class="form-signin">{% csrf_token %}
-		<span class="title">拼爱网</span>
-		<div class="form-group">
-		<span style="color:red;font-size:15px">{{error}}</span>
-		<input type="text" class="form-control input-lg" placeholder="请输入用户名" name="username" value="" id="username"/>
-		<input type="password" class="form-control input-lg" placeholder="请输入密码" name="password" value="" id="password"/>
-		<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
-		<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
-		<input type="checkbox" name="remember_status">记住登录状态<br>
-		{%if False %}
-		第三方登录：
-        <a href="/third_party_login/qq_login_url/"><img src="{{STATIC_URL}}img/qq_login_logo.png"></a>&nbsp;&nbsp;
-        <a href="/third_party_login/sina_login_url/" ><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
-         <a href="/third_party_login/facebook_login_url/" ><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
-		<a href="/third_party_login/twitter_login_url/" >twitter</a>
-		{%endif %}
+		</script>
+	</head>
+	<body>
+		<div id="fststage" style="display: ;" class="stage bgc-gray">
+			<div class="layer bgc-blue">
+				<div class="layer-top" style="margin-bottom: 100px;">
+					<div class="logo">
+						pinlove
+						<span style="font-size: 18px; margin: 3px 0;">|</span>
+						拼爱
+					</div>
+
+					<!--<div class="login">
+						<a id="login"href="#">
+							登录
+						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="#">
+							注册
+						</a>
+					</div>-->
+				</div>
+
+				<div id="pinlove" class="layer-main" {% if error %}style="display: none;" {%endif%}>
+					<div class="main-left">
+						<p class="title">
+							拼爱网
+						</p>
+						<p>
+							还在约会网站上“碰运气”？试试拼爱网吧。
+						</p>
+						<br />
+					</div>
+					<div class="main-right">
+						<p style="font-size: 26px;">
+							加入拼爱，寻找最合适你的<span style="color: #F1592A;">TA</span>
+						</p>
+						<span class="btn-login">开始体验你的拼爱旅程</span>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="#">
+								或先浏览精彩内容
+							</a>
+						</p>
+					</div>
+				</div>
+				
+				<div id="reglogin" class="layer-main" style="margin-top: -30px;{%  if not error %}display: none;{% endif %}">
+					<center>
+						<span style="position: relative;left: -130px;">请输入你的基本信息以注册</span>
+						<span style="position: relative;left: -60px;">或者</span>
+						<span style="position: relative;left: -25px;">直接登录</span>
+					</center>
+					<div class="main-left" style="text-align: right;">
+						<form  action="/account/register/" method="post" >{% csrf_token %}
+							<div class="form" >
+								{{user_form.username}}
+								&nbsp;&nbsp;
+								{% for choice in user_form.gender.field.choices %}
+								 <label >
+						 		<input type="radio" id="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}" value="{{ choice.0 }}" name="gender" {%ifequal user_form.gender.value choice.0 %}checked="checked"{%endifequal%}/> {{ choice.1 }} 
+							    </label>
+							    
+						 {% endfor %}
+						 <p id ='email_error' style="color: red;"></p>
+							</div>
+							<div class="form">
+								{{user_form.email}}
+								<p id ='email_error' style="color: red;"></p>
+							</div>
+							<div class="form">
+								{{user_form.password1}}
+							</div>
+							<div class="form">
+								{{user_form.password2}}
+							</div>
+							<div class="form">
+								<input id="id_inviteCode" class="form-control" type="text" id="email" value="" placeholder="邀请码"  name="inviteCode"/>
+							</div>
+							<input type="hidden" name="link" value="{{request.GET.link}}">
+							<div class="form">
+								<input class="btn" type="submit" id="register" value="注册" />
+							</div>
+						</form>
+					</div>
+					<div class="main-right">
+						<form action="/account/auth/" method="post" >{% csrf_token %}
+						<span style="color:red;font-size:15px">{{error}}</span>
+							<div  class="form"  >
+								<input class="form-control" type="text" id="inputemail" value="" name="username" id="username" placeholder="请输入用户名"/>
+							</div>
+							<div class="form">
+								<input class="form-control" type="password" id="inputemail" name="password" id="password" value="" placeholder="请输入密码"/>
+							</div>
+							<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
+							<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
+							<input type="checkbox" name="remember_status">记住登录状态<br>
+							<div class="form">
+								<input class="btn" type="button" id="login" value="登录" onclick="submit();"/>
+							</div>
+							{%if False %}
+							第三方登录：
+                           <a href="/third_party_login/qq_login_url/"><img src="{{STATIC_URL}}img/qq_login_logo.png"></a>&nbsp;&nbsp;
+                            <a href="/third_party_login/sina_login_url/" ><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+                           <a href="/third_party_login/facebook_login_url/" ><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
+                            <a href="/third_party_login/twitter_login_url/" >twitter</a>
+                        		{%endif %}
+							<div class="form" style="margin-top: 56px;">
+								<button class="btn-sm"  id="qqlogin"><img src="{{STATIC_URL}}img/qq.png" />&nbsp;使用QQ账号登录</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button class="btn-sm"  id="weibologin"><img src="{{STATIC_URL}}img/sina-weibo.png"/>&nbsp;使用微博账号登录</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="layer-bottom bgc-blue">
+				<span class="more"> 了解更多 </span>
+			</div>
+			<p class="title" style="color: #000;">
+						拼爱网是什么？
+			</p>
 		</div>
-		<div class="button_type_1"><a href="/account/forget_password/">忘记密码</a></div>
-		<div class="button_type_1"><a id='login' href="javascript:void(0)" onclick="submit()">登录</a></div>
-		
-	</form>
-<script  type="text/javascript">
-	var picGroup = new Array("{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape09.png","{{STATIC_URL}}img/Cityscape55.jpg","{{STATIC_URL}}img/Cityscape55.jpg");
-    document.body.style.backgroundImage="url("+picGroup[new Date().getHours()>>2]+")";
-</script>
-<script  type="text/javascript">
-function submit(){
-	$('#login').submit();
-}
 
-$(document).ready(function(){
-    $(".input-lg").keydown(function(e){
-        if(e.keyCode == 13){
-            submit()
-        };
-    });
-});
-</script>
+		<div class="stage bgc-white" style="display: none;">
+			<div class="layer bgc-gray">
+				<center class="layer-main">
+					<p class="title">
+						拼爱网是什么？
+					</p>
+					<p>
+						拼爱网是年轻的新一代社交网络，它功能简单，高效，致力于帮助千万用户以诚信为本准确的实现自我定位，通过
+					</p>
+					<p >
+						分析大量的用户数据，理性地寻找到真正属于自己的那个TA。
+					</p>
+					<img style="width: 40%;margin-top: 30px;" src="{{STATIC_URL}}img/login.png"/>
+				</center>
+			</div>
+			<div class="layer-bottom bgc-gray">
+				<span class="more"> 了解更多 </span>
+			</div>
+			<p class="title">
+						高效交友
+			</p>
+		</div>
 
-{% endblock %}
-{% block footer %}
-{% endblock %}
+		<div class="stage bcg-orange" style="display: none;">
+			<div class="layer bgc-white">
+				<center class="layer-main">
+					<p class="title">
+						高效交友
+					</p>
+					<p>
+						我们并不完全免费，但是我们真的很高效！
+					</p>
+					<p >
+						基于对所有用户的深度喜好分析，只推荐最适合你的那个TA！
+					</p>
+				</center>
+			</div>
+			<div class="layer-bottom bgc-white">
+				<span class="more"> 了解更多 </span>
+			</div>
+			<p class="title" style="color: #fff;">
+						改变命运
+			</p>
+		</div>
+
+		<div class="stage" style="color: #fff;display: none;">
+			<div class="layer" style="background-color: #F1592A;height: 100%;">
+				<center class="layer-main">
+					<p class="title">
+						改变命运
+					</p>
+					<p>
+						你是屌丝？男神女神遥不可及？
+					</p>
+					<p >
+						更自信，让所有人第一时间看到你的优势，交友不再“见光死”。
+					</p>
+				</center>
+			</div>
+		</div>
+		<a id="scrollUp" title="" style="position: fixed; z-index: 2147483647;display: none;"></a>
+	</body>
+</html>

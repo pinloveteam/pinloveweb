@@ -52,7 +52,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
 ####user_basic_profile###
     MALE = 'M'
     FEMALE = 'F'
-    GENDER_CHOICES = ( (MALE, r'帅哥'), (FEMALE, r'美女'), )
+    GENDER_CHOICES = ( (MALE, r'男'), (FEMALE, r'女'), )
     gender = models.CharField(verbose_name=r"性别", max_length=1, choices=GENDER_CHOICES, default=MALE,null=True,blank=True,) 
     
     YEAR_OF_BIRTH_CHOICES = ((-1,r'未填'),)

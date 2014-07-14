@@ -54,6 +54,7 @@ def login(request) :
         redirectURL=request.REQUEST.get('redirectURL','')
         if redirectURL!='':
             args['redirectURL']=redirectURL
+        args['user_form']= RegistrationForm() 
         args.update(csrf(request))
         return render(request, 'login.html', args,) 
     
@@ -101,7 +102,7 @@ def auth_view(request) :
         # Show an error page 
         link = request.REQUEST.get('link','')
         next = request.REQUEST.get('next','')
-        return render(request,'login.html',{'error':'用户名或者密码错误!','link':link,'next':next},)
+        return render(request,'login.html',{'error':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
 '''
 根据key 获取缓存数据
 '''
@@ -231,7 +232,7 @@ def register_user(request) :
     else : 
         args['user_form']= RegistrationForm() 
     
-    return render(request, 'register.html', args)
+    return render(request, 'login.html', args)
     
 def register_success(request) : 
     return render(request, 'register_success.html')
