@@ -230,6 +230,10 @@ def register_user(request) :
         else : 
             args['user_form'] = userForm
             args['error']=True
+            if userForm.errors:
+                for item in userForm.errors.items():
+                    key='%s%s'%(item[0],'_error')
+                    args[key]=item[1][0]
     else : 
         args['user_form']= RegistrationForm() 
     

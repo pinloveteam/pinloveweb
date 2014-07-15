@@ -216,11 +216,11 @@
 						});
 				
 				//检查用户名
-				$("input[name='username']").change(function(){
+				$("input[name='username']").blur(function(){
 			    	flag=true;
 			    	error_message=null
-			    	error=$('#username_error')
-			    	var username=$('#id_username').val().trim();
+			    	error=$(this).parent().find('#username_error')
+			    	var username=this.value.trim();
 			    	if (username.length==0){
 			    		error_message='用户名不能为空!';
 			    		flag=false;
@@ -263,15 +263,21 @@
 			      	}
 			      });
 				
-				$('#id_email').change(function(){
+				$('#id_email').blur(function(){
 			    	flag=true;
 			    	error_message=null
 			    	error=$('#email_error')
-			    	var email=$('#id_email').val().trim();
+			    	var email=$(this).val().trim();
 			    	if (email.length==0){
 			    		error_message='邮箱不能为空!';
 			    		flag=false;
 			    	}else{
+			    		re=/^([a-zA-Z0-9]|[._])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+			    		if(!re.test(email)){
+			    			error_message='邮箱格式错误!';
+				    		flag=false;
+			    		}
+			    	}if(flag){
 			    	  $.ajax({
 			    		type:'get',
 			    		data:{email:email,type:'check_email'},
@@ -303,6 +309,36 @@
 			      	}
 			      });
 				
+				//密码错误
+				$('input[name^="password"]').blur(function(){
+					flag=true;
+			    	error_message=''
+			    	error=$(this).parent().find('span[id$="error"]')
+			    	var password=$(this).val();
+			    	if (password==undefined ||password.length==0){
+			    		error_message='不能为空!';
+			    		flag=false;
+			    	}else{
+			    		re=/^[0-9a-zA-Z\xff_]{6,20}$/
+			    		if(!re.test(password)){
+			    			error_message='格式错误!';
+				    		flag=false;
+			    	  }else if(this.id=='id_password2'){
+			    		  password1=$('#id_password1').val();
+			    		  if(password1!=password){
+			    			  error_message='两次输入不一致，请重新输入!';
+					    	  flag=false;
+			    		  }
+			    		  
+			    	  }
+			    	}
+			    	
+			    	if(flag){
+			    			  error.html('')
+			      	}else{
+			      		error.html(error_message)
+			      	}
+				});
 				
 			});
 
@@ -370,17 +406,20 @@
 							    </label>
 							    
 						 {% endfor %}
-						 <p id ='email_error' style="color: red;"></p>
+						  <span id ='gender_error' style="color: red;">{{gender_error}}</p>
+						  <span id ='username_error' style="color: red;">{{username_error}}</p>
 							</div>
 							<div class="form">
 								{{user_form.email}}
-								<p id ='email_error' style="color: red;"></p>
+								<span id ='email_error' style="color: red;">{{email_error}}</p>
 							</div>
 							<div class="form">
 								{{user_form.password1}}
+								<span id ='password1_error' style="color: red;">{{password1_error}}</p>
 							</div>
 							<div class="form">
 								{{user_form.password2}}
+								<span id ='password1_error' style="color: red;">{{password1_error}}</p>
 							</div>
 							<div class="form">
 								<input id="id_inviteCode" class="form-control" type="text" id="email" value="" placeholder="邀请码"  name="inviteCode"/>
@@ -396,9 +435,12 @@
 						<span style="color:red;font-size:15px">{{error_message}}</span>
 							<div  class="form"  >
 								<input class="form-control" type="text" id="inputemail" value="" name="username" id="username" placeholder="请输入用户名"/>
+								<span id="username_error" style="color:red;font-size:15px"></span>
 							</div>
 							<div class="form">
-								<input class="form-control" type="password" id="inputemail" name="password" id="password" value="" placeholder="请输入密码"/>
+								<input class="form-control" type="password"  name="password" id="password" placeholder="请输入密码"  value=""/>
+								<span id="password_error" style="color:red;font-size:15px"></span>
+								<span style="color:red;font-size:15px">{{error_message}}</span>
 							</div>
 							<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
 							<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
