@@ -102,7 +102,7 @@ def auth_view(request) :
         # Show an error page 
         link = request.REQUEST.get('link','')
         next = request.REQUEST.get('next','')
-        return render(request,'login.html',{'error':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
+        return render(request,'login.html',{'error':'True','error_message':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
 '''
 根据key 获取缓存数据
 '''
@@ -229,6 +229,7 @@ def register_user(request) :
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         else : 
             args['user_form'] = userForm
+            args['error']=True
     else : 
         args['user_form']= RegistrationForm() 
     

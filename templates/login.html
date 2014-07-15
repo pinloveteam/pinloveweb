@@ -7,6 +7,7 @@
         <meta property="qc:admins" content="143025601647656375" />
         <meta property="wb:webmaster" content="e67843f5f9933b87" />
 		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.scrollUp.min.js"></script>
 		<title>拼爱网</title>
 		<style type="text/css">
 			*, *:before, *:after {
@@ -34,7 +35,7 @@
 			}
 
 			a:hover {
-				color: #F1592A;
+				color: #F1592A !important;
 			}
 			
 			.form-control{
@@ -47,6 +48,7 @@
 			    line-height: 1.42857;
 			    font-size: 16px;
 			    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+			    width: 208px;
 			}
 			
 			.form{
@@ -84,7 +86,7 @@
 				background-color: #EC0000;
 			}
 			.stage {
-				height: 100%;
+				height: 80%;
 			}
 			.bgc-blue,.bcg-orange,a,.btn,.btn-sm{
 				color: #fff;
@@ -116,8 +118,8 @@
 			}
 			
 			.layer {
-				padding: 20px 80px;
-				height: 77%;
+				padding: 20px 60px;
+				height: 100%;
 			}
 
 			.layer-top div, .main-left,.main-right {
@@ -165,11 +167,10 @@
 				position: relative;
 				left: 20px;
 				top: 30px;
-				cursor: pointer;
 			}
 			
 			#scrollUp {
-				background: url("{{STATIC_RUL}}/img/top.png") no-repeat scroll 0 0 transparent;
+				background: url("{{STATIC_URL}}/img/top.png") no-repeat scroll 0 0 transparent;
 				bottom: 20px;
 				height: 38px;
 				right: 20px;
@@ -182,11 +183,15 @@
 			$('#login').submit();
 			}
 			$(document).ready(function() {
-				$('.layer-bottom').click(function() {
-					$(this).parents('.stage').slideUp('slow').next().slideDown('slow');
-					if($('#scrollUp').css('display')=='none'){
-						$('#scrollUp').show('slow');
-					}
+				$.scrollUp({
+					scrollName : 'scrollUp', // Element ID
+					topDistance : '300', // Distance from top before showing element (px)
+					topSpeed : 300, // Speed back to top (ms)
+					animation : 'fade', // Fade, slide, none
+					animationInSpeed : 200, // Animation in speed (ms)
+					animationOutSpeed : 200, // Animation out speed (ms)
+					scrollText : '', // Text for element
+					activeOverlay : false // Set CSS color to display scrollUp active point, e.g '#00FFFF'
 				});
 				
 				$('.btn-login').click(function(){
@@ -194,11 +199,15 @@
 					$('#reglogin').slideDown('slow');
 				});
 				
-				$('#scrollUp').click(function(){
-					$('.stage').slideUp('slow');
-					$(this).hide();
-					$('#fststage').slideDown('slow');
-				});
+				$(".layer-bottom").click(function() {
+			        $("html, body").animate({
+			            scrollTop: $($(this).children().attr("href")).offset().top + "px"
+			        }, {
+			            duration: 500,
+			            easing: "swing"
+			        });
+			        return false;
+			    });
 				
 				$(".input-lg").keydown(function(e){
 					if(e.keyCode == 13){
@@ -357,7 +366,7 @@
 								&nbsp;&nbsp;
 								{% for choice in user_form.gender.field.choices %}
 								 <label >
-						 		<input type="radio" id="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}" value="{{ choice.0 }}" name="gender" {%ifequal user_form.gender.value choice.0 %}checked="checked"{%endifequal%}/> {{ choice.1 }} 
+						 		{{ choice.1 }} <input type="radio" id="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}" value="{{ choice.0 }}" name="gender" {%ifequal user_form.gender.value choice.0 %}checked="checked"{%endifequal%}/> 
 							    </label>
 							    
 						 {% endfor %}
@@ -384,7 +393,7 @@
 					</div>
 					<div class="main-right">
 						<form action="/account/auth/" method="post" >{% csrf_token %}
-						<span style="color:red;font-size:15px">{{error}}</span>
+						<span style="color:red;font-size:15px">{{error_message}}</span>
 							<div  class="form"  >
 								<input class="form-control" type="text" id="inputemail" value="" name="username" id="username" placeholder="请输入用户名"/>
 							</div>
@@ -393,7 +402,7 @@
 							</div>
 							<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
 							<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
-							<input type="checkbox" name="remember_status">记住登录状态<br>
+							<label><input type="checkbox" name="remember_status">记住登录状态<br></label>
 							<div class="form">
 								<input class="btn" type="button" id="login" value="登录" onclick="submit();"/>
 							</div>
@@ -413,14 +422,11 @@
 				</div>
 			</div>
 			<div class="layer-bottom bgc-blue">
-				<span class="more"> 了解更多 </span>
+				<a class="more" href="#more_1"> 了解更多 </a>
 			</div>
-			<p class="title" style="color: #000;">
-						拼爱网是什么？
-			</p>
 		</div>
 
-		<div class="stage bgc-white" style="display: none;">
+		<div class="stage bgc-white" id="more_1">
 			<div class="layer bgc-gray">
 				<center class="layer-main">
 					<p class="title">
@@ -432,18 +438,15 @@
 					<p >
 						分析大量的用户数据，理性地寻找到真正属于自己的那个TA。
 					</p>
-					<img style="width: 40%;margin-top: 30px;" src="{{STATIC_URL}}img/login.png"/>
+					<img style="width: 45%;margin-top: 30px;" src="{{STATIC_URL}}img/login.png"/>
 				</center>
 			</div>
 			<div class="layer-bottom bgc-gray">
-				<span class="more"> 了解更多 </span>
+				<a class="more" href="#more_2" style="color: #000;"> 了解更多 </a>
 			</div>
-			<p class="title">
-						高效交友
-			</p>
 		</div>
 
-		<div class="stage bcg-orange" style="display: none;">
+		<div class="stage bcg-orange" id="more_2">
 			<div class="layer bgc-white">
 				<center class="layer-main">
 					<p class="title">
@@ -458,15 +461,12 @@
 				</center>
 			</div>
 			<div class="layer-bottom bgc-white">
-				<span class="more"> 了解更多 </span>
+				<a class="more" href="#more_3" style="color: #000;"> 了解更多 </a>
 			</div>
-			<p class="title" style="color: #fff;">
-						改变命运
-			</p>
 		</div>
 
-		<div class="stage" style="color: #fff;display: none;">
-			<div class="layer" style="background-color: #F1592A;height: 100%;">
+		<div class="stage bcg-orange" id="more_3">
+			<div class="layer">
 				<center class="layer-main">
 					<p class="title">
 						改变命运
@@ -480,6 +480,5 @@
 				</center>
 			</div>
 		</div>
-		<a id="scrollUp" title="" style="position: fixed; z-index: 2147483647;display: none;"></a>
 	</body>
 </html>
