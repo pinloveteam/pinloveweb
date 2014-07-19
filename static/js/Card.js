@@ -585,28 +585,30 @@ window.Card = function(person){
 			this.template.find('.hoverbox').append('<li><a  style="display:none;" class="venobox" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');
 		}
 	}
-		
-	$('.card_row').append(this.template.html());
 	
-	$('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
+		
+	$('.card_row').append(this.template);
+	this.template.show();
+	
+	this.template.find('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
 	
 	$('.icon_dislike').on('click',dislike);
 	
 	$('.icon_ding').on('click',ding);
-	//发送私信
-	if(person.isChat){
-		$('.btn_send_msg').on('click',sendMsg);
-	}else{
-		$('#chat_tab').html('只有相互关注或者相互看过对方对我的打分才能聊天!')
-	}
 	
 	
 	$("[class^='icon_like']").on('click',like);
 	
-	$(".icon_msg").on('click',init_msg);
 	$(".test_match").on('click',test_match);
 	$('.dafen').find('button').unbind();
 	$('.introBox').on('click',detail_info);
+	//发送私信
+	if(person.isChat){
+		this.template.find('.btn_send_msg').on('click',sendMsg);
+		this.template.find(".icon_msg").on('click',init_msg);
+	}else{
+		this.template.find('#chat_tab').html('只有相互关注或者相互看过对方对我的打分才能聊天!')
+	}
 	
 	$(function(){
 		 $('.icon_like_0,.icon_like_3').following();
