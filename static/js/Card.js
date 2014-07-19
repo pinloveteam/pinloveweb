@@ -587,9 +587,6 @@ window.Card = function(person){
 	}
 	
 		
-	$('.card_row').append(this.template.children());
-	this.template.show();
-	
 	this.template.find('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
 	
 	this.template.find('.icon_dislike').on('click',dislike);
@@ -609,6 +606,7 @@ window.Card = function(person){
 	}else{
 		this.template.find('#chat_tab').html('只有相互关注或者相互看过对方对我的打分才能聊天!')
 	}
+	$('.card_row').append(this.template.children());
 	
 	$(function(){
 		$('.icon_like_0,.icon_like_3').following();
