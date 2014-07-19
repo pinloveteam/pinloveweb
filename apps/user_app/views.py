@@ -29,6 +29,7 @@ from django.db import transaction
 from pinloveweb.forms import ChangePasswordForm
 from apps.message_app.method import add_system_message_121
 from pinloveweb.settings import ADMIN_ID
+logger=logging.getLogger(__name__)
 
 '''
 推荐页面移除不喜欢用户
@@ -112,10 +113,8 @@ def follow(request,type,ajax='false'):
         cardList=arg.get('pages')
         #将关注列表转换成Card列表
         from apps.pojo.card import fllowList_to_CardList
-        cardList.object_list=fllowList_to_CardList(request.user,cardList.object_list,type)
-        #好友关系
-        from pinloveweb.method import is_focus_each_other
-        cardList.object_list=is_focus_each_other(request, cardList.object_list)
+        cardList.object_list=fllowList_to_CardList(request.user.id,cardList.object_list,type)
+       
         ajax=request.GET.get('ajax')
         if ajax =='true':
             data={}
@@ -331,6 +330,29 @@ def reset_password(request):
     else:
         args={'error_message':u'该链接无效!'}
     return render(request,'error.html',args)
+
+'''
+更新黑名单
+'''
+def black_list(request):
+    args={}
+    try:
+        userId=int(request.REQUEST.get('userId'))
+        from apps.user_app.method import update_black_list
+        result=update_black_list(request.user.id,userId)
+        if result==1:
+            from util.cache import set_black_list_by_cache
+            set_black_list_by_cache(userId)
+        elif result==-1:
+            from util.cache import del_attribute_black_list_by_cache
+            del_attribute_black_list_by_cache(userId)
+        args={'result':'success','type':result}
+    except Exception ,e:
+        logger.exception('更新黑名单出错')
+        args={'result':'error','error_message':'黑名单修改出错!'}
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
+        
 #######################################################
 #上面是改版页面
 #######################################################

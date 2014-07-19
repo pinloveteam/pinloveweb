@@ -2,7 +2,7 @@
 import sys   
 import time
 from apps.user_app.models import UserProfile, UserTag, Follow,\
-    BrowseOherScoreHistory
+    BrowseOherScoreHistory, BlackList, Denounce
 import logging
 from django.utils import simplejson
 reload(sys) # Python2.5 初始化后会删除 sys.setdefaultencoding 这个方法，我们需要重新载入   
@@ -81,7 +81,36 @@ def get_chat_permission_by_user_ids(myId,oherIdList=None,followIdList=None,histo
         if not id in followIdList:
             followIdList.append(id)
     return followIdList
-        
+    
+'''
+添加黑名单
+myId  拉黑名单的用户id
+otherId 被拉黑名单的用户id
+
+'''
+def update_black_list(myId,otherId):  
+    if not BlackList.objects.filter(my_id=myId,other_id=otherId).exists():
+        BlackList(my_id=myId,other_id=otherId).save()
+        return 1
+    else:
+        BlackList.objects.filter(my_id=myId,other_id=otherId).delete()
+        return -1 
+    
+'''
+根据用户名获取黑名单列表
+@param userId:用户id
+@return:  List[BlackList] 黑名单列表
+   
+'''
+def get_black_list(userId):
+    return BlackList.objects.filter(my_id=userId)
+'''
+ 举报用户
+'''
+def add_denounce(myId,otherId,comeFrom,auid,type,resson=None):
+    Denounce(my_id=myId,other_id=otherId,comeFrom=comeFrom,auid=auid,type=type,resson=resson).save()
+     
+      
 '''
 根据用户id列表查看是否聊天权限
 myId  我的用户id

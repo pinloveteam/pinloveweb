@@ -17,13 +17,14 @@ from apps.user_app.views import isIdAuthen
 from util.page import page
 from apps.the_people_nearby.views import GetLocation
 import logging
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http.response import HttpResponse
 from apps.recommend_app.models import MatchResult
 from django.db import transaction
 from django.utils import simplejson
 from pinloveweb.method import create_invite_code
 from apps.user_app.method import is_chat
+from django.views.decorators.http import require_POST
 logger = logging.getLogger(__name__)
 ####################
 ######1.0
@@ -78,6 +79,9 @@ def auth_view(request) :
         get_score_by_user_login(request.user.id)
         #邀请
         link=request.REQUEST.get('link',False)
+        #内存里初始化个人相关信息
+        from util.cache import init_profile_into_cache
+        init_profile_into_cache(user.id)
         if link:
             get_score_by_invite_friend_login(link,request.user.id)
         # Redirect to a success page 
@@ -154,7 +158,7 @@ def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):
          arg=page(request,matchResultList,**kwargs)
          matchResultList=arg['pages']
          from apps.pojo.card import matchResultList_to_CardList
-         matchResultList.object_list=matchResultList_to_CardList(matchResultList.object_list)
+         matchResultList.object_list=matchResultList_to_CardList(request.user.id,matchResultList.object_list)
     else:
           if disLikeUserIdList is None: 
               userProfileList=UserProfile.objects.exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)
@@ -163,10 +167,8 @@ def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):
           arg=page(request,userProfileList,**kwargs)   
           matchResultList=arg['pages']
           from apps.pojo.card import userProfileList_to_CardList
-          matchResultList.object_list=userProfileList_to_CardList(matchResultList.object_list)
-    from pinloveweb.method import is_focus_each_other
-    matchResultList=is_focus_each_other(request,matchResultList)
-    matchResultList=is_chat(request.user.id,matchResultList,)
+          matchResultList.object_list=userProfileList_to_CardList(request.user.id,matchResultList.object_list)
+    
     return matchResultList
 
      
@@ -207,8 +209,6 @@ def register_user(request) :
                  return render(request, 'register.html', args)
             userForm.save()
             username = userForm.cleaned_data['username']
-            # password = user_form.clean_password2()
-            # user = authenticate(username=username, password=password)
             user = User.objects.get(username=username)
             sex=userForm.cleaned_data['gender']
             #创建二维码
@@ -226,6 +226,9 @@ def register_user(request) :
                 get_score_by_invite_friend_register(link)
             user = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
             auth.login(request, user)
+            #内存里初始化个人相关信息
+            from util.cache import init_profile_into_cache
+            init_profile_into_cache(user.id)
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         else : 
             args['user_form'] = userForm
@@ -347,21 +350,30 @@ def newcount(request):
     
 def test(request):
    try:
-       int('wewf')
-       return HttpResponse('sd')
-#     from django.core.cache import cache
-#     cache_key = "myID"
-#     result = cache.get(cache_key)
-#     if result is None:
-#         data = "hello, found"
-#         cache.set(cache_key, data, 60)
-#         return HttpResponse("not found")
-#     else:
-#         return HttpResponse(result)
+      import hashlib
+      chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
+      return render(request,'test.html',{'chanel':chanel})
    except :
       logging.exception('sdsd')
       logger.exception("An error occurred")
       return HttpResponse('sd')
 ############################
-
+@require_POST
+@csrf_exempt
+def pusher_authentication(request):
+    socket_id=request.POST.get('socket_id')
+    channel_name=request.POST.get('channel_name')
+    APP_ID='82042'
+    APP_KEY='96c2a47c4f074b2cc22e'
+    APP_SECRET ='f90fc229ede97d99a3a8'
+    from pinloveweb.method import sign_channel
+    md5=sign_channel(request)
+    if channel_name=='%s%s'%(u'private_',md5):
+        import pusher
+        p = pusher.Pusher(app_id=APP_ID, key=APP_KEY, secret=APP_SECRET)
+        auth = p[channel_name].authenticate(socket_id)
+        json=simplejson.dumps(auth)
+        return HttpResponse(json)
+    
+    
     

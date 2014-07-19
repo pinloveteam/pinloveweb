@@ -39,7 +39,7 @@ def the_people_nearby(request):
     arg=page(request,userProfileList)
     userList=arg['pages']
     from apps.pojo.card import userProfileList_to_CardList
-    userList.object_list=userProfileList_to_CardList(userList.object_list)
+    userList.object_list=userProfileList_to_CardList(request.user.id,userList.object_list)
     from pinloveweb.method import is_focus_each_other
     userList=is_focus_each_other(request,userList)
     if request.GET.get('ajax')=='true':

@@ -59,6 +59,8 @@ def search(request):
             args['searchForm']=searchForm
             from apps.search_app.forms import SUN_SIGN_CHOOSICE
             args['sunSign']=SUN_SIGN_CHOOSICE
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id))
             return render(request, 'simple_search.html',args)
     except Exception as e:
         print e
@@ -68,9 +70,7 @@ def get_recommend_list(request,userProfile,userProfileList,**kwargs):
     args=page(request,userProfileList)
     matchResultList=args['pages']
     from apps.pojo.card import userProfileList_to_CardList
-    matchResultList.object_list=userProfileList_to_CardList(matchResultList.object_list)
-    from pinloveweb.method import is_focus_each_other
-    matchResultList=is_focus_each_other(request,matchResultList)
+    matchResultList.object_list=userProfileList_to_CardList(request.user.id,matchResultList.object_list)
     return matchResultList
 '''
 简单搜索

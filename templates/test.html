@@ -1,145 +1,20 @@
 ﻿<!DOCTYPE html>
-<html>
-	<head>
-		<link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
-    <link href="{{STATIC_URL}}css/footer&navbar.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}css/poplayer.css" rel="stylesheet">
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.poplayer.js"></script>
-    <script src="{{STATIC_URL}}js/jquery.loading.js" type="text/javascript" charset="utf-8"></script>
-       <script type="text/javascript">
-        $(document).ready(function(){
-		  $("#jin").click(function(){
-		  $.getJSON("http://127.0.0.1:8000/test/",function(result){
-           $('.container').append(result['detail'])
-    });});
-        });
-    </script>
-		<style>
-			body{
-				background-color: rgba(0,0,0,0);
-				overflow: hidden;
-			}
+<head>
+  <title>Pusher Test</title>
+  <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    // Enable pusher logging - don't include this in production
+    Pusher.log = function(message) {
+      if (window.console && window.console.log) {
+        window.console.log(message);
+      }
+    };
 
-			.col-xs-4{
-				background-color: #fff;
-				height: 530px;
-			}
-			.score {
-				display: inline-block;
-				font-size: 60px;
-				width: 176px;
-				text-align: center;
-			}
-
-			.head {
-				margin: 30px;
-				border-radius: 50%;
-				width: 100px;
-				height: 100px;
-				background-clip: padding-box;
-				overflow: hidden;
-			}
-
-			.head_girl {
-				border: 2px solid rgba(255, 102, 51, 0.6);
-			}
-
-			.main {
-				position: absolute;
-				top: 60px;
-				left: 150px;
-			}
-
-			.tag {
-				margin-left: 30px;
-			}
-
-			.table {
-				margin-top: 50px;
-				margin-left: 20px;
-			}
-
-			td {
-				border: none !important;
-			}
-			
-			.icon{
-				display: inline-block;
-				height: 32px;
-				width: 32px;
-				background:no-repeat;
-			}
-			.icon-height{
-				background: url("./img/身高.png");
-			}
-			.icon-education {
-				background: url("./img/学历.png");
-			}
-
-			.icon-age {
-				background: url("./img/年龄.png");
-			}
-
-			.icon-income {
-				background: url("./img/收入.png");
-			}
-
-			.icon-trade {
-				background: url("./img/行业.png");
-			}
-
-			.icon-constellation {
-				background: url("./img/星座.png");
-			}
-			
-			.icon-eye{
-				background: url("./img/个人信息新-08.png");
-				cursor: pointer;
-			}
-			
-			.label {
-				border-radius: initial;
-				color: #FFFFFF;
-				display: inline;
-				font-size: 100%;
-				font-weight: bold;
-				line-height: 2;
-				padding: 0.2em 0.6em 0.3em;
-				text-align: center;
-				vertical-align: baseline;
-				white-space: nowrap;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container" style="background-color: rgba(0,0,0,0);padding: 0;">
-			
-		</div>
-		<button id='jin'>jin</button>
-		<script type="text/javascript" charset="utf-8">
-			var datasets = {
-				fillColor : "rgba(0,0,0,0)",
-				strokeColor : "rgb(0,151,36)",
-				pointColor : "rgb(0,151,36)"
-			}
-			var ctx = $("canvas").get(0).getContext("2d");
-			datasets.data = [60, 20, 40, 20, 20]
-			var data = {
-				labels : ["教育程度", "性格", "收入情况", "样貌", "身高"],
-				datasets : [datasets]
-			};
-			var myNewChart = new Chart(ctx).Radar(data, {
-				scaleOverride : true,
-				scaleSteps : 4,
-				scaleStepWidth : 25,
-				scaleStartValue : 0,
-				scaleLineColor : "rgba(0,0,0,.5)",
-				scaleShowLabels : true,
-				angleLineColor : "rgba(0,0,0,.5)"
-			});
-		</script>
-	</body>
-</html>
+    var pusher = new Pusher('96c2a47c4f074b2cc22e');
+    var channel = pusher.subscribe('private_{{chanel}}');
+    channel.bind('my_event', function(data) {
+      alert(data.message);
+    });
+  </script>
+</head>
+{{user.id}}{{user.username}}

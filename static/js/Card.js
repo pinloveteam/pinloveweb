@@ -587,21 +587,21 @@ window.Card = function(person){
 	}
 	
 		
-	$('.card_row').append(this.template);
+	$('.card_row').append(this.template.children());
 	this.template.show();
 	
 	this.template.find('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
 	
-	$('.icon_dislike').on('click',dislike);
+	this.template.find('.icon_dislike').on('click',dislike);
 	
-	$('.icon_ding').on('click',ding);
+	this.template.find('.icon_ding').on('click',ding);
 	
 	
-	$("[class^='icon_like']").on('click',like);
+	this.template.find("[class^='icon_like']").on('click',like);
 	
-	$(".test_match").on('click',test_match);
-	$('.dafen').find('button').unbind();
-	$('.introBox').on('click',detail_info);
+	this.template.find(".test_match").on('click',test_match);
+	this.template.find('.dafen').find('button').unbind();
+	this.template.find('.introBox').on('click',detail_info);
 	//发送私信
 	if(person.isChat){
 		this.template.find('.btn_send_msg').on('click',sendMsg);
@@ -611,7 +611,7 @@ window.Card = function(person){
 	}
 	
 	$(function(){
-		 $('.icon_like_0,.icon_like_3').following();
+		$('.icon_like_0,.icon_like_3').following();
 		});
 }
 

@@ -9,6 +9,7 @@ from apps.user_app.models import Follow, Verification, UserVerification
 from django.utils import simplejson
 from django.http.response import HttpResponse
 from apps.friend_dynamic_app.models import FriendDynamic
+import hashlib
 def init_person_info_for_card_page(userProfile,**kwargs):
     arg={}
     arg['avatar_name']=userProfile.avatar_name
@@ -37,27 +38,39 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['follow']=followEachCount
     #获得最近一条动态
     arg['dynamic']=get_dymainc_late(userProfile.user_id)
-    #获取未读信息
-    from apps.message_app.method import get_no_read_message_count
-    arg['messageNoReadCount']=get_no_read_message_count(userProfile.user_id)
-    #读取未读动态评论
-    from apps.friend_dynamic_app.method import get_no_read_comment_count
-    arg['dynamicCommentCount']=get_no_read_comment_count(userProfile.user_id)
-    arg['noReadCount']= arg['messageNoReadCount']+arg['dynamicCommentCount']
+    arg.update(get_no_read_web_count(userProfile.user_id))
     return arg
 
+'''
+获取未读的消息数量
+@param userId:用户id
+@return: dict
+         messageNoReadCount 获取未读信息
+         dynamicCommentCount 读取未读动态评论
+         noReadCount  未读总信息
+'''
+def get_no_read_web_count(userId):
+    arg={}
+    #获取未读信息
+    from apps.message_app.method import get_no_read_message_count
+    arg['messageNoReadCount']=get_no_read_message_count(userId)
+    #读取未读动态评论
+    from apps.friend_dynamic_app.method import get_no_read_comment_count
+    arg['dynamicCommentCount']=get_no_read_comment_count(userId)
+    arg['noReadCount']= arg['messageNoReadCount']+arg['dynamicCommentCount']
+    return arg
 '''
 判断是否是相互关注
 attribute：
   CardList :List[Card] Card 类的列表
   focusEachOtherList：list 相互关注用户id
 '''
-def is_focus_each_other(request,cardList):
+def is_focus_each_other(userId,cardList):
     i=0
     cardIds=[card.user_id for card in cardList]
-    focus = Follow.objects.select_related().filter(my=request.user,follow_id__in=cardIds)
-    follows=Follow.objects.select_related().filter(my_id__in=cardIds,follow=request.user)
-    followEach=Follow.objects.follow_each(request.user.id,userIdList=cardIds)
+    focus = Follow.objects.select_related().filter(my_id=userId,follow_id__in=cardIds)
+    follows=Follow.objects.select_related().filter(my_id__in=cardIds,follow_id=userId)
+    followEach=Follow.objects.follow_each(userId,userIdList=cardIds)
     focusIds=[f.follow_id for f in focus] 
     followsIds=[follow.my_id for follow in follows] 
     followEachIds=[f.my_id for f in followEach] 
@@ -202,3 +215,9 @@ def send_reset_password(user,user_code):
        send_mail(u'拼爱网重置用户密码', email_message,DEFAULT_FROM_EMAIL,[user.email]) 
     except Exception as e:
         raise 
+'''
+加密通道
+使用用户名和密码加密通道
+'''
+def sign_channel(request):
+    return hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()

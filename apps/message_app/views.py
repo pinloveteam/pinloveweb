@@ -129,37 +129,6 @@ def message_reply(request):
         return HttpResponse(json)
     
     
-# def notify_detail(request):
-#     args={}
-#     try:
-#         senderId=int(request.REQUEST.get('senderId',False))
-#         receiverId=int(request.REQUEST.get('receiverId',False))
-#         id=int(request.REQUEST.get('id',False))
-#         if senderId and senderId and id:
-#             notifyList=Notify.objects.filter(sender_id__in=[senderId,receiverId],receiver_id__in=[senderId,receiverId]).exclude(id=id).order_by('-sendTime')
-#             notifyList=page(request,notifyList)['pages']
-#             from apps.pojo.notify import Notify_to_NotifyBean
-#             notifyList.object_list=Notify_to_NotifyBean(notifyList.object_list,request.user.id)
-#             args['messageList']=notifyList.object_list
-#             args['has_next']=notifyList.has_next()
-#             if notifyList.has_next():
-#                 args['next_page_number']=notifyList.next_page_number()
-#             args['result']='success'
-#             args['userId']=request.user.id
-#             #标记已读
-#             from apps.message_app.method import clean_message_by_user,get_no_read_message_count
-#             clean_message_by_user(receiverId,'notify')
-#             args['messageCount']=get_no_read_message_count(receiverId)
-#         else:
-#             args={'result':'error','error_message':'传递参数出错!'}
-#         from apps.pojo.notify import NotifyBeanEncoder
-#         json=simplejson.dumps(args,cls=NotifyBeanEncoder)
-#         return HttpResponse(json)
-#     except Exception as e:
-#         logger.exception('获取我和指定异性之间所有私信出错，出错原因')
-#         args={'result':'error','error_message':'获取我和指定异性之间所有私信出错!'}
-#         json=simplejson.dumps(args)
-#         return HttpResponse(json)
 
 '''
 获取信息数量
@@ -251,12 +220,16 @@ def get_noread_messges_by_userid(request):
     userId=request.GET.get('userId')
     user=request.user
     #获取未读的message和最近发出的三条message
-    sqlList=[user.id,userId,0,0,userId,user.id]
-    messageList=MessageLog.objects.get_message_list(userId,0,2)
+    messageList=MessageLog.objects.get_message_list_121(user.id,userId,first=0,end=3)
     from util.util import regex_expression
     result=[{'sender_id':message['sender_id'],'receiver_id':message['receiver_id'],'content':regex_expression(message['content'])} for message in messageList ]
     json = simplejson.dumps(result)
     return HttpResponse(json, mimetype="application/json")
+
+
+
+def message_test(request):
+    return HttpResponse('abc')
 ##############################
 
 

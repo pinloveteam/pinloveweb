@@ -31,6 +31,9 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^member/$','member'),
      url(r'^become_member/$','become_member'),
      url(r'^cancel_member/$','cancel_member'),
+     #黑名单
+     url(r'^black_list/$','black_list'),
+     
      
     )
 #1.0使用

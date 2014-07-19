@@ -161,6 +161,21 @@ GROUP BY sender_id  '''
         return  connection_to_db(sql,param=[userId,userId,userId],type=True)
     
     '''
+    获得两个用户之间的
+    '''
+    def get_message_list_121(self,userId,otherId,first=None,end=None): 
+        sql='''
+   
+SELECT u1.*,u2.*,u3.username as receiverName,u4.username as senderName from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id
+INNER JOIN auth_user u3 on u1.receiver_id=u3.id INNER JOIN auth_user u4 on u2.sender_id=u4.id
+where  isDeletereceiver = False  AND receiver_id in (%s,%s) and sender_id in (%s,%s)
+ORDER BY sendTime DESC
+ '''
+        if first is not None:
+            sql=sql+'limit %s , %s'%(first,end)
+        return  connection_to_db(sql,param=[userId,otherId,userId,otherId],type=True)
+       
+    '''
     获取用户未读消息数量
     '''
     def get_no_read_msessge_count(self,userId):

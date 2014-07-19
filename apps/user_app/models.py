@@ -17,6 +17,7 @@ from apps.recommend_app.models import  MatchResult
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT, ADMIN_ID
 # from util.singal import cal_recommend_user
 from apps.common_app.models import Tag
+import datetime
 
 class UserProfileManager(models.Manager):
     '''
@@ -525,6 +526,45 @@ class Verification(models.Model):
         verbose_name_plural = u'临时验证码'
         db_table='verification'
     
+'''
+黑名单
+'''   
+class BlackList(models.Model):
+    my=models.ForeignKey(User,related_name='black_list_user',verbose_name=u'拉黑用户')
+    other=models.ForeignKey(User,related_name='black_list_other',verbose_name=u'被拉黑的用户')
+    createTime=models.DateTimeField(verbose_name=u'创建时间',)
+    
+    def save(self,*args,**kwargs):
+        self.createTime=datetime.datetime.now()
+        super(BlackList,self).save(*args,**kwargs)
+    class Meta:
+        verbose_name=u'黑名单'
+        verbose_name_plural = u'黑名单'
+        db_table='black_list'
+
+'''
+举报
+'''
+class Denounce(models.Model):
+    my=models.ForeignKey(User,related_name='denounce_user',verbose_name=u'举报用户')
+    FROM_CHOICES=((0,u'私信'),)
+    comeFrom=models.SmallIntegerField(verbose_name='举报内容来自哪里',null=True)
+    auid=models.IntegerField(verbose_name='举报内容id',null=True)
+    other=models.ForeignKey(User,related_name='denounce_other',verbose_name=u'被举报的用户')
+    STATUTS_CHOICES=((0,u'未处理'),(1,u'无效'),(2,u'有效'),)
+    status=models.SmallIntegerField(verbose_name=u'处理状态',default=0,choices=STATUTS_CHOICES)
+    TYPE_CHOICES=((0,u'色情交易'),(1,u'头像、资料虚假或冒用'),(2,u'婚托、饭托、酒托'),
+                  (3,u' 骚扰广告'),(4,u' 诈骗钱财、虚假中奖信息'),(5,u' 其他理由'),)
+    type=models.SmallIntegerField(verbose_name=u'举报类型',choices=TYPE_CHOICES)
+    reason=models.CharField(verbose_name=u'理由',max_length=128,null=True)
+    createTime=models.DateTimeField(verbose_name=u'创建时间')
+    def save(self,*args,**kwargs):
+        self.createTime=datetime.datetime.now()
+        super(Denounce,self).save(*args,**kwargs)
+    class Meta:
+        verbose_name=u'举报'
+        verbose_name_plural = u'举报'
+        db_table='denounce'
 
 def save_avatar_in_db(sender, uid, avatar_name, **kwargs):
     if UserProfile.objects.filter(user_id=uid).exists():

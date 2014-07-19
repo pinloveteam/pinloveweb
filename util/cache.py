@@ -7,7 +7,6 @@ Created on 2014年1月8日
 import datetime
 from django.core.cache import cache
 from django.utils import simplejson
-
 '''
 初始化缓存
 '''
@@ -151,7 +150,8 @@ def set_cache(key,value):
     else:
         data.append(value)
         cache.set(key,data)
-        
+    
+
 '''
 备份缓存数据  
 backupType： 备份数据类型
@@ -178,4 +178,34 @@ def restore_backup_cache(backupType,time):
         data=getattr(backupCache,menthod)
         cache.set(menthod,simplejson.loads(data))
 
+'''
+初始化个人所需要的信息到cache中
+@param userId:用户id 
+'''
+def init_profile_into_cache(userId):
+    from apps.user_app.method import get_black_list
+    balckList=get_black_list(userId)
+    BACKLIST=[user.other_id for user in balckList]
+    cache.set('BACKLIST',BACKLIST)
 
+'''
+获得黑名单列表
+@return: list 黑名单列表
+'''
+def get_black_list_by_cache():
+    return  cache.get('BACKLIST',None)
+'''
+将用户id缴入黑名单列表
+'''
+def set_black_list_by_cache(userId):
+    blackList=cache.get('BACKLIST',None)
+    blackList.append(userId)
+    cache.set('BACKLIST',blackList)
+'''
+获得黑名单列表
+@return: list 黑名单列表
+'''
+def del_attribute_black_list_by_cache(userId):
+    blackList=cache.get('BACKLIST',None)
+    blackList.remove(userId)
+    cache.set('BACKLIST',blackList)

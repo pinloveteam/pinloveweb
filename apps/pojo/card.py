@@ -10,6 +10,8 @@ from apps.friend_dynamic_app.models import Picture
 from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
 from apps.recommend_app.models import Grade
 from apps.user_app.models import UserProfile
+from pinloveweb.method import is_focus_each_other
+from apps.user_app.method import is_chat
 '''
   卡片类
 '''
@@ -86,7 +88,7 @@ class MyEncoder(simplejson.JSONEncoder):
  attribute：
     matchResultList  :  MatchResult集合
 '''
-def matchResultList_to_CardList(matchResultList):
+def matchResultList_to_CardList(myId,matchResultList):
     recommendResultList=[]
     for matchResult in matchResultList:
        grade=Grade.objects.get(user=matchResult.other)
@@ -109,13 +111,17 @@ def matchResultList_to_CardList(matchResultList):
            isVote=False
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
        recommendResultList.append(recommendResult)
+    #关注情况
+    recommendResultList=is_focus_each_other(myId,recommendResultList)
+    #是否有聊天权限
+    recommendResultList=is_chat(myId,recommendResultList,)
     return recommendResultList
 '''
 将用户详细信息userProfileList转换成卡片集合CardList
 attribute：
  userProfileList：  用户详细信息集合
 '''
-def userProfileList_to_CardList(userProfileList):
+def userProfileList_to_CardList(myId,userProfileList):
      recommendResultList=[]
      for userProfile in userProfileList:
        userId=userProfile.user_id
@@ -136,6 +142,10 @@ def userProfileList_to_CardList(userProfileList):
            isVote=False
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
        recommendResultList.append(recommendResult)
+     #关注情况
+     recommendResultList=is_focus_each_other(myId,recommendResultList)
+     #是否有聊天权限
+     recommendResultList=is_chat(myId,recommendResultList,)
      return recommendResultList
  
 
@@ -144,7 +154,7 @@ def userProfileList_to_CardList(userProfileList):
 attribute：
  userProfileList：  用户详细信息集合
 ''' 
-def fllowList_to_CardList(user,fllowList,type):
+def fllowList_to_CardList(myId,fllowList,type):
     recommendResultList=[]
     userList=[]
     if type ==1:
@@ -183,6 +193,10 @@ def fllowList_to_CardList(user,fllowList,type):
         city=userProfile.city
         recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
         recommendResultList.append(recommendResult)
+    #关注情况
+    recommendResultList=is_focus_each_other(myId,recommendResultList)
+    #是否有聊天权限
+    recommendResultList=is_chat(myId,recommendResultList,)
     return recommendResultList
  
  

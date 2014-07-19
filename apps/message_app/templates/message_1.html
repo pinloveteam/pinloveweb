@@ -214,6 +214,36 @@
 					publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght - curLength)
 				}
 			}
+			//拉黑
+			function blackList(context,userId){
+				var data={userId:userId}
+				$.ajax({
+					dataType:"json",
+					url:'/user/black_list/',
+					data:data,
+					success:function(data, textStatus){
+                        if(data.result== 'success'){
+                        	if (data.type==1){
+                        		$(context).html('解除拉黑')
+                            	var body=$('<p>拉黑成功!</p>')
+                        	}
+                        	else{
+                        		$(context).html('拉黑')
+                            	var body=$('<p>解除拉黑成功!</p>')
+                        	}
+                        	
+                        }else if(data.result == 'error'){
+                        	 alert(data.error_message)
+                        	 var body=$(data.error_message)
+                        }
+                        $.poplayer({body:body});
+					},
+                    error: function(response){
+                        alert('网络异常！')
+                    },
+					
+				});
+			}
 			$(document).ready(function(){
 				$('.publishInputExpression').click(publishInputExpression);
 				limitTextArea()
@@ -775,6 +805,9 @@
 							{%endifnotequal  %}
 								<a  id='replyNow' href="javascript:void(0);" onclick="reply({%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%},1);">
 									回复
+								</a>
+								<a  id='blackList' href="javascript:void(0);" onclick="blackList(this,{%ifequal user.id page.receiverId%}{{page.senderId}}{%else%}{{page.receiverId}}{%endifequal%});">
+									{%if page.isBlackList %}解除拉黑{%else%}拉黑{%endif%}
 								</a>
 								<div class="message-list">
 									<div class="message">
