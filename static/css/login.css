@@ -1,0 +1,164 @@
+﻿html, body {
+	height: 100%;
+}
+body {
+	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
+	font-size: 16px;
+}
+
+.container, body {
+	width: 100%;
+}
+
+a:hover {
+	color: #F1592A !important;
+	text-decoration: none;
+}
+
+.btn, .btn-sm {
+	border: none;
+	cursor: pointer;
+}
+
+.btn {
+	width: 100%;
+	font-size: 16px;
+}
+
+.btn-sm {
+	width: 150px;
+	padding: 5px 0;
+}
+
+#register {
+	background-color: #EE5B2F;
+}
+#login {
+	background-color: #50B62F;
+}
+
+#qqlogin {
+	background-color: #175E88;
+}
+
+#weibologin {
+	background-color: #EC0000;
+	position: relative;
+	top: -28.5px;
+	left: 200px;
+}
+.stage {
+	height: 551px;
+}
+
+.background{
+	background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('../img/bg.jpg'); 
+    z-index: 0;
+    position: absolute;
+     bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+.bgc-blue, .bcg-orange, a, .btn, .btn-xs {
+	color: #fff;
+}
+
+.bgc-white, .bgc-gray {
+	color: #333;
+}
+
+.bgc-blue {
+	background-color: #5DA6CF;
+}
+
+.bgc-gray {
+	background-color: #E6E6E6;
+}
+
+.bgc-white {
+	background-color: #FFF;
+}
+
+.bcg-orange {
+	background-color: #F1592A;
+}
+
+.title {
+	font-size: 45px;
+	text-align: center;
+}
+
+.layer {
+	padding: 20px 60px;
+	height: 100%;
+	position: relative;
+}
+
+.layer-top div {
+	display: inline-block;
+}
+
+.layer-main {
+	margin: 50px auto;
+}
+
+.main-left, .main-right {
+	padding: 10px 50px;
+}
+
+.main-left {
+	border-right: solid 1px #fff;
+	text-align: center;
+}
+
+.radio-inline {
+	margin-left: 0 !important;
+}
+
+.form-group {
+	width: 100%;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+.btn-login {
+	background-color: #F4856A;
+	padding: 5px 10px;
+	font-size: 20px;
+	display: inline-block;
+	cursor: pointer;
+	margin-top: 20px;
+}
+
+.btn-login:hover {
+	background-color: #F1592A;
+}
+
+.layer-bottom {
+	border-radius: 50%;
+	width: 100px;
+	height: 60px;
+	margin: 0px auto;
+	position: relative;
+	top: -30px;
+	z-index: 1;
+}
+
+.more {
+	position: relative;
+	left: 20px;
+	top: 30px;
+}
+
+#scrollUp {
+	background: url("../img/top.png") no-repeat scroll 0 0 transparent;
+	bottom: 20px;
+	height: 38px;
+	right: 20px;
+	width: 38px;
+	cu
