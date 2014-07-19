@@ -40,8 +40,7 @@ urlpatterns = patterns('',
     url(r'^account/verification/$', 'pinloveweb.views.register_verify'), 
     url(r'^account/check_register/$', 'pinloveweb.views.check_register'),
    url(r'^newCount/$', 'pinloveweb.views.newcount'),
-   #印证通道
-   url(r'^/pusher/auth$', 'apps.pusher_app.views.pusher_authentication'),
+
    
     
     # User Profile 
