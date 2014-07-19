@@ -3,6 +3,8 @@ function submit(){
 }
 
 $(document).ready(function() {
+     var height=document.body.clientHeight;
+	 $('.stage').css('height',height-50);
 	$.scrollUp({
 		scrollName : 'scrollUp', // Element ID
 		topDistance : '300', // Distance from top before showing element (px)
