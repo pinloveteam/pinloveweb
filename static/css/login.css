@@ -2,7 +2,11 @@
 	height: 100%;
 }
 body {
-	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
+	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体"; 
+	/* font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Hiragino Sans GB","Hiragino Sans GB W3";*/ 
+	-webkit-font-smoothing:antialiased; 
+	-moz-osx-font-smoothing: grayscale; 
+	font-weight: normal;
 	font-size: 16px;
 }
 
@@ -48,14 +52,14 @@ a:hover {
 	left: 200px;
 }
 .stage {
-	height: 551px;
+	height: 591px;
 }
 
 .background{
 	background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('../img/bg.jpg'); 
+    background-image: url('img/bg.jpg'); 
     z-index: 0;
     position: absolute;
      bottom: 0;
@@ -127,16 +131,12 @@ a:hover {
 }
 
 .btn-login {
-	background-color: #F4856A;
+	background-color: #F1592A;
 	padding: 5px 10px;
-	font-size: 20px;
+	font-size: 18px;
 	display: inline-block;
 	cursor: pointer;
 	margin-top: 20px;
-}
-
-.btn-login:hover {
-	background-color: #F1592A;
 }
 
 .layer-bottom {
@@ -156,7 +156,7 @@ a:hover {
 }
 
 #scrollUp {
-	background: url("../img/top.png") no-repeat scroll 0 0 transparent;
+	background: url("./img/top.png") no-repeat scroll 0 0 transparent;
 	bottom: 20px;
 	height: 38px;
 	right: 20px;

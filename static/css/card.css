@@ -1,396 +1,391 @@
 ﻿/*common*/
+.img-circle, .img-rounded {
+margin-left: 30px;
+margin-top: 4px;
+}
+
+.name {
+margin: 10px;
+font-weight: bold;
+font-size: 16px;
+}
+
 hr {
-	margin: 7px;
-	border: none;
-	border-top: 1px solid rgba(255, 255, 255, 0.4);
+margin: 7px;
+border: none;
+border-top: 1px solid rgba(255, 255, 255, 0.4);
 }
 
+.card-top{
+width: 100%;
+height: 10px;
+}
+
+.top-girl{
+background-color: #FF8532;
+}
+
+.top-boy{
+background-color: #00A3FE;
+}
 .card_panel {
-	margin-top: 17px;
-	width: 253px;
-	/*border: 2px solid #C4DAED;*/
-	background: none repeat scroll 0 0 #fff;
-	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+margin-top: 17px;
+width: 203px;
+/*border: 2px solid #C4DAED;*/
+background: none repeat scroll 0 0 #fff;
+-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
+box-shadow: 2px 2px 10px #909090;/*opera或ie9*/
 }
 
-/*.controlArrow {
-	transition: border-color 0.5s;
-	border-style: solid;
-	cursor: pointer;
-	height: 0;
-	margin-top: -40px;
-	position: absolute;
-	top: 50%;
-	width: 0;
+.controlArrow {
+transition: border-color 0.5s;
+border-style: solid;
+cursor: pointer;
+height: 0;
+margin-top: -40px;
+position: absolute;
+top: 50%;
+width: 0;
 }
 
 .controlArrow.prev {
-	border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
-	border-width: 50px 40px 50px 0;
-	left: -50px;
-	width: 0;
+border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+border-width: 50px 40px 50px 0;
+left: -50px;
+width: 0;
 }
 
 .controlArrow.next {
-	border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.3);
-	border-width: 50px 0 50px 40px;
-	right: -45px;
+border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 1);
+border-width: 50px 0 50px 40px;
+right: -45px;
 }
 
-.controlArrow.next:hover {
-	border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.7);
+/*.controlArrow.next:hover {
+border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(255, 255, 255, 1);
 }
 
 .controlArrow.prev:hover {
-	border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.7) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 }*/
 
 #compare_tip {
-	display: none;
-	width: 600px;
-	position: absolute;
-	z-index: 9999;
+display: none;
+width: 600px;
+position: absolute;
+z-index: 9999;
 }
 
 /*The left side*/
 .send_pic {
-	height: 194px;
+height: 194px;
 }
 
 /* card */
 .card {
-	padding: 0;
-	margin-right: 20px;
-	height: 360px;
+padding: 0;
+margin-right: 20px;
+height: 260px;
 }
 
 /*.chosen{
- border:2px solid green !important;
- }
+border:2px solid green !important;
+}
 
- .dafen,.compare_cancle,.compare,.chart_info,.other_name canvas{
- position: absolute;
- left: 120px; top: 0px;
- width: 100px;
- Z-index:1000;
- }
+.dafen,.compare_cancle,.compare,.chart_info,.other_name canvas{
+position: absolute;
+left: 120px; top: 0px;
+width: 100px;
+Z-index:1000;
+}
 
- .dafen,.compare_cancle,.compare{
- top: -120px;
- }
+.dafen,.compare_cancle,.compare{
+top: -120px;
+}
 
- .dafen{
- left: 320px;
- }
- .other_name canvas{
- display:none;
- background-color: rgba(255, 255, 255, 0.9);
- width: 320px;
- Z-index:999;
- }*/
-
+.dafen{
+left: 320px;
+}
+.other_name canvas{
+display:none;
+background-color: rgba(255, 255, 255, 0.9);
+width: 320px;
+Z-index:999;
+}*/
 
 .chart_info {
-	top: 300px;
+top: 300px;
 }
 
 .card-nav {
-	position: absolute;
-	top: 315px;
-}
-
-.btn-lg{
-	width: 85px;
-	border-radius: 0;
-	padding-top: 12px;
-	padding-bottom: 11px;	
+margin-left: 40px;
+position: absolute;
+top: 220px;
+border-bottom: none;
 }
 
 /* info tab */
-.name{
-	position: absolute;
-	top: 315px;
-	width: 100%;
-	height: 46px;
-	transition:top 0.75s;
-	-moz-transition:top 0.75s; /* Firefox 4 */
-	-webkit-transition:top 0.75s; /* Safari and Chrome */
-	-o-transition:top 0.75s; /* Opera */
+.other_name {
+cursor: pointer;
 }
 
-.introBox:hover .name{
-	top:250px;
-}
-
-.username{
-	cursor: pointer;
-	font-size: 14px;
-	color: #fff;
-	font-weight: bold;
-	display: inline-block;
-	background-color: #428BCA;
-	padding: 3px 0;
-	width: 150px;
-	text-align: center;
-}
-.name-arrow{
-	background: #428BCA repeat scroll 0 0;
-	display: inline-block;
-	height: 18.5px;
-	width: 18.5px;
-	left: -13px;
-	top: 3.5px;
-	position: relative;
-	transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-}
-
-.tag{
-	margin-left: 50px;
-}
-
-.glyphicon{
-	font-size: 20px;
-	color: #B7B6BC;	
-}
-
- .card-introBox {
-	height: 200px;
-	background-clip: padding-box;
-	overflow: hidden;
-	display: inline-block;
+.head, .card-introBox {
+border-radius: 50%;
+width: 103px;
+height: 103px;
+background-clip: padding-box;
+overflow: hidden;
+display: inline-block;
 }
 
 .head_girl {
-	border: 2px solid rgba(255, 102, 51, 0.6);
+border: 2px solid rgba(255, 102, 51, 0.6);
 }
 
 .head_boy {
-	border: 2px solid rgba(60, 117, 186, 0.6);
+border: 2px solid rgba(60, 117, 186, 0.6);
 }
 
 .introBox {
-	position: relative;
-	width: 100%;
+position: relative;
+left: 52px;
+top: 4px;
+width: 100px;
 }
 
 .detail_info {
-	color: #6AB3C2;
-	font-weight:bold;
+position: absolute;
+top: 15px;
+left: 10px;
+margin: 10px;
+color: #fff;
+text-align: center;
 }
 
 .card-introBox {
-	cursor: pointer;
-	background: none repeat scroll 0 0 rgba(255,255,255,0);
-	transition: opacity 1s;
-	/*opacity: 0;*/
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: 0px;
-	top: 0px;
+cursor: pointer;
+background: none repeat scroll 0 0 #000;
+transition: opacity 1s;
+opacity: 0;
+width: 100px;
+height: 100px;
+position: absolute;
+left: 2px;
+top: 2px;
 }
 
 .card-introBox:hover {
-	background: none repeat scroll 0 0 rgba(255,255,255,0.2);
+opacity: 0.7;
 }
 
+.tag, .other_name {
+text-align: center;
+}
 
 .tool_bar {
-	margin-left: 50px;
-	margin-top: 10px;
+margin-left: 50px;
+margin-top: 10px;
 }
 
 /* picture tab */
 .hoverbox {
-	margin-top: 10px;
-	height: 150px;
-	list-style: none;
+margin-top: 10px;
+width: 203px;
+height: 48px;
+cursor: default;
+list-style: none;
 }
 
 .hoverbox a {
-	cursor: default;
+cursor: default;
 }
 
 .hoverbox a .preview {
-	display: none;
+display: none;
 }
 
 .hoverbox img {
-	height: 50px;
-	width: 50px;
+height: 50px;
+vertical-align: top;
+width: 50px;
+max-width: 150px;
 }
 
 .hoverbox li {
-	color: inherit;
-	display: inline;
-	float: left;
-	margin: 1px;
-	position: relative;
+color: inherit;
+display: inline;
+float: left;
+margin: 1px;
+position: relative;
 }
 
 /* chat tab */
 .chat {
-	height: 150px;
-	overflow: hidden;
+width: 203px;
+height: 90px;
+overflow: hidden;
 }
 
 .chat_content_group.self {
-	text-align: right;
+text-align: right;
 }
 
 .chat_content_group {
-	padding: 5px 10px 5px 10px;
+padding: 5px 10px 5px 10px;
 }
 
 .chat_tab {
-	margin: 0;
-	padding: 0;
+margin: 0;
+padding: 0;
 }
 
 .chat_content_group.self .chat_content_avatar {
-	float: right;
-	margin: 0 0 0 10px;
+float: right;
+margin: 0 0 0 10px;
 }
 
 .chat_content_avatar {
-	float: left;
-	height: 40px;
-	margin-right: 10px;
-	width: 40px;
+float: left;
+height: 40px;
+margin-right: 10px;
+width: 40px;
 }
 
 .chat_content_group.self .chat_content {
-	text-align: left;
+text-align: left;
 }
 
 .chat_content_group.self .chat_content {
-	background: #EBEDF3 repeat scroll 0 0;
+background: #EBEDF3 repeat scroll 0 0;
 }
 
 .chat_content {
-	position: relative;
-	background: #99CC33 repeat scroll 0 0;
-	border-radius: 5px;
-	display: inline-block;
-	line-height: 1.4;
-	max-width: 90%;
-	min-height: 16px;
-	padding: 5px 15px;
-	word-break: break-all;
+position: relative;
+background: #99CC33 repeat scroll 0 0;
+border-radius: 5px;
+display: inline-block;
+line-height: 1.4;
+max-width: 90%;
+min-height: 16px;
+padding: 5px 15px;
+word-break: break-all;
 }
 
 .cloudArrow {
-	background: #EBEDF3 repeat scroll 0 0;
-	display: block;
-	font-size: 0;
-	height: 10px;
-	position: absolute;
-	top: 10px;
-	width: 10px;
-	transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
+background: #EBEDF3 repeat scroll 0 0;
+display: block;
+font-size: 0;
+height: 10px;
+position: absolute;
+top: 10px;
+width: 10px;
+transform: rotate(45deg);
+-webkit-transform: rotate(45deg);
 }
 
 .chat_content_group.self .cloudArrow {
-	right: -5px;
+right: -5px;
 }
 
 .chat_content_group.other .cloudArrow {
-	background: #99CC33 repeat scroll 0 0;
-	left: -5px;
+background: #99CC33 repeat scroll 0 0;
+left: -5px;
 }
 
 .chat_textarea {
-	resize: none;
-	display: inline;
-	width: 100%;
-	height: 35px;
+resize: none;
+display: inline;
+width: 100%;
+height: 35px;
 }
 
 .btn_send_msg {
-	display: inline;
-	float: right;
-	margin-right: 1px;
+display: inline;
+float: right;
+margin-right: 1px;
 }
 
 /* icon */
 .icon_profile, .icon_photo, .icon_msg, .icon_ding, .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3, .icon_dislike {
-	background: url("../img/profile.png") no-repeat;
-	margin-right: 3px;
-	display: inline-block;
-	height: 32px;
-	width: 32px;
+background: url("../img/profile.png") no-repeat;
+display: inline-block;
+height: 32px;
+width: 32px;
 }
 .icon_photo {
-	background-image: url("../img/photo.png");
+background-image: url("../img/photo.png");
 }
 .icon_msg {
-	background-image: url("../img/msg.png");
+background-image: url("../img/msg.png");
 }
 
-.icon_ding, .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3, .icon_dislike {
-	height: 20px;
-	width: 24px;
-	position: absolute;
-	transition: opacity 0.5s;
-	opacity: 0;
+.icon_ding, .icon_dislike {
+position: absolute;
+height: 16px;
+width: 16px;
+transition: opacity 0.5s;
+opacity: 0;
 }
 
 .icon_ding {
-	top: 0px;
-	left: 0px;
-	background-image: url("../img/2.png");
+top: 10px;
+left: 0px;
+background-image: url("../img/ping.png");
+}
+
+.icon_dislike {
+top: 10px;
+right: 0px;
+background-image: url("../img/dislike.png");
+}
+
+.card :hover .icon_ding ,.card :hover .icon_dislike {
+opacity: 1;
 }
 
 .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3 {
-	top: 177px;
-	left: 95px;
-	opacity: 1;
-	background-image: url("../img/like.png");
+position: absolute;
+height: 20px;
+width: 24px;
+top: 177px;
+left: 95px;
+background-image: url("../img/like.png");
 }
 .icon_like_0 {
-	background-image: url("../img/like.png");
-	title: "未关注"
+background-image: url("../img/like.png");
+title: "未关注"
 }
 .icon_like_1 {
-	background-image: url("../img/slike.png");
-	title: "已关注"
+background-image: url("../img/slike.png");
+title: "已关注"
 }
 .icon_like_2 {
-	background-image: url("../img/dlike.png");
-	title: "相互关注"
+background-image: url("../img/dlike.png");
+title: "相互关注"
 }
 .icon_like_3 {
-	background-image: url("../img/olike.png");
-	title: "相互关注"
-}
-.icon_dislike {
-	top: 0px;
-	right: -10px;
-	background-image: url("../img/dislike.png");
+background-image: url("../img/olike.png");
+title: "相互关注"
 }
 
 .icon_follow, .icon_fans, .icon_mutual_like {
-	background: url("../img/关注.png") no-repeat;
-	margin-left: 8px;
-	display: block;
-	height: 27px;
-	width: 32px;
+background: url("../img/关注.png") no-repeat;
+margin-left: 8px;
+display: block;
+height: 27px;
+width: 32px;
 }
 
 .icon_fans {
-	background-image: url("../img/粉丝.png");
+background-image: url("../img/粉丝.png");
 }
 
 .icon_mutual_like {
-	background-image: url("../img/相互关注.png");
+background-image: url("../img/相互关注.png");
 }
 
-.ding {
-	opacity: 1;
-	background-image: url("../img/1.png");
+.ding{
+opacity:1;
+background-image: url("../img/ding1.png");
 }
-
