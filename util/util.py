@@ -13,7 +13,6 @@ from django.core.serializers import serialize
 from django.db.models.query import QuerySet
 from django.utils import simplejson
 from apps.user_app.models import UserProfile
-from celery.worker.job import Request
 '''
 生成长度固定的字符串
 '''
