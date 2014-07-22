@@ -284,7 +284,7 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
 <div class="">
 <div class="score">
 <span>%s</span>
-<a onclick="buy_score_for_other(%s)"><i title="让对方看见" class="icon icon-eye"></i></a>
+<a onclick="buy_score_for_other(this,%s)"><i title="让对方看见" class="icon icon-eye"></i></a>
 </div>
 <div class="score score_other">
 %s
@@ -314,7 +314,7 @@ def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
                 compareScoreMyself='<button value="%s">查<button>'%(compareScoreMatch['matchResult']['userId'])
         if scoreMatch['matchResult'].get('scoreMyself',None)!=None:
             scoreMyself= int(scoreMatch['matchResult'].get('scoreMyself'))
-            compareEye='<a onclick="buy_score_for_other(%s)"><i class="icon icon-eye" ></i></a>'%(scoreMatch['matchResult']['userId'])
+            compareEye='<a onclick="buy_score_for_other(this,%s)"><i class="icon icon-eye" ></i></a>'%(scoreMatch['matchResult']['userId'])
         else:
             scoreMyself='<button value="%s" >查<button>'%(scoreMatch['matchResult']['userId'])
         canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['scoreOther']),scoreMatch['matchResult']['userId'],compareEye,compareScoreOther,scoreMyself,compareScoreMyself)

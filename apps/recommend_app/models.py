@@ -152,7 +152,17 @@ class MatchResult(models.Model):
                 pass
         return self._user_basic_profile_cache
 
-
+'''
+投票记录表
+'''
+class AppearanceVoteRecord(models.Model):
+    user=models.ForeignKey(User,related_name='vote_user',verbose_name=u"打分的用户")
+    other=models.ForeignKey(User,related_name='voted_user',verbose_name=u"被打分的用户")
+    class Meta:
+        verbose_name = u'投票记录表' 
+        verbose_name_plural = u'投票记录表'
+        db_table=u'appearance_vote_record'
+    
 # '''
 # 触发推荐事件
 # '''

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Django settings for pinlove project.
 import os
+import sys
 PATH=os.path.dirname(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -157,7 +158,7 @@ INSTALLED_APPS = (
 'apps.alipay_app',
 )
 PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
-# PAYPAL_TEST=False
+PAYPAL_TEST=False
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -399,6 +400,8 @@ UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 DOMAIN='pinlove.com'
 
+if 'test' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
 ###################for tests##########
 # import djcelery
 # djcelery.setup_loader()

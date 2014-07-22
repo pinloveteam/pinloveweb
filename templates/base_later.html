@@ -130,16 +130,22 @@ function change_navi(){
 		$('#member').addClass('active');
 	}
 }
+var isChard=false;
+var noReadMessageCount={{messageNoReadCount}}
 //拉取信息数量
-var time=1000*1000;
+var time=1000*10;
 interval = self.setInterval("polling()", time);
  var polling=function(){
 	   $.getJSON('/newCount/',function(data){
 		   if(data.result=='success'){
 			   set_count(data.messageNoReadCount,data.dynamicCommentCount)
+			   if(data.messageNoReadCount-noReadMessageCount>0&&isChard){
+				   get_card_chat(data.messageNoReadCount-noReadMessageCount);
+				   noReadMessageCount=data.messageNoReadCount;
+			   }
 		   }else{
 			   clearTimeout(interval)
-		   }
+		        }
 			   });  
    };
    

@@ -6,7 +6,8 @@ Created on Sep 3, 2013
 '''
 from apps.user_app.models import UserProfile, Follow, UserTag,\
     BrowseOherScoreHistory
-from apps.recommend_app.models import MatchResult, Grade, UserExpect
+from apps.recommend_app.models import MatchResult, Grade, UserExpect,\
+    AppearanceVoteRecord
 from util.page import page
 from django.shortcuts import render
 from apps.upload_avatar import app_settings
@@ -200,6 +201,7 @@ def buy_score_for_other(request):
     args={}
     try:
         flag=False
+        type=1
         otherId=int(request.REQUEST.get('otherId'))
         from apps.user_score_app.method import use_score_by_other_score
         result=use_score_by_other_score(request.user.id,otherId)
@@ -216,6 +218,10 @@ def buy_score_for_other(request):
             args={'result':'success'}
             if not BrowseOherScoreHistory.objects.filter(my_id=otherId,other_id=request.user.id).exists():
                 BrowseOherScoreHistory(my_id=otherId,other_id=request.user.id).save()
+            #判断对方是否浏览过我的分数
+            if BrowseOherScoreHistory.objects.filter(my_id=request.user.id,other_id=otherId).exists():
+                type=2
+            args['type']=type
             #发系统消息给对应用户
             from apps.message_app.method import add_system_message_121
             add_system_message_121(ADMIN_ID, otherId, BUY_SCORE_FOR_OTHER_MESSAGE_TEMPLATE%(request.user.username,request.user.id))
@@ -233,20 +239,26 @@ def buy_score_for_other(request):
 def user_vote(request):
     args={}
     try:
-        score = request.GET.get('score')
+        score = float(request.GET.get('score').strip())
         userId=request.GET.get('userId')
-        if score.strip()=='':
+        if AppearanceVoteRecord.objects.filter(user_id=request.user.id,other_id=userId).exists():
+            raise Exception('你已打过分!')
+        if score <0 or score >100:
+            raise Exception('分数必须在1~100范围内!')
+        if score=='':
             args={'result':'error','error_message':u'不能为空!'}
         else:
             geadeInstance=Grade.objects.get(user_id=userId)
             from apps.recommend_app.recommend_util import cal_user_vote
-            score=cal_user_vote(float(score),geadeInstance)
+            score=cal_user_vote(score,geadeInstance)
             Grade.objects.filter(user_id=userId).update(appearancescore=score,appearancesvote=geadeInstance.appearancesvote+1)
+            AppearanceVoteRecord(user_id=request.user.id,other_id=userId).save()
             args={'result':'success'}
+    except Exception,e:
+        logger.exception('用户投票,出错!')
+        args={'result':'error','error_message':e.message}
         json = simplejson.dumps(args)
         return HttpResponse(json)
-    except Exception,e:
-        logger.exception(' 用户投票,出错!')
         
 ##########################################
 def recommend(request):

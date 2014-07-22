@@ -56,13 +56,23 @@ def member(request):
     try:
         args={}
         userProfile=UserProfile.objects.get(user=request.user)
-        chargeExchangeRelateList=ChargeExchangeRelate.objects.filter(currencyType=2)
+        #获取城市代码
+        from util.location import get_country_code
+        countryCode=get_country_code(request)
+        if countryCode=='US':
+            chargeExchangeRelateList=ChargeExchangeRelate.objects.filter(currencyType=1)
+        elif countryCode=='CN':
+            chargeExchangeRelateList=ChargeExchangeRelate.objects.filter(currencyType=2)
+        else:
+            chargeExchangeRelateList=ChargeExchangeRelate.objects.filter(currencyType=2)
         charge=Charge.objects.get(user_id=request.user.id)
         args['chargeExchangeRelateList']=chargeExchangeRelateList
         args['charge']=charge
         #初始化个人信息模块
         from pinloveweb.method import init_person_info_for_card_page
         args.update(init_person_info_for_card_page(userProfile))
+        from pinloveweb.method import get_no_read_web_count
+        args.update(get_no_read_web_count(request.user.id))
         return render(request,'buy.html',args)
     except Exception as e:
         errorMessage='会员购买页面出错'

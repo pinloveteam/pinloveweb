@@ -104,9 +104,12 @@ where u2.country=%s
     
 '''
 相用户貌投票
+得分=(原本用户外貌打分*（原本票数+DEFAULT_WEB_VOTE_NUM）+新用户投票分数)/(原本票数+1+DEFAULT_WEB_VOTE_NUM)
+[注：DEFAULT_WEB_VOTE_NUM 为网站默认为用打分占的权重]
 '''
 def cal_user_vote(score,geadeInstance):
-     return  (geadeInstance.appearancescore*(100+geadeInstance.appearancesvote)+score)/(geadeInstance.appearancesvote+1)
+     from apps.recommend_app.recommend_settings import DEFAULT_WEB_VOTE_NUM
+     return  (geadeInstance.appearancescore*(geadeInstance.appearancesvote+DEFAULT_WEB_VOTE_NUM)+score)/(geadeInstance.appearancesvote+1+DEFAULT_WEB_VOTE_NUM)
  
 def cal_recommend(userId,fields=[]):
     from util.cache import get_has_recommend,has_recommend

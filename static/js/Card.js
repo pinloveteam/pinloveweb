@@ -10,6 +10,64 @@ var check_id=null;
 var diaogList=[];
 var mgr = hopscotch.getCalloutManager(),
 state = hopscotch.getState();
+//判断是不是有card页面
+isChard=true;
+
+
+
+var sendMsg = function(){
+	var api = pane.data('jsp');
+	var content = $(this).prev();
+	var chat = $(this).prevAll('.chat').find('.jspPane');
+	var send_content = content.val().trim();
+	var receiver_id=$(this).parents('.card_panel').attr('id');
+	if(send_content!=''){
+	   $.getJSON('/message/send/',{receiver_id:receiver_id,reply_content:send_content},function(data){
+		   if(data.result=='success'){
+			   chat.append('<div class="chat_content_group self"><div class="chat_content">'+send_content+'<div class="cloudArrow"></div></div></div>');
+				content.val('');
+				pane.jScrollPane();
+			    api.scrollTo(0,9999);
+		   }else{
+			   var body=$('<p>'+data.error_message+'</p>')
+			   $.poplayer({body:body});
+		   }
+		 
+	  });
+}
+	
+}
+
+//初始化对话框
+var init_msg = function(){
+    panel = $(this).parents('.card-nav').prev().find('.chat');
+	 panel.jScrollPane();
+	  var userId=$(this).parents('.card_panel').attr('id');
+	   $.getJSON("/message/get_noread_messges/",{userId:userId,ajax:true},function(data) {
+		   if (data['login']=='invalid'){
+			   alert("请先登录");
+			   window.location =data['redirectURL'];
+		   }
+		   panel.children().children().children().remove();
+		   for(var message in data){
+			   if (userId!=data[message].receiver_id){
+				   var api = panel.data('jsp');
+					var chat = panel.find('.jspPane');
+					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+					panel.jScrollPane();
+					api.scrollTo(0,9999);
+			   }else{
+				   var api = panel.data('jsp');
+				    var chat = panel.find('.jspPane');
+					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+					panel.jScrollPane();
+					api.scrollTo(0,9999);
+			   }
+	    	  
+	      }
+	   });	
+};
+
 window.Card = function(person){
 	var test_match= function(){
 			var userId=$(this).parent().attr("id")
@@ -58,6 +116,15 @@ window.Card = function(person){
 					myFollow=myFollow+1
 					$('#follow').html(follow)
 					$('#myFollow').html(myFollow)
+					
+					if($('#'+userId).find('.btn_send_msg').length==0){
+						var card=$('#'+userId)
+						var chat_tab=$('#card').find('#chat_tab')
+						card.find('#chat_tab').html(chat_tab.children());
+						card.find('.btn_send_msg').on('click',sendMsg);
+						card.find(".icon_msg").on('click',init_msg);
+					}
+				  
 				  }else{
 					  icon_like.following();
 				     if(data['type']==-1){
@@ -78,62 +145,13 @@ window.Card = function(person){
 		    });
 	};
 	
-	//初始化对话框
-	var init_msg = function(){
-	    panel = $(this).parents('.card-nav').prev().find('.chat');
-    	 panel.jScrollPane();
-    	  var userId=$(this).parents('.card_panel').attr('id');
-    	   $.getJSON("/message/get_noread_messges/",{userId:userId,ajax:true},function(data) {
-    		   if (data['login']=='invalid'){
-    			   alert("请先登录");
-    			   window.location =data['redirectURL'];
-    		   }
-    		   panel.children().children().children().remove();
-    		   for(var message in data){
-    			   if (userId!=data[message].receiver_id){
-    				   var api = panel.data('jsp');
-    					var chat = panel.find('.jspPane');
-    					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
-    					panel.jScrollPane();
-    					api.scrollTo(0,9999);
-    			   }else{
-    				   var api = panel.data('jsp');
-    				    var chat = panel.find('.jspPane');
-    					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
-    					panel.jScrollPane();
-    					api.scrollTo(0,9999);
-    			   }
-    	    	  
-    	      }
-    	   });	
-	};
+	
 	
 	var ding = function(){
 		$(this).toggleClass('ding').hasClass('ding')?$(this).attr('title','取消固定').parents('.card').removeClass('hideable'):$(this).attr('title','固定').parents('.card').addClass('hideable');
 	}
 	
-	var sendMsg = function(){
-		var api = pane.data('jsp');
-		var content = $(this).prev();
-		var chat = $(this).prevAll('.chat').find('.jspPane');
-		var send_content = content.val().trim();
-		var receiver_id=$(this).parents('.card_panel').attr('id');
-		if(send_content!=''){
-		   $.getJSON('/message/send/',{receiver_id:receiver_id,reply_content:send_content},function(data){
-			   if(data.result=='success'){
-				   chat.append('<div class="chat_content_group self"><div class="chat_content">'+send_content+'<div class="cloudArrow"></div></div></div>');
-					content.val('');
-					pane.jScrollPane();
-				    api.scrollTo(0,9999);
-			   }else{
-				   var body=$('<p>'+data.error_message+'</p>')
-				   $.poplayer({body:body});
-			   }
-			 
-		  });
-	}
-		
-	}
+	
 	
 	var showRadar = function(event){
 		var mouse_x = event.pageX;
@@ -431,7 +449,16 @@ window.Card = function(person){
 	}
 	//投票
 	function vote(userId){
-		score=$('#vote').val().trim();
+		score=parseInt($('#vote').val().trim());
+		if(isNaN(score)){
+			var body = $("<p>请填写正确的格式!</p>")
+       	    $.poplayer({body:body});
+			return;
+		}else if(score<0 || score>100){
+			var body = $("<p>分数必须在1~100范围内!</p>")
+       	    $.poplayer({body:body});
+			return;
+		}
 		$.ajax({
 			type:'GET',
 			url:'/recommend/user_vote/',
@@ -580,7 +607,7 @@ window.Card = function(person){
 
 	for(i=0;i<person.pictureList.length;i++){
 		if(i<=6){
-			this.template.find('.hoverbox').append('<li><a class="venobox" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');
+			this.template.find('.hoverbox').append('<li><a class="venobox vbox-item" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');
 		}else{
 			this.template.find('.hoverbox').append('<li><a  style="display:none;" class="venobox" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');
 		}
@@ -604,13 +631,14 @@ window.Card = function(person){
 		this.template.find('.btn_send_msg').on('click',sendMsg);
 		this.template.find(".icon_msg").on('click',init_msg);
 	}else{
-		this.template.find('#chat_tab').html('只有相互关注或者相互看过对方对我的打分才能聊天!')
+		this.template.find('#chat_tab').html('<span id="notChat">只有相互关注或者相互看过对方对我的打分才能聊天!</span>')
 	}
 	$('.card_row').append(this.template.children());
 	
 	$(function(){
 		$('.icon_like_0,.icon_like_3').following();
 		});
+	
 }
 
 function Person(username,age,city,headImg,userId,isFriend,pictureList,isChat){
@@ -624,7 +652,7 @@ function Person(username,age,city,headImg,userId,isFriend,pictureList,isChat){
 	this.isChat=isChat
 	
 }
-function buy_score_for_other(userId){
+function buy_score_for_other(context,userId){
 	$.ajax({
 		type:'GET',
 		url:'/recommend/buy_score_for_other/',
@@ -633,7 +661,17 @@ function buy_score_for_other(userId){
 		success:function(data, textStatus){
 			if(textStatus=='success'){
 				if(data['result']=='success'){
+					$(context).attr('onclick','');
 					var body = $("<p>购买成功!</p>")
+					if(data['type']==2){
+						if($('#'+userId).find('.btn_send_msg').length==0){
+							var card=$('#'+userId)
+							var chat_tab=$('#card').find('#chat_tab')
+							card.find('#chat_tab').html(chat_tab.children());
+							card.find('.btn_send_msg').on('click',sendMsg);
+							card.find(".icon_msg").on('click',init_msg);
+						}
+					}
 				}else if(data['result']=='error'){
 					var body = $("<p>"+data['error_message']+"<p>")
 				}
@@ -647,4 +685,26 @@ function buy_score_for_other(userId){
        	    $.poplayer({body:body});
 		},
 });
+}
+
+//卡片中插入聊天
+function get_card_chat(num){
+	var userIdList=[];
+	   var cards=$('.btn_send_msg:visible').closest('.card');
+	   if(cards.length){
+		   for(var i=0;i<cards.length;i++){
+			   userIdList.push(cards[i].id);
+		   };
+		   $.getJSON('/message/get_no_read_messge_by_ids/',{num:num,userIds:userIdList.toString()},function(data){
+			   for (message in data['messageList']){
+			            messageBean=data['messageList'][message]
+			    	    var api = pane.data('jsp');
+						var chat = $('#'+messageBean.senderId).find('.jspPane')
+						chat.append('<div class="chat_content_group other"><div class="chat_content">'+messageBean.content+'<div class="cloudArrow "></div></div></div>');
+						pane.jScrollPane();
+						api.scrollTo(0,9999);
+			      }
+	   });
+	   };
+	  
 }

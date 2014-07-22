@@ -10,13 +10,11 @@ from util.page import page
 from apps.message_app.models import  Message, MessageLog
 from django.http.response import Http404, HttpResponse
 from django.utils import simplejson
-import datetime
 from apps.user_app.models import UserProfile
 import logging
 from django.db import transaction
-from django.db.models.query_utils import Q
-from pinloveweb.settings import ADMIN_ID
 from apps.message_app.method import add_system_message_121
+from pinloveweb.settings import ADMIN_ID
 logger=logging.getLogger(__name__)
 ###############################
 ##1.0
@@ -227,6 +225,32 @@ def get_noread_messges_by_userid(request):
     return HttpResponse(json, mimetype="application/json")
 
 
+'''
+根据id获取未读信息
+@param userIds: 用户id集合的字符串
+@param num: 未读消息数量
+@return: messageList：列表
+  
+'''
+def get_no_read_messge_by_ids(request):
+    args={}
+    try:
+        userIdString=request.REQUEST.get('userIds')
+        num=int(request.REQUEST.get('num',False))
+        userIdList=[int(x) for x in userIdString.split(',')]
+        if num:
+            messageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id, 0, num)
+            messageList=[message for message in messageLogList if  message.message.sender_id in userIdList]
+        else:
+            msessageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id)
+        from apps.pojo.message import MessageLog_to_Message
+        messageBeanList=MessageLog_to_Message(messageList,request.user.id)
+        args['messageList']=messageBeanList
+        from apps.pojo.message import MessageBeanEncoder
+        json=simplejson.dumps(args,cls=MessageBeanEncoder)
+        return HttpResponse(json)
+    except Exception,e:
+        logger.exception('根据id获取未读信息,出错!')
 
 def message_test(request):
     return HttpResponse('abc')
@@ -320,25 +344,6 @@ def has_new_message(request):
         json = simplejson.dumps(arg)
         return HttpResponse(json)
     
-'''
-根据id获取信息
-attribute：
-   userIdList：用户id列表
-return：
-  messageList：列表
-'''
-def get_messge_by_id(request):
-    userIdString=request.GET.get('userIdList')
-    userIdList=[int(x) for x in userIdString.split(',')]
-    excludeMessageList=[]
-    if 'messageList' in request.session.keys():
-        excludeMessageList=request.session['messageList']
-    messageList=Message.objects.filter( receiver=request.user,isRead=False,isDeletereceiver=False).exclude(id__in=excludeMessageList)
-    for message in messageList:
-        excludeMessageList.append(message.id)
-    request.session['messageList']=excludeMessageList
-    result=[message.as_json_for_id_conent() for message in messageList ]
-    json = simplejson.dumps(result)
-    return HttpResponse(json, mimetype="application/json")
+
 
 

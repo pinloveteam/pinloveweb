@@ -194,7 +194,7 @@ where  isDeletereceiver = False  and isRead=0 AND receiver_id = %s
     '''
     获取所有未读消息
     '''
-    def get_no_read_messagelog(self,userId):
+    def get_no_read_messagelog(self,userId,first=None,end=None):
         sql='''
         SELECT * from (
 SELECT null as id,%s as receiver_id,u3.id as message_id,0 as isDeleteSender,
@@ -207,6 +207,8 @@ where  isDeletereceiver = False  and u1.isRead=False  AND receiver_id = %s
 ) s
 ORDER BY sendTime desc
         '''
+        if first is not None :
+            sql=sql+'  limit %s , %s'%(first,end)
         messageLogList=MessageLog.objects.raw(sql, [userId,userId])
         return  messageLogList
        
