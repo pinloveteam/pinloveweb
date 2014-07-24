@@ -242,18 +242,21 @@ def user_vote(request):
         score = float(request.GET.get('score').strip())
         userId=request.GET.get('userId')
         if AppearanceVoteRecord.objects.filter(user_id=request.user.id,other_id=userId).exists():
-            raise Exception('你已打过分!')
-        if score <0 or score >100:
-            raise Exception('分数必须在1~100范围内!')
-        if score=='':
+            args={'result':'error','error_message':u'你已打过分'}
+        elif score <0 or score >100:
+            args={'result':'error','error_message':u'分数必须在1~100范围内!'}
+        elif score=='':
             args={'result':'error','error_message':u'不能为空!'}
         else:
             geadeInstance=Grade.objects.get(user_id=userId)
             from apps.recommend_app.recommend_util import cal_user_vote
+            logger.error('===================score:%s,appearancesvote:%s,appearancescore:%s'%(score,geadeInstance.appearancesvote,geadeInstance.appearancesvote))
             score=cal_user_vote(score,geadeInstance)
             Grade.objects.filter(user_id=userId).update(appearancescore=score,appearancesvote=geadeInstance.appearancesvote+1)
             AppearanceVoteRecord(user_id=request.user.id,other_id=userId).save()
             args={'result':'success'}
+        json = simplejson.dumps(args)
+        return HttpResponse(json)
     except Exception,e:
         logger.exception('用户投票,出错!')
         args={'result':'error','error_message':e.message}
