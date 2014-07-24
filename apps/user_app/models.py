@@ -202,11 +202,11 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     bodyShape=models.CharField(verbose_name=r"发型",choices=HAIR_STYLE_CHOICE,max_length=2,null=True,blank=True,default='N')
     
 #####user_study_work
-    JOB_INDUSRY_CHOICE=((-1,r'未填'),(0,r'计算机/互联网/通信'),(1,r'公务员/事业单位'),(2,r'教师'),(3,r'医生'),(4,r'护士'),(5,r'空乘人员'),
-                        (6,r'生产/工艺/制造'),(8,r'商业/服务业/个体经营'),(9,r'文化/广告/传媒'),(10,r'娱乐/艺术/表演'),
-                        (11,r'律师/法务'),(12,r'教育/培训/管理咨询'),(13,r'建筑/房地产/物业'),(14,r'消费零售/贸易/交通物流'),(15,r'酒店旅游'),
-                        (16,r'现代农业'),(17,r'在校学生'))
-    jobIndustry = models.CharField(verbose_name=r"职业领域",max_length=125,null=True,blank=True) 
+    JOB_INDUSRY_CHOICE=((-1,r'未填'),(0,r'IT|通信|电子|互联网'),(1,r'金融业'),(2,r'房地产|建筑业'),(3,r'商业服务'),(4,r'贸易|批发|零售|租赁业'),(5,r'问题教育|工体美术'),
+                        (6,r'生产|加工|制造'),(8,r'交通|运输|物流仓库'),(9,r'服务业'),(10,r'文化|传媒|娱乐|体育'),
+                        (11,r'能源|矿产|环保'),(12,r'政府|非盈利机构'),(13,r'农|林|牧|渔|其他'),
+                        (14,r'在校学生'))
+    jobIndustry = models.IntegerField(verbose_name=r"职业领域",max_length=125,null=True,blank=True,choices=JOB_INDUSRY_CHOICE) 
     
     jOB_TITLE=((-1,r'未填'),(0,r'普通职员'),(1,r'中层管理者'),(2,r'高层管理者'),(3,r'企业主'),)
     jobTitle = models.IntegerField(verbose_name=r"目前职位",choices=jOB_TITLE, max_length=50,null=True,blank=True,default=-1) 

@@ -23,10 +23,11 @@ def user_info_card(userProfile,userTagBeanList):
             'age':userProfile.age,
             'education':userProfile.get_education_display(),
             'income':userProfile.income,
-            'jobIndustry':userProfile.jobIndustry,
+            'jobIndustry':userProfile.get_jobIndustry_display(),
             'city':userProfile.city,
             'sunSign':userProfile.get_sunSign_display(),
             'gender':userProfile.gender,
+            'avatar_name_status':userProfile.avatar_name_status
             }
     #获取标签信息
     tagTupe=()
