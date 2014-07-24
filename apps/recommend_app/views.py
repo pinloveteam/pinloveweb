@@ -250,7 +250,6 @@ def user_vote(request):
         else:
             geadeInstance=Grade.objects.get(user_id=userId)
             from apps.recommend_app.recommend_util import cal_user_vote
-            logger.error('===================score:%s,appearancesvote:%s,appearancescore:%s'%(score,geadeInstance.appearancesvote,geadeInstance.appearancesvote))
             score=cal_user_vote(score,geadeInstance)
             Grade.objects.filter(user_id=userId).update(appearancescore=score,appearancesvote=geadeInstance.appearancesvote+1)
             AppearanceVoteRecord(user_id=request.user.id,other_id=userId).save()

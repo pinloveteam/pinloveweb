@@ -446,6 +446,7 @@ window.Card = function(person){
 		dialog=create_dialog(diaogList);
 		$('.poplayer').css('left','25%').css('width','780px');
 		 $('.compare-btn').click(function(){compare(userId,1)})
+		 compare_flag=false;
 	}
 	//投票
 	function vote(userId){
