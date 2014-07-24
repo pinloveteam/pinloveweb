@@ -221,7 +221,7 @@ def get_noread_messges_by_userid(request):
     messageList=MessageLog.objects.get_message_list_121(user.id,userId,first=0,end=3)
     from util.util import regex_expression
     result=[{'sender_id':message['sender_id'],'receiver_id':message['receiver_id'],'content':regex_expression(message['content'])} for message in messageList ]
-    result[::-1]
+    result=result[::-1]
     json = simplejson.dumps(result)
     return HttpResponse(json, mimetype="application/json")
 
