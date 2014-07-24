@@ -45,12 +45,12 @@ def show_me_the_money(sender,**kwargs):
     ipn_obj = sender
     # You need to check 'payment_status' of the IPN
     if ipn_obj.payment_status == "Completed":
-        logger.error('============ipn_obj  Completed')
+#         logger.error('============ipn_obj  Completed')
         if Order.objects.filter(orderId=ipn_obj.invoice).exists():
             order=Order.objects.get(orderId=ipn_obj.invoice)
-            logger.error('============Order  exists')
+#             logger.error('============Order  exists')
             if ipn_obj.mc_gross==order.price:
-                 logger.error('============price  222')
+#                  logger.error('============price  222')
                  order.status="completed"
                  order.updateTime=datetime.datetime.today()
                  order.save()
@@ -61,7 +61,7 @@ def show_me_the_money(sender,**kwargs):
                  charge.validAmount+=order.amount
                  charge.save()
             else:
-               logger.error('============price  1111')
+#                logger.error('============price  1111')
                order.status="failed"
                order.updateTime=datetime.datetime.today()
                order.failReason=u'金额错误，金额不相等'

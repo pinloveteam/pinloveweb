@@ -157,10 +157,10 @@ INSTALLED_APPS = (
 'paypal.standard.ipn',
 'apps.alipay_app',
 )
-# PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
-# PAYPAL_TEST=False
+PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
+PAYPAL_TEST=False
 #test account
-PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
+# PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
