@@ -4,14 +4,12 @@ Created on 2014年5月2日
 
 @author: jin
 '''
-from pinloveweb import settings
-from django.core.urlresolvers import reverse
 from paypal.standard.forms import PayPalPaymentsForm
 import logging
 from apps.pay_app.models import Order, Charge, ChargeDetail
-import uuid
 import datetime
 from django.db import transaction
+logger=logging.getLogger(__name__)
 #===============================
 #生成paypal订单
 #===============================
@@ -38,20 +36,21 @@ def asks_for_money(userId,amount=0,price=0.00,currency='USB',data=''):
     order.save()
     return context
   except Exception as e:
-      print '%s%s' %('生成paypal订单出错，出错原因：',e)
+      logger.exception('%s%s' %('生成paypal订单出错，出错原因：',e)) 
 
 from paypal.standard.ipn.signals import payment_was_successful
 @transaction.commit_on_success  
 def show_me_the_money(sender,**kwargs):
+  try:
     ipn_obj = sender
     # You need to check 'payment_status' of the IPN
     if ipn_obj.payment_status == "Completed":
-#         logging.error('============ipn_obj  Completed')
+        logger.error('============ipn_obj  Completed')
         if Order.objects.filter(orderId=ipn_obj.invoice).exists():
             order=Order.objects.get(orderId=ipn_obj.invoice)
-#             logging.error('============Order  exists')
+            logger.error('============Order  exists')
             if ipn_obj.mc_gross==order.price:
-                 logging.error('============price  222')
+                 logger.error('============price  222')
                  order.status="completed"
                  order.updateTime=datetime.datetime.today()
                  order.save()
@@ -62,12 +61,18 @@ def show_me_the_money(sender,**kwargs):
                  charge.validAmount+=order.amount
                  charge.save()
             else:
-#                logging.error('============price  1111')
+                logger.error('============price  1111')
                order.status="failed"
                order.updateTime=datetime.datetime.today()
                order.failReason=u'金额错误，金额不相等'
                order.save()
-               
+  except Exception ,e:
+      logger.exception('更新paypal订单出错！')
+      order.status="failed"
+      order.updateTime=datetime.datetime.today()
+      order.failReason=e.message
+      order.save()
+        
     
 payment_was_successful.connect(show_me_the_money) 
 
