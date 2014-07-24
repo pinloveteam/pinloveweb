@@ -59,7 +59,7 @@ a:hover {
 	background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('img/bg.jpg'); 
+    background-image: url('../img/bg.jpg'); 
     z-index: 0;
     position: absolute;
      bottom: 0;
@@ -155,12 +155,8 @@ a:hover {
 	top: 30px;
 }
 
-input[type="radio"]{
-	margin-left:-35px  !important;
-	}
-
 #scrollUp {
-	background: url("./img/top.png") no-repeat scroll 0 0 transparent;
+	background: url("../img/top.png") no-repeat scroll 0 0 transparent;
 	bottom: 20px;
 	height: 38px;
 	right: 20px;
