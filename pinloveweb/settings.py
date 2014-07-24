@@ -157,10 +157,11 @@ INSTALLED_APPS = (
 'paypal.standard.ipn',
 'apps.alipay_app',
 )
-PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
+# PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
+# PAYPAL_TEST=False
 #test account
-# PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
-PAYPAL_TEST=False
+PAYPAL_RECEIVER_EMAIL = "pinloveteam-facilitator@gmail.com"
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -350,7 +351,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                            
+#                             
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -375,7 +376,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-                              
+                               
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
