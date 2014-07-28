@@ -112,9 +112,11 @@ def follow(request,type,ajax='false'):
         arg=page(request,fllowList)
         cardList=arg.get('pages')
         #将关注列表转换成Card列表
-        from apps.pojo.card import fllowList_to_CardList
-        cardList.object_list=fllowList_to_CardList(request.user.id,cardList.object_list,type)
-       
+        if len(cardList.object_list)>0:
+            from apps.pojo.card import fllowList_to_CardList
+            cardList.object_list=fllowList_to_CardList(request.user.id,cardList.object_list,type)
+        else:
+            cardList.object_list=[]
         ajax=request.GET.get('ajax')
         if ajax =='true':
             data={}
