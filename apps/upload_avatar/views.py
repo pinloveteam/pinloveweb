@@ -73,7 +73,7 @@ def upload_avatar(request):
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['TOO_LARGE'])
     elif uploaded_file.size < UPLOAD_AVATAR_MIX_SIZE:
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['TOO_SMALL'])
-    elif not imageName[imageName.rindex('.')+1:] in UPLOAD_AVATAR_FORMAT:
+    elif not imageName[imageName.rindex('.')+1:].lower()   in UPLOAD_AVATAR_FORMAT:
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['UPLOAD_FORMAT_ERROR'])
     
     
