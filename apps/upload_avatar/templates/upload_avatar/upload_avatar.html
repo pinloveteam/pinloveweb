@@ -1,6 +1,6 @@
 <div id="uploadAvatar">
     <link rel="stylesheet" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css" type="text/css" />
-    <script type="text/javascript" src="{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.js"></script>
     
     <style type="text/css">
         #uploadAvatarBtnLayout {
@@ -157,6 +157,7 @@
                     y1: sel.y1,
                     x2: sel.x2,
                     y2: sel.y2,
+                    parent:'html',
                     onSelectChange: updateCoors
                 });
                 
