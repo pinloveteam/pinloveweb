@@ -2,13 +2,13 @@
   <script src="{{STATIC_URL}}js/dropzone.js"></script>
 <script type="text/javascript">
 function upload_pic(){
-	$('#publishInputUploadPhotoArea').show();
+	$('#publishInputUploadPhotoArea2').show();
 }
 function hide_pic(){
-	$('#publishInputUploadPhotoArea').hide();
+	$('#publishInputUploadPhotoArea2').hide();
 }
 </script>
-<div class="publishInputUploadPhotoArea" id="publishInputUploadPhotoArea" style="width: 500px;position: absolute;top: 100px;left: 320px;display: none;">
+<div class="publishInputUploadPhotoArea" id="publishInputUploadPhotoArea2" style="width: 500px;position: absolute;top: 100px;left: 320px;display: none;">
                             <form class="dropzone" id="my-dropzone" action="/dynamic/updatePhoto/" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                              <input type="hidden" name="type" value="1">

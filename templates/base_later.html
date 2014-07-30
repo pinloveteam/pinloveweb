@@ -131,10 +131,10 @@ function change_navi(){
 	}
 }
 var isChard=false;
-var noReadMessageCount={{messageNoReadCount}}
+var noReadMessageCount={%if noReadMessageCount %}{{messageNoReadCount}}{%else%}0{%endif%}
 //拉取信息数量
 var time=1000*10;
-interval = self.setInterval("polling()", time);
+/* interval = self.setInterval("polling()", time); */
  var polling=function(){
 	   $.getJSON('/newCount/',function(data){
 		   if(data.result=='success'){

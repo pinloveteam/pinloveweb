@@ -180,7 +180,14 @@ def user_score_freeze(userId,type,amount,data,*args,**kwargs):
     userScore.freezeScore+=amount
     userScore.save()
     UserScoreDtail(userScore=userScore,exchangeRelate_id='1107',amount=amount,data=data).save()
-    
+  
+'''
+获得有效积分
+@param userId:用户id
+@return: 用户有效积分 
+'''
+def get_valid_score(userId):
+    return UserScore.objects.get(user_id=userId).validScore
 '''
 获取用户登录积分缓存
 '''

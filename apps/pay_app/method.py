@@ -66,3 +66,8 @@ def charge_save(userId,type,*args,**kwargs):
     ChargeDetail(user_id=userId,amount=chargeExchangeRelate.PLPrice,data=data,time=time,type=type).save()
     charge.save()
 
+'''
+获得有效拼爱币的数量
+'''
+def get_charge_vailAmount(userId):
+    return Charge.objects.get(user_id=userId).validAmount

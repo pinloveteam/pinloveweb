@@ -50,8 +50,7 @@ $(document).ready(function() {
 			         url: "/pay/redeem_price/",
 			         data:data,
 			         beforeSend: function(XMLHttpRequest){
-			        	 $(btn).data('object').masklayer.remove();
-			        	 $(btn).data('object').dialog.remove();
+			        	 $(btn).closest('.poplayer').find('.poplayer-close-btn').click();
 			         },
 			         success: function(data, textStatus){
 			            if(textStatus == 'success'){

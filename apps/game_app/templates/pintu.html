@@ -533,7 +533,7 @@ removecloud();
 	<div class="try_again ask_friends" style="left:170px; top: 320px;background-image: url('/static/img/按钮-66.png');background-repeat:no-repeat;width:50px;" >help</div>
 </div>
 
-<div class="count"><img style="height:30px;width:30px;position:absolute;left:10%;" src="{{STATIC_URL}}img/拼图-18.png"><span class="num" style="top: 20px;position:absolute;left:15%;">×{{charge.validAmount}}  积分{{userScore.validScore}}</span></div>
+<div class="count"><img style="height:30px;width:30px;position:absolute;left:10%;" src="{{STATIC_URL}}img/拼图-18.png"><span class="num" style="top: 20px;position:absolute;left:15%;">×{{pinLoveIcon}}</span></div>
 
 <div id="search_condition">
     <label><input type="radio" name="radiobutton" value="all" ><span>随机匹配</span></label>
@@ -949,7 +949,7 @@ function loadStage() {
 	            if(textStatus == 'success'){
 	             	data=$.parseJSON(data)
 	            	if( data.type=='score'){
-	            		var body = $("<p>消耗积分:"+data.amount+"</p>")
+	            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
 	            		var hehe = function(){
 	            			StartGame(data.type);
 	            			}

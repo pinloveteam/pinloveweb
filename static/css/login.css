@@ -2,7 +2,8 @@
 	height: 100%;
 }
 body {
-	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体"; 
+	/*font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体"; */ 
+	font-family: arial,"Microsoft Yahei","Hiragino Sans GB",sans-serif;
 	/* font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Hiragino Sans GB","Hiragino Sans GB W3";*/ 
 	-webkit-font-smoothing:antialiased; 
 	-moz-osx-font-smoothing: grayscale; 
@@ -59,7 +60,7 @@ a:hover {
 	background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('./img/bg.jpg'); 
+    background-image: url('../img/bg.jpg'); 
     z-index: 0;
     position: absolute;
      bottom: 0;
@@ -160,7 +161,7 @@ margin-left:-35px !important;
 }
 
 #scrollUp {
-	background: url("./img/top.png") no-repeat scroll 0 0 transparent;
+	background: url("../img/top.png") no-repeat scroll 0 0 transparent;
 	bottom: 20px;
 	height: 38px;
 	right: 20px;

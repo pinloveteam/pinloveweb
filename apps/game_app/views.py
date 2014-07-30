@@ -3,11 +3,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson
-from apps.game_app.models import Yuanfenjigsaw, get_count, YuanfenjigsawWeb
-from apps.third_party_login_app.models import FacebookUser
-from apps.user_app.models import UserProfile
-from apps.pay_app.models import Charge, ChargeExchangeRelate
-from apps.user_score_app.models import UserScore, UserScoreExchangeRelate
+from apps.game_app.models import Yuanfenjigsaw, YuanfenjigsawWeb
+from apps.pay_app.models import  ChargeExchangeRelate
+from apps.user_score_app.models import  UserScoreExchangeRelate
 import logging
 
 
@@ -24,11 +22,12 @@ def jigsaw_mobi(request):
     return HttpResponse(json)
 
 def pintu(request):
-    charge=Charge.objects.get(user=request.user)
-    userScore=UserScore.objects.get(user=request.user)
+    userId=request.user.id
     from apps.game_app.models import get_recommend_history_web
-    facebookUserListDcit=get_recommend_history_web(request.user.id)
-    return render(request, 'pintu.html',{'userScore':userScore,'charge':charge,'facebookUserListDcit':facebookUserListDcit})
+    facebookUserListDcit=get_recommend_history_web(userId)
+    from apps.pay_app.method import get_charge_vailAmount
+    from apps.user_score_app.method import get_valid_score
+    return render(request, 'pintu.html',{'pinLoveIcon':get_valid_score(userId)+get_charge_vailAmount(userId),'facebookUserListDcit':facebookUserListDcit})
 
 @csrf_exempt
 def jigsaw_web(request):
