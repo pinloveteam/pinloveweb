@@ -351,7 +351,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                             
+#                              
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -365,10 +365,10 @@ CACHES = {
 # }
 # MEDIA_URL = '/media/'
 # STATIC_URL = '/static/'
-# MEDIA_ROOT = os.path.join(PATH,'update').replace('\\','/')
+# MEDIA_ROOT = os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
 # STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-# UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
-# UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(PATH,'update/user_img').replace('\\','/')
+# UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+# UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
 # UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 # UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 # DOMAIN='pinlove.xicp.net'
@@ -376,7 +376,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-                               
+                                
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
