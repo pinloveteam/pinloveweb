@@ -88,6 +88,18 @@ def grade_for_other(request):
  
 '''
  获取另一半对自己打分
+'''
+def check_score_and_PLprice_for_socre_my(request):
+    try:
+        from apps.pay_app.method import check_score_and_PLprice
+        args=check_score_and_PLprice(request.user.id,"score_my")
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    except Exception as e:
+        logging.error('%s%s'%('check_score_and_PLprice_for_pintu,出错原因：',e))
+        
+'''
+ 获取另一半对自己打分
 '''   
 def socre_my(request):
     args={}
@@ -95,9 +107,7 @@ def socre_my(request):
         otherId=int(request.REQUEST.get('userId',False))
         if otherId:
             member=UserProfile.objects.get(user_id=request.user.id).member
-            from apps.user_app.models import BrowseOherScoreHistory
-            flag=BrowseOherScoreHistory.objects.filter(my_id=request.user.id,other_id=otherId).exists()
-            if member>0 or flag:
+            if member>0:
                 matchResult=get_matchresult(request,otherId)
                 args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
             else:
@@ -164,7 +174,7 @@ def get_socre_for_other(userId,otherId):
             args={'result':'error','error_messge':'用户id不存在!'}
         return args
     except Exception as e:
-        logger.error('%s%s' %('获得对自己对另一半的打分，出错原因：',e))
+        logger.exception('%s%s' %('获得对自己对另一半的打分，出错原因：',e))
         args={'result':'error','error_messge':'系统出错!'}
         return args
     

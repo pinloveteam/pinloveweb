@@ -41,19 +41,8 @@ def jigsaw_web(request):
 def check_score_and_PLprice_for_pintu(request):
     try:
         args={}
-        from apps.user_score_app.method import has_score_by_pintu
-        hasScore=has_score_by_pintu(request.user.id)
-        if hasScore:
-            userScoreExchangeRelate=UserScoreExchangeRelate.objects.get(type='1010')
-            args={'type':'score','amount':userScoreExchangeRelate.amount,}
-        else:
-            from apps.pay_app.method import has_charge_by_pintu
-            hasCharge=has_charge_by_pintu(request.user.id)
-            if hasCharge:
-                chargeExchangeRelate=ChargeExchangeRelate.objects.get(operateType='1004')
-                args={'type':'charge','amount':chargeExchangeRelate.PLPrice}
-            else:
-                args={'type':'less'}
+        from apps.pay_app.method import check_score_and_PLprice
+        args=check_score_and_PLprice(request.user.id,"pintu")
         json=simplejson.dumps(args)
         return HttpResponse(json)
     except Exception as e:

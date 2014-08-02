@@ -16,69 +16,91 @@
 	{% block css %}{% endblock %}
 </head> 
 <body>
-{% block logo %}
-<header >
-<div class="page_top">
-			<div class="logo"><a href="/"><img alt="140x140" src="{{STATIC_URL}}img/logo.png"/></a></div>
-</header>
-{% endblock %}
 {% block navigation %}
 <header data-log="navi" class="header" id="header">
 	<div class="header-inner">
-		<h1 class="header-logo"></h1>
+		<div class="header-logo">
+			<img height="30px" src="{{STATIC_URL}}img/logo-02.png"/>
+		</div>
 		<ul class="header-navi list-inline">
-			<li id="home"><a href="/"> <span>推荐</span>
-			</a></li>
-			<li id="dynamic"><a href="/dynamic/"> <span>动态</span>
-			</a></li>
-			<li id="the_people_nearby"><a href="/the_people_nearby/the_people_nearby"> <span>附近的人</span>
-			</a></li>
-			<li id="search"><a href="/search/"> <span>用户搜索</span>
-			</a> <em class="icon-recomm header-park-recomm"></em></li>
-			<li id="game_pintu"><a href="/game/game_pintu/"> <span>缘分拼图</span>
-			</a></li>
-			<li id="member"><a href="/pay/member/"> <span>会员中心</span>
-			</a></li>
+			<li id="home">
+				<a href="/">
+					<span>推荐</span>
+				</a>
+			</li>
+			<li id="trend">
+				<a href="/dynamic/">
+					<span>动态</span>
+				</a>
+			</li>
+			<li id="the_people_nearby">
+				<a href="/the_people_nearby/the_people_nearby">
+					<span>附近的人</span>
+				</a>
+			</li>
+			<li  id="search">
+				<a href="/search/">
+					<span>用户搜索</span>
+				</a>
+				<em class="icon-recomm header-park-recomm"></em>
+			</li>
+			<li id="game_pintu">
+				<a href="/game/game_pintu/">
+					<span>缘分拼图</span>
+				</a>
+			</li>
+			<li id="member">
+			   <a href="/pay/member/"> 
+			       <span>会员中心</span>
+               </a>    
+	        </li>
 		</ul>
 		<div class="header-info js-header-info">
-			<div class="header-info-mess js-info-mess glyphicon" id="message_icon" >
-			<div id="count" class="notice" {%ifequal noReadCount 0%}style="display: none;"{%endifequal%}>
-								{%ifequal noReadCount 0%}0{%else%}{{noReadCount}}{%endifequal%}
-							</div>
-				 <div id='count-list' class="header-info-list js-list" style="{%ifequal noReadCount 0%}display: none;{%endifequal%}">
-					<ul>
-						<li class="js-message" style="width: 80px;{%ifequal messageNoReadCount 0%}display: none;{%endifequal%}"  >
-						  <a href="/message/no_read_message/">
-						     <span>未读消息
-						     <div id="messageCount" class="notice" style="left: 76px;" >
-								{%ifequal messageNoReadCount 0%}0{%else%}{{messageNoReadCount}}{%endifequal%}
-							</div>
-							</span>
-						  </a>
-						</li>
-						<li class="js-message" style="width: 80px;{%ifequal dynamicCommentCount 0%}display: none;{%endifequal%}">
-						  <a href="/dynamic/no_read_coment/">
-						     <span>未读评论
-						     <div id="dynamicCommentCount" class="notice" style="left: 76px;" >
-								{{dynamicCommentCount}}
-							</div>
-							</span>
-						  </a>
-						</li>
-					</ul>
-				</div>
+			<div class="header-info-mess js-info-mess" id="message_icon">
+		        <div id="count" class="notice" {%ifequal noReadCount 0%}style="display: none;"{%endifequal%}>
+					{%ifequal noReadCount 0%}0{%else%}{{noReadCount}}{%endifequal%}
+			    </div>
+			    <div id='count-list' class="header-info-list js-list" style="{%ifequal noReadCount 0%}display: none;{%endifequal%}">
+			     <ul>
+				   <li class="js-message" style="width: 80px;{%ifequal messageNoReadCount 0%}display: none;{%endifequal%}"  >
+				     <a href="/message/no_read_message/">
+				      <span>未读消息
+				        <div id="messageCount" class="notice" style="left: 76px;" >
+						{%ifequal messageNoReadCount 0%}0{%else%}{{messageNoReadCount}}{%endifequal%}
+					    </div>
+					  </span>
+				    </a>
+				  </li>
+				  <li class="js-message" style="width: 80px;{%ifequal dynamicCommentCount 0%}display: none;{%endifequal%}">
+				   <a href="/dynamic/no_read_coment/">
+				     <span>未读评论
+				       <div id="dynamicCommentCount" class="notice" style="left: 76px;" >
+						{{dynamicCommentCount}}
+					  </div>
+					 </span>
+				   </a>
+				  </li>
+			     </ul>
+		        </div>
 			</div>
-			</a>
-			<div class="header-info-user js-info-user glyphicon ">
+			<div class="header-info-user js-info-user">
 				<div class="header-info-list header-info-setting-list">
 					<ul>
-						<li><a href="/user/user_profile/#self_info"> <span>个人信息</span>
-						</a></li>
-						<li><a href="/user/change_password/"> <span>修改密码</span>
-						</a></li>
-						<li class="line"></li>
-						<li><a href="/account/logout/" id="logOut"> <span>退出</span>
-						</a></li>
+						<li>
+							<a href="/user/user_profile/#self_info">
+								<span>个人信息</span>
+							</a>
+						</li>
+						<li>
+							<a href="user/change_password/">
+								<span>修改密码</span>
+					</a>
+						</li>
+						<li>
+							<a href="/account/logout/" id="logOut">
+								<span>退出</span>
+							</a>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -240,6 +262,19 @@ function set_no_read_dynamic_comment(count){
 			</dt>
 			<dd>
 				<div class="follow"><a><img src="{{STATIC_URL}}img/weixin.jpg"/></a></div>
+			</dd>
+		</dl>
+		
+		<dl class="db-item">
+			<dt class="item-title">
+				<span style="background-color: #FF9700"></span>
+				拼爱特色服务
+			</dt>
+			<dd>
+			<ul>
+				<li><a>量化交友</a></li>
+				<li><a href="#">自由定制</a></li>
+			</ul>
 			</dd>
 		</dl>
 	</div>

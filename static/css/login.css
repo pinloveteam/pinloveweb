@@ -156,9 +156,6 @@ a:hover {
 	top: 30px;
 }
 
-input[type="radio"]{
-margin-left:-35px !important;
-}
 
 #scrollUp {
 	background: url("../img/top.png") no-repeat scroll 0 0 transparent;

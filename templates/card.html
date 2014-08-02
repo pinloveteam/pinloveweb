@@ -168,101 +168,77 @@ function venobox(){
 
 </script>
 
-<script type="text/javascript" >
 
-	
-		
-//拉取信息
-/**
-var userIdString=''
-
-  userIdString=userIdString.substring(0,userIdString.length-1)
-var time=1000*10;
-interval = self.setInterval("polling()", time);
- var polling=function(){
-	   $.getJSON('/message/get_messge_by_id/',{userIdList:userIdString},function(data){
-		   for(var message in data){
-		    	  var api = pane.data('jsp');
-					var chat = $('#chat_'+data[message].receiver_id).children().children();
-					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
-					pane.jScrollPane();
-					api.scrollTo(0,9999);
-		      }
-
-			   });  
-   };
-   **/
-</script>
-
-
-		<div class="col-xs-9">
-		<div id="compare_tip" class="alert alert-success alert-dismissable">
-		  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+<div class="col-xs-9">
+	<div id="compare_tip" class="alert alert-success alert-dismissable">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 		  点击其他用户<span class="text-danger"><strong>姓名</strong></span>进行对比。
-		</div>
-			<div class="row card_row" style="width:894px;">
-			</div>
-			<div class="controlArrow prev" title="上一页"></div>
-			<div class="controlArrow next" title="下一页"></div>
-		</div>
+	</div>
+	<div class="row card_row" style="width:894px;">
+	</div>
+	<!--  <div class="controlArrow prev" title="上一页"></div>
+	<div class="controlArrow next" title="下一页"></div>
+	-->
+</div>
 		
-		<!-- card clone -->
+<!-- card clone -->
 		
-		<div id="card" style="display:none;">
-<div class="card card_panel col-xs-6 hideable">
-<div class="card-top  {% ifequal gender 'F'%}top-boy{%else%}top-girl{%endifequal%}"></div>
+<div id="card" style="display: none;">
+	<div class="card card_panel col-xs-6 hideable">
+		<div class="tabbable">
 			<div class="tab-content">
-				<div class="tab-pane active fade in" id="tab12">
-					<div class="introBox" data-type="frame" href="javascript;void(0)">
-					<div class="head {% ifequal gender 'F'%}head_boy{%else%}head_girl{%endifequal%}">
-						<img src="" alt="当前头像">
+				<div class="tab-pane active" id="tab12">
+					<div class="introBox">
+						<img class="head" width="253px" src="">
+						<div class="card-introBox" title="点击查看详细信息"></div>
+
+						<div class="name">
+							<span class="username"></span> <s class="name-arrow"></s>
+							<div class="tag">
+								<span id="age" class="label label-success"></span>&nbsp;&nbsp;&nbsp;
+								<span id="location" class="label label-danger"></span>
+							</div>
+						</div>
 					</div>
-						<div class="card-introBox" title="查看详细信息"><span class="detail_info">查看<br/>详细信息</span></div>
+					<div class="tool_bar">
+						<a href="#"> <i class="icon_ding" title="固定"></i>
+						</a>
+						<!--
+								<a href="javascript:void(0)"><i class="icon_ding" title="固定"></i></a>
+			   	   	   	        <a href="javascript:void(0)"><i move-data="" move-to="js-follow" class="icon_like_0" title="喜欢"></i></a>
+			   	   	   	   	   	<a href="javascript:void(0)"><i class="icon_dislike" title="不喜欢"></i></a>
+							    -->
 					</div>
-					<div class="name other_name" title="22">
-						<a id='dynamic' href=""><span class="name username"></span></a>
-					</div>
-					<hr />
-				<div class="tag">
-					<span>24岁</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<span>杭州</span>
 				</div>
-				<!-- <div class="test_match"><button>测试数据</button></div> -->
-				<div class="tool_bar">
-					<a href="javascript:void(0)"><i class="icon_ding" title="固定"></i></a>
-					<a href="javascript:void(0)"><i move-data="" move-to="js-follow" class="icon_like_0" title="喜欢"></i></a>
-					<a href="javascript:void(0)"><i class="icon_dislike" title="不喜欢"></i></a>
-				</div>
-				</div>
-				<div class="tab-pane fade" id="tab13">
-					<div class="head head_girl min_head" style="margin-left:20px;margin-top:4px;height:60px;width:60px;display:inline-block;">
-						<img alt="140x140" src=""/>
-					</div>
-					<span class="name username" style="position:absolute;top:10px;left:80px;"></span>
+				<div class="tab-pane" id="tab13">
+					<img alt="140x140" src="" class="img-circle" />
 					<div class="scroller">
-						<ul class="hoverbox">
-						</ul>
+						<ul class="hoverbox"></ul>
 					</div>
 				</div>
-				<div class="tab-pane chat_tab fade" id="tab10">
-					<div class="head head_girl min_head" style="margin-left:20px;margin-top:4px;height:60px;width:60px;display:inline-block;">
-						<img alt="140x140" src=""/>
+				<div class="tab-pane chat_tab" id="tab10">
+					<img alt="140x140" src="" class="img-circle" />
+					<div id="chat_tab">
+						<div class="chat"></div>
+						<textarea rows="1" class="chat_textarea"></textarea>
+						<button class="btn btn-xs btn_send_msg">发送</button>
 					</div>
-					<span class="name username" style="position:absolute;top:10px;left:80px;"></span>
-				<div id="chat_tab">
-				<div class="chat">
-				</div>
-					<textarea rows="1" class="chat_textarea"></textarea>
-					<!-- <p class="publishInputExpression">表情</p>  -->
-					<button class="btn btn-xs btn_send_msg">发送</button> 
-					<!--  <a href="#" class="venoboxframe" data-type="iframe">聊天记录</a>-->
-				</div>
 				</div>
 			</div>
-			<ul class="list-inline card-nav">
-				<li class="active"><a href="#tab12" data-toggle="tab" title="资料"><i class="icon_profile"></i></a></li>
-				<li><a href="#tab13" data-toggle="tab"><i class="icon_photo" title="照片"></i></a></li>
-				<li><a href="#tab10" data-toggle="tab"><i class="icon_msg" title="消息"></i></a></li>
-			</ul>
+			<div class="btn-group card-nav">
+				<button type="button" class="btn btn-default btn-lg" href="#tab12"
+					data-toggle="tab" style="border-left: none;">
+					<span class="glyphicon glyphicon-info-sign"></span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg" href="#tab13"
+					data-toggle="tab">
+					<span class="glyphicon glyphicon-picture"></span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg" href="#tab10"
+					data-toggle="tab" style="border-right: none;">
+					<span class="glyphicon glyphicon-comment"></span>
+				</button>
+			</div>
 		</div>
+	</div>
 </div>

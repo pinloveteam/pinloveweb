@@ -9,53 +9,50 @@ function hide_pic(){
 }
 </script>
 <div class="publishInputUploadPhotoArea" id="publishInputUploadPhotoArea2" style="width: 500px;position: absolute;top: 100px;left: 320px;display: none;">
-                            <form class="dropzone" id="my-dropzone" action="/dynamic/updatePhoto/" method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                             <input type="hidden" name="type" value="1">
-                             </form>
-<button onclick="hide_pic();" style="float: right;position:absolute;z-index: 1">完成</button>
+    <form class="dropzone" id="my-dropzone" action="/dynamic/updatePhoto/" method="post" enctype="multipart/form-data">
+     {% csrf_token %}
+      <input type="hidden" name="type" value="1">
+      </form>
+      <button onclick="hide_pic();" style="float: right;position:absolute;z-index: 1">完成</button>
 </div>
 <div class="col-xs-3">
-			<div class="user_info card_panel" style="min-height: 150px;"> 
-			    <div class="card-top {% ifequal gender 'M'%}top-boy{%else%}top-girl{%endifequal%}"></div>
-				<div id="avatar" class="head {% ifequal gender 'M'%}head_boy{%else%}head_girl{%endifequal%}" style="margin:4px;height:63px;width:63px;">
-				<a href="/user/user_profile/"><img alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/></a>
-				</div>
-				<a href='/user/user_profile/#self_info_'><div  id="info_name" class="name">{{user.username}}</div></a>
-				<a onclick="upload_pic()" href="javascript:void(0);">上传图片</a>
-				<!-- {% ifequal member 0 %}
-				<a href='/user/member/'><div class="member">开通会员</div></a>
-				{%else%}
-				<a href='/user/member/'><div class="member">会员</div></a>
-				{% endifequal %} -->
-				
-				<hr/>
-				<p id="profile_dynamic" style="margin:20px 0 20px 20px;" title='{{dynamic.1|safe}}'>{{dynamic.0|safe}}</p>
-			</div>
-			<div class="sns_info card_panel">
-			   <div class="card-top  {% ifequal gender 'M'%}top-boy{%else%}top-girl{%endifequal%}"></div>
-				<table class="table table-condensed">
-					<tbody>
-					  <tr class="js-follow">
+	<div class="user_info card_panel">
+		<a href="/user/user_profile/">
+		   <img id="avatar"  alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/>
+		</a>
+		<a href='/user/user_profile/#self_info_'>
+		   <div id="info_name" style="margin: 10px;font-weight: bold;font-size: 16px; display: inline-block;">
+			{{user.username}}
+		   </div>
+		</a>
+		<br><a onclick="upload_pic()" href="javascript:void(0);">上传图片</a>
+		<hr/>
+		<p id="profile_dynamic" style="margin:20px 0 20px 20px;" title='{{dynamic.1|safe}}'>
+		   {{dynamic.0|safe}}
+		</p>
+
+		<div class="sns_info">
+			<table class="table">
+				<tbody>
+					<tr class="js-follow-each">
 						<td><i class="icon_follow"></i></td>
 						<td><a href="/user/follow/1">关注</a></td>
 						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
-					  </tr>
-					  <tr>
+					</tr>
+					<tr>
 						<td><i class="icon_fans"></i></td>
 						<td><a href="/user/follow/2">粉丝</a></td>
 						<td><a id="fans" href="/user/follow/2">{{fans}}</a></td>
-					  </tr>
-					  <tr class="js-follow-each">
+					</tr>
+					<tr class="js-follow-each">
 						<td><i class="icon_mutual_like"></i></td>
 						<td><a href="/user/follow/3">相互关注</a></td>
 						<td><a id="follow" href="/user/follow/3">{{follow}}</a></td>
-					  </tr>
-					</tbody>
-				</table>
-			</div>
-			
-			<div class="send_pic card_panel">
-			  <div class="card-top  {% ifequal gender 'M'%}top-boy{%else%}top-girl{%endifequal%}"></div>
-			</div>
+					</tr>
+				</tbody>
+			</table>
 		</div>
+	</div>
+
+	<!--<div class="send_pic card_panel"></div>-->
+</div>

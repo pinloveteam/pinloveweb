@@ -7,35 +7,20 @@
 }
 
 .masklayer {
-	background: rgba(0, 0, 0, 0.85);
+	background: #000;
+	opacity: 0.5;
 	filter: alpha(opacity=50);
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 1999;
-}
-
-.poplayer-close {
-    cursor: pointer;
-    position: fixed;
-    top: -1px;
-    right: 0;
-    width: 46px;
-    height: 40px;
-    padding: 10px 20px 10px 0;
-    display: block;
-    background: url(css/close.gif) no-repeat;
-    background-position:10px center;
-    color: #fff;
-    text-indent: -100px;
-    overflow: hidden;
+	z-index: 999;
 }
 
 .poplayer {
 	position: fixed;
-	z-index: 2999;
+	z-index: 1000;
 	top: 35%;
 	left: 35%;
 }
@@ -49,7 +34,7 @@
 }
 
 .poplayer-confirm-head {
-	background-color: #203854;
+	background-color: #9CD0FF;
 	padding-left: 15px;
 }
 
@@ -62,7 +47,7 @@
 }
 
 .poplayer-close-btn:hover {
-	background-color: #9CD0FF;
+	background-color: #203854;
 }
 
 .poplayer-confirm-head-text {
@@ -84,69 +69,91 @@
 	left: 80%;
 }
 
-
-.poplayer .col-xs-4 {
-	background-color: #fff;
-	height: 530px;
-	width: 400px;
-}
-.poplayer .score {
-	display: inline-block;
-	font-size: 60px;
-	width: 176px;
-	text-align: center;
+.js-popframe {
+	position: fixed;
+	z-index: 1000;
+	top: 10%;
+	left: 20%;
 }
 
-.poplayer .main {
-text-align: center;
+hr {
+	margin-bottom: 12px;
+	margin-top: 12px;
 }
-
-.poplayer .table {
-	margin-top: 50px;
-	margin-left: 20px;
-}
-
-.poplayer td {
+.js-popframe td {
 	border: none !important;
-	vertical-align: middle !important;
+}
+.js-popframe .table {
+	margin-bottom: 0;
+}
+.js-popframe {
+	width: 960px;
+	padding-left: 0;
+}
+.js-popframe .title, .js-popframe #name, .js-popframe .score {
+	font-size: 16px;
 }
 
-.poplayer .icon {
+.js-popframe .right ,.js-popframe .left {
+	background-color: #fff;
+	border-radius: 10px 0 0 10px;
+	padding: 20px;
+	padding-left: 40px;
+}
+.js-popframe .right ,.radius{
+	border-radius: 0 10px 10px 0;
+}
+
+.js-popframe #name, .js-popframe .score {
+	color: #D43F10;
+	font-weight: bold;
+}
+
+.js-popframe .score-other {
+	height: 38px;
+}
+.js-popframe .tags{
+	height: 112px;
+}
+.js-popframe .tag {
 	display: inline-block;
-	height: 32px;
-	width: 32px;
-	background: no-repeat;
-}
-.poplayer .icon-height {
-	background: url("../img/身高.png");
-}
-.poplayer .icon-education {
-	background: url("../img/学历.png");
+	background-color: #DDDDDD;
+	border: solid 1px #C4C4C4;
+	border-radius: 5px;
+	padding: 1px 10px;
+	margin: 3px;
 }
 
-.poplayer .icon-age {
-	background: url("../img/年龄.png");
+.js-popframe .progress {
+	border-radius: 0;
+	height: 12px;
+	border: solid 1px #000;
+	margin-top: 5px;
+	overflow: visible
+}
+.js-popframe .progress-bar {
+	background-color: #D43F10;
+	max-width: 90%;
+	min-width: 0;
 }
 
-.poplayer .icon-income {
-	background: url("../img/收入.png");
-}
-
-.poplayer .icon-trade {
-	background: url("../img/行业.png");
-}
-
-.poplayer .icon-constellation {
-	background: url("../img/星座.png");
-}
-
-.poplayer .icon-eye {
-	background: url("../img/个人信息新-08.png");
+.js-popframe .computerMove {
+	height: 16px;
+	width: 16px;
+	border: solid 1px #000;
+	border-radius: 50%;
+	position: absolute;
+	top: 3px;
+	background-color: #DBDBDB;
 	cursor: pointer;
 }
 
-.label {
-	font-size: 100%;
-	line-height: 2;
-	margin-left: 5px;
+.js-popframe .score-big {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.js-popframe .text {
+	font-size: 24px;
+	color: #fff;
 }

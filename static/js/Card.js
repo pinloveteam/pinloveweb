@@ -12,7 +12,8 @@ var mgr = hopscotch.getCalloutManager(),
 state = hopscotch.getState();
 //判断是不是有card页面
 isChard=true;
-
+//分数显示
+var Time, i = 0, num, progress, score;
 
 
 var sendMsg = function(){
@@ -378,31 +379,55 @@ window.Card = function(person){
 	}
 	
     
-	var score_my = function(e){
+	function score_my(e,userId,type){
+		$(e).hide().prevAll().show();
+		progress = $(e).prev().prev().find('.progress-bar');
+		score = $(e).prev().find('.score');
 		current=$(this)
-		userId=$(this).val()
-		e.stopPropagation();    //  阻止事件冒泡
+//		userId=$(this).val()
+//		e.stopPropagation();    //  阻止事件冒泡
 		$.ajax({
 				type:'GET',
 				url:'/recommend/socre_my/',
 				dataType:"json",
-				data:{userId:userId},
+				data:{userId:userId,type:type},
 				success:function(data, textStatus){
 					if(textStatus=='success'){
 						if(data['result']=='success'){
-							current.parent().append(data['scoreMyself'])
-							current.remove()
+							Score(data['scoreMyself'])
 						}else if(data['result']=='error'){
-							alert(data['error_messge'])
+							var body = $("<p>"+data['error_messge']+"</p>")
+				       	    $.poplayer({body:body});
 						}
 						
 					}
 				},
 				error:function(response){
-					alert('网络异常!')
+					var body = $("<p>网络异常!</p>")
+		       	    $.poplayer({body:body});
 				},
 		});
 	}
+	
+	function Score(s) {
+		num = s;
+		clearInterval(Time);
+		Time = setInterval(Start, 3);
+		progress.css({
+			width : num + "%"
+		});
+	}
+
+	function Start() {
+		if (i <= num) {
+			score.html(i);
+			i++;
+		} else {
+			clearInterval(Time);
+			i = 0;
+		}
+	} 
+	
 	
 	/*type:
 		1---对比
@@ -411,8 +436,10 @@ window.Card = function(person){
 		if(type==1){
 			compare_flag=true;
 			check_id=userId;
+			$('#compare_button').html('取消对比')
 		}else{
 			compare_flag=false;
+			$('#compare_button').html('与其他用户对比')
 		}
 		
 		//引导
@@ -509,56 +536,63 @@ window.Card = function(person){
 			dataType:"json",
 			success:function(data, textStatus){
 				try {
-				 var body = $(data.detail)
-				 var socreForOther=data.socreForOther
-				 if(compare_flag){
-					 diaogList=[socreForOther.matchResult.edcationScore,socreForOther.matchResult.characterScore,socreForOther.matchResult.incomeScore,socreForOther.matchResult.appearanceScore,socreForOther.matchResult.heighScore,]					 
-					 var compareSocreForOther=data.compareSocreForOther
-					 compareList=[compareSocreForOther.matchResult.edcationScore,compareSocreForOther.matchResult.characterScore,compareSocreForOther.matchResult.incomeScore,compareSocreForOther.matchResult.appearanceScore,compareSocreForOther.matchResult.heighScore,]
-					 $.poplayer({body:body,type:'frame',data:diaogList,data2:compareList});
-					 $('.compare-btn').click(function(){
-						 compare(userId,2,false)
-					 })
-					 
-				 }else{
-					 guide=false;
-					 if(data.socreForOther.result=="success"){
-						 diaogList=[socreForOther.matchResult.edcationScore,socreForOther.matchResult.characterScore,socreForOther.matchResult.incomeScore,socreForOther.matchResult.appearanceScore,socreForOther.matchResult.heighScore,]
-						 $.poplayer({body:body,type:'frame',data:diaogList,data2:[]});
-						 if(data.compare_button){
-							 var tour = {
-										id : "hello-hopscotch",
-										steps : [{
-											title : "对比雷达图",
-											content : "点击对比，可以对比两个人的个人信息以及雷达图",
-											target : "compare-button",
-											placement : "bottom"
-										}]
-									};
-							hopscotch.startTour(tour);
-							guide=true;
-						 }
-						 $('.compare-btn').click(function(){
-							 compare(userId,1,guide)
+					options={
+							compar:compare_flag,
+							type : 'frame',
+							user1 : data.user1,
+					}
+					if(compare_flag){
+						options.user2= data.user2
+						
+					}
+					$.poplayer(options);
+					if(compare_flag){
+						//取消对比
+						$('#compare_button').click(function(){
+							 compare(userId,2,false)
+						 })
+					}else{
+						$('#compare_button').click(function(){
+							 compare(userId,1,false)
 						 });
-					 }else{
-						 detail_info=true
-						 $.poplayer({body:body,type:'error'});
-						 $('.compare-btn').attr('disable',true);
-						 $('.compare-btn').removeClass('btn-info')
-//							var body = $("<p>"+socreForOther.error_messge+"</p>")
-//							$.poplayer({body:body});
-					 }
-					 
-				 }
-				 $('#radar').find('button').on('click',score_my);
-				 $('.compare-btn_1').click(function(){
-					 cancel_compare(userId)
-				 })
-				 detail_info=true;
-				 $('#vote-button').click(function(){
-						vote(userId);
-					});  
+					}
+					detail_info=true
+					
+
+					$('.btn-show-score').click(function() {
+						content=this;
+						$.ajax({
+							type:'GET',
+							url:'/recommend/check_charge_for_socre_my/',
+							dataType:"json",
+							data:{userId:userId},
+							success:function(data, textStatus){
+								if(textStatus == 'success'){
+					            	if( data.type=='score'){
+					            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+					            		var hehe = function(){
+					            			score_my(content,userId,data.type);
+					            			}
+					            		$.poplayer({body:body,btnFunc:hehe});
+					            	}else if( data.type=='charge') {
+					            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+					            		var hehe = function(){
+					            			score_my(content,userId,data.type)
+					            			}
+					            		$.poplayer({body:body,btnFunc:hehe});
+					            	}else if(data.type=='less'){
+					            		var body = $("<p>请充值!</p>")
+					            		 $.poplayer({body:body});
+					            	} 
+					            }
+							},
+							error:function(response){
+								var body = $("<p>异常错误!</p>")
+								$.poplayer({body:body});
+							},
+					});
+						
+					});
 			 } catch (e) {
 					detail_info=true
 					var body = $("<p>异常错误!</p>")
@@ -578,8 +612,8 @@ window.Card = function(person){
 
 	this.template.find('.username').html(person.username);
 	this.template.find('.tag').children().first().html(person.age).next().html(person.city);
-	this.template.find('.head').children().attr('src',person.headImg+'-110.jpeg');
-	this.template.find('.min_head').children().attr('src',person.headImg+'-60.jpeg');
+	this.template.find('.head').attr('src',person.headImg+'-110.jpeg');
+	this.template.find('.img-circle').attr('src',person.headImg+'-60.jpeg');
 	this.template.find('.card').attr('id',person.username);
 	this.template.find('.other_name').attr('title',person.username);
 	this.template.find('#dynamic').attr('href','/dynamic/person/?userId='+person.userId);
@@ -599,11 +633,11 @@ window.Card = function(person){
 	
 	//添加tab id
 	var tab=this.template.find('.tab-pane');
-	var nav=this.template.find('.card-nav').children().children();
+	var nav=this.template.find('.card-nav').children();
 	for (i=0;i<3;i++){
       j=i+4
 	  tab[i].id='tab'+j+person.userId;
-	  nav[i].href='#tab'+j+person.userId;
+      nav.eq(i).attr('href','#tab'+j+person.userId);
 	}
 
 	for(i=0;i<person.pictureList.length;i++){

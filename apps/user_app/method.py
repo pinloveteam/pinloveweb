@@ -129,10 +129,32 @@ def is_chat(myId,cardList,followIdList=None,historyIdList=None):
 '''
 详细信息页面
 '''
-def get_detail_info(userId):
-    userProfile=UserProfile.objects.get_user_info(userId)
+def get_detail_info(myId,userId,socreForOther):
+    userProfile=UserProfile.objects.select_related('user').get(user_id=userId)
+    #获取标签信息
     tagList=UserTag.objects.select_related('tag').filter(user_id=userId,type=0)
-    return user_info_card(userProfile,tagList)
+    tags=[]
+    for tag in tagList:
+        tags.append(tag.tag.content)
+    data={
+                        'head' : '%s%s%s'%('/media/',userProfile.avatar_name,'-110.jpeg'),
+                        'tag' : tags,
+                        'name' : userProfile.user.username,
+                        'userId':userProfile.user_id,
+                        'age' : userProfile.age,
+                        'city' : userProfile.city,
+                        'height' :userProfile.height,
+                        'education' : userProfile.get_education_display(),
+                        'income' : userProfile.income,
+                        'trade' : userProfile.get_jobIndustry_display(),
+                        'constellation' : userProfile.get_sunSign_display(),
+                        'score' :int(socreForOther['matchResult']['scoreOther']),
+                        'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
+                    }
+    for  key in data.keys():
+        if data[key] in missing_value:
+            data[key]='未填'
+    return data
 
 '''
 获取用户头像
@@ -142,188 +164,12 @@ def get_avatar_name(myId,userId):
 
 def detailed_info_div(myId,userId,compareId=None):
     args={}
-    flag=False
-    detailDict=get_detail_info(userId)
     from apps.recommend_app.views import get_socre_for_other
-    args['socreForOther']=get_socre_for_other(myId,userId)
-    head_color = 'head_girl' if detailDict['gender']=='F' else 'head_boy'
-#     keys=''
-#     for key in args['socreForOther'].keys():
-#         keys+=key+'====='
-#     logging.error('======='+keys)
+    socreForOther=get_socre_for_other(myId,userId)
+    #获取页面详细信息
+    args['user1']=get_detail_info(myId,userId,socreForOther)
     if not compareId is None:
-        flag=True
-        data=get_detail_info(compareId)
-        compareTags=''
-        for tag in data['tagTupe']:
-            compareTags+='%s%s%s'%('<span class="label label-info">',tag,'</span>\r')
-            
-        args['compareSocreForOther']=get_socre_for_other(myId,compareId)
-    tags=''
-    for tag in detailDict['tagTupe']:
-        tags+='%s%s%s'%('<span class="label label-info">',tag,'</span>\r')
-    if flag:
-        compareTag='取消对比'
-        left=8
-        width=''
-    else:
-        compareTag='对比'
-        left=25
-        width='width:780px'
-    detail='''<div id="detail_info_div" class="container poplayer" style="top:10%%;left: %s%%;padding: 0;%s">
-<div class="row">
-<div class="col-xs-4" style="border-right: solid 2px #00CCCC;">
-
-<div class="main">
-<div class="head %s">
-<img src="/media/%s-110.jpeg" alt="当前头像">
-</div>
-<div style="display: inline-block;width: 260px;position: relative;top:-40px;">
-<span><strong>%s</strong></span>
-<br>
-<span>%s</span>
-</div>
-<br>
-<button id="compare-button" class="btn btn-info compare-btn">
-%s
-</button>
-<input id="vote" name="vote" >
-<button id="vote-button" class="btn btn-info">
-打分
-</button>
-</div>
-
-<div>
-   %s
-</div>
-<table class="table">
-<tbody>
-<tr>
-<td><i class="icon icon-height"></i>&nbsp;&nbsp;身高：%s</td>
-<td><i class="icon icon-education"></i>&nbsp;&nbsp;学历：%s</td>
-</tr>
-<tr>
-<td><i class="icon icon-age"></i>&nbsp;&nbsp;年龄：%s</td>
-<td><i class="icon icon-income"></i>&nbsp;&nbsp;收入：%s</td>
-</tr>
-<tr>
-<td><i class="icon icon-trade"></i>&nbsp;&nbsp;行业：%s</td>
-<td><i class="icon icon-constellation"></i>&nbsp;&nbsp;星座:%s</td>
-</tr>
-</tbody>
-</table>
-</div>
-'''%(left,width,head_color,detailDict['avatar_name'],detailDict['username'],detailDict['city'],compareTag,tags,detailDict['height'],detailDict['education'],detailDict['age'],detailDict['income'],detailDict['jobIndustry'],detailDict['sunSign'],)
-
-    if flag:
-        head_color = 'head_girl' if data['gender']=='F' else 'head_boy'
-        canvasDiv=canvas_div(args['socreForOther'],flag,args['compareSocreForOther'])
-        detail+=canvasDiv
-        compare='''
-        <div class="col-xs-4" style="border-left: solid 2px #00CCCC;">
-
-<div class="main">
-<div class="head %s">
-<img src="/media/%s-110.jpeg" alt="当前头像">
-</div>
-<div style="display: inline-block;width: 260px;position: relative;top:-40px;">
-<span><strong>%s</strong></span>
-<br>
-<span>%s</span>
-</div>
-<br>
-<button class="btn btn-info compare-btn_1">
-%s
-</button>
-</div>
-
-<div>
-   %s
-</div>
-<table class="table">
-<tbody>
-<tr>
-<td><i class="icon icon-height"></i>&nbsp;&nbsp;身高：%s</td>
-<td><i class="icon icon-education"></i>&nbsp;&nbsp;学历：%s</td>
-</tr>
-<tr>
-<td><i class="icon icon-age"></i>&nbsp;&nbsp;年龄：%s</td>
-<td><i class="icon icon-income"></i>&nbsp;&nbsp;收入：%s</td>
-</tr>
-<tr>
-<td><i class="icon icon-trade"></i>&nbsp;&nbsp;行业：%s</td>
-<td><i class="icon icon-constellation"></i>&nbsp;&nbsp;星座:%s</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>'''%(head_color,data['avatar_name'],data['username'],data['city'],compareTag,compareTags,data['height'],data['education'],data['age'],data['income'],data['jobIndustry'],data['sunSign'],)
-        detail+=compare
-        
-    else:
-         canvasDiv=canvas_div(args['socreForOther'],flag)
-         detail+=canvasDiv
-#          print detail
-    args['detail']=detail.replace('\n', '')
-    if args['socreForOther']['result']=='success':
-         from util.util import is_guide
-         guide=UserProfile.objects.get_user_info(myId).guide
-         if not is_guide(myId,guide,'compareButton'):
-             args['compare_button']=True
-    return args  
-
-'''
-获得雷达图的div
-scoreMatch 我对对方打分的
-compareFlag  是否有对比用户
-compareScoreMatch 对比用户我对对方打分的
-
-'''
-def canvas_div(scoreMatch,compareFlag,compareScoreMatch=None):
-    canvasDiv='''<div class="col-xs-4" id="radar" >
-<div class="">
-<div class="score">
-<span>%s</span>
-<a onclick="buy_score_for_other(this,%s)"><i title="让对方看见" class="icon icon-eye"></i></a>
-</div>
-<div class="score score_other">
-%s
-<span>%s</span>
-</div>
-</div>
-
-<canvas class="radar" height="370px" width="370px"></canvas>
-<div class="">
-<div class="score">
-<span>%s</span>
-</div>
-<div class="score score_other">
-<span>%s</span>
-</div>
-</div>
-</div>'''
-    if scoreMatch['result']=='success':
-        compareScoreOther=''
-        compareScoreMyself=''
-        compareEye=''
-        if compareFlag:
-            compareScoreOther=int(compareScoreMatch['matchResult']['scoreOther'])
-            if compareScoreMatch['matchResult'].get('scoreMyself',None)!=None:
-                compareScoreMyself=int(compareScoreMatch['matchResult'].get('scoreMyself'))
-            else:
-                compareScoreMyself='<button value="%s">查<button>'%(compareScoreMatch['matchResult']['userId'])
-        if scoreMatch['matchResult'].get('scoreMyself',None)!=None:
-            scoreMyself= int(scoreMatch['matchResult'].get('scoreMyself'))
-            compareEye='<a onclick="buy_score_for_other(this,%s)"><i class="icon icon-eye" ></i></a>'%(scoreMatch['matchResult']['userId'])
-        else:
-            scoreMyself='<button value="%s" >查<button>'%(scoreMatch['matchResult']['userId'])
-        canvasDiv=canvasDiv%(int(scoreMatch['matchResult']['scoreOther']),scoreMatch['matchResult']['userId'],compareEye,compareScoreOther,scoreMyself,compareScoreMyself)
-    else:
-        canvasDiv='<div class="col-xs-4" id="radar" >为了显示雷达图，请您首先填写完整的个人信息</div>'
-#         canvasDiv='<div class="col-xs-4" id="radar" >'+scoreMatch['error_messge']+'</div>'
-
-    return canvasDiv
-        
-    
+        compareSocreForOther=get_socre_for_other(myId,compareId)
+        args['user2']=get_detail_info(myId,compareId,compareSocreForOther)
+    return args
     

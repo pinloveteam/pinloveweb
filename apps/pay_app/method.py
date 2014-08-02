@@ -22,6 +22,31 @@ def use_charge_by_other_score(myId,otherId):
         return 'less'
 
 '''
+检查积分拼爱币是否足够支付
+@param userId:用户id
+@param type:支付类型 (pintu|)
+@return: args
+'''
+def check_score_and_PLprice(userId,type):
+    from apps.pay_app.pay_settings import SCORE_PLPRICE_TYPE
+    type=SCORE_PLPRICE_TYPE[type]
+    args={}
+    from apps.user_score_app.method import has_score_by_pintu
+    hasScore=has_score_by_pintu(userId)
+    if hasScore:
+        from apps.user_score_app.models import UserScoreExchangeRelate
+        userScoreExchangeRelate=UserScoreExchangeRelate.objects.get(type=type['score'])
+        args={'type':'score','amount':userScoreExchangeRelate.amount,}
+    else:
+        hasCharge=has_charge_by_pintu(userId)
+        if hasCharge:
+            chargeExchangeRelate=ChargeExchangeRelate.objects.get(operateType=type['charge'])
+            args={'type':'charge','amount':chargeExchangeRelate.PLPrice}
+        else:
+            args={'type':'less'}
+    return args
+
+'''
 扣除玩一次缘分拼图的拼爱币
 '''   
 def use_charge_by_pintu(userId):
