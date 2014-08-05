@@ -34,7 +34,7 @@ UPLOAD_AVATAR_URL_PREFIX_CROPPED = settings.UPLOAD_AVATAR_URL_PREFIX_CROPPED
 # Default max allowed size is 3MB
 UPLOAD_AVATAR_MAX_SIZE = getattr(settings, 'UPLOAD_AVATAR_MAX_SIZE', 1024 * 1024 *8)
 
-UPLOAD_AVATAR_MIX_SIZE = getattr(settings, 'UPLOAD_AVATAR_MIX_SIZE',1024*8)
+UPLOAD_AVATAR_MIX_SIZE = getattr(settings, 'UPLOAD_AVATAR_MIX_SIZE',1024*20)
 #上传格式
 UPLOAD_AVATAR_FORMAT = getattr(settings, 'UPLOAD_AVATAR_FORMAT',['jpg','jpeg','gif','png'])
 # You should custom the test function.
@@ -59,7 +59,7 @@ if UPLOAD_AVATAR_GET_UID_FUNC is None:
 
 # How many different size your wanna resize.
 # NOTICE, the value MUST be list, even if there are only one size.
-UPLOAD_AVATAR_RESIZE_SIZE = getattr(settings, 'UPLOAD_AVATAR_RESIZE_SIZE', [110,60])
+UPLOAD_AVATAR_RESIZE_SIZE = getattr(settings, 'UPLOAD_AVATAR_RESIZE_SIZE', [[250,312],[60,75]])
 # Avatar default size which will be shown in you website,
 # this is for call user.get_avatar_path(), user.get_avatar_url() more convenient
 UPLOAD_AVATAR_DEFAULT_SIZE = getattr(settings, 'UPLOAD_AVATAR_DEFAULT_SIZE', 110)

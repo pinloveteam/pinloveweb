@@ -101,6 +101,27 @@ class MatchResultManager(models.Manager):
     '''
     def is_exist_by_userid(self,myId):
         return MatchResult.objects.filter(my_id=myId).exists()
+    '''
+    获取匹配结果信息
+    @param userId:用户id
+    @param disLikeUserIdList:不喜欢用户列表 
+    @param STAFF_MEMBERS：管理员列表 
+    '''
+    def get_match_result_by_userid(self,userId,disLikeUserIdList):
+        from pinloveweb import STAFF_MEMBERS
+        excludeList=[userId,]
+        excludeList.extend(STAFF_MEMBERS)
+        if not disLikeUserIdList is None:
+            excludeList.extend(disLikeUserIdList)
+        sql='''
+        select u1.*,u2.* from recommend_match_result u1 
+left  JOIN auth_user u2 on u2.id=u1.other_id 
+LEFT JOIN  user_profile u3 on u1.other_id =u3.user_id
+where u3.avatar_name_status='3' and u1.my_id=%s '''
+        if len(excludeList)>1:
+            sql='%s%s%s%s'%(sql,'and  u1.other_id not in (',('%s,'*(len(excludeList)-1))[:-1],')')
+        return MatchResult.objects.raw(sql,excludeList)
+       
        
 class MatchResult(models.Model):
     my=models.ForeignKey(User,related_name='my_User',verbose_name=u"自己")

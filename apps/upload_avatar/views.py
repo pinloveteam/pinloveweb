@@ -152,8 +152,8 @@ def crop_avatar(request):
     count = UserProfile.objects.filter(user_id=get_uid(request)).count()
     
     def _resize(size):
-        res = avatar.resize((size, size), Image.ANTIALIAS)
-        res_name = '%s-%d.%s' % (avatar_name, size, UPLOAD_AVATAR_SAVE_FORMAT)
+        res = avatar.resize((size[0], size[1]), Image.ANTIALIAS)
+        res_name = '%s-%d.%s' % (avatar_name, size[0], UPLOAD_AVATAR_SAVE_FORMAT)
         res_path = os.path.join(UPLOAD_AVATAR_AVATAR_ROOT, res_name)
         
         

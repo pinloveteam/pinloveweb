@@ -15,6 +15,7 @@ from apps.user_app.method import is_chat
 '''
   卡片类
 '''
+
 empty_result_list=[-1,'N',None]
 class Card(object):
     def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,):
@@ -111,10 +112,11 @@ def matchResultList_to_CardList(myId,matchResultList):
            isVote=False
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
        recommendResultList.append(recommendResult)
-    #关注情况
-    recommendResultList=is_focus_each_other(myId,recommendResultList)
-    #是否有聊天权限
-    recommendResultList=is_chat(myId,recommendResultList,)
+    if len(matchResultList)>0:
+        #关注情况
+        recommendResultList=is_focus_each_other(myId,recommendResultList)
+        #是否有聊天权限
+        recommendResultList=is_chat(myId,recommendResultList,)
     return recommendResultList
 '''
 将用户详细信息userProfileList转换成卡片集合CardList

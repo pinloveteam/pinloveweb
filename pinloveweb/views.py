@@ -151,19 +151,16 @@ attribute：
 '''
 def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):
     if flag:
-         if disLikeUserIdList is None:
-             matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id).exclude(other_id__in=STAFF_MEMBERS)
-         else:
-            matchResultList=MatchResult.objects.select_related('other').filter(my_id=request.user.id).exclude(other_id__in=disLikeUserIdList).exclude(other_id__in=STAFF_MEMBERS)
+         matchResultList=MatchResult.objects.get_match_result_by_userid(request.user.id,disLikeUserIdList)
          arg=page(request,matchResultList,**kwargs)
          matchResultList=arg['pages']
          from apps.pojo.card import matchResultList_to_CardList
          matchResultList.object_list=matchResultList_to_CardList(request.user.id,matchResultList.object_list)
     else:
           if disLikeUserIdList is None: 
-              userProfileList=UserProfile.objects.exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)
+              userProfileList=UserProfile.objects.exclude(gender=userProfile.gender, avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS,)
           else:
-              userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)
+              userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender, avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)
           arg=page(request,userProfileList,**kwargs)   
           matchResultList=arg['pages']
           from apps.pojo.card import userProfileList_to_CardList

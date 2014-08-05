@@ -141,18 +141,19 @@
                 img_height = $(this).height();
                 
                 var sel = {};
-                sel['x1'] = Math.round(img_width/2-25 > 0 ? img_width/2-25 : 0),
-                sel['y1'] = Math.round(img_height/2-25 > 0 ? img_height/2-25 : 0),
-                sel['x2'] = Math.round(img_width/2+25 > img_width ? img_width : img_width/2+25),
-                sel['y2'] = Math.round(img_height/2+25 > img_height ? img_height : img_height/2+25),
-                sel['width'] = 50;
-                
+                sel['x1'] = Math.round(img_width/2-70 > 0 ? img_width/2-70 : 0),
+                sel['y1'] = Math.round(img_height/2-87.5 > 0 ? img_height/2-87.5 : 0),
+                sel['x2'] = Math.round(img_width/2+70 > img_width ? img_width : img_width/2+70),
+                sel['y2'] = Math.round(img_height/2+87.5 > img_height ? img_height : img_height/2+87.5),
+                sel['width'] = 60;
+                window.console.log(img_width+" "+img_height);
+                window.console.log(sel);
                 $(this).imgAreaSelect({
                     handles: true,
-                    aspectRatio: "1:1",
+                    aspectRatio: "4:5",
                     fadeSpeed: 100,
-                    minHeight: 50,
-                    minWidth: 50,
+                    minHeight: 120,
+                    minWidth: 96,
                     x1: sel.x1,
                     y1: sel.y1,
                     x2: sel.x2,
@@ -192,13 +193,13 @@
         function crop_avatar_success(msg,avatar_name) {
         	var body = $('<p>'+msg+'</p>');
         	$.poplayer({body:body});
-        	$('#avatar').find('img').attr('src',avatar_name+'-60.jpeg')
+        	$('#avatar').attr('src',avatar_name+'-60.jpeg')
         };
     </script>
     <div class="tip">
 <h5>请上传清晰美观的个人近照，给别人留下美好的第一印象。</h5>
 <p class="text-muted">
-<small>支持jpg、gif、png格式，单张照片在10k-8M之间；</small>
+<small>支持jpg、gif、png格式，单张照片在20k-8M之间；</small>
 </p>
 </div>
     <form id="uploadAvatarCropForm" action="{% url 'uploadavatar_crop' %}" method="post" target="uploadAvatarIframe" style="display: none;">

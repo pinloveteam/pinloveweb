@@ -612,7 +612,7 @@ window.Card = function(person){
 
 	this.template.find('.username').html(person.username);
 	this.template.find('.tag').children().first().html(person.age).next().html(person.city);
-	this.template.find('.head').attr('src',person.headImg+'-110.jpeg');
+	this.template.find('.head').attr('src',person.headImg+'-250.jpeg');
 	this.template.find('.img-circle').attr('src',person.headImg+'-60.jpeg');
 	this.template.find('.card').attr('id',person.username);
 	this.template.find('.other_name').attr('title',person.username);
