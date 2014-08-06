@@ -389,7 +389,7 @@ DATABASES = {
     }
 }
 #upload 上传地址
-MEDIA_URL = '/update/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/update'
 #静态文件地址
 STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
