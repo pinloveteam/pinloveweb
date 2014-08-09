@@ -33,14 +33,25 @@
 
 		$(document.body).append(masklayer).append(dialog);
 		if(options.type == 'frame'){
-		    computerMove();
+			computerMove();
 		}
 		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn').click(function() {
 			masklayer.remove();
 			dialog.remove();
 		});
 	}
-	
+	function is_vote(infoframe,isVote,voteScore){
+		if(isVote==false){
+			infoframe.find('.btn-primary').attr('disabled',true);
+		    infoframe.find('.computerMove').remove();
+		    infoframe.find('.score').parent().html('不能打分');
+		}else{
+			infoframe.find('#vote_value').val(voteScore);
+			infoframe.find('.score').html(voteScore);
+			infoframe.find('.progress-bar').css('width',voteScore+'%');
+			infoframe.find('.computerMove').css('left',voteScore * 90 / 100 + "%")
+		};
+	};
 	function computerMove(){
 	                var $div = $("div.computerMove");
 					var progressWidth = $div.parents('.progress').css('width').split('p')[0];
@@ -76,6 +87,8 @@
 									width : now_x + "%"
 								});
 								score.html(now_x);
+								$('#vote_value').val(now_x);
+								
 							}
 						});
 					});
@@ -104,8 +117,8 @@
 	}
 
 	function loadInfoFrame(user) {
-		var infoframe = $('<div class="col-xs-4"></div>');
-		var i1 = $('<div id="user_info" class="col-xs-4" style="padding-left: 0;"><img id="head" width="75px" src=""/></div><div class="col-xs-8" style="padding-right: 0;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>岁&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div>');
+		var infoframe = $('<div id="user_info"  class="col-xs-4"></div>');
+		var i1 = $('<div class="col-xs-4" style="padding-left: 0;"><img id="head" width="75px" src=""/></div><div class="col-xs-8" style="padding-right: 0;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>岁&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div>');
 		i1.find('#head').attr('src', user.head);
 		i1.find('#name').html(user.name);
 		i1.find('#age').html(user.age);
@@ -126,9 +139,11 @@
 		i3.find('#income').html(user.income);
 		i3.find('#constellation').html(user.constellation);
 
-		var i4 = $('<div class="row"><hr /><p class="title">为TA打分</p><div class="col-xs-6" style="padding: 0;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 10%"><div class="computerMove"></div></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span>分</div><div class="col-xs-3"><button class="btn btn-xs btn-primary">确认</button></div></div>');
-
+		var i4 = $('<div class="row"><hr /><p class="title">为TA打分</p><div class="col-xs-6" style="padding: 0;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"><div class="computerMove"></div></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span>分<input id="vote_value" type="hidden" value=""></div><div class="col-xs-3"><button id="appearancevote" class="btn btn-xs btn-primary">确认</button></div></div>');
+		//判断能不能投票
+		is_vote(i4,user.isVote,user.voteScore);
 		infoframe.append(i1).append(i2).append(i3).append(i4);
+		
 		return infoframe;
 	}
 

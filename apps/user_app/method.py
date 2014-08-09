@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys   
-import time
 from apps.user_app.models import UserProfile, UserTag, Follow,\
     BrowseOherScoreHistory, BlackList, Denounce
-import logging
-from django.utils import simplejson
+from apps.recommend_app.models import  AppearanceVoteRecord
 reload(sys) # Python2.5 初始化后会删除 sys.setdefaultencoding 这个方法，我们需要重新载入   
 sys.setdefaultencoding('utf-8')  
 '''
@@ -136,6 +134,11 @@ def get_detail_info(myId,userId,socreForOther):
     tags=[]
     for tag in tagList:
         tags.append(tag.tag.content)
+    isVote=False
+    voteScore=-1
+    if userProfile.avatar_name_status=='3':
+        isVote=True
+        voteScore=int(AppearanceVoteRecord.objects.get(user_id=myId,other_id=userId).score)
     data={
                         'head' : '%s%s%s'%('/media/',userProfile.avatar_name,'-110.jpeg'),
                         'tag' : tags,
@@ -149,6 +152,8 @@ def get_detail_info(myId,userId,socreForOther):
                         'trade' : userProfile.get_jobIndustry_display(),
                         'constellation' : userProfile.get_sunSign_display(),
                         'score' :int(socreForOther['matchResult']['scoreOther']),
+                        'isVote':isVote,
+                        'voteScore':voteScore,
                         'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
                     }
     for  key in data.keys():

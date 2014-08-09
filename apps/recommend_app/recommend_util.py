@@ -5,7 +5,7 @@ Created on Sep 5, 2013
 @author: jin
 '''
 from django.contrib.auth.models import User
-from apps.recommend_app.models import Grade
+from apps.recommend_app.models import Grade, AppearanceVoteRecord
 import MySQLdb
 from pinloveweb import settings
 from apps.common_app.models import School
@@ -103,13 +103,47 @@ where u2.country=%s
     return int((schoolRankingCount+0.01)/shcoolCount*100)
     
 '''
+@param scoreId:打分人的用户id
+@param param scoredId: 被打分人的用户id 可为空
+@param score:用户打分
+@param appearancescore:之前的外貌分数
+@param appearancesvote: 之前的投票数
+@param type:投票类型  
+            0 系统打分  1 用户打分
+    
 相用户貌投票
 得分=(原本用户外貌打分*（原本票数+DEFAULT_WEB_VOTE_NUM）+新用户投票分数)/(原本票数+1+DEFAULT_WEB_VOTE_NUM)
 [注：DEFAULT_WEB_VOTE_NUM 为网站默认为用打分占的权重]
 '''
-def cal_user_vote(score,geadeInstance):
-     from apps.recommend_app.recommend_settings import DEFAULT_WEB_VOTE_NUM
-     return  (geadeInstance.appearancescore*(geadeInstance.appearancesvote+DEFAULT_WEB_VOTE_NUM)+score)/(geadeInstance.appearancesvote+1+DEFAULT_WEB_VOTE_NUM)
+def cal_user_vote(scoreId,scoredId,score,appearancescore,appearancesvote,type,**kwargs):
+    from apps.recommend_app.recommend_settings import DEFAULT_WEB_VOTE_NUM
+    #判断是否打过分
+    flag=True
+    appearanceVoteRecord=None
+    if type==0:
+        #前一次系统打分
+        preScore=abs((appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)-kwargs.get('sysappearancescore')*DEFAULT_WEB_VOTE_NUM)/(appearancesvote-DEFAULT_WEB_VOTE_NUM))
+        score=(preScore*(appearancesvote)+score*DEFAULT_WEB_VOTE_NUM)/(appearancesvote+DEFAULT_WEB_VOTE_NUM)
+            
+    elif type==1:
+        if AppearanceVoteRecord.objects.filter(user_id=scoreId,other_id=scoredId).exists():
+            appearanceVoteRecord=AppearanceVoteRecord.objects.get(user_id=scoreId,other_id=scoredId)
+        else:
+            flag=False
+            appearanceVoteRecord=AppearanceVoteRecord(user_id=scoreId,other_id=scoredId)
+        if flag:
+            #前一次系统打分
+            preScore=(appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)-appearanceVoteRecord.score)/(appearancesvote+DEFAULT_WEB_VOTE_NUM-1)
+            appearanceVoteRecord.score=score
+            score=(preScore*(appearancesvote+DEFAULT_WEB_VOTE_NUM-1)+score)/(appearancesvote+DEFAULT_WEB_VOTE_NUM)
+            appearanceVoteRecord.save()
+        else:
+            score=(appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)+score)/(appearancesvote+1+DEFAULT_WEB_VOTE_NUM)
+            appearanceVoteRecord.score=score
+            appearanceVoteRecord.save()
+    else:
+        raise Exception('type 参数错误')    
+    return  {'score':score,'flag':flag}
  
 def cal_recommend(userId,fields=[]):
     from util.cache import get_has_recommend,has_recommend

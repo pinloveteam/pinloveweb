@@ -153,7 +153,7 @@ class AvatarCheckAdmin(admin.ModelAdmin):
 #             form_url, extra_context=extra_context)
        
     def get_appearancescore(self,instance):
-        return Grade.objects.get(user=instance.user).appearancescore
+        return Grade.objects.get(user=instance.user).sysappearancescore
     #默认过滤
     def changelist_view(self, request, extra_context=None):
         if not request.GET.has_key('avatar_name_status__exact'):
@@ -183,7 +183,16 @@ class AvatarCheckAdmin(admin.ModelAdmin):
         """
         obj.save()
         user_1=obj.user
-        Grade.objects.filter(user=user_1).update(appearancescore=form.cleaned_data['appearancescore'])
+        appearancescore=form.cleaned_data['appearancescore']
+        if  Grade.objects.filter(user=user_1,appearancescore__lte=0).exists():
+            Grade.objects.filter(user=user_1).update(appearancescore=appearancescore,sysappearancescore=appearancescore)
+        else:
+             grade=Grade.objects.get(user=user_1)
+             from apps.recommend_app.recommend_util import cal_user_vote
+             data=cal_user_vote(None,None,appearancescore,grade.appearancescore,grade.appearancesvote,0,sysappearancescore=grade.sysappearancescore)
+             Grade.objects.filter(user=user_1).update(appearancescore=data['score'],sysappearancescore=appearancescore)
+            
+        
         #头像认证通过得分
         from apps.user_score_app.method import get_score_by_avatar_check
         get_score_by_avatar_check(user_1.id)

@@ -8,6 +8,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.signals import post_save
+import datetime
 
 class GradeManage(models.Manager):
     '''
@@ -35,6 +36,7 @@ class Grade(models.Model):
     educationscore=models.FloatField(verbose_name=u"学历分数",null=True,default='0',)
     educationweight=models.FloatField(verbose_name=u"学历权重",null=True)
     appearancescore=models.FloatField(verbose_name=u"外貌分数",null=True,default='0',)
+    sysappearancescore=models.FloatField(verbose_name=u"系统外貌分数",null=True)
     appearanceweight=models.FloatField(verbose_name=u"外貌权重",null=True)
     characterweight=models.FloatField(verbose_name=u"性格权重",null=True)
     appearancesvote=models.IntegerField(verbose_name=u'相貌投票数',default='0',null=True)
@@ -179,6 +181,11 @@ class MatchResult(models.Model):
 class AppearanceVoteRecord(models.Model):
     user=models.ForeignKey(User,related_name='vote_user',verbose_name=u"打分的用户")
     other=models.ForeignKey(User,related_name='voted_user',verbose_name=u"被打分的用户")
+    score=models.IntegerField(verbose_name=u"用户打分",null=True,blank=True)
+    time=models.DateTimeField(verbose_name=u'创建时间',)
+    def save(self, *args, **kwargs):
+        self.time=datetime.datetime.now()
+        super(AppearanceVoteRecord, self).save(*args, **kwargs)
     class Meta:
         verbose_name = u'投票记录表' 
         verbose_name_plural = u'投票记录表'

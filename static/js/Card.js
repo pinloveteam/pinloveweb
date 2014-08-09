@@ -476,8 +476,10 @@ window.Card = function(person){
 		 compare_flag=false;
 	}
 	//投票
-	function vote(userId){
-		score=parseInt($('#vote').val().trim());
+	function vote(content){
+		user_info=$(content).closest("#user_info")
+		userId=user_info.find('#userId').val()
+		score=parseInt(user_info.find('#vote_value').val().trim());
 		if(isNaN(score)){
 			var body = $("<p>请填写正确的格式!</p>")
        	    $.poplayer({body:body});
@@ -488,7 +490,7 @@ window.Card = function(person){
 			return;
 		}
 		$.ajax({
-			type:'GET',
+			type:'POST',
 			url:'/recommend/user_vote/',
 			dataType:"json",
 			data:{score:score,userId:userId},
@@ -500,7 +502,6 @@ window.Card = function(person){
 						var body = $("<p>"+data['error_message']+"<p>")
 					}
 					$.poplayer({body:body});
-					
 				}
 				
 			},
@@ -535,7 +536,6 @@ window.Card = function(person){
 			data:data,
 			dataType:"json",
 			success:function(data, textStatus){
-				try {
 					options={
 							compar:compare_flag,
 							type : 'frame',
@@ -557,6 +557,9 @@ window.Card = function(person){
 						 });
 					}
 					detail_info=true
+					$("div.computerMove").closest('.row').find('#appearancevote').click(function(){
+						vote(this);
+					});
 					
 
 					$('.btn-show-score').click(function() {
@@ -593,11 +596,7 @@ window.Card = function(person){
 					});
 						
 					});
-			 } catch (e) {
-					detail_info=true
-					var body = $("<p>异常错误!</p>")
-					$.poplayer({body:body});
-						}
+			
 			},
 			error:function(response){
 				detail_info=true;
@@ -654,7 +653,6 @@ window.Card = function(person){
 	this.template.find('.icon_dislike').on('click',dislike);
 	
 	this.template.find('.icon_ding').on('click',ding);
-	
 	
 	this.template.find("[class^='icon_like']").on('click',like);
 	
