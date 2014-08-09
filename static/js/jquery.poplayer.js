@@ -54,6 +54,9 @@
 	};
 	function computerMove(){
 	                var $div = $("div.computerMove");
+	                if($div.length){
+	                	return;
+	                }
 					var progressWidth = $div.parents('.progress').css('width').split('p')[0];
 					/* 绑定鼠标左键按住事件 */
 					$div.bind("mousedown", function(event) {
