@@ -138,7 +138,10 @@ def get_detail_info(myId,userId,socreForOther):
     voteScore=-1
     if userProfile.avatar_name_status=='3':
         isVote=True
-        voteScore=int(AppearanceVoteRecord.objects.get(user_id=myId,other_id=userId).score)
+        if AppearanceVoteRecord.objects.filter(user_id=myId,other_id=userId).exists():
+            voteScore=int(AppearanceVoteRecord.objects.get(user_id=myId,other_id=userId).score)
+        else:
+            voteScore=0
     data={
                         'head' : '%s%s%s'%('/media/',userProfile.avatar_name,'-110.jpeg'),
                         'tag' : tags,
