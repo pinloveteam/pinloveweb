@@ -54,7 +54,7 @@
 	};
 	function computerMove(){
 	                var $div = $("div.computerMove");
-	                if($div.length){
+	                if($div.length==0){
 	                	return;
 	                }
 					var progressWidth = $div.parents('.progress').css('width').split('p')[0];
