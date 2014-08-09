@@ -246,23 +246,23 @@ def buy_score_for_other(request):
 '''
   用户投票
 '''    
+@csrf_exempt
 def user_vote(request):
     args={}
     try:
-        score = float(request.GET.get('score').strip())
-        userId=request.GET.get('userId')
-        if AppearanceVoteRecord.objects.filter(user_id=request.user.id,other_id=userId).exists():
-            args={'result':'error','error_message':u'你已打过分'}
-        elif score <0 or score >100:
+        score = float(request.REQUEST.get('score').strip())
+        userId=int(request.REQUEST.get('userId'))
+#         if AppearanceVoteRecord.objects.filter(user_id=request.user.id,other_id=userId).exists():
+#             args={'result':'error','error_message':u'你已打过分'}
+        if score <0 or score >100:
             args={'result':'error','error_message':u'分数必须在1~100范围内!'}
         elif score=='':
             args={'result':'error','error_message':u'不能为空!'}
         else:
             geadeInstance=Grade.objects.get(user_id=userId)
             from apps.recommend_app.recommend_util import cal_user_vote
-            score=cal_user_vote(score,geadeInstance)
-            Grade.objects.filter(user_id=userId).update(appearancescore=score,appearancesvote=geadeInstance.appearancesvote+1)
-            AppearanceVoteRecord(user_id=request.user.id,other_id=userId).save()
+            score=cal_user_vote(request.user.id,userId,score,geadeInstance.appearancescore,geadeInstance.appearancesvote,1)
+            Grade.objects.filter(user_id=userId).update(appearancescore=score['score'],appearancesvote=geadeInstance.appearancesvote if score['flag'] else geadeInstance.appearancesvote+1)
             args={'result':'success'}
         json = simplejson.dumps(args)
         return HttpResponse(json)
