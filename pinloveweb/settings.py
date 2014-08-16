@@ -375,7 +375,7 @@ DOMAIN='pinlove.xicp.net'
 
 
 #---服务器环境-----
- DATABASES = {
+DATABASES = {
                                   
      'default': {
          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -388,20 +388,20 @@ DOMAIN='pinlove.xicp.net'
          'OPTIONS':{'init_command':'SET storage_engine=INNODB,character_set_connection=utf8,collation_connection=utf8_unicode_ci',},
      }
  }
-upload 上传地址
- MEDIA_URL = '/media/'
- MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/update'
- #静态文件地址
- STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
- STATIC_URL = '/static/'
- #头像上传地址
- UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/update/user_img'
- UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/update/user_img'
- UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
- #grappelli
- UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
- ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
- DOMAIN='pinlove.com'
+#upload 上传地址
+MEDIA_URL = '/media/'
+MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/update'
+#静态文件地址
+STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+STATIC_URL = '/static/'
+#头像上传地址
+UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/update/user_img'
+UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/update/user_img'
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+#grappelli
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
+DOMAIN='pinlove.com'
 
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
