@@ -23,6 +23,7 @@ logger=logging.getLogger(__name__)
 '''
 def dynamic(request):
     arg={}
+    dynamicId=request.REQUEST.get('dynamicId',None)
     #发布动态
     if request.method=="POST":
         flag=True
@@ -56,7 +57,7 @@ def dynamic(request):
     userProfile=UserProfile.objects.get(user_id=request.user.id)
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
-    arg=init_dynamic(request,request.user.id,arg,0)
+    arg=init_dynamic(request,request.user.id,arg,0,dynamicId=dynamicId)
     if request.GET.get('type')=='ajax':
         from apps.pojo.dynamic import MyEncoder
         json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
@@ -90,14 +91,20 @@ attridute
   type 
      0   好友动态
      1   自己的动态
+@param dynamicId:d动态id获取单条动态 
 '''
-def init_dynamic(request,userId,arg,type=None):
-    if type==0:
+def init_dynamic(request,userId,arg,type=None,**kwargs):
+    from apps.pojo.dynamic import friendDynamicList_to_Dynamic
+    #获取单条消息列表
+    if not kwargs.get('dynamicId') is None:
+        friendDynamicList=FriendDynamic.objects.filter(id=kwargs.get('dynamicId'))
+        arg['friendDynamicList']=friendDynamicList_to_Dynamic(friendDynamicList, userId)
+        return arg
+    elif type==0:
         friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
     else:
         friendDynamicList=FriendDynamic.objects.filter(publishUser_id=userId).order_by('-publishTime')
     arg.update(page(request,friendDynamicList))
-    from apps.pojo.dynamic import friendDynamicList_to_Dynamic
     friendDynamicList=friendDynamicList_to_Dynamic(arg['pages'].object_list, userId)
     #获取点赞列表
 #     friendDynamicArgeeList=FriendDynamicArgee.objects.filter(user=user)
@@ -358,9 +365,9 @@ def show_comment(request):
 def comment(request):
         arg={}
         try:
-            dynamicId=int(request.GET.get('dynamicId'))
-            receiverId=request.GET.get('receiverId','')
-            content=request.GET.get('content')
+            dynamicId=int(request.REQUEST.get('dynamicId'))
+            receiverId=request.REQUEST.get('receiverId','')
+            content=request.REQUEST.get('content')
         except:
             arg['type']='error' 
             json=simplejson.dumps(arg)

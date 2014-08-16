@@ -52,6 +52,25 @@
 			infoframe.find('.computerMove').css('left',voteScore * 90 / 100 + "%")
 		};
 	};
+	
+	function Score(s) {
+		num = s;
+		clearInterval(Time);
+		Time = setInterval(Start, 3);
+		progress.css({
+			width : num + "%"
+		});
+	}
+
+	function Start() {
+		if (i <= num) {
+			score.html(i);
+			i++;
+		} else {
+			clearInterval(Time);
+			i = 0;
+		}
+	} 
 	function computerMove(){
 	                var $div = $("div.computerMove");
 	                if($div.length==0){
@@ -127,6 +146,16 @@
 		i1.find('#age').html(user.age);
 		i1.find('#city').html(user.city);
 		i1.find('#userId').val(user.userId);
+		if(user.scoreMy>=0){
+			var show_score=i1.find('.btn-show-score');
+			show_score.hide().prevAll().show();
+			progress = show_score.prev().prev().find('.progress-bar');
+			score = show_score.prev().find('.score');
+			progress.css({
+				width : user.scoreMy + "%"
+			});
+			score.html(user.scoreMy);
+		}
 		
 
 		var i2 = $('<div class="row"><hr /><p class="title">性格标签</p><div class="tags"></div></div>');

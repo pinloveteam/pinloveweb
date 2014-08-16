@@ -72,6 +72,8 @@ class FriendDynamicArgee(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)
     user=models.ForeignKey(User,verbose_name="用户",)
     objects=FriendDynamicArgeeManage()
+    time=models.DateTimeField(verbose_name="时间")
+    isRead=models.NullBooleanField(verbose_name="是否阅读",default=False)
     class Meta:
         verbose_name = u'点赞表' 
         verbose_name_plural = u'点赞表'

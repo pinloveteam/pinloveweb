@@ -409,25 +409,6 @@ window.Card = function(person){
 		});
 	}
 	
-	function Score(s) {
-		num = s;
-		clearInterval(Time);
-		Time = setInterval(Start, 3);
-		progress.css({
-			width : num + "%"
-		});
-	}
-
-	function Start() {
-		if (i <= num) {
-			score.html(i);
-			i++;
-		} else {
-			clearInterval(Time);
-			i = 0;
-		}
-	} 
-	
 	
 	/*type:
 		1---对比
@@ -561,7 +542,8 @@ window.Card = function(person){
 						vote(this);
 					});
 					
-
+                    if(data.user1.scoreMy>0){
+                    	
 					$('.btn-show-score').click(function() {
 						content=this;
 						$.ajax({
@@ -596,6 +578,7 @@ window.Card = function(person){
 					});
 						
 					});
+                    }
 			
 			},
 			error:function(response){

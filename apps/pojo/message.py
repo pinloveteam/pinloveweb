@@ -96,3 +96,23 @@ def MessageLog_to_Message(messageLogList,userId,**kwargs):
         messageBean.get_messagebean(message,userId,**kwargs)
         messageBeanList.append(messageBean)
     return messageBeanList
+
+'''
+转换为页面的消息信息
+'''
+def messagedynamics_to_message_page(messageDynamicList):
+    messageList=[]
+    for messageDynamic in messageDynamicList:
+        message=messageDynamic
+        message['sendTime']=message['sendTime'].strftime("%m-%d %H:%M")
+        if message['type']==2:
+            #判断是否关注
+            from apps.user_app.method import is_follow,is_follow_each
+            if is_follow(message['receiver_id'],message['sender_id']):
+                message['fllow_type']=1
+            elif is_follow_each(message['receiver_id'],message['sender_id']):
+                message['fllow_type']=2
+            else:
+                message['fllow_type']=0
+        messageList.append(message)
+    return messageList

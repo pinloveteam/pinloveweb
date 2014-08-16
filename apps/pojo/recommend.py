@@ -18,8 +18,11 @@ class RecommendResult(object):
         grade=Grade.objects.get(user_id=self.userId)
         self.incomeScore=grade.incomescore
         self.edcationScore=grade.educationscore
-        self.appearanceScore=grade.appearancescore
-        self.heighScore=kwargs.pop('heighMatchOtherScore',None)
+        if kwargs.get('appearanceMatchOtherScore',None) is None:
+            self.appearanceScore=grade.appearancescore
+        else:
+            self.appearanceScore=kwargs.pop('appearanceMatchOtherScore')
+        self.heighScore=kwargs.pop('heighMatchOther',None)
         self.characterScore=kwargs.pop('tagMatchOtherScore',None)
         self.scoreMyself=int(kwargs.pop('scoreMyself',None))
         self.scoreOther=int(kwargs.pop('scoreOther',None))

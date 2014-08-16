@@ -24,32 +24,39 @@ logger=logging.getLogger(__name__)
 def message(request,template_name):
     args={}
     user=request.user
-    userProfile=UserProfile.objects.get(user=user)
-    #获得所有我和所有用户之间的最近私信一条不是我发送的私信
-    messageList=MessageLog.objects.get_message_list(user.id)
-    args=page(request,messageList)
-    messageList=args['pages']
-    from apps.pojo.message import MessageLog_to_MessageBean
-    messageList.object_list=MessageLog_to_MessageBean(messageList.object_list,request.user.id,type=1)
-    #最近一条系统消息
-#     notify=Notify.objects.select_related('sender','receiver').filter(Q(receiver_id=user.id,type='0')|Q(sender_id=user.id,type='0')).order_by('-sendTime')[:1]
-#     if len(notify)>0:
-#         from apps.pojo.notify import Notify_to_NotifyBean
-#         notify=Notify_to_NotifyBean(notify,user.id,type=1)[0]
-#     args['notify']=notify
-    if request.REQUEST.get('ajax',False):
-        data={}
-        data['messageList']=messageList.object_list
-        data['has_next']=messageList.has_next()
-        if messageList.has_next():
-            data['next_page_number']=messageList.next_page_number()
-        from apps.pojo.message import MessageBeanEncoder
-        json=simplejson.dumps(data,cls=MessageBeanEncoder)
-        return HttpResponse(json)
-    args['pages']=messageList
-    from pinloveweb.method import init_person_info_for_card_page
-    args.update(init_person_info_for_card_page(userProfile))
+    from apps.message_app.models import get_message_dynamic_list
+    messageDynamicList=get_message_dynamic_list(user.id)
+    from apps.pojo.message import messagedynamics_to_message_page
+    messageDynamicsList=messagedynamics_to_message_page(messageDynamicList)
+    args['messageDynamicList']=simplejson.dumps(messageDynamicsList)
+#     userProfile=UserProfile.objects.get(user=user)
+#     #获得所有我和所有用户之间的最近私信一条不是我发送的私信
+#     messageList=MessageLog.objects.get_message_list(user.id)
+#     args=page(request,messageList)
+#     messageList=args['pages']
+#     from apps.pojo.message import MessageLog_to_MessageBean
+#     messageList.object_list=MessageLog_to_MessageBean(messageList.object_list,request.user.id,type=1)
+#     #最近一条系统消息
+# #     notify=Notify.objects.select_related('sender','receiver').filter(Q(receiver_id=user.id,type='0')|Q(sender_id=user.id,type='0')).order_by('-sendTime')[:1]
+# #     if len(notify)>0:
+# #         from apps.pojo.notify import Notify_to_NotifyBean
+# #         notify=Notify_to_NotifyBean(notify,user.id,type=1)[0]
+# #     args['notify']=notify
+#     if request.REQUEST.get('ajax',False):
+#         data={}
+#         data['messageList']=messageList.object_list
+#         data['has_next']=messageList.has_next()
+#         if messageList.has_next():
+#             data['next_page_number']=messageList.next_page_number()
+#         from apps.pojo.message import MessageBeanEncoder
+#         json=simplejson.dumps(data,cls=MessageBeanEncoder)
+#         return HttpResponse(json)
+#     args['pages']=messageList
+#     from pinloveweb.method import init_person_info_for_card_page
+#     args.update(init_person_info_for_card_page(userProfile))
     return render(request,template_name,args)
+    
+
 
 
 '''
@@ -201,8 +208,8 @@ def message_send(request):
     args={}
     try:
         user=request.user
-        receiver_id=request.GET.get('receiver_id')
-        reply_content=request.GET.get('reply_content')
+        receiver_id=request.REQUEST.get('receiver_id')
+        reply_content=request.REQUEST.get('reply_content')
         add_system_message_121(user.id,receiver_id,reply_content)
         args={'result':'success'}   
     except Exception ,e:    
@@ -217,8 +224,10 @@ def message_send(request):
 def get_noread_messges_by_userid(request):
     userId=request.GET.get('userId')
     user=request.user
-    #获取未读的message和最近发出的三条message
-    messageList=MessageLog.objects.get_message_list_121(user.id,userId,first=0,end=3)
+    messageList=MessageLog.objects.get_nr_message_list_121(user.id,userId)
+    if len(messageList)==0:
+        #获取未读的message和最近发出的三条message
+        messageList=MessageLog.objects.get_message_list_121(user.id,userId,first=0,end=3)
     from util.util import regex_expression
     result=[{'sender_id':message['sender_id'],'receiver_id':message['receiver_id'],'content':regex_expression(message['content'])} for message in messageList ]
     result=result[::-1]

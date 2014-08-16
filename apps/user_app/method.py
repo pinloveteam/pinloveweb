@@ -157,6 +157,7 @@ def get_detail_info(myId,userId,socreForOther):
                         'score' :int(socreForOther['matchResult']['scoreOther']),
                         'isVote':isVote,
                         'voteScore':voteScore,
+                        'scoreMy':int(socreForOther['matchResult'].get('scoreMyself',-3)),
                         'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
                     }
     for  key in data.keys():
@@ -181,3 +182,19 @@ def detailed_info_div(myId,userId,compareId=None):
         args['user2']=get_detail_info(myId,compareId,compareSocreForOther)
     return args
     
+'''
+判断是否关注
+@param myId:关注者的id
+@param followId:被关注者的id 
+'''
+def is_follow(myId,followId):
+    return Follow.objects.filter(my_id=myId,follow_id=followId).exists()
+
+'''
+判断是否相互关注
+@param myId:关注者的id
+@param followId:被关注者的id 
+'''
+def is_follow_each(myId,followId):
+    userList=[myId,followId]
+    return Follow.objects.filter(my_id__in=[myId,followId],follow_id__in=[myId,followId]).count()>=2

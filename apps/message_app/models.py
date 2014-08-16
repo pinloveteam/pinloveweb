@@ -115,8 +115,87 @@ from pinloveweb.settings import ADMIN_ID
 #         verbose_name = u'私信消息表' 
 #         verbose_name_plural = u'私信消息表'
 #         db_table = "message" 
-
     
+'''
+获取未读消息，动态评论的列表数量
+'''
+def get_no_read_message_dynamic_list_count(receiverId):  
+    sql='''
+   SELECT count(*) from(
+SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead,
+null as friendDynamic_id,null as friendDynamic_content  ,null as data
+from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id 
+LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
+where  isDeletereceiver = False  and u1.isRead=False  AND receiver_id =%s
+UNION
+SELECT u3.id,u3.sender_id,u1.username as sender_name,u4.avatar_name,u4.avatar_name_status,%s as receiver_id,u3.content,u3.sendTime,u3.type,0 as isRead,
+null as friendDynamic_id,null as friendDynamic_content ,null as data
+from message u3 LEFT JOIN auth_user u1 on u1.id=u3.sender_id LEFT JOIN user_profile u4 on u4.user_id=u3.sender_id
+where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4) and now()<=u3.expireTime
+UNION
+SELECT u1.id,u1.reviewer_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u1.receiver_id,u1.content,u1.commentTime as sendTime ,5 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_comment u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.reviewer_id LEFT JOIN user_profile u4 on u4.user_id=u1.reviewer_id
+WHERE u1.receiver_id=%s and u1.isRead=0
+)s 
+    '''
+    result=connection_to_db(sql,param=[receiverId,receiverId,receiverId])
+    return result[0]
+     
+'''
+获取消息，动态评论的列表
+'''
+def get_message_dynamic_list(receiverId):
+    if(get_no_read_message_dynamic_list_count(receiverId))<=0:
+        sql='''
+   SELECT * from(
+SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead,
+null as friendDynamic_id,null as friendDynamic_content  ,null as data
+from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id 
+LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
+where  isDeletereceiver = False  and u1.isRead=False  AND receiver_id =%s
+UNION
+SELECT u3.id,u3.sender_id,u1.username as sender_name,u4.avatar_name,u4.avatar_name_status,%s as receiver_id,u3.content,u3.sendTime,u3.type,0 as isRead,
+null as friendDynamic_id,null as friendDynamic_content ,null as data
+from message u3 LEFT JOIN auth_user u1 on u1.id=u3.sender_id LEFT JOIN user_profile u4 on u4.user_id=u3.sender_id
+where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4) and now()<=u3.expireTime
+UNION
+SELECT u1.id,u1.reviewer_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u1.receiver_id,u1.content,u1.commentTime as sendTime ,5 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_comment u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.reviewer_id LEFT JOIN user_profile u4 on u4.user_id=u1.reviewer_id
+WHERE u1.receiver_id=%s and u1.isRead=0
+)s 
+ORDER BY sendTime desc
+    '''
+    else:
+        sql='''
+   SELECT * from(
+SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead,
+null as friendDynamic_id,null as friendDynamic_content  ,null as data
+from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id 
+LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
+where  isDeletereceiver = False  AND receiver_id =%s
+UNION
+SELECT u3.id,u3.sender_id,u1.username as sender_name,u4.avatar_name,u4.avatar_name_status,%s as receiver_id,u3.content,u3.sendTime,u3.type,0 as isRead,
+null as friendDynamic_id,null as friendDynamic_content ,null as data
+from message u3 LEFT JOIN auth_user u1 on u1.id=u3.sender_id LEFT JOIN user_profile u4 on u4.user_id=u3.sender_id
+where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4) and now()<=u3.expireTime
+UNION
+SELECT u1.id,u1.reviewer_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u1.receiver_id,u1.content,u1.commentTime as sendTime ,5 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_comment u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.reviewer_id LEFT JOIN user_profile u4 on u4.user_id=u1.reviewer_id
+WHERE u1.receiver_id=%s
+)s 
+ORDER BY sendTime desc
+    '''
+    return connection_to_db(sql,param=[receiverId,receiverId,receiverId],type=True)
+        
 '''
 系统消息
 '''
@@ -124,7 +203,7 @@ class Message(models.Model):
     sender=models.ForeignKey(User,verbose_name=u'发信人',related_name="message_from")
     content=models.TextField(verbose_name="内容")
     sendTime=models.DateTimeField(verbose_name="发出时间")
-    TYPE_CHOICES=((0,'群发'),(1,'单发'))
+    TYPE_CHOICES=((0,u'群发系统消息'),(1,u'私信'),(2,u'加好友'),(3,u'点赞'))
     type=models.SmallIntegerField(verbose_name="信息类型",choices=TYPE_CHOICES)
     expireTime=models.DateTimeField(verbose_name="失效时间",null=True)
     def save(self,*args,**kwargs):
@@ -161,7 +240,7 @@ GROUP BY sender_id  '''
         return  connection_to_db(sql,param=[userId,userId,userId],type=True)
     
     '''
-    获得两个用户之间的
+    获得两个用户之间的私信
     '''
     def get_message_list_121(self,userId,otherId,first=None,end=None): 
         sql='''
@@ -174,6 +253,29 @@ ORDER BY sendTime DESC
         if first is not None:
             sql=sql+'limit %s , %s'%(first,end)
         return  connection_to_db(sql,param=[userId,otherId,userId,otherId],type=True)
+    
+    '''
+获得两个用户的未读私信
+    '''
+    def get_nr_message_list_121(self,receiverId,senderId,first=None,end=None): 
+        sql='''
+   
+SELECT u1.*,u2.*,u3.username as receiverName,u4.username as senderName from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id
+INNER JOIN auth_user u3 on u1.receiver_id=u3.id INNER JOIN auth_user u4 on u2.sender_id=u4.id
+where  isDeletereceiver = False  AND receiver_id in (%s,%s) and sender_id in (%s,%s)
+and u2.sendTime >=(
+SELECT sendTime 
+from message_log m1  LEFT JOIN message m2 on m1.message_id=m2.id
+where isDeletereceiver = False  and isRead=False and m1.receiver_id=%s and m2.sender_id=%s
+ORDER BY sendTime
+limit 0,1
+)
+ORDER BY sendTime DESC
+ '''
+        if first is not None:
+            sql=sql+'limit %s , %s'%(first,end)
+        return  connection_to_db(sql,param=[receiverId,senderId,receiverId,senderId,receiverId,senderId,],type=True)
+   
        
     '''
     获取用户未读消息数量

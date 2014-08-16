@@ -107,7 +107,8 @@ def socre_my(request):
         otherId=int(request.REQUEST.get('userId',False))
         if otherId:
             member=UserProfile.objects.get(user_id=request.user.id).member
-            if member>0:
+            flag=BrowseOherScoreHistory.objects.filter(my_id=request.user.id,other_id=otherId).exists();
+            if member>0 or flag:
                 matchResult=get_matchresult(request,otherId)
                 args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
             else:
@@ -147,9 +148,9 @@ def get_socre_for_other(userId,otherId):
     args={}
     try:
         if otherId:
-             from apps.recommend_app.method import get_match_score_other
-             matchResult=get_match_score_other(userId,otherId)
-             if matchResult==None:
+#              from apps.recommend_app.method import get_match_score_other
+#              matchResult=get_match_score_other(userId,otherId)
+#              if matchResult==None:
                  #判断是否可用匹配
                  from util.cache import get_has_recommend,get_recommend_status,has_recommend
                  for field in ['userExpect','grade','tag']:
@@ -166,10 +167,10 @@ def get_socre_for_other(userId,otherId):
                          if not recommendStatus[key]:
                              errorMessge+=dict[key]
                      args={'result':'error','error_messge':'%s%s' %(errorMessge,u'未填写完整!')}
-             else:
-                 from apps.pojo.recommend import MarchResult_to_RecommendResult
-                 matchResult=MarchResult_to_RecommendResult(matchResult)
-                 args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
+#              else:
+#                  from apps.pojo.recommend import MarchResult_to_RecommendResult
+#                  matchResult=MarchResult_to_RecommendResult(matchResult)
+#                  args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
         else:
             args={'result':'error','error_messge':'用户id不存在!'}
         return args
