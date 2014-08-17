@@ -56,6 +56,16 @@
 						
 					});
                 });
+                
+                //菜单切换
+                $('.nav').children().click(function(){
+                	var context=$(this);
+                	$('.nav').chlidren.removeClass('active');
+                	context.addClass('active');
+                	url=window.location.pathname
+                	return false;
+                	
+                });
             })
             // using jQuery
 function getCookie(name) {
@@ -142,9 +152,13 @@ function getCookie(name) {
                          dynamic_comment_clone.find('#username').html(message.sender_name);
                          dynamic_comment_clone.find('#content').html(message.content);
                          dynamic_comment_clone.find('#time').html(message.sendTime);
-                         message.data=$.parseJSON(message.data);
-                         dynamic_comment_clone.find('#dynamic_img_count').html('('+message.data.length+")");
-                         dynamic_comment_clone.find('#dynamic_img').attr('src','/media/images/'+message.data[0]+'-140.jpg').parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
+                         if(message.data.length>0){
+                        	 message.data=$.parseJSON(message.data);
+                             dynamic_comment_clone.find('#dynamic_img_count').html('('+message.data.length+")");
+                             dynamic_comment_clone.find('#dynamic_img').attr('src','/media/images/'+message.data[0]+'-140.jpg').parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
+                         }else{
+                        	 dynamic_comment_clone.find('.message-img').last().children(':lt(2)').remove();
+                         }
                          dynamic_comment_clone.find('#dynamic_content').html(message.friendDynamic_content).parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);;
                          $('.col-xs-9').append(dynamic_comment_clone);
                          var message_reply=$('#message_clone').find('#message-reply').clone();
@@ -191,7 +205,7 @@ function getCookie(name) {
 {% block css %}
 		<style>
 		 .affix, .message {
-                margin-top: 10px;
+                margin-top: 20px;
                 background-color: #fff;
                 -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
                 -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -304,7 +318,7 @@ function getCookie(name) {
 									</a>
 								</li>
 								<li>
-									<a href="#">
+									<a href="/message/message_list/">
 										站内私信
 									</a>
 								</li>
@@ -329,7 +343,7 @@ function getCookie(name) {
 					<div class="col-xs-9">
 						<div class="row">
 							<h4>全部消息</h4>
-							<hr style="border-color: #777;"/>
+							<hr style="border-color: #777; margin: 0;margin-bottom: 10px;"/>
 						</div>
                         <div id="message_clone" style="display: none;">
 						<div id="message" class="message row">
@@ -349,10 +363,10 @@ function getCookie(name) {
                                     <button class="btn btn-xs btn-primary reply-btn">
                                         回复
                                     </button>
+                                   <span id="time" class="message-time">8月5日 14:44</span>
                                 </div>
 
                              </div>
-							<span id="time" class="message-time">8月5日 14:44</span>
 						</div>
 						<div id="message-reply" class="message-reply row">
 								<form action="/trend/send/" id="form1"   name="form1" method="POST">
@@ -399,9 +413,8 @@ function getCookie(name) {
                                         关注TA
                                     </button>
                                 </div>
+                                <span  id="time"  class="message-time ">12月25日 14:44</span>
                             </div>
-							<span  id="time"  class="message-time">12月25日 14:44</span>
-
 						</div>
 
 						<div id="dynamic_agree" class="message row">
@@ -417,9 +430,9 @@ function getCookie(name) {
                                     <div class="message-img">
                                         <img src="img/haha.jpg"/>
                                     </div>
+                                    <span   id="time" class="message-time">8月5日 14:44</span>
                                 </div>
                             </div>
-							<span   id="time" class="message-time">8月5日 14:44</span>
 
 						</div>
 
@@ -439,21 +452,19 @@ function getCookie(name) {
                                     </span>
                                     <div class="message-img">
                                         <a href=""><img id="dynamic_img" src="img/haha.jpg"/></a>
-                                        <p id="dynamic_img_count">(共9张)</p>
+                                        <span id="dynamic_img_count">(共9张)</span>
                                         <p>
-                                            <a href="#">
                                                 <a herf=""><p id="dynamic_content" class="message-text">
                                                     lalala
                                                 </p></a>
-                                            </a>
                                         </p>
                                     </div>
                                     <button class="btn btn-xs btn-primary reply-btn">
                                         回复
                                     </button>
+                                    <span id="time"  class="message-time">8月5日 14:44</span>
                                 </div>
                             </div>
-							<span   id="time"  class="message-time">8月5日 14:44</span>
 
 						</div>
                         </div>
