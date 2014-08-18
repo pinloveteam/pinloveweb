@@ -25,42 +25,42 @@
 		<ul class="header-navi list-inline">
 			<li id="home">
 				<a href="/">
-					<span>推荐</span>
+					推荐
 				</a>
 			</li>
 			<li id="trend">
 				<a href="/dynamic/">
-					<span>动态</span>
+					动态
 				</a>
 			</li>
 			<li id="the_people_nearby">
 				<a href="/the_people_nearby/the_people_nearby">
-					<span>附近的人</span>
+					附近的人
 				</a>
 			</li>
 			<li  id="search">
 				<a href="/search/">
-					<span>用户搜索</span>
+					用户搜索
 				</a>
 				<em class="icon-recomm header-park-recomm"></em>
 			</li>
 			<li id="game_pintu">
 				<a href="/game/game_pintu/">
-					<span>缘分拼图</span>
+					缘分拼图
 				</a>
 			</li>
 			<li id="member">
 			   <a href="/pay/member/"> 
-			       <span>会员中心</span>
+			       会员中心
                </a>    
 	        </li>
 		</ul>
 		<div class="header-info js-header-info">
-			<div class="header-info-mess js-info-mess" id="message_icon">
+			<div class="header-info-mess js-info-mess glyphicon glyphicon-envelope" id="message_icon">
 		        <div id="count" class="notice" {%ifequal noReadCount 0%}style="display: none;"{%endifequal%}>
 					{%ifequal noReadCount 0%}0{%else%}{{noReadCount}}{%endifequal%}
 			    </div>
-			    <div id='count-list' class="header-info-list js-list" style="{%ifequal noReadCount 0%}display: none;{%endifequal%}">
+			   <!--  <div id='count-list' class="header-info-list js-list" style="{%ifequal noReadCount 0%}display: none;{%endifequal%}">
 			     <ul>
 				   <li class="js-message" style="width: 80px;{%ifequal messageNoReadCount 0%}display: none;{%endifequal%}"  >
 				     <a href="/message/no_read_message/">
@@ -81,24 +81,24 @@
 				   </a>
 				  </li>
 			     </ul>
-		        </div>
+		        </div>--> 
 			</div>
-			<div class="header-info-user js-info-user">
+			<div class="header-info-user js-info-user glyphicon glyphicon-user">
 				<div class="header-info-list header-info-setting-list">
 					<ul>
 						<li>
 							<a href="/user/user_profile/#self_info">
-								<span>个人信息</span>
+								个人信息
 							</a>
 						</li>
 						<li>
 							<a href="user/change_password/">
-								<span>修改密码</span>
+								修改密码
 					</a>
 						</li>
 						<li>
 							<a href="/account/logout/" id="logOut">
-								<span>退出</span>
+								退出
 							</a>
 						</li>
 					</ul>

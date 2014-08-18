@@ -7,7 +7,7 @@
 
  <script>
 	$(document).ready(function(){
-                messageList={{messageDynamicList|safe }};
+                messageList={{messageList|safe }};
                 init_message(messageList);
                 //回复窗口
                 $('.reply-btn').click(function(){
@@ -60,10 +60,35 @@
                 //菜单切换
                 $('.nav').children().click(function(){
                 	var context=$(this);
-                	$('.nav').chlidren.removeClass('active');
+                	$('.nav').children().removeClass('active');
                 	context.addClass('active');
-                	url=window.location.pathname
-                	return false;
+                	title=context.find('a').html().trim()
+                	$('#nav_title').html(title);
+                	url=context.find('a').attr('href')
+                	$.ajax({
+        					dataType:"json",
+        					type: "GET",
+        					url:url,
+        					data:{},
+        					beforeSend:function(XMLHttpRequest){
+        					},
+        					complete:function(XMLHttpRequest, textStatus){
+        					},
+        					success:function(data, textStatus){
+        						$('.col-xs-9').children(':gt(0)').remove();
+        						init_message(data.messageList);
+        						},
+        	                    error: function(response){
+        	                    	/* var body=$('<p>网络异常!</p>')
+        							 $.poplayer({body:body}); */
+        	                    },
+        						
+        			});
+                	var state = {
+                		    title: title,
+                		    url: url,
+                		};
+                	window.history.pushState(state, title, url)
                 	
                 });
             })
@@ -91,8 +116,11 @@ function getCookie(name) {
                         message_clone.find('#senderId').val(message.sender_id);
                         message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
                         message_clone.find('#username').html(message.sender_name);
-                        message_clone.find('#content').html(message.content);
+                        message_clone.find('#content').html(message.content).parent().attr('href','/message/detail/?senderId='+message.sender_id);
                         message_clone.find('#time').html(message.sendTime);
+                        if(message.isRead==0){
+                        	message_clone.addClass('unread')
+                        }
                         $('.col-xs-9').append(message_clone);
                         var message_reply=$('#message_clone').find('#message-reply').clone();
                         $('.col-xs-9').append(message_reply);
@@ -135,6 +163,9 @@ function getCookie(name) {
                         follow_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
                         follow_clone.find('#username').html(message.sender_name);
                         follow_clone.find('#time').html(message.sendTime);
+                        if(message.isRead==0){
+                        	follow_clone.addClass('unread')
+                        }
                         if(message.fllow_type==1){
                         	follow_btn=follow_clone.find('.follow')
                         	follow_btn.html('已经关注');
@@ -152,6 +183,9 @@ function getCookie(name) {
                          dynamic_comment_clone.find('#username').html(message.sender_name);
                          dynamic_comment_clone.find('#content').html(message.content);
                          dynamic_comment_clone.find('#time').html(message.sendTime);
+                         if(message.isRead==0){
+                        	 dynamic_comment_clone.addClass('unread')
+                         }
                          if(message.data.length>0){
                         	 message.data=$.parseJSON(message.data);
                              dynamic_comment_clone.find('#dynamic_img_count').html('('+message.data.length+")");
@@ -201,6 +235,90 @@ function getCookie(name) {
 
             };
         </script>
+        <script type="text/javascript">
+		(function($){
+			$.fn.extend({
+			insertAtCaret: function(myValue){
+			var $t=$(this)[0];
+			if (document.selection) {
+			this.focus();
+			sel = document.selection.createRange();
+			sel.text = myValue;
+			this.focus();
+			}
+			else
+			if ($t.selectionStart || $t.selectionStart == '0') {
+			var startPos = $t.selectionStart;
+			var endPos = $t.selectionEnd;
+			var scrollTop = $t.scrollTop;
+			$t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
+			this.focus();
+			$t.selectionStart = startPos + myValue.length;
+			$t.selectionEnd = startPos + myValue.length;
+			$t.scrollTop = scrollTop;
+			}
+			else {
+			this.value += myValue;
+			this.focus();
+			}
+			}
+			})
+			})(jQuery);
+		
+		
+	   //滚动加载
+	    var next_page={{next_page_number|safe}}
+		var totalheight = 0; 
+        var load_message=true;
+		function loadData()
+		{ 
+		    totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
+
+		    if ($(document).height() <= totalheight) 
+			{ 
+				//加载数据
+				if(next_page==-1){
+					var no_dynamic=$('#no_dynamic')
+					$('.col-xs-9').append('<div>没有消息了</div>')
+					load_message=false
+					return;
+				}
+				 $.ajax({
+			         type: 'GET',
+			         url:window.location.pathname,
+			         data:{page:next_page},
+			         beforeSend: function(XMLHttpRequest){
+			         },
+			         success: function(data, textStatus){
+			        	    if( typeof(data)!="object"){
+			        	    	data=$.parseJSON(data);
+			        	    }
+			            	page=data['next_page_number']
+			            	if(typeof(data.messageList)!="object"){
+			            		data.messageList=$.parseJSON(data.messageList);
+			            	}
+			            	init_message(data.messageList);
+			         },
+			         complete: function(XMLHttpRequest, textStatus){
+			         },
+			         error: function(response){
+			             alert('网络异常!')
+			         }
+			     });
+		    } 
+		} 
+
+		$(window).scroll( function() { 
+			if(load_message){
+		/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+			console.log("页面的文档高度 ："+$(document).height());
+			console.log('浏览器的高度：'+$(window).height()); */
+			loadData();
+			}
+		}); 
+
+
+</script>
 {% endblock %}
 {% block css %}
 		<style>
@@ -234,6 +352,9 @@ function getCookie(name) {
                 width: 50px;
                 margin-top: 15px;
             }
+            .unread{
+				border: solid 1px #E74C3C;
+			}
             .message-name, .message-type, .message-text {
                 color: #193344;
             }
@@ -313,27 +434,27 @@ function getCookie(name) {
 						<div role="complementary" class="affix">
 							<ul class="nav">
 								<li class="active">
-									<a href="#">
+									<a id='all_message' href="/message/">
 										全部消息
 									</a>
 								</li>
 								<li>
-									<a href="/message/message_list/">
+									<a id='message' href="/message/message_list/" onclick="return false;">
 										站内私信
 									</a>
 								</li>
 								<li>
-									<a href="#">
+									<a id='dynamic' href="/dynamic/comment_list/" onclick="return false;">
 										动态评论
 									</a>
 								</li>
 								<li>
-									<a href="#">
+									<a id='agree' href="/dynamic/agree_list/" onclick="return false;">
 										给我的“赞”
 									</a>
 								</li>
 								<li>
-									<a href="#">
+									<a href="/message/follow_list" onclick="return false;">
 										新的粉丝
 									</a>
 								</li>
@@ -342,10 +463,15 @@ function getCookie(name) {
 					</div>
 					<div class="col-xs-9">
 						<div class="row">
-							<h4>全部消息</h4>
+							<h4 id="nav_title">全部消息</h4>
 							<hr style="border-color: #777; margin: 0;margin-bottom: 10px;"/>
 						</div>
-                        <div id="message_clone" style="display: none;">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="message_clone" style="display: none;">
 						<div id="message" class="message row">
                             <input type="hidden" id="senderId" value="">
 							<div class="col-xs-1">
@@ -357,9 +483,9 @@ function getCookie(name) {
                                     <span class="message-type">
                                         给你的私信:
                                     </span>
-                                    <p id="content" class="message-text">
+                                    <a href=""><p id="content" class="message-text">
                                       私信
-                                    </p>
+                                    </p></a>
                                     <button class="btn btn-xs btn-primary reply-btn">
                                         回复
                                     </button>
@@ -468,9 +594,4 @@ function getCookie(name) {
 
 						</div>
                         </div>
-
-					</div>
-				</div>
-			</div>
-		</div>
 {% endblock %}

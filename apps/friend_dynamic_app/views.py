@@ -128,6 +128,69 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
     return  arg
 
 '''
+获取评论列表
+如有未读消息显示未读，否则已读显示已读
+'''
+def comment_list(request):
+    args={}
+    try:
+        if request.is_ajax():
+            if FriendDynamicComment.objects.get_no_read_comment_count(request.user.id)>0:
+                friendDynamicCommentList=FriendDynamicComment.objects.get_no_read_comment_list(request.user.id)
+                data=page(request,friendDynamicCommentList)
+                friendDynamicIds=[friendDynamic['id'] for friendDynamic in data['pages'].object_list]
+                FriendDynamicComment.objects.filter(id__in=friendDynamicIds).update(isRead=True)
+            else:
+                 friendDynamicCommentList=FriendDynamicComment.objects.get_comment_list(request.user.id)
+                 data=page(request,friendDynamicCommentList)
+            from apps.pojo.message import messagedynamics_to_message_page
+            messageList=messagedynamics_to_message_page(data['pages'].object_list)
+            args['messageList']=messageList
+            if data['pages'].has_next():
+                #如果为未读
+                if data['pages'].object_list[0]['isRead']:
+                    args['next_page_number']=1
+                else:
+                    args['next_page_number']=data['pages'].next_page_number()
+            else:
+                data['next_page_number']=-1
+            json=simplejson.dumps(args)
+            return HttpResponse(json)    
+    except Exception,e:
+        logger.exception('获取评论列表,出错')
+
+'''
+获得赞的列表
+'''
+def agree_list(request):
+    args={}
+    try:
+        if request.is_ajax():
+            if FriendDynamicArgee.objects.get_no_read_agree_count(request.user.id)>0:
+                friendDynamicArgeeList=FriendDynamicArgee.objects.get_no_read_agree_List(request.user.id)
+                data=page(request,friendDynamicArgeeList)
+                friendDynamicIds=[friendDynamic['id'] for friendDynamic in data['pages'].object_list]
+                FriendDynamicArgee.objects.filter(id__in=friendDynamicIds).update(isRead=True)
+            else:
+                friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List(request.user.id)
+                data=page(request,friendDynamicArgeeList)
+            from apps.pojo.message import messagedynamics_to_message_page
+            messageList=messagedynamics_to_message_page(data['pages'].object_list)
+            args['messageList']=messageList
+            if data['pages'].has_next():
+                #如果为未读
+                if data['pages'].object_list[0]['isRead']:
+                    args['next_page_number']=1
+                else:
+                    args['next_page_number']=data['pages'].next_page_number()
+            else:
+                data['next_page_number']=-1
+            json=simplejson.dumps(args)
+            return HttpResponse(json)    
+    except Exception,e:
+        logger.exception('获取赞的列表,出错')
+
+'''
 获取未读评论列表
 '''
 def no_read_comment_list(request,template_name):

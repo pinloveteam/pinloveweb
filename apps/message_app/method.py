@@ -35,4 +35,27 @@ def clean_message_by_user(senderId,receiverId):
 def add_system_message_121(senderId,receiverId,content):
     message=Message(sender_id=senderId,content=content,type=0)
     message.save()
-    MessageLog(receiver_id=receiverId,message=message).save()
+    MessageLog(receiver_id=receiverId,message=message)
+    return message
+    
+'''
+将消息中心的消息标记成已读
+'''
+def clean_message_Dynamic(userId,messageDynamicList):
+    args={'messageLog':[],'dynamicComent':[],'dynamicArgee':[]}
+    for messageDynamic in messageDynamicList:
+        if messageDynamic['type']<3:
+            args['messageLog'].append(messageDynamic['id'])
+        elif  messageDynamic['type']==3:
+            args['dynamicArgee'].append(messageDynamic['id'])
+        elif messageDynamic['type']==5:
+            args['dynamicComent'].append(messageDynamic['id'])
+    for key in args.keys():
+        if key=='messageLog':
+            MessageLog.objects.clean_message_by_ids(userId,args[key])
+        if key=='dynamicComent':
+            from apps.friend_dynamic_app.method import clean_dynamic_comment_by_ids
+            clean_dynamic_comment_by_ids(args[key])
+        if key=='dynamicArgee':
+            from apps.friend_dynamic_app.method import clean_dynamic_argee_by_ids
+            clean_dynamic_argee_by_ids(args[key])

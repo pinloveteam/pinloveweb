@@ -8,6 +8,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from apps.user_app.models import UserProfile, Follow
+from util.connection_db import connection_to_db
 class FriendDynamicManage(models.Manager):
     '''
     获得评论条数
@@ -68,6 +69,48 @@ class FriendDynamicArgeeManage(models.Manager):
     '''
     def get_agree_count(self,dynamicId):
             return FriendDynamicArgee.objects.filter(friendDynamic_id=dynamicId).count()
+        
+    '''
+    未被查看点赞数
+    '''
+    def get_no_read_agree_count(self,userId):
+        sql='''
+       SELECT count(*)
+from friend_dynamic_argee u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.user_id LEFT JOIN user_profile u4 on u4.user_id=u1.user_id
+WHERE u2.publishUser_id=%s  and u1.isRead=0
+'''
+        return connection_to_db(sql,param=[userId])[0]
+    
+    '''
+     未被查看点赞信息
+    '''
+    def get_no_read_agree_List(self,userId):
+        sql='''
+       SELECT u1.id,u1.user_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u2.publishUser_id as receiver_id,null as content,u1.time as sendTime ,3 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_argee u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.user_id LEFT JOIN user_profile u4 on u4.user_id=u1.user_id
+WHERE u2.publishUser_id=%s  and u1.isRead=0
+ORDER BY sendTime desc
+'''
+        return connection_to_db(sql,param=[userId],type=True)
+    '''
+     查看点赞列表
+    '''
+    def get_agree_List(self,userId):
+        sql='''
+       SELECT u1.id,u1.user_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u2.publishUser_id as receiver_id,null as content,u1.time as sendTime ,3 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_argee u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.user_id LEFT JOIN user_profile u4 on u4.user_id=u1.user_id
+WHERE u2.publishUser_id=%s
+ORDER BY sendTime desc
+'''
+        return connection_to_db(sql,param=[userId],type=True)
+
 class FriendDynamicArgee(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)
     user=models.ForeignKey(User,verbose_name="用户",)
@@ -85,6 +128,35 @@ class FriendDynamicCommentManage(models.Manager):
     '''
     def get_no_read_comment_by_user_id(self,userId):
         return FriendDynamicComment.objects.select_related('friendDynamic','reviewer').filter(receiver_id=userId,isRead=False)
+    
+    '''
+    获取未读评论，用于消息中心数据
+    '''
+    def get_no_read_comment_list(self,userId):
+        sql='''
+        SELECT u1.id,u1.reviewer_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u1.receiver_id,u1.content,u1.commentTime as sendTime ,5 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_comment u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.reviewer_id LEFT JOIN user_profile u4 on u4.user_id=u1.reviewer_id
+WHERE u1.receiver_id=%s and u1.isRead=0
+ORDER BY sendTime desc
+        '''
+        return connection_to_db(sql,param=[userId],type=True)
+    '''
+    获取评论，用于消息中心数据
+    '''
+    def get_comment_list(self,userId):
+        sql='''
+        SELECT u1.id,u1.reviewer_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u1.receiver_id,u1.content,u1.commentTime as sendTime ,5 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_comment u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.reviewer_id LEFT JOIN user_profile u4 on u4.user_id=u1.reviewer_id
+WHERE u1.receiver_id=%s 
+ORDER BY sendTime desc
+        '''
+        return connection_to_db(sql,param=[userId],type=True)
     
     '''
     根据用户id获取未读评论数量
