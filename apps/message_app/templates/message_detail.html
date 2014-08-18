@@ -1,0 +1,382 @@
+{% extends "base_later.html" %}
+ {% load util_filter %}
+		<title> {% block title %} 拼爱网 ---私信{% endblock %} </title>
+{% block staticfiles %}
+<link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
+<script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
+
+ <script>
+  var userId={{userId|safe }};
+  var avatarName="{{avatarName}}"
+  next_page={{next_page_number}}
+	$(document).ready(function(){
+		      
+                messageList={{messageList|safe }};
+                init_message_detail(messageList);
+                if(next_page==-1){
+                	var mroe=$('#message_clone').find('.mroe').clone();
+                	$('#message_list').append(mroe);
+                	mroe.find('#more_content').html('没有更多信息!');
+                }else{
+                	var mroe=$('#message_clone').find('.mroe').clone();
+                	$('#message_list').append(mroe);
+                	$('#more_content').click(function(){
+                		var context=$(this)
+                		$.ajax({
+       						dataType:"json",
+       						 type: "get",
+       						 url:'/message/detail/',
+       						data:{senderId:{{senderId}},page:next_page},
+       						beforeSend:function(XMLHttpRequest){
+       						},
+       						complete:function(XMLHttpRequest, textStatus){
+       						},
+       						success:function(data, textStatus){
+       							if(typeof(data)!="object"){
+       								data=$.parseJSON(data);
+       							}
+       							if(typeof(data.messageList)!="object"){
+       								data.messageList=$.parseJSON(data.messageList);
+    			            	}
+       							init_message_detail(data.messageList);
+       							if(data.next_page_number){
+       								$('#message_list').find('#more_content').html('没有更多信息!');
+       								context.unbind();
+       							}
+       						},
+       	                    error: function(response){
+       	                    	var body=$('<p>网络异常!</p>')
+       							 $.poplayer({body:body});
+       	                    },
+       						
+       					});
+                	});
+                }
+                
+                $('#form1').submit(function(){
+                  	 var context=$(this);
+                  	 publishTextArea=context.find('#publishTextArea');
+                  	 content=publishTextArea.val();
+                  	 $.ajax({
+   						dataType:"json",
+   						 type: "POST",
+   						url:'/message/send/',
+   						data:{receiver_id:{{senderId}},reply_content:content,csrfmiddlewaretoken:getCookie('csrftoken')},
+   						beforeSend:function(XMLHttpRequest){
+   							context.attr('disabled',true);
+   						},
+   						complete:function(XMLHttpRequest, textStatus){
+   							$('.follow').attr('disabled',false)
+   						},
+   						success:function(data, textStatus){
+   							if (data.result=='success'){
+   								 var body=$('<p>发送成功!</p>')
+   								 var message_clone=$('#message_clone').find('.self').clone();
+   			                      message_clone.find('#avatar').attr('src','/media/'+avatarName+'-60.jpeg');
+   			                      message_clone.find('#content').html(content);
+   			                      message_clone.find('#time').html(data.messageTime);
+   								 $('#message_list').prepend(message_clone);
+   								  publishTextArea.val('')
+   							}
+   							else{
+   								var body=$('<p>发送失败!</p>')
+   							}
+   							 $.poplayer({body:body});
+   						},
+   	                    error: function(response){
+   	                    	var body=$('<p>网络异常!</p>')
+   							 $.poplayer({body:body});
+   	                    },
+   						
+   					});
+                  	 return false;
+                   });
+                
+                //菜单切换
+                $('.nav').children().click(function(){
+                	var context=$(this);
+                	$('.nav').children().removeClass('active');
+                	context.addClass('active');
+                	title=context.find('a').html().trim()
+                	$('#nav_title').html(title);
+                	url=context.find('a').attr('href')
+                	$.ajax({
+        					dataType:"json",
+        					type: "GET",
+        					url:url,
+        					data:{},
+        					beforeSend:function(XMLHttpRequest){
+        					},
+        					complete:function(XMLHttpRequest, textStatus){
+        					},
+        					success:function(data, textStatus){
+        						$('.col-xs-9').children(':gt(0)').remove();
+        						init_message(data.messageList);
+        						},
+        	                    error: function(response){
+        	                    	/* var body=$('<p>网络异常!</p>')
+        							 $.poplayer({body:body}); */
+        	                    },
+        						
+        			});
+                	var state = {
+                		    title: title,
+                		    url: url,
+                		};
+                	window.history.pushState(state, title, url)
+                	
+                });
+            })
+            // using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+            function init_message_detail(messageList){
+                for(var i in messageList){
+                    message=messageList[i]
+                    if(userId==message.sender_id){
+                        var message_clone=$('#message_clone').find('.self').clone();
+                    }
+                    else{
+                    	var message_clone=$('#message_clone').find('.other').clone();
+                     }
+                        message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
+                        //message_clone.find('#username').html(message.sender_name);
+                        message_clone.find('#content').html(message.content);
+                        message_clone.find('#time').html(message.sendTime);
+                        if($('#message_list').find('#more_content').length>0){
+                        	$('#message_list').find('.mroe').before(message_clone)
+                        }else{
+                        	$('#message_list').append(message_clone);
+                        }
+                       	
+                 };
+
+            };
+        </script>
+{% endblock %}
+{% block css %}
+		<style>
+		 .affix, .message {
+				margin-top: 10px;
+				background-color: #fff;
+				-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+			}
+			.affix {
+				width: 180px;
+			}
+
+			.nav > li > a {
+				padding-left: 50px !important;
+				color: #333;
+			}
+			.nav > li > a:hover {
+				font-weight: bold;
+			}
+
+			.nav > .active {
+				background-color: #EEEEEE;
+				font-weight: bold;
+			}
+			.message {
+				position: relative;
+			}
+			
+			.mroe{
+				margin-bottom: 20px;
+			}
+			.avatar-50 {
+				width: 50px;
+				margin-top: 15px;
+			}
+			.message-time {
+				font-size: 12px;
+				color: #777;
+				margin-top: 50px;
+				display: inline-block;
+			}
+			
+			.self .chat-content{
+				background-color: #D1E7F4;
+			}
+			
+			.other .chat-content{
+				background-color: #FAD4C7;
+			}
+			.chat-content{
+				padding: 10px;	
+				margin-top: 10px;
+				text-align: left;
+			}
+			.other .col-xs-9{
+				text-align: right;
+			}
+			#emoji-layer {
+				position: absolute;
+				padding: 4px;
+				background-color: #fff;
+				width: 417px;
+				z-index: 9999;
+			}
+
+			.emoji-list li:hover {
+				border: 1px solid #0095CD;
+			}
+
+			.emoji-list li {
+				border: 1px solid #E8E8E8;
+				cursor: pointer;
+				float: left;
+				overflow: hidden;
+				padding: 3px 3px;
+				text-align: center;
+				background-color: #fff;
+			}
+
+			.emoji-list li > img {
+				width: 26px;
+				height: 26px;
+			}
+
+			li {
+				list-style: none outside none;
+			}
+		</style>
+{% endblock %}
+{% block logo %}
+{% endblock %}
+{% block content %}
+<div class="wrap">
+			<div class="container">
+				<div class="row" style="margin-top:63px;">
+					<div class="col-xs-3">
+						<div role="complementary" class="affix">
+							<ul class="nav">
+								<li class="active">
+									<a id='all_message' href="/message/">
+										全部消息
+									</a>
+								</li>
+								<li>
+									<a id='message' href="/message/message_list/" onclick="return false;">
+										站内私信
+									</a>
+								</li>
+								<li>
+									<a id='dynamic' href="/dynamic/comment_list/" onclick="return false;">
+										动态评论
+									</a>
+								</li>
+								<li>
+									<a id='agree' href="/dynamic/agree_list/" onclick="return false;">
+										给我的“赞”
+									</a>
+								</li>
+								<li>
+									<a href="/message/follow_list" onclick="return false;">
+										新的粉丝
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-xs-9">
+						<div class="row">
+							<h4>与<span style="color: #193344; font-weight: bold;">{{username}}</span>的私信</h4>
+							<hr style="border-color: #777; margin: 0;margin-bottom: 10px;" />
+						</div>
+						<div  class="message row">
+							<div id="message_list" class="col-xs-12">
+							</div>
+						</div>
+						
+
+						<div class="message row">
+							<form action="/trend/send/" id="form1" name="form1" method="POST">
+								<input type="hidden" id="type" name="type" value="1">
+								<div class="publishInputArea">
+									<textarea id="publishTextArea" class="publishInputBefore" name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
+									<div class="publishInputBottom f_gray_999">
+										<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
+											<li target="#publishTextArea" class="publishInputExpression fn-left">
+												表情
+											</li>
+										</ul>
+										<div class="fn-right">
+											<p class="wordNumber ">
+												还能输入
+												<span id="reserve">199</span>
+字
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="underPublishInput">
+									<button class="btn btn-xs btn-primary fn-right" id="submit-all" href="javascript:;" onclick="public()">
+										回复
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div id="message_clone" style="display: none;">
+								<div class="row other">
+									<div class="col-xs-1">
+										<img id="avatar" class="avatar-50" src="" />
+									</div>
+									<div class="col-xs-9">
+										<span id="time" class="message-time"></span>
+										<p id="content" class="chat-content">
+										</p>
+									</div>
+									<div class="col-xs-2">
+
+									</div>
+								</div>
+
+								<div class="row self ">
+									<div class="col-xs-2">
+
+									</div>
+									<div class="col-xs-9">
+										<span  id="time" class="message-time"></span>
+										<p  id="content" class="chat-content">
+										</p>
+									</div>
+									<div class="col-xs-1">
+										<img id="avatar" class="avatar-50" src="" />
+									</div>
+								</div>
+
+								<div class="row mroe">
+									<div class="col-xs-5">
+										<hr style="border-color: #777;margin-right: 0;">
+									</div>
+									<center class="col-xs-2">
+										<span id='more_content' style="font-size: 18px;cursor: pointer;">加载更多</span>
+									</center>
+									<div class="col-xs-5">
+										<hr style="border-color: #777;margin-left: 0;">
+									</div>
+								</div>
+							</div>
+{% endblock %}
