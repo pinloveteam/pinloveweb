@@ -16,6 +16,7 @@ from django.http import HttpResponse
 import logging
 from django.http.response import HttpResponseRedirect
 from util.page import page
+from apps.pojo.dynamic import MyEncoder
 logger=logging.getLogger(__name__)
 '''
 卡片界面动态
@@ -41,7 +42,6 @@ def dynamic(request):
             friendDynamic.type=1
         friendDynamic.save()
         if 'images_path' in request.session.keys():
-#             pictureList=[]
             photoList=simplejson.loads(request.session['images_path'])
             for photo in photoList:
                 picture=Picture()
@@ -54,10 +54,14 @@ def dynamic(request):
                 del request.session['images_path']
 #                 pictureList.append(picture.picPath)
         return HttpResponseRedirect('/dynamic/')
-    userProfile=UserProfile.objects.get(user_id=request.user.id)
-    from pinloveweb.method import init_person_info_for_card_page
-    arg.update(init_person_info_for_card_page(userProfile))
+    #userProfile=UserProfile.objects.get(user_id=request.user.id)
+    #from pinloveweb.method import init_person_info_for_card_page
+    #arg.update(init_person_info_for_card_page(userProfile))
     arg=init_dynamic(request,request.user.id,arg,0,dynamicId=dynamicId)
+    #arg['picList']=simplejson.loads(request.session['images_path']) if request.session.get('images_path',False) else  []
+    arg['user']=request.user
+    from apps.user_app.method import get_avatar_name
+    arg['avatar_name']=get_avatar_name(request.user.id,request.user.id)
     if request.GET.get('type')=='ajax':
         from apps.pojo.dynamic import MyEncoder
         json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
@@ -103,28 +107,14 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
     elif type==0:
         friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
     else:
-        friendDynamicList=FriendDynamic.objects.filter(publishUser_id=userId).order_by('-publishTime')
-    arg.update(page(request,friendDynamicList))
-    friendDynamicList=friendDynamicList_to_Dynamic(arg['pages'].object_list, userId)
-    #获取点赞列表
-#     friendDynamicArgeeList=FriendDynamicArgee.objects.filter(user=user)
-#     argeeList=[]
-#     for friendDynamic in friendDynamicList:
-#         commentNum=FriendDynamic.objects.get_coment_count(friendDynamic.publishUser.id,user.id,friendDynamic.id)
-#         friendDynamic.commentNum=commentNum
-#         if friendDynamic.type==2:
-#             friendDynamic.data=simplejson.loads(friendDynamic.data)
-#         is_agreee=False  
-#         for friendDynamicArgee in friendDynamicArgeeList:
-#             if friendDynamic.id==friendDynamicArgee.friendDynamic_id:
-#                 is_agreee=True 
-#         argeeList.append(is_agreee)  
-    arg['friendDynamicList']=friendDynamicList
-    if arg['pages'].has_next():
-        arg['next_page_number']=arg['pages'].next_page_number()
+        friendDynamicList=FriendDynamic.objects.select_related('publishUser'),filter(publishUser_id=userId).order_by('-publishTime')
+    data=page(request,friendDynamicList)
+    friendDynamicList=friendDynamicList_to_Dynamic(data['pages'].object_list, userId)
+    arg['friendDynamicList']=simplejson.dumps(friendDynamicList,cls=MyEncoder)
+    if data['pages'].has_next():
+        arg['next_page_number']=data['pages'].next_page_number()
     else:
         arg['next_page_number']=-1
-#     arg['argeeList']=argeeList
     return  arg
 
 '''
@@ -299,6 +289,7 @@ def dynamic_list(request):
         return render(request, 'login.html', arg,) 
 '''
 上传动态图片
+@param type:是否是动态图片，还是图片上传 
 '''  
 def update_photo(request): 
   try:
@@ -308,6 +299,12 @@ def update_photo(request):
         # uppload image
         f = request.FILES["file"]
         type=request.POST.get('type',False)
+        imageName=f.name
+        from apps.friend_dynamic_app.dynamic_settings import UPLOAD_PHOTO_FORMAT,UPLOAD_PHOTO_TEXT
+        if not imageName[imageName.rindex('.')+1:].lower() in UPLOAD_PHOTO_FORMAT:
+            return HttpResponse(
+                "<script>window.parent.upload_photo_error('%s')</script>" % UPLOAD_PHOTO_TEXT['UPLOAD_FORMAT_ERROR']
+            )
         parser = ImageFile.Parser()  
         for chunk in f.chunks():
             parser.feed(chunk)  
@@ -327,11 +324,14 @@ def update_photo(request):
         img.save('%s%s%s'%(name,'.',IMAGE_SAVE_FORMAT))
         img.thumbnail(thumbnails)
         img.save('%s%s%s%s%s'%(name,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT))
-#         return HttpResponseRedirect('/dynamic/send/')
-        return HttpResponse(pictureName)
+        return HttpResponse(
+                "<script>window.parent.upload_photo_success('%s')</script>" % pictureName 
+            )
   except :
         logger.exception('上传动态图片出错！')
-        return HttpResponse('上传图片出错!')
+        return HttpResponse(
+                "<script>window.parent.upload_photo_error('%s')</script>" % UPLOAD_PHOTO_TEXT['UPLOAD_FORMAT_ERROR']
+            )
 
 '''
 删除图片

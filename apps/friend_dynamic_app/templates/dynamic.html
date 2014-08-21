@@ -5,10 +5,9 @@
 {% load staticfiles %}
 {% block staticfiles %}
 <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
-<script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
-<link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
- <link href="{{STATIC_URL}}css/dropzone.css" type="text/css" rel="stylesheet"/>
-  <script src="{{STATIC_URL}}js/dropzone.js"></script>
+ <link href="{{STATIC_URL}}css/picShow.css" type="text/css" rel="stylesheet"/>
+  <script src="{{STATIC_URL}}js/picShow.js"></script>
+  <script type="text/javascript" src="{{STATIC_URL}}js/jquery.rotate.js"></script>
   <script type="text/javascript">
   var page={{next_page_number}};
   $(document).ready(function(){
@@ -20,90 +19,51 @@
 {% block css %}
 
 	<style>
-			.avatar {
-				float: left;
+			.trend-content {
+				background-color: #fff;
+				-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 			}
-
-			#form1 {
-				margin: 17px 0;
+			.trend-name, .trend-time {
+				margin-left: 80px;
 			}
-
-			.trend-list {
-				width: 100%;
-				margin-top: 0;
-				margin-bottom: 17px;
-			}
-
 			.trend-name {
-				position: relative;
-				color: #000;
+				font-size: 18px;
 			}
-
+			.trend-time {
+				margin-top: 28px;
+				font-size: 12px;
+			}
 			.trend-text {
-				font-size: 15px;
-				width: 730px;
-				margin-left: 86px;
+				text-indent: 2em;
+				padding: 10px 0;
 			}
 
-			.controlArrow {
-				border-style: solid;
-				position: absolute;
-				left: 560px;
-				top: 24px;
-				border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
-				border-width: 11px 10px 11px 0;
-				cursor: inherit;
-				transform: rotate(90deg);
-				-webkit-transform: rotate(90deg);
+			.trend-reply {
+				display: none;
+			}
+			.comment-btn {
+				text-align: right;
+			}
+			.comment-like {
+				color: #4B83A6;
+				font-weight: bold;
+				padding: 0 10px;
+			}
+			.comment {
+				padding-bottom: 10px;
+				margin-bottom: 10px;
+				border-bottom: solid 1px #C8C9CD;
 			}
 
-			.interact {
-				display: inline-block;
-				position: relative;
-				left: 75%;
+			.comment .comment-btn {
+				display: none;
 			}
 
-			.interact > ul > li {
-				cursor: pointer;
+			.comment:hover .comment-btn {
+				display: block;
 			}
-
-			.pic-list {
-				margin-left: 88px;
-			}
-
-			.pic-list > a > img {
-				width: 65px;
-				height: 65px;
-				display: inline-block;
-			}
-
-			.comments-area {
-				left: 25%;
-				width: 70%;
-			}
-
-			.comments {
-				padding: 0 0 0 40px;
-				position: relative;
-			}
-
-			.comments-head {
-				height: 35px;
-				width: 35px;
-				position: absolute;
-				top: 0;
-				left: 0;
-			}
-
-			.comments-text, .comments-edit {
-				position: relative;
-			}
-
-			.comments-edit {
-				left: 60%;
-				width: 230px;
-			}
-
 			#emoji-layer {
 				position: absolute;
 				padding: 4px;
@@ -134,110 +94,27 @@
 			li {
 				list-style: none outside none;
 			}
-
-			.publishInputBefore {
-				border: 0 none;
-				color: #BBBBBB;
-				font-size: 14px;
-				height: 72px;
-				line-height: 24px;
-				outline: medium none;
-				overflow: auto;
-				padding: 6px 12px;
-				resize: none;
-				width: 100%;
+			
+			.btn-xs{
+				padding: 1px 15px;
 			}
-			.publishInputArea {
-				border: 2px solid #C4DAED;
-				border-radius: 3px 3px 3px 3px;
-				position: relative;
-				width: 100%;
-			}
-			.publishInputBottomLeft li {
-				cursor: pointer;
-				height: 16px;
-				line-height: 16px;
-				margin-left: 8px;
-				padding-left: 21px;
-			}
-			.publishInputBottom {
-				background: none repeat scroll 0 0 #F9F9F9;
-				height: 34px;
-				position: relative;
-				width: 100%;
-				z-index: 14;
-			}
-			.f_gray_999 {
-				color: #999999;
-			}
-			.fn-clear {
-			}
-			.fn-left {
-				float: left;
-			}
-			.publishInputPhoto {
-				background: url("{{STATIC_URL}}img/photo_icon.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
-			}
-			.publishInputExpression {
-				background: url("{{STATIC_URL}}img/pop_expression.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
-			}
-			.publishInputVideo {
-				background: url("{{STATIC_URL}}img/tag_icon.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
-			}
-			.fn-left, .fn-right {
-				display: inline;
-			}
-			.fn-right {
-				float: right;
-			}
-			.publishBtn {
-				margin: 4px 10px 0 0;
-			}
-			.btn6025 {
-				height: 25px;
-				line-height: 25px;
-				text-align: center;
-				width: 60px;
-				background: #FF9283;
-			}
-			.wordNumber {
-				margin: -2px 16px 0 0;
-			}
-			.wordNumber span {
-				font-family: Constantia, Georgia;
-				font-size: 22px;
-				font-style: italic;
-				font-weight: 700;
-				padding: 0 2px;
-			}
-			.btn6025 a:link, .btn6025 a:visited {
-				background: -moz-linear-gradient(center top , #FF4F86, #FF5187) repeat scroll 0 0 rgba(0, 0, 0, 0);
-				border: 1px solid #F9F9F9;
-				color: #FFFFFF;
-				display: block;
-				height: 25px;
-				text-decoration: none;
-				width: 60px;
-			}
-			.publishInputUploadPhotoArea {
-				display: none;
-			}
-			.publishInputUploadVideoArea {
-				display: none;
-			}
-		</style>
+		</style>	
+			
 <script type="text/javascript">
-var userName="{{user.username}}"
-var userId="{{user.id}}"
+var userName="{{user.username}}";
+var userId={{user.id}};
+
 $(document).ready(function(){
+	dynamicList={{friendDynamicList|safe}}
+	init_dynamic(dynamicList);
 	//字数限制
-	$(".publishTextArea").keydown(function(){
+	$("#publishTextArea_1").keydown(function(){
 		publishTextArea=$(this)
 	   var curLength=publishTextArea.val().length;
-	   var limitLenght=140
+	   var limitLenght=199
 	   if(curLength>=limitLenght){
 	      var num=publishTextArea.val().substr(0,limitLenght);
-	      $(".publishTextArea").val(num);
+	      $(".#publishTextArea_1").val(num);
 	        alert("超过字数限制，多出的字将被截断！" );
 	       }
 	     else{
@@ -245,150 +122,143 @@ $(document).ready(function(){
 	      }
 	});
 	
-	$('#publishInputPhoto').bind('click',function(){
-	    $('#publishInputUploadPhotoArea').toggle()
-	    $('#publishInputUploadVideoArea').hide()
-	    
-	})
-	
-	$('.public').click(function(){
-		var content= $(this).closest('.publishInputArea').find(".publishTextArea").val();
-	       var length= $.trim(content).length
-	       if (length >0){
-	           $('#form1').submit();
-	       }
-	       else{
-	           alert("内容不能为空！")
-	       };
+	//上传图片
+	$('#publishInputPhoto').click(function(){
+		$('#update_file').click();
 	});
 	
+	$('#update_file').change(function(){
+		updateFileForm.submit();
+	});
 	
-	
-	$(".reply").click(reply_comment);
-	
-	
-});
-//发表评论
-function reply_comment(){
-    var reply=$(this)
-	var dynamicId=$(this).closest('.card_panel').find('#dynamicId').val()
-	var receiverId=$(this).parent().find('#receiverId').val()
-	var content=$(this).closest('.publishInputArea').find('.publishTextArea').val()
-      $.getJSON('/dynamic/comment/',{dynamicId:dynamicId,receiverId:receiverId,content:content},function(data){
-        if (data['type']=='success'){
-          init_comment(data['dynamicCommentList'],dynamicId)
-          reply.closest('.publishInputArea').find('.publishTextArea').val('')
-          reply.parent().find('#receiverId').val("")
-          comment=reply.closest('.card_panel').find('#show_comment_'+dynamicId)
-          var commentNum=comment.html()
-          comment.html("评论("+(parseInt(commentNum.substring(3,commentNum.length-1))+1)+')');
-          
-        }else if(data['type']=='error'){
-            alert("删除失败")
-        }else{
-            window.location.href='http://127.0.0.1:8000/';
-        }
-    })
-}
-
-function commentary_reply(){
-	var commentId=$(this).parent().find('.commentId').val()
-	var reviewerName=$(this).parent().find('.reviewerName').val()
-	var reviewerId=$(this).parent().find('.reviewerId').val()
-	var areaText=$(this).closest('.commentary-area')
-	areaText.find('#receiverId').val(reviewerId)
-	areaText.find('.publishTextArea').val('回复@'+reviewerName+":")
-};
-//添加移除赞
-function agree(id){
-    agreeStatus=$('#agree_'+id).val();
-    agreeString= $('#argeeName_'+id).html()
-    agreeNum=agreeString.substring(agreeString.indexOf('(')+1,agreeString.indexOf(')'))
-    agreeNum=parseInt(agreeNum)
-    $.getJSON('/dynamic/agree/',{id:id},function(data){
-        if (data['type']=='delSuccess'){
-            $('#argeeName_'+id).html("赞("+(agreeNum-1)+")")
-            $('#agree_'+id).val("False");
-           // $('#argeeNum_'+id).text(argeeNum-1);
-        }else if (data['type']=='addSuccess'){
-            $('#argeeName_'+id).html("已赞("+(agreeNum+1)+")")
-            $('#agree_'+id).val("True");
-           // $('#argeeNum_'+id).text(argeeNum+1);
-        }else if(arg['type']=='error'){
-            alert("删除失败")
-        }else{
-            window.location.href='http://127.0.0.1:8000/';
-        }
-    });
-}
-function confirm_del_dynamic(id,type){
-	var body = $("<p>确认删除</p>")
-	var hehe = function(){
-		del_dynamic(id,type)
-		$(this).closest('.poplayer').remove();
-		$('.masklayer').remove();
-		}
-	$.poplayer({body:body,btnFunc:hehe});
-}
-//删除动态
-function del_dynamic(id,type){
-    $.getJSON('/dynamic/delDynamic/',{id:id,type:type},function(data){
-        if (data['type']=='success'){
-        	if (data.dynamic!=null){
-        		profile_dynamic=$('#profile_dynamic');
-            	profile_dynamic.attr('title',data['dynamic'][1]);
-            	profile_dynamic.html(data['dynamic'][0]);
-        	}else{
-        		profile_dynamic.remove();
-        	}
-            $('#dynamic_'+id).remove()
-        }else if(data['type']=='error'){
-            alert("删除失败")
-        }else{
-       window.location.href='http://127.0.0.1:8000/';
-}
-});
-};
-
-
-//初始化评论
-function init_comment(commentList,dynamicId){
-	$(commentList).each(function(){
-		var comment=$('.comment_clone').clone()
-		comment.removeClass('comment_clone')
-		comment.find('.comments-head').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
-		comments_edit=comment.find('.comments-edit')
-		if(this.receiverName==null ){
-			comment.find('.commentary-username').html(this.reviewerName+'：')
-		}else{
-			comment.find('.commentary-username').html(this.reviewerName+'回复：'+this.receiverName)
-		}
-		if(userId==this.reviewerId){
-			comments_edit.append('<li><a class="commentary-delete" href="javascript:void(0);">删除</a></li>')
-			comment.find('.commentary-delete').bind("click",del_comment);
+	//回复
+	$('form[name="relpy_form"]').submit(function(){
+		var context=$(this);
+		data=context.serialize()
+		$.ajax({
+			dataType:"json",
+			 type: "POST",
+			url:'/dynamic/comment/',
+			data:data,
+			beforeSend:function(XMLHttpRequest){
+				context.attr('disabled',true);
+			},
+			complete:function(XMLHttpRequest, textStatus){
+				$('.follow').attr('disabled',false)
+			},
+			success:function(data, textStatus){
+				if (data['type']=='success'){
+					init_comment(context.closest('.trend'),data['dynamicCommentList'])
+					context.find('#publishTextArea').val('');
+					context.closest('#reply').hide();
+			        }else if(data['type']=='error'){
+			        	var body=$('<p>删除失败!</p>')
+			        	$.poplayer({body:body});
+			        }else{
+			            window.location.href='http://127.0.0.1:8000/';
+			        }
+			},
+            error: function(response){
+            	var body=$('<p>网络异常!</p>')
+				 $.poplayer({body:body});
+            },
 			
-		}else{
-			comments_edit.append('<li><a class="commentary-reply" href="javascript:void(0);">回复</a></li>')
-			comment.find('.commentary-reply').bind("click",commentary_reply);
+		});
+		return false;
+	});
+});
+//发布
+function public(e){
+	var content= $(e).closest('.col-xs-9').find("#publishTextArea_1").val();
+       var length= $.trim(content).length
+       if (length >0){
+           $('#pubblicFrom').submit();
+       }
+       else{
+           alert("内容不能为空！")
+       };
+};
+
+//初始化动态
+function init_dynamic(dynamicList){
+	$(dynamicList).each(function(){
+		dynamic=$('#dynamic_clone').find('.row').first().clone();
+		dynamicObj=this;
+		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-60.jpeg');
+		dynamic.find('#username').html(this.publishUserName);
+		dynamic.find('#time').html(this.publishTime);
+		dynamic.find('#content').html(this.content);
+		dynamic.find('#agreeNum').html('('+this.argeeNum+')');
+		if(this.type==2){
+			dataList=Array();
+			imgList=this.data
+			for(i in imgList){
+				img=imgList[i]
+				dataList.push({id:i,img:'/media/images/'+img+'-140.jpg',middleimg:'/media/images/'+img+'-140.jpg',bigimg:'/media/images/'+img+'.jpg'});
+			}
 		}
-		//comment.find('.commentary-time').html(this.commentTime)
-		comment.find('.comments-text').append(this.content)
-		comments_edit.append('<li><span class="commentary-time">'+this.commentTime+'</span></li>')
-		comment.find('.commentId').val(this.id)
-		comment.find('.reviewerName').val(this.reviewerName)
-		comment.find('.reviewerId').val(this.reviewerId)
-		comment.show()
-		$('#comment_'+dynamicId).find('.comments-list').append(comment)
+		if(this.agreeList.length>0){
+			init_agree(dynamic,this.agreeList)
+		}
+		if(this.commentList.length>0){
+			init_comment(dynamic,$.parseJSON(this.commentList),this.publishUserId);
+		}
+		$('#dynamic').append(dynamic);
+		if(this.type==2){
+		dynamic.find('#pic').actizPicShow({data:dataList});
+		}
+		reply_clone=$('#dynamic_clone').find('#reply').clone();
+		reply_clone.find('#dynamicId').val(dynamicObj.id);
+		dynamic.find('.trend').append(reply_clone);
+		$('.reply-btn,.btn-comment').click(function() {
+			reply=$(this).closest('.trend').find('.trend-reply');
+			reply.slideDown('slow');
+			reply.find('#receiverId').val($(this).closest('#comment').find('#reviewerId').val());
+			});
+	});
+	
+	//删除评论
+	$('.del-btn').click(function(){
+		del_comment(this);
+	});
+};
+function init_agree(dynamic_div,agreeList){
+	$(agreeList).each(function(){
+		agree=$('#dynamic_clone').find('#agree').clone();
+		agree.find('img').attr('src','/media/'+this.avatarName+'-60.jpeg').next().html(this.username);
+		dynamic_div.find('.trend').append(agree);
+	});
+}
+//初始化评论
+function init_comment(dynamic_div,commentList,publishUserId){
+	$(commentList).each(function(){
+		var comment=$('#dynamic_clone').find('#comment').clone();
+		comment.find('img').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg').next().html(this.reviewerName);
+		comment.find('.comment-text').html(this.content);
+		comment.find('#commentId').val(this.id);
+		comment.find('#reviewerId').val(this.reviewerId);
+		if(publishUserId==userId){
+			comment.find('.comment-btn').append('<button class="btn btn-xs btn-primary del-btn">删除</button>');
+		}
+		if(this.reviewerId==userId){
+			comment.find('.reply-btn').remove();
+		}
+		if(dynamic_div.find('#reply').length==0){
+			$(dynamic_div).find('.trend').append(comment);
+		}else{
+			$(dynamic_div).children().eq(-2).after(comment);
+		}
+		
 	})
 };
 
 //删除评论
-function del_comment(){
-	var comment=$(this)
-	commentId=comment.closest('#comment').find('.commentId').val();
+function del_comment(e){
+	comment=$(e).closest('#comment');
+	commentId=comment.find('commentId').val();
 	 $.getJSON('/dynamic/del_comment/',{commentId:commentId},function(data){
 	        if(data['type']=='success'){
-	        	comment.closest('#comment').remove()
+	        	comment.remove();
 	           var body = $('<p>删除成功</p>');
 	        }else if(data['type']=='error'){
 	        	 var body = $('<p>'+data['msg']+'</p>');
@@ -396,6 +266,15 @@ function del_comment(){
 	        $.poplayer({body:body});
 	    })
 };
+
+//上传图片出错
+function upload_photo_error(error_message){
+	var body=$('<p>'+error_message+'</p>')
+	$.poplayer({body:body});
+};
+function upload_photo_success(picName){
+	$('.upload-pic').find('ul').append('<li><img width="70px" src="/media/images/'+picName+'-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>');
+}
 </script>
 {% endblock %}
 {% block logo %}
@@ -403,465 +282,214 @@ function del_comment(){
 {% block content %}
 <div class="wrap">
 <div class="container">
-				<div class="row" style="margin-top:63px;">
-					{% include 'left.html'%}
-					<div id="dynmaic_content" class="col-xs-9">
-					{%block public_dynmaic %}
-						<div id="s-trend">
-							<form action="" id="form1"   name="form1" method="POST">{% csrf_token %}
-								<input type="hidden" id="type" name="type" value="1">
-								<div class="publishInputArea">
-									<textarea id="publishTextArea_1" class="publishInputBefore publishTextArea" name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
-									<div class="publishInputBottom fn-clear f_gray_999">
-										<div class="fn-clear">
-											<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
-												<li id="publishInputPhoto" class="publishInputPhoto fn-left">
-													照片
-												</li>
-												<li target="#publishTextArea_1" class="publishInputExpression fn-left">
-													表情
-												</li>
-											</ul>
-										</div>
-										<div class="fn-right">
-											<p class="btn6025 publishBtn fn-right">
-												<a  id="submit-all" href="javascript:void(0);" class="public">
-													发布
-												</a>
-											</p>
-											<p class="wordNumber fn-right">
-												还能输入
-												<span id="reserve">140</span>
-												字
-											</p>
-										</div>
-									</div>
-								</div>
-							</form>
-							<div class="publishInputUploadPhotoArea" id="publishInputUploadPhotoArea">
-                            <form class="dropzone" id="my-dropzone" action="/dynamic/updatePhoto/" method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                             </form>
-       </div>
-       <script type="text/javascript">
-       dynamicUrl="/dynamic/"
-       dynamicData={page:page,type:'ajax'}
-        Dropzone.options.myDropzone = {
-
-      		  // Prevents Dropzone from uploading dropped files immediately
-      		  autoProcessQueue: true,
-      		  maxFilesize:10, // MB
-      		  dictFileTooBig: "图片不得大于 10MB" ,
-      		  //文件类型
-      		  acceptedFiles:".png,.jpg,.JPG",
-      		  //文件类型错误提示
-      		  dictInvalidFileType:"照片格式不符合规范",
-      		  //uploadMultiple:true,
-      		  //最大文件数
-      		  maxFiles:4,
-      		  //删除文件
-      		 addRemoveLinks:"dictRemoveFile",
-      		 dictRemoveFile:"删除文件",
-      		 dictResponseError:"服务器无响应",
-      		  init: function() {
-      		  //  var submitButton = document.querySelector("#submit-all")
-      		      myDropzone = this; // closure
-
-      		    //submitButton.addEventListener("click", function() {
-      		  //    myDropzone.processQueue(); // Tell Dropzone to process all queued files.
-      		    
-      		   // });
-                 
-      		  
-      		    // You might want to show the submit button only when 
-      		    // files are dropped here:
-      		    	
-      		    this.on("addedfile", function() {
-      		      // Show submit button here and/or inform user to click it.
-      		       $('#type').val('2');
-      		    });
-      		   this.on("maxfilesexceeded", function(file) { this.removeFile(file); });
-      		   
-      		    this.on("success", function(file, response) {
-      		    	file.pictureName = response; // If you just return the ID when storing the file
-      		      // You can also return a JSON object then the line would
-      		      // look something like this:
-      		      //
-      		      // file.serverId = response.id;
-      		      //
-      		      // In that case make sure that you respond with the mime type
-      		      // application/json
-      		    });
-      		    this.on("removedfile", function(file) {
-      		      if (!file.pictureName) { return; } // The file hasn't been uploaded
-      		      $.getJSON("/dynamic/deletePhoto/",{pictureName:file.pictureName}); // Send the file id along
-      		    });
-
-      		  }
-      		};
-</script>
-						</div>
-						{% endblock %}
-						
-						{%for dynamic in friendDynamicList%}
-						<div id="dynamic_{{dynamic.id}}" class="card_panel trend-list">
-						    <input type="hidden" id="publishUserId" value="{{dynamic.publishUserId}}">
-						    <input type="hidden" id="dynamicId" value="{{dynamic.id}}">
-							<div class="avatar">
-								<img alt="140x140" src="{{MEDIA_URL}}{{dynamic.avatarName}}-110.jpeg" style="height:70px;width:70px;"/>
-							</div>
-							<div style="min-height: 70px;">
-								<a class="name trend-name">{{dynamic.publishUserName}}</a>
-								<p class="trend-text">{{dynamic.content|safe}}</p>
-							</div>
-							<div class="pic-list">
-							{%ifequal dynamic.type 2 %}
-							    {%for photo in dynamic.data%}
-							    <a class="venobox" data-gall="gall1" href="{{MEDIA_URL}}images/{{photo}}.jpg" title="">
-								<img src="{{MEDIA_URL}}images/{{photo}}-140.jpg" style="margin: 5px;">
-								</a>
-								{%endfor%}
-							{%endifequal%}
-							</div>
-							
-							<div class="interact">
-								<ul class="list-inline">
-									<li>
-									 <a id="argeeName_{{dynamic.id}}" href="javascript:void(0)" onclick="agree({{dynamic.id}})">{%if dynamic.isAgree%}已赞{%else%}赞{%endif%}({{dynamic.argeeNum}})</a>
-									</li>
-									<li class="comment" href="#comment_{{dynamic.id}}">
-										<span><a id="show_comment_{{dynamic.id}}" href="javascript:void(0)">评论({{dynamic.commentNum}})</a></span>
-									</li>
-									{%ifequal dynamic.publishUserId user.id %} 
-									<li>
-										 <a href="javascript:void(0)" onclick="confirm_del_dynamic({{dynamic.id}},{{dynamic.type}})">删除</a>
-									</li>
-									{%endifequal%}
-								</ul>
-							</div>
-
-							<div id="comment_{{dynamic.id}}" class="comments-area gray-panel" style="display: none;">
-								<div class="divArrow gray-panel" style="left: 500px;"></div>
-								<div class="comments-list">
-								</div>
-								<div class="publishInputArea">
-									<textarea id="publishTextArea{{dynamic.id}}" class="publishInputBefore publishTextArea" name="content" style="color: rgb(0, 0, 0); height: 52px;"></textarea>
-									<div class="publishInputBottom fn-clear f_gray_999">
-										<div class="fn-clear">
-											<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
-												<li target="#publishTextArea{{dynamic.id}}" class="publishInputExpression fn-left">
-													表情
-												</li>
-											</ul>
-										</div>
-										<div class="fn-right">
-											<p class="btn6025 publishBtn fn-right">
-											 <input type="hidden" id="receiverId" value="">
-												<a  id="submit-all" href="javascript:void(0);" class='reply'>
-													回复
-												</a>
-											</p>
-											<p class="wordNumber fn-right">
-												还能输入
-												<span id="reserve">199</span>
-												字
-											</p>
-										</div>
-									</div>
-								</div>
-
-							</div>
-						</div>
-						{%endfor%}
+	<div class="row" style="margin-top: 63px;">
+		<div id="dynamic" class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-3">
+					<div class="avatar">
+						<img alt="140x140" src="/media/{{avatar_name}}-60.jpeg" />
 					</div>
+					<p class="trend-name">发布新的动态</p>
+				</div>
+				<div class="col-xs-9">
+					<form action="" id="pubblicFrom" name="form1" method="POST">{% csrf_token %}
+						<input type="hidden" id="type" name="type" value="1">
+						<div class="publishInputArea">
+							<textarea id="publishTextArea_1" name="content" class="publishInputBefore" name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
+							<div class="publishInputBottom f_gray_999">
+								<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
+									<li target="#publishTextArea_1" class="publishInputExpression fn-left">表情</li>
+								</ul>
+								<div class="fn-right">
+									<p class="wordNumber ">
+										还能输入 <span id="reserve">199</span> 字
+									</p>
+								</div>
+							</div>
+						</div>
+					</form>
+						<div class="underPublishInput">
+						<form id="updateFileForm" enctype="multipart/form-data" method="POST" action="/dynamic/updatePhoto/" target='frameFile'> {% csrf_token %}
+							<a id="publishInputPhoto" class="add-pic" href="javascript:void(0);"> 
+							<i class="glyphicon glyphicon-picture"></i>&nbsp;&nbsp;添加图片
+							</a>
+							<input id="update_file" type="file" name="file" style="opacity: 0; width: 50px; height: 0px;"/>
+						</form>
+							<button class="btn btn-xs btn-primary fn-right" id="submit-all" href="javascript:void(0);" onclick="public(this);">发布</button>
+						</div>
+					    <iframe id='frameFile' name='frameFile' style='display: none;'></iframe>
+						<div class="upload-pic">
+						 <ul class="list-inline">
+						{% for pic  in picList %}
+						 <li><img width="70px" src="/media/images/{{pic}}-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>
+						{%endfor%}
+						 </ul>
+						</div>
 				</div>
 			</div>
-			</div>
-			<!-- 表情 -->
-			<div id="emoji-layer" style="display: none;">
-			<div class="controlArrow" style="border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0); left: 20px;"></div>
-			<ul class="emoji-list"></ul>
+			<hr style="border-color: #C8C9CD; margin: 0; margin-bottom: 20px;" />
+			
+
 		</div>
-		    <!-- 评论 -->
-			<div id="comment" class="comments comment_clone" style="display: none;">
-			    <input type="hidden" class="commentId" value="">
-			    <input type="hidden" class="reviewerName" value="">
-			    <input type="hidden" class="reviewerId" value="">
-			    <img class="comments-head" src="">
-			    <div class="comments-text">
-			      <a href="#" class="commentary-username"></a>
-                  
-			    </div>
-			    <ul id="comments-edit" class="list-inline comments-edit">
-			    </ul>
+	</div>
+</div>
+</div>
+
+<div id="dynamic_clone" style="display: none;">
+	<div class="row">
+		<div class="col-xs-3">
+			<div class="avatar">
+				<img  id="avatar" alt="140x140" src="" />
 			</div>
-			<!-- 没有动态 -->
-			<div id="no_dynamic" class="card_panel trend-list" style=" text-align: center; margin: 0px auto;display: none;">
-						<span style="font-weight: bold; font-size: 20px;">没有动态</span>
-						</div>
-		    <!-- 动态 -->
-		   <div id="dynamic_clone" class="card_panel trend-list" style="display: none;">
-						    <input type="hidden" id="publishUserId" value="{{dynamic.publishUserId">
-						    <input type="hidden" id="dynamicId" value="">
-							<div class="head head_boy" style="margin:4px;height:70px;width:70px;">
-								<img alt="140x140" src="{{MEDIA_URL" style="height:70px;width:70px;"/>
-							</div>
-							<span class="name trend-name"></span>
-							<span class="trend-text"></span>
-							<div class="pic-list">
-							</div>	
-							<div class="interact">
-								<ul class="list-inline">
-									
+			<p id="username" class="trend-name"></p>
+			<p id="time" class="trend-time"></p>
+		</div>
+		<div class="col-xs-9">
+			<div  class="trend">
+				<div class="trend-content">
+					<center id="pic" style="clear: both">
+						<p></p>
+					</center>
+					<p id="content" class="trend-text">别碰爷，爷今天不爽，小心我要你哦~</p>
+				</div>
+				<div class="comment-btn">
+					<a class="comment-like"> 
+					<i class="glyphicon glyphicon-heart" style="color: #80827F;">&nbsp;</i>
+						<span id="agreeNum">(32)</span>
+					</a> <span style="color: #C2C4C3; padding-right: 10px; font-size: 16px;">|</span>
+					<button class="btn btn-xs btn-primary btn-comment">评论</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	            <div id="agree" class="comment row">
+					<div class="col-xs-2">
+						<img width="30px" src="" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
+					</div>
+					<div class="col-xs-8">赞了这张照片</div>
+				</div>
+				<div id="comment" class="comment row">
+				   <input id="commentId" type="hidden" value="">
+				   <input id="reviewerId" type="hidden" value="">
+					<div class="col-xs-2">
+						<img width="30px" src="img/image1.jpeg" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
+					</div>
+					<div class="col-xs-8">
+						<p class="comment-text">别碰爷，爷今天</p>
+					</div>
+					<div class="col-xs-2 comment-btn">
+						<button class="btn btn-xs btn-primary reply-btn">回复</button>
+					</div>
+				</div>
+				<div id="reply" class="trend-reply">
+					<form action="" id="" name="relpy_form" method="POST">{% csrf_token %}
+						<input type="hidden" id="dynamicId" name="dynamicId" value="">
+						<input type="hidden" id="receiverId" name="receiverId" value="">
+						<div class="publishInputArea">
+							<textarea id="publishTextArea" class="publishInputBefore"
+								name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
+							<div class="publishInputBottom f_gray_999">
+								<ul class="publishInputBottomLeft fn-left"
+									style="list-style: none outside none;">
+									<li target="#publishTextArea"
+										class="publishInputExpression fn-left">表情</li>
 								</ul>
-							</div>
-							<div id="" class="commentary-area" style="display: none;">
-								<div class="controlArrow"></div>
-								<div class="comments-list">
+								<div class="fn-right">
+									<p class="wordNumber ">
+										还能输入 <span id="reserve">199</span> 字
+									</p>
 								</div>
-								<div class="publishInputArea">
-									<textarea id="publishTextArea{{dynamic.id}}" class="publishInputBefore publishTextArea" name="content" style="color: rgb(0, 0, 0); height: 52px;"></textarea>
-									<div class="publishInputBottom fn-clear f_gray_999">
-										<div class="fn-clear">
-											<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
-												<li target="#publishTextArea{{dynamic.id}}" class="publishInputExpression fn-left">
-													表情
-												</li>
-											</ul>
-										</div>
-										<div class="fn-right">
-											<p class="btn6025 publishBtn fn-right">
-											 <input type="hidden" id="receiverId" value="">
-												<a  id="submit-all" href="javascript:void(0);" class='reply'>
-													回复
-												</a>
-											</p>
-											<p class="wordNumber fn-right">
-												还能输入
-												<span id="reserve">199</span>
-												字
-											</p>
-										</div>
-									</div>
-								</div>
-
 							</div>
 						</div>
-          <script>
-            //显示评论
-            function show_comment(){
-				href = $(this).attr('href');
-				if ($(href).is(":hidden")){
-					var dynamicId= href.substring('#comment_'.length)
-					$('#comment_'+dynamicId).find('.comments-list').children().remove();
-					var publishUserId=$('#dynamic_'+dynamicId).find('#publishUserId').val()
-					$(href).show('slow');
-					$.getJSON('/dynamic/show_comment',{id:dynamicId,publishUserId:publishUserId},function(data){
-						init_comment(data,dynamicId)
-					 })
-				}else{
-					$(href).hide('slow')
-				}
-			}
-			$('.comment').click(show_comment);
-			
-			venobox();
-			function venobox() {
-				$('.venobox').venobox({
-					numeratio : true,
-					border : '0'
-				});
-				$('.venoboxvid').venobox({
-					bgcolor : '#000'
-				});
-				$('.venoboxframe').venobox({
-					framewidth : '400px',
-					frameheight : '551px',
-					border : '6px',
-				});
-				$('.venoboxinline').venobox({
-					framewidth : '300px',
-					frameheight : '250px',
-					border : '6px',
-					bgcolor : '#f46f00'
-				});
-				$('.venoboxajax').venobox({
-					framewidth : '400px',
-					frameheight : '551px',
-					border : '30px;'
-				});
-			}
-			
-			$('.publishInputExpression').click(publishInputExpression);
-			function publishInputExpression(event){
-				var e=window.event || event;
-				if(e.stopPropagation){
-					e.stopPropagation();
-				}else{
-					e.cancelBubble = true;
-				}
-				var obj = $(this);
-				var offset = obj.offset();
-				var left = offset.left + 10;
-				var top = offset.top + 30;
-				var target = obj.attr('target');
-				if (($('.emoji-list').html()) == '') {
-					for ( i = 0; i <= 95; i++) {
-						$('.emoji-list').append('<li onclick="sendExpression(this);" action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/' + i + '.gif"/></li>');
-					}
-				}
-				$('#emoji-layer').css({
-					left : left,
-					top : top
-				});
-				$('#emoji-layer').attr('target', target);
-				$('#emoji-layer').toggle();
-			}
-			
-			$("#emoji-layer").click(function(event){
-				var e=window.event || event;
-				if(e.stopPropagation){
-					e.stopPropagation();
-				}else{
-					e.cancelBubble = true;
-				}
-			});
-			
-			document.onclick = function(){
-				$("#emoji-layer").hide();
-			};
-			function sendExpression(e) {
-				var target = $('#emoji-layer').attr('target');
-				var targettext = $(target);
-				targettext.insertAtCaret($(e).attr('action-text'));
-			};
-				
-		</script>
-		<script type="text/javascript">
-		(function($){
-			$.fn.extend({
-			insertAtCaret: function(myValue){
-			var $t=$(this)[0];
-			if (document.selection) {
-			this.focus();
-			sel = document.selection.createRange();
-			sel.text = myValue;
-			this.focus();
-			}
-			else
-			if ($t.selectionStart || $t.selectionStart == '0') {
-			var startPos = $t.selectionStart;
-			var endPos = $t.selectionEnd;
-			var scrollTop = $t.scrollTop;
-			$t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
-			this.focus();
-			$t.selectionStart = startPos + myValue.length;
-			$t.selectionEnd = startPos + myValue.length;
-			$t.scrollTop = scrollTop;
-			}
-			else {
-			this.value += myValue;
-			this.focus();
-			}
-			}
-			})
-			})(jQuery);
-		
-		
-	   //滚动加载
-		var totalheight = 0; 
-        var load_dynamic=true;
-		function loadData()
-		{ 
-		    totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
+						<div class="underPublishInput">
+							<button class="btn btn-xs btn-primary fn-right" id="submit-all"
+								>回复</button>
+						</div>
+					</form>
+				</div>
+</div>
 
-		    if ($(document).height() <= totalheight) 
-			{ 
-				//加载数据
-				/* data=[{"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-04 06:26:53", "argeeNum": 1, "content": "\u6211\u5f88\u5f00\u5fc3<img src=\"/static/img/48x48/2.gif\" style=\"width: 25px; height: 25px;\">", "publishUserName": "jin", "isAgree": true, "type": 1, "id": 17}, {"data": ["1_20140403muIMkacpVx.png", "1_20140403LGnBKOjYrf.png"], "publishUserId": 1, "commentNum": 12, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-03 17:45:25", "argeeNum": 0, "content": "sgdgsdgfdgf", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 12}, {"data": ["1_20140403ogeOzKrIvs.png"], "publishUserId": 1, "commentNum": 1, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-03 17:37:42", "argeeNum": 0, "content": "\u53d1\u4e00\u5f20\u56fe\u7247", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 10}, {"data": null, "publishUserId": 10, "commentNum": 22, "avatarName": "user_img/1c6aeb978ea8c8d02a50ee0ba6d02cd4", "publishTime": "2014-04-03 15:49:14", "argeeNum": 0, "content": "jin\u5728\u5417", "publishUserName": "jin1111", "isAgree": false, "type": 1, "id": 9}, {"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 18:01:13", "argeeNum": 0, "content": "dgfgdf", "publishUserName": "jin", "isAgree": false, "type": 1, "id": 8}, {"data": ["1_20140402enIMucAJmX.png", "1_20140402bUewgrzyfV.png"], "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 17:53:56", "argeeNum": 0, "content": "\u9876\u5471\u5471", "publishUserName": "jin", "isAgree": false, "type": 2, "id": 6}, {"data": null, "publishUserId": 1, "commentNum": 0, "avatarName": "user_img/2b15d5630ed8783ac93365c6a75e3ade", "publishTime": "2014-04-02 17:32:23", "argeeNum": 0, "content": "\u7684\u4eba\u7279\u7279", "publishUserName": "jin", "isAgree": false, "type": 1, "id": 4}, {"data": ["10_20140327FcgCEujOXv.png"], "publishUserId": 10, "commentNum": 14, "avatarName": "user_img/1c6aeb978ea8c8d02a50ee0ba6d02cd4", "publishTime": "2014-03-27 18:30:38", "argeeNum": 0, "content": "\u6c83\u5c14\u6c83\u800c", "publishUserName": "jin1111", "isAgree": false, "type": 2, "id": 3}]
-				init_dynamic(data) */
-				if(page==-1){
-					var no_dynamic=$('#no_dynamic')
-					$('.col-md-9').append($('#no_dynamic'))
-					no_dynamic.show()
-					load_dynamic=false
-					return;
-				}
-				 $.ajax({
-			         type: 'GET',
-			         url:dynamicUrl,
-			         data:dynamicData,
-			         beforeSend: function(XMLHttpRequest){
-			         },
-			         success: function(data, textStatus){
-			            if(textStatus == 'success'){
-			            	page=data['next_page_number']
-			            	init_dynamic(data['friendDynamicList'])
-			             } 
-			         },
-			         complete: function(XMLHttpRequest, textStatus){
-			         },
-			         error: function(response){
-			             alert('网络异常!')
-			         }
-			     });
-		    } 
-		} 
 
-		$(window).scroll( function() { 
-			if(load_dynamic){
-		/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
-			console.log("页面的文档高度 ："+$(document).height());
-			console.log('浏览器的高度：'+$(window).height()); */
-			loadData();
-			}
-		}); 
-		
-		//初始化动态
-		function init_dynamic(dynamicList){
-			$(dynamicList).each(function(){
-				var dynamic=$('#dynamic_clone').clone()
-				dynamic.attr('id','dynamic_'+this.id)
-				dynamic.find('#dynamicId').val(this.id)
-				dynamic.find('#publishUserId').val(this.publishUserId)
-				dynamic.find('.head_boy').children().attr('src','/media/'+this.avatarName+'-110.jpeg')
-				dynamic.find('.name').html(this.publishUserName)
-				dynamic.find('.trend-text').html(this.content)
-				pic_list=dynamic.find('.pic-list')
-				if(this.type==2){
-					for(var i=0;i<this.data.length;i++){
-						pic_list.append('<a class="venobox" data-gall="gall1" href="/media/images/'+this.data[i]+'" title=""><img src="/media/images/'+this.data[i]+'" style="margin: 5px;" ></a>')
-					}
-						
-				}
-				pic_list.find('.venobox').venobox({
-					numeratio : true,
-					border : '0'
-				});
-				dynamic.find('.commentary-area').attr('id','comment_'+this.id)
-				var operate=dynamic.find('.list-inline')
-				if(this.isAgree){
-					operate.append('<li><a id="argeeName_'+this.id+'" onclick="agree('+this.id+')" href="javascript:void(0)">已赞('+this.argeeNum+')</a></li>')
-				}else{
-					operate.append('<li><a id="argeeName_'+this.id+'" onclick="agree('+this.id+')" href="javascript:void(0)">赞('+this.argeeNum+')</a></li>')
-				}
-				operate.append('<li class="comment" href="#comment_'+this.id+'"><span><a id="show_comment_'+this.id+'" href="javascript:void(0)">评论('+this.commentNum+')</a></span></li>')
-				if(this.publishUserId==userId){
-					operate.append('<li><a href="javascript:void(0)" onclick="confirm_del_dynamic('+this.id+','+this.type+')">删除</a></li>')
-				}
-				dynamic.find('.comment').click(show_comment)
-				dynamic.find('.publishInputExpression').click(publishInputExpression);
-				//初始化表情
-				dynamic.find('.publishInputExpression').attr('target','#publishTextArea_'+this.id)
-				dynamic.find('.publishTextArea').attr('id','publishTextArea_'+this.id)
-				dynamic.find('.comments-list').children().remove()
-				dynamic.find('.commentary-area').hide()
-				$('#dynmaic_content').append(dynamic)
-				dynamic.find(".reply").click(reply_comment);
-				dynamic.show()
-			});
-			
+<div id="emoji-layer" style="display: none;">
+	<div class="controlArrow" style="border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0); left: 20px;"></div>
+	  <ul class="emoji-list"></ul>
+</div>
+<script>
+$('.upload-close').click(function() {
+$(this).parent().hide('slow');
+});
+
+$('.publishInputExpression').click(publishInputExpression);
+function publishInputExpression(event){
+	var e=window.event || event;
+	if(e.stopPropagation){
+		e.stopPropagation();
+	}else{
+		e.cancelBubble = true;
+	}
+	var obj = $(this);
+	var offset = obj.offset();
+	var left = offset.left + 10;
+	var top = offset.top + 30;
+	var target = obj.attr('target');
+	if (($('.emoji-list').html()) == '') {
+		for ( i = 0; i <= 95; i++) {
+			$('.emoji-list').append('<li onclick="sendExpression(this);" action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/' + i + '.gif"/></li>');
 		}
+	}
+	$('#emoji-layer').css({
+		left : left,
+		top : top
+	});
+	$('#emoji-layer').attr('target', target);
+	$('#emoji-layer').toggle();
+}
 
-</script>
+$("#emoji-layer").click(function(event){
+	var e=window.event || event;
+	if(e.stopPropagation){
+		e.stopPropagation();
+	}else{
+		e.cancelBubble = true;
+	}
+});
+
+document.onclick = function(){
+	$("#emoji-layer").hide();
+};
+function sendExpression(e) {
+	var target = $('#emoji-layer').attr('target');
+	var targettext = $(target);
+	targettext.insertAtCaret($(e).attr('action-text'));
+};
+(function($){
+	$.fn.extend({
+	insertAtCaret: function(myValue){
+	var $t=$(this)[0];
+	if (document.selection) {
+	this.focus();
+	sel = document.selection.createRange();
+	sel.text = myValue;
+	this.focus();
+	}
+	else
+	if ($t.selectionStart || $t.selectionStart == '0') {
+	var startPos = $t.selectionStart;
+	var endPos = $t.selectionEnd;
+	var scrollTop = $t.scrollTop;
+	$t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
+	this.focus();
+	$t.selectionStart = startPos + myValue.length;
+	$t.selectionEnd = startPos + myValue.length;
+	$t.scrollTop = scrollTop;
+	}
+	else {
+	this.value += myValue;
+	this.focus();
+	}
+	}
+	})
+	})(jQuery);
+		</script>  
 {% endblock %}

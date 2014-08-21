@@ -97,19 +97,39 @@ ORDER BY sendTime desc
 '''
         return connection_to_db(sql,param=[userId],type=True)
     '''
-     查看点赞列表
+     查看一条动态所有点赞列表
     '''
-    def get_agree_List(self,userId):
+    def get_agree_List(self,userId,dynamicId):
         sql='''
        SELECT u1.id,u1.user_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
 u2.publishUser_id as receiver_id,null as content,u1.time as sendTime ,3 as type,u1.isRead,
 u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
 from friend_dynamic_argee u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
 LEFT JOIN auth_user u3 on u3.id=u1.user_id LEFT JOIN user_profile u4 on u4.user_id=u1.user_id
-WHERE u2.publishUser_id=%s
+WHERE u2.publishUser_id=%s and u1.friendDynamic_id=%s
+ORDER BY time desc
+'''
+        return connection_to_db(sql,param=[userId,dynamicId],type=True)
+    
+    '''
+    查看对应用户的动态评论
+    @param  dynamicId:动态id
+    @param idList: id列表
+    '''
+    def get_agree_List_by_ids(self,idList,dynamicId):
+        sql='''
+       SELECT u1.id,u1.user_id as sender_id ,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,
+u2.publishUser_id as receiver_id,null as content,u1.time as sendTime ,3 as type,u1.isRead,
+u1.friendDynamic_id,u2.content as friendDynamic_content ,u2.data
+from friend_dynamic_argee u1  LEFT JOIN friend_dynamic u2 on u2.id=u1.friendDynamic_id
+LEFT JOIN auth_user u3 on u3.id=u1.user_id LEFT JOIN user_profile u4 on u4.user_id=u1.user_id
+WHERE u2.publishUser_id in ('''+('%s,'*len(idList))[:-1]+''') and u1.user_id in ('''+('%s,'*len(idList))[:-1]+''')  and u1.friendDynamic_id=%s
 ORDER BY sendTime desc
 '''
-        return connection_to_db(sql,param=[userId],type=True)
+        paramList=idList
+        paramList.extend(idList)
+        paramList.append(dynamicId)
+        return connection_to_db(sql,param=paramList,type=True)
 
 class FriendDynamicArgee(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)

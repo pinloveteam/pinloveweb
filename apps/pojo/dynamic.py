@@ -7,6 +7,7 @@ Created on Sep 17, 2014
 from django.utils import simplejson
 from simplejson.encoder import JSONEncoder
 from util.util import regex_expression
+from apps.friend_dynamic_app.models import FriendDynamicComment
 '''
 评论类
 '''
@@ -37,7 +38,6 @@ def FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList):
     for friendDynamicComment in friendDynamicCommentList:
         id=friendDynamicComment.id
         reviewer=friendDynamicComment.reviewer
-        from apps.friend_dynamic_app.models import FriendDynamicComment
         try:
             receiver=friendDynamicComment.receiver
         except FriendDynamicComment.DoesNotExist: 
@@ -66,19 +66,23 @@ class Dynamic(object):
     self.argeeNum=None
     self.commentNum=None
     self.isAgree=False
+    self.commentList=None
+    '''
+     key:username,time
+    '''
+    self.agreeList=[]
     
 class MyEncoder(JSONEncoder):
     def default(self, o):
         return o.__dict__  
 def friendDynamicList_to_Dynamic(friendDynamicList,userId):
-    DynamicList=[]
+    dynamicList=[]
     from apps.friend_dynamic_app.models import FriendDynamicArgee
     from apps.friend_dynamic_app.models import FriendDynamic
     for friendDynamic in friendDynamicList:
         dynamic=Dynamic()
         for field in ['id','type','content']:
             setattr(dynamic,field,getattr(friendDynamic,field))
-        from util.util import regex_expression
         dynamic.content=regex_expression(dynamic.content)
         dynamic.publishUserId=friendDynamic.publishUser.id
         dynamic.publishUserName=friendDynamic.publishUser.username
@@ -89,8 +93,19 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
         dynamic.isAgree=FriendDynamicArgee.objects.is_agree(friendDynamic.id, userId)
         dynamic.argeeNum=FriendDynamicArgee.objects.get_agree_count(friendDynamic.id)
         dynamic.commentNum=FriendDynamic.objects.get_coment_count(friendDynamic.publishUser.id,userId,friendDynamic.id)
-        DynamicList.append(dynamic)
-    return DynamicList
+        #获得评论
+        if dynamic.publishUserId==userId:
+            friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,isDelete=False).order_by('-commentTime')
+            friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List(userId,friendDynamic.id)
+        else:
+            friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,reviewer_id__in=[userId,dynamic.publishUserId],receiver_id__in=[userId,dynamic.publishUserId],isDelete=False).order_by('-commentTime')
+            friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List_by_ids([userId,dynamic.publishUserId],friendDynamic.id)
+        dynamic.commentList=simplejson.dumps(FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList),cls=DynamicCommentEncoder)
+        for friendDynamicArgee in friendDynamicArgeeList:
+            from apps.user_app.method import get_avatar_name
+            dynamic.agreeList.append({'username':friendDynamicArgee['sender_name'],'avatarName':get_avatar_name(userId,friendDynamicArgee['sender_id']),'time':friendDynamicArgee['sendTime'].strftime("%m-%d %H:%M")})
+        dynamicList.append(dynamic)
+    return dynamicList
 
 
 '''

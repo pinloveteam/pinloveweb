@@ -143,6 +143,7 @@ function getCookie(name) {
         							if (data.result=='success'){
         								 var body=$('<p>发送成功!</p>')
         								  publishTextArea.val('')
+        								  context.closest('#message-reply').hide();
         							}
         							else{
         								var body=$('<p>发送失败!</p>')
@@ -232,6 +233,10 @@ function getCookie(name) {
                          });
                     };
                  };
+                 $('.reply-btn').click(function(){
+       			   $(this).parents('.message').next().slideDown('slow');
+       			   $(this).hide();
+       			});
 
             };
         </script>
