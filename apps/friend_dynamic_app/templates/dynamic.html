@@ -247,7 +247,9 @@ function init_comment(dynamic_div,commentList,publishUserId){
 		comment.find('img').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
 		reviewerHref=comment.find('#username').html(this.reviewerName).parent().attr('id',this.reviewerId)
 		if(this.receiverName!=null){
-			reviewerHref.after('&nbsp;回复&nbsp;<a id="'+this.receiverId+'" href="javascript:void(0)"><span>'+this.receiverName+'</span><a>');
+			reviewerHref.after('&nbsp;回复&nbsp;<a id="'+this.receiverId+'" href="javascript:void(0)"><span>'+this.receiverName+'</span><a>:');
+		}else{
+			reviewerHref.after(':')
 		}
 		reviewerHref.parent().find('a').click(detail_info);
 		comment.find('.comment-text').html(this.content);
@@ -449,7 +451,7 @@ function upload_photo_success(picName){
 					</div>
 					<div class="col-xs-9" style="padding-left: 0;">
 					    <a id="" href="javascript:void(0)"><span id="username">张三</span></a>
-						<p class="comment-text">别碰爷，爷今天</p>
+						<span class="comment-text">别碰爷，爷今天</span>
 					</div>
 					<div class="col-xs-2 comment-btn">
 						<button class="btn btn-xs btn-primary reply-btn">回复</button>
