@@ -112,11 +112,12 @@
                        	 var context=$(this);
                        	 publishTextArea=context.find('#publishTextArea');
                        	 content=publishTextArea.val();
+                       	 data={receiver_id:message.sender_id,reply_content:content,csrfmiddlewaretoken:getCookie('csrftoken')}
                        	 $.ajax({
         						dataType:"json",
         						 type: "POST",
         						url:'/message/send/',
-        						data:{receiver_id:message.sender_id,reply_content:content,csrfmiddlewaretoken:getCookie('csrftoken')},
+        						data:data,
         						beforeSend:function(XMLHttpRequest){
         							context.attr('disabled',true);
         						},
@@ -127,7 +128,7 @@
         							if (data.result=='success'){
         								 var body=$('<p>发送成功!</p>')
         								  publishTextArea.val('')
-        								  context.closest('#message-reply').hide();
+        								  context.closest('#message-reply').hide('slow').prev().find('.reply-btn').show();
         							}
         							else{
         								var body=$('<p>发送失败!</p>')
@@ -173,7 +174,7 @@
                          }
                          if(message.data.length>0){
                         	 message.data=$.parseJSON(message.data);
-                             dynamic_comment_clone.find('#dynamic_img_count').html('('+message.data.length+")");
+                             dynamic_comment_clone.find('#dynamic_img_count').html('(共'+message.data.length+"张)");
                              dynamic_comment_clone.find('#dynamic_img').attr('src','/media/images/'+message.data[0]+'-140.jpg').parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
                          }else{
                         	 dynamic_comment_clone.find('.message-img').last().children(':lt(2)').remove();
@@ -182,15 +183,17 @@
                          $('.col-xs-9').append(dynamic_comment_clone);
                          var message_reply=$('#message_clone').find('#message-reply').clone();
                          $('.col-xs-9').append(message_reply);
+                         message_data={dynamicId:message.friendDynamic_id,receiverId:message.sender_id,csrfmiddlewaretoken:getCookie('csrftoken')}
                          message_reply.find('form').submit(function(){
                         	 var context=$(this);
                         	 publishTextArea=context.find('#publishTextArea');
                         	 content=publishTextArea.val();
+                        	 message_data.content=content
                         	 $.ajax({
          						dataType:"json",
          						 type: "POST",
          						url:'/dynamic/comment/',
-         						data:{dynamicId:message.friendDynamic_id,receiverId:message.sender_id,content:content,csrfmiddlewaretoken:getCookie('csrftoken')},
+         						data:message_data,
          						beforeSend:function(XMLHttpRequest){
          							context.attr('disabled',true);
          						},
@@ -201,6 +204,7 @@
          							if (data['type']=='success'){
          								 var body=$('<p>评论成功!</p>')
          								  publishTextArea.val('')
+         								 publishTextArea.closest('#message-reply').hide('slow').prev().find('.reply-btn').show();
          							}
          							else{
          								var body=$('<p>评论失败!</p>')
@@ -213,7 +217,7 @@
          	                    },
          						
          					});
-                        	 return false;
+                        	return false;
                          });
                     };
                  };
@@ -484,7 +488,7 @@
                              </div>
 						</div>
 						<div id="message-reply" class="message-reply row">
-								<form action="/trend/send/" id="form1"   name="form1" method="POST">
+								<form action="" id="form1"   name="form1" method="POST">
 									<input type="hidden" id="type" name="type" value="">
 									<input type="hidden" id="senderId" name="sendId" value="">
 									<input type="hidden" id="friendDynamicId" name="friendDynamicId" value="">
@@ -506,7 +510,7 @@
 										</div>
 									</div>
 									<div class="underPublishInput">
-										<button class="btn btn-xs btn-primary fn-right" id="submit-all" href="javascript:;" onclick="public()">
+										<button class="btn btn-xs btn-primary fn-right" id="submit-all" href="javascript:;">
 											回复
 										</button>
 									</div>
@@ -569,9 +573,9 @@
                                         <a href=""><img id="dynamic_img" src="img/haha.jpg"/></a>
                                         <span id="dynamic_img_count">(共9张)</span>
                                         <p>
-                                                <a herf=""><p id="dynamic_content" class="message-text">
-                                                    lalala
-                                                </p></a>
+                                           <a>
+                                          <span id="dynamic_content" class="message-text">lalala</span>
+                                          </a>
                                         </p>
                                     </div>
                                     <button class="btn btn-xs btn-primary reply-btn">
