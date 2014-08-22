@@ -64,11 +64,6 @@ class FriendDynamicArgeeManage(models.Manager):
     def is_agree(self,friendDynamicId,userId):
         return FriendDynamicArgee.objects.filter(user_id=userId,friendDynamic_id=friendDynamicId).exists()
     
-    '''
-    点赞总数
-    '''
-    def get_agree_count(self,dynamicId):
-            return FriendDynamicArgee.objects.filter(friendDynamic_id=dynamicId).count()
         
     '''
     未被查看点赞数
@@ -183,6 +178,17 @@ ORDER BY sendTime desc
     '''
     def get_no_read_comment_count(self,userId):
         return FriendDynamicComment.objects.filter(receiver_id=userId,isRead=False).count()
+    
+    '''
+    是否拥有删除权限
+    1.是改评论的发表者，2.该动态的拥有者
+    '''
+    def has_permission_to_del_commment(self,userId,commentId):
+       sql='''
+       SELECT IFNULL(1,0) as 'a' from friend_dynamic_comment u1 LEFT JOIN friend_dynamic u2 on u1.friendDynamic_id=u2.id
+where u1.id=%s and ( u1.reviewer_id=%s or u2.publishUser_id=%s )
+       '''
+       return connection_to_db(sql,param=[commentId,userId,userId])[0][0]
 
 class FriendDynamicComment(models.Model):
     friendDynamic=models.ForeignKey(FriendDynamic,verbose_name="好友动态",)

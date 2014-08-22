@@ -8,6 +8,7 @@
  <link href="{{STATIC_URL}}css/picShow.css" type="text/css" rel="stylesheet"/>
   <script src="{{STATIC_URL}}js/picShow.js"></script>
   <script type="text/javascript" src="{{STATIC_URL}}js/jquery.rotate.js"></script>
+  <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
   <script type="text/javascript">
   var page={{next_page_number}};
   $(document).ready(function(){
@@ -106,21 +107,9 @@ var userId={{user.id}};
 
 $(document).ready(function(){
 	dynamicList={{friendDynamicList|safe}}
-	init_dynamic(dynamicList);
 	//字数限制
-	$("#publishTextArea_1").keydown(function(){
-		publishTextArea=$(this)
-	   var curLength=publishTextArea.val().length;
-	   var limitLenght=199
-	   if(curLength>=limitLenght){
-	      var num=publishTextArea.val().substr(0,limitLenght);
-	      $(".#publishTextArea_1").val(num);
-	        alert("超过字数限制，多出的字将被截断！" );
-	       }
-	     else{
-	    	 publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght-publishTextArea.val().length)
-	      }
-	});
+	$(".publishInputArea").keydown(limit_length);
+	init_dynamic(dynamicList);
 	
 	//上传图片
 	$('#publishInputPhoto').click(function(){
@@ -167,11 +156,26 @@ $(document).ready(function(){
 		return false;
 	});
 });
+//字数限制
+function limit_length(){
+	publishTextArea=$(this).find('textarea')
+   var curLength=publishTextArea.val().length;
+   var limitLenght=199
+   if(curLength>=limitLenght){
+      var num=publishTextArea.val().substr(0,limitLenght);
+      $(".#publishTextArea_1").val(num);
+        alert("超过字数限制，多出的字将被截断！" );
+       }
+     else{
+    	 publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght-publishTextArea.val().length)
+      }
+}
 //发布
 function public(e){
 	var content= $(e).closest('.col-xs-9').find("#publishTextArea_1").val();
        var length= $.trim(content).length
        if (length >0){
+    	   $(e).attr('disabled',true);
            $('#pubblicFrom').submit();
        }
        else{
@@ -194,32 +198,39 @@ function init_dynamic(dynamicList){
 			imgList=this.data
 			for(i in imgList){
 				img=imgList[i]
-				dataList.push({id:i,img:'/media/images/'+img+'-140.jpg',middleimg:'/media/images/'+img+'-140.jpg',bigimg:'/media/images/'+img+'.jpg'});
+				dataList.push({id:i,img:'/media/images/'+img+'-140.jpg',middleimg:'/media/images/'+img+'.jpg'});
 			}
 		}
 		if(this.agreeList.length>0){
 			init_agree(dynamic,this.agreeList)
+		}
+		if(this.isAgree){
+			agree.find('.comment-like').find('li').css('color','color: #ff7979;')
 		}
 		if(this.commentList.length>0){
 			init_comment(dynamic,$.parseJSON(this.commentList),this.publishUserId);
 		}
 		$('#dynamic').append(dynamic);
 		if(this.type==2){
-		dynamic.find('#pic').actizPicShow({data:dataList});
+		pic=dynamic.find('#pic');
+		pic.attr('id','pic_'+this.id)
+		pic.actizPicShow({data:dataList});
 		}
 		reply_clone=$('#dynamic_clone').find('#reply').clone();
 		reply_clone.find('#dynamicId').val(dynamicObj.id);
-		dynamic.find('.trend').append(reply_clone);
-		$('.reply-btn,.btn-comment').click(function() {
+		reply_clone.find(".publishInputArea").keydown(limit_length);
+		reply_clone.find('textarea').attr('id','dynamic_'+this.id)
+		reply_clone.find('.publishInputExpression').attr('target','#dynamic_'+this.id).click(publishInputExpression);
+		dynamic.find('.reply-btn,.btn-comment').click(function() {
 			reply=$(this).closest('.trend').find('.trend-reply');
 			reply.slideDown('slow');
-			reply.find('#receiverId').val($(this).closest('#comment').find('#reviewerId').val());
+			comment=$(this).closest('#comment')
+			reply.find('#receiverId').val(comment.find('#reviewerId').val());
+			if(this.className.search('reply-btn')>0){
+				reply.find('textarea').val('回复'+comment.find('#username').html()+':')
+			}
 			});
-	});
-	
-	//删除评论
-	$('.del-btn').click(function(){
-		del_comment(this);
+		dynamic.find('.trend').append(reply_clone);
 	});
 };
 function init_agree(dynamic_div,agreeList){
@@ -233,11 +244,16 @@ function init_agree(dynamic_div,agreeList){
 function init_comment(dynamic_div,commentList,publishUserId){
 	$(commentList).each(function(){
 		var comment=$('#dynamic_clone').find('#comment').clone();
-		comment.find('img').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg').next().html(this.reviewerName);
+		comment.find('img').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
+		reviewerHref=comment.find('#username').html(this.reviewerName).parent().attr('id',this.reviewerId)
+		if(this.receiverName!=null){
+			reviewerHref.after('&nbsp;回复&nbsp;<a id="'+this.receiverId+'" href="javascript:void(0)"><span>'+this.receiverName+'</span><a>');
+		}
+		reviewerHref.parent().find('a').click(detail_info);
 		comment.find('.comment-text').html(this.content);
 		comment.find('#commentId').val(this.id);
 		comment.find('#reviewerId').val(this.reviewerId);
-		if(publishUserId==userId){
+		if(publishUserId==userId||this.reviewerId==userId){
 			comment.find('.comment-btn').append('<button class="btn btn-xs btn-primary del-btn">删除</button>');
 		}
 		if(this.reviewerId==userId){
@@ -248,23 +264,48 @@ function init_comment(dynamic_div,commentList,publishUserId){
 		}else{
 			$(dynamic_div).children().eq(-2).after(comment);
 		}
-		
 	})
+	//删除评论
+	dynamic_div.find('.del-btn').click(function(){
+		del_comment(this);
+	});
 };
 
 //删除评论
 function del_comment(e){
 	comment=$(e).closest('#comment');
-	commentId=comment.find('commentId').val();
-	 $.getJSON('/dynamic/del_comment/',{commentId:commentId},function(data){
-	        if(data['type']=='success'){
-	        	comment.remove();
-	           var body = $('<p>删除成功</p>');
-	        }else if(data['type']=='error'){
-	        	 var body = $('<p>'+data['msg']+'</p>');
-	        }
-	        $.poplayer({body:body});
-	    })
+	commentId=comment.find('#commentId').val();
+	var body = $('<p>确认删除</p>');
+	btn=function(){
+		$.ajax({
+			dataType:"json",
+			 type: "POST",
+			url:'/dynamic/del_comment/',
+			data:{commentId:commentId,csrfmiddlewaretoken:getCookie('csrftoken')},
+			beforeSend:function(XMLHttpRequest){
+				$('.poplayer').find('button').attr('disabled',true);
+			},
+			complete:function(XMLHttpRequest, textStatus){
+				$('.poplayer').find('button').attr('disabled',false)
+			},
+			success:function(data, textStatus){
+				if(data.result=='success'){
+		        	comment.remove();
+		           var body = $('<p>删除成功</p>');
+		        }else if(data.result=='error'){
+		        	 var body = $('<p>'+data.error_message+'</p>');
+		        }
+		        $.poplayer({body:body});
+			},
+            error: function(response){
+            	var body=$('<p>网络异常!</p>')
+				 $.poplayer({body:body});
+            },
+			
+		});
+	};
+	$.poplayer({body:body,btnFunc:btn});
+	
 };
 
 //上传图片出错
@@ -273,7 +314,38 @@ function upload_photo_error(error_message){
 	$.poplayer({body:body});
 };
 function upload_photo_success(picName){
-	$('.upload-pic').find('ul').append('<li><img width="70px" src="/media/images/'+picName+'-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>');
+	var pic_div=$('<li><img width="70px" src="/media/images/'+picName+'-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>');
+	 pic_div.find('.glyphicon-remove').click(function(){
+		data={pictureName:picName,csrfmiddlewaretoken:getCookie('csrftoken')}
+		var context =$(this);
+		$.ajax({
+			dataType:"json",
+			 type: "POST",
+			url:'/dynamic/deletePhoto/',
+			data:data,
+			beforeSend:function(XMLHttpRequest){
+				context.attr('disabled',true);
+			},
+			complete:function(XMLHttpRequest, textStatus){
+				$('.follow').attr('disabled',false)
+			},
+			success:function(data, textStatus){
+				if (data.result=='success'){
+					context.parent().remove();
+			        }else{
+			        	var body=$('<p>'+data.error_message+'</p>')
+						 $.poplayer({body:body});
+			        }
+			},
+            error: function(response){
+            	var body=$('<p>网络异常!</p>')
+				 $.poplayer({body:body});
+            },
+			
+		});
+	});
+	$('.upload-pic').find('ul').append(pic_div);
+	
 }
 </script>
 {% endblock %}
@@ -336,7 +408,7 @@ function upload_photo_success(picName){
 </div>
 
 <div id="dynamic_clone" style="display: none;">
-	<div class="row">
+	<div class="row" style="margin-bottom: 30px;">
 		<div class="col-xs-3">
 			<div class="avatar">
 				<img  id="avatar" alt="140x140" src="" />
@@ -367,15 +439,16 @@ function upload_photo_success(picName){
 					<div class="col-xs-2">
 						<img width="30px" src="" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
 					</div>
-					<div class="col-xs-8">赞了这张照片</div>
+					<div class="col-xs-8">赞了这个动态</div>
 				</div>
 				<div id="comment" class="comment row">
 				   <input id="commentId" type="hidden" value="">
 				   <input id="reviewerId" type="hidden" value="">
-					<div class="col-xs-2">
-						<img width="30px" src="img/image1.jpeg" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
+					<div class="col-xs-1">
+						<img width="30px" src="" /> 
 					</div>
-					<div class="col-xs-8">
+					<div class="col-xs-9" style="padding-left: 0;">
+					    <a id="" href="javascript:void(0)"><span id="username">张三</span></a>
 						<p class="comment-text">别碰爷，爷今天</p>
 					</div>
 					<div class="col-xs-2 comment-btn">
@@ -491,5 +564,164 @@ function sendExpression(e) {
 	}
 	})
 	})(jQuery);
-		</script>  
+		</script> 
+		<script>
+		//投票
+		function vote(content){
+			user_info=$(content).closest("#user_info")
+			userId=user_info.find('#userId').val()
+			score=parseInt(user_info.find('#vote_value').val().trim());
+			if(isNaN(score)){
+				var body = $("<p>请填写正确的格式!</p>")
+	       	    $.poplayer({body:body});
+				return;
+			}else if(score<0 || score>100){
+				var body = $("<p>分数必须在1~100范围内!</p>")
+	       	    $.poplayer({body:body});
+				return;
+			}
+			$.ajax({
+				type:'POST',
+				url:'/recommend/user_vote/',
+				dataType:"json",
+				data:{score:score,userId:userId},
+				success:function(data, textStatus){
+					if(textStatus=='success'){
+						if(data['result']=='success'){
+							var body = $("<p>投票成功!</p>")
+						}else if(data['result']=='error'){
+							var body = $("<p>"+data['error_message']+"<p>")
+						}
+						$.poplayer({body:body});
+					}
+					
+				},
+				error:function(response){
+					var body = $("<p>网络异常!</p>")
+		       	    $.poplayer({body:body});
+				},
+		});
+		};
+		
+		function score_my(e,userId,type){
+			$(e).hide().prevAll().show();
+			progress = $(e).prev().prev().find('.progress-bar');
+			score = $(e).prev().find('.score');
+			current=$(this)
+//			userId=$(this).val()
+//			e.stopPropagation();    //  阻止事件冒泡
+			$.ajax({
+					type:'GET',
+					url:'/recommend/socre_my/',
+					dataType:"json",
+					data:{userId:userId,type:type},
+					success:function(data, textStatus){
+						if(textStatus=='success'){
+							if(data['result']=='success'){
+								Score(data['scoreMyself'])
+							}else if(data['result']=='error'){
+								var body = $("<p>"+data['error_messge']+"</p>")
+					       	    $.poplayer({body:body});
+							}
+							
+						}
+					},
+					error:function(response){
+						var body = $("<p>网络异常!</p>")
+			       	    $.poplayer({body:body});
+					},
+			});
+		}
+		
+	//生成个人详细信息页面，对比页面
+	    detail_info_status=true;
+		function detail_info(){
+			context=this
+			compare_flag=false
+			if ( $('.masklayer').length==0&&detail_info_status){
+			detail_info_status=false;
+			userId=this.id;
+			if(compare_flag){
+				if(check_id==userId){
+					detail_info_status=true;
+					var body = $("<p>不能选择同一个用户!</p>")
+		        	 $.poplayer({body:body});
+					 return;
+				}
+				data={userId:check_id,compareId:userId}
+			}else{
+				data={userId:userId}
+			}
+			
+			$.ajax({
+				type:'GET',
+				url:'/user/detailed_info/',
+				data:data,
+				dataType:"json",
+				success:function(data, textStatus){
+						options={
+								compar:compare_flag,
+								type : 'frame',
+								user1 : data.user1,
+						}
+						if(compare_flag){
+							options.user2= data.user2
+							
+						}
+						$.poplayer(options);
+						$('#compare_button').attr('disabled',true);
+						detail_info_status=true
+						$("div.computerMove").closest('.row').find('#appearancevote').click(function(){
+							vote(this);
+						});
+						
+	                    if(data.user1.scoreMy>0){
+	                    	
+						$('.btn-show-score').click(function() {
+							content=this;
+							$.ajax({
+								type:'GET',
+								url:'/recommend/check_charge_for_socre_my/',
+								dataType:"json",
+								data:{userId:userId},
+								success:function(data, textStatus){
+									if(textStatus == 'success'){
+						            	if( data.type=='score'){
+						            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+						            		var hehe = function(){
+						            			score_my(content,userId,data.type);
+						            			}
+						            		$.poplayer({body:body,btnFunc:hehe});
+						            	}else if( data.type=='charge') {
+						            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+						            		var hehe = function(){
+						            			score_my(content,userId,data.type)
+						            			}
+						            		$.poplayer({body:body,btnFunc:hehe});
+						            	}else if(data.type=='less'){
+						            		var body = $("<p>请充值!</p>")
+						            		 $.poplayer({body:body});
+						            	} 
+						            }
+								},
+								error:function(response){
+									var body = $("<p>异常错误!</p>")
+									$.poplayer({body:body});
+								},
+						});
+							
+						});
+	                    }
+				
+				},
+				error:function(response){
+					detail_info_status=true;
+					var body = $("<p>网络异常!</p>")
+		        	 $.poplayer({body:body});
+				},
+		});
+			}
+			
+		}
+		</script> 
 {% endblock %}

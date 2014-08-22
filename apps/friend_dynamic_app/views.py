@@ -17,6 +17,8 @@ import logging
 from django.http.response import HttpResponseRedirect
 from util.page import page
 from apps.pojo.dynamic import MyEncoder
+from django.views.decorators.http import require_POST
+import re
 logger=logging.getLogger(__name__)
 '''
 卡片界面动态
@@ -36,13 +38,13 @@ def dynamic(request):
         friendDynamic.publishUser=request.user
         friendDynamic.content=content
         if 'images_path' in request.session.keys():
-            friendDynamic.data=request.session['images_path']
+            friendDynamic.data=simplejson.dumps(request.session['images_path'])
             friendDynamic.type=2
         else:
             friendDynamic.type=1
         friendDynamic.save()
         if 'images_path' in request.session.keys():
-            photoList=simplejson.loads(request.session['images_path'])
+            photoList=request.session['images_path']
             for photo in photoList:
                 picture=Picture()
                 picture.user=request.user
@@ -51,7 +53,7 @@ def dynamic(request):
                 from util import util_settings
                 picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
                 picture.save()
-                del request.session['images_path']
+            del request.session['images_path']
 #                 pictureList.append(picture.picPath)
         return HttpResponseRedirect('/dynamic/')
     #userProfile=UserProfile.objects.get(user_id=request.user.id)
@@ -236,7 +238,7 @@ def send_dynamic(request):
                 friendDynamic.data=request.session['images_path']
             friendDynamic.save()
             if type=='2':
-                photoList=simplejson.loads(request.session['images_path'])
+                photoList=request.session['images_path']
                 for photo in photoList:
                     picture=Picture()
                     picture.user=request.user
@@ -314,11 +316,11 @@ def update_photo(request):
         pictureName='%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10))
         if not  type:
          if 'images_path' in request.session.keys():
-            list=simplejson.loads(request.session['images_path'])
+            list=request.session['images_path']
             list.append(pictureName)
-            request.session['images_path']=simplejson.dumps(list)
+            request.session['images_path']=list
          else:
-            request.session['images_path']=simplejson.dumps([pictureName,])
+            request.session['images_path']=[pictureName,]
         name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
         from apps.friend_dynamic_app.dynamic_settings import thumbnails,IMAGE_SAVE_FORMAT
         img.save('%s%s%s'%(name,'.',IMAGE_SAVE_FORMAT))
@@ -337,16 +339,16 @@ def update_photo(request):
 删除图片
 attribute:图片名称
 '''
+@require_POST
 def delete_photo(request):
-        try:
-            pictureName=request.GET.get('pictureName')
-        except:
-            logger.error('获取图片名称pictureName失败')
-            logging.exception('Got exception on main handler')
+    args={}
+    try:
+        pictureName=request.POST.get('pictureName')
         if 'images_path' in request.session.keys():
-            list=simplejson.loads(request.session['images_path'])
+            list=request.session['images_path']
             if pictureName in list:
                 list.remove(pictureName)
+            request.session['images_path']=list
         from util import util_settings
         name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
         from apps.friend_dynamic_app.dynamic_settings import IMAGE_SAVE_FORMAT,thumbnails
@@ -355,7 +357,12 @@ def delete_photo(request):
         import os
         os.remove(path)
         os.remove(thumbnailPath)
-        return HttpResponse('删除成功!')
+        args={'result':'success'}
+    except Exception as e:
+        logger.exception('删除图片出错!')
+        args={'result':'error','error_message':'删除图片出错!'}
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
     
 def update_video(request): 
     arg={}
@@ -446,8 +453,9 @@ def comment(request):
             return HttpResponse(json)
         else:
             comment.receiver_id=receiverId
-        if content.startswith(u'回复@'):
-            comment.content=content[content.index(':')+1:]
+        m=re.search(u'^回复.*?:', content)
+        if m:
+            comment.content=re.sub(u'^回复.*?:', '' , content , 1 )
         else:
             comment.content=content
         comment.friendDynamic_id=dynamicId
@@ -478,19 +486,26 @@ def comment(request):
 '''
 删除评论
 '''
+@require_POST
 def del_comment(request):
-    arg={}
-    commentId=int(request.GET.get('commentId'))
-    if FriendDynamicComment.objects.filter(reviewer=request.user,id=commentId).exists():
-        FriendDynamicComment.objects.filter(reviewer=request.user,id=commentId).delete()
-#         commentNum=FriendDynamic.objects.get(id=friendDynamicComment.friendDynamic_id).commentNum
-#         FriendDynamic.objects.filter(id=friendDynamicComment.friendDynamic_id).update(commentNum=commentNum-1)
-    else:
-        arg['type']='error'
-        arg['msg']='数据错误'
-    arg['type']='success'
-    json=simplejson.dumps(arg)
-    return HttpResponse(json)
+    args={}
+    try:
+        commentId=int(request.REQUEST.get('commentId'))
+        if not FriendDynamicComment.objects.filter(id=commentId).exists():
+            args={'result':'error','error_message':'该删除评论不存在'}
+        elif not FriendDynamicComment.objects.has_permission_to_del_commment(request.user.id,commentId):
+            args={'result':'error','error_message':'没有删除评论权限'}
+        else:
+            friendDynamicComment=FriendDynamicComment.objects.get(id=commentId)
+            friendDynamicComment.delete()
+            commentNum=FriendDynamic.objects.get(id=friendDynamicComment.friendDynamic_id).commentNum
+            FriendDynamic.objects.filter(id=friendDynamicComment.friendDynamic_id).update(commentNum=commentNum-1)
+            args={'result':'success'}
+    except Exception as e:
+        logger.exception('删除评论')
+        args={'result':'error','error_message':e.message}
+    json=simplejson.dumps(args)
+    return HttpResponse(json)    
 
 
 

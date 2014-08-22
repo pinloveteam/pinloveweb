@@ -52,7 +52,8 @@ def clean_message_Dynamic(userId,messageDynamicList):
             args['dynamicComent'].append(messageDynamic['id'])
     for key in args.keys():
         if key=='messageLog':
-            MessageLog.objects.clean_message_by_ids(userId,args[key])
+            if len(args[key])>0:
+                MessageLog.objects.clean_message_by_ids(userId,args[key])
         if key=='dynamicComent':
             from apps.friend_dynamic_app.method import clean_dynamic_comment_by_ids
             clean_dynamic_comment_by_ids(args[key])
