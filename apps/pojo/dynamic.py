@@ -91,15 +91,16 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
         if friendDynamic.type==2:
             dynamic.data=simplejson.loads(friendDynamic.data)
         dynamic.isAgree=FriendDynamicArgee.objects.is_agree(friendDynamic.id, userId)
-        dynamic.argeeNum=FriendDynamicArgee.objects.get_agree_count(friendDynamic.id)
         dynamic.commentNum=FriendDynamic.objects.get_coment_count(friendDynamic.publishUser.id,userId,friendDynamic.id)
         #获得评论
         if dynamic.publishUserId==userId:
             friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,isDelete=False).order_by('-commentTime')
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List(userId,friendDynamic.id)
+            dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id).count()
         else:
             friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,reviewer_id__in=[userId,dynamic.publishUserId],receiver_id__in=[userId,dynamic.publishUserId],isDelete=False).order_by('-commentTime')
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List_by_ids([userId,dynamic.publishUserId],friendDynamic.id)
+            dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id,user_id__in=[dynamic.publishUserId,userId]).count()
         dynamic.commentList=simplejson.dumps(FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList),cls=DynamicCommentEncoder)
         for friendDynamicArgee in friendDynamicArgeeList:
             from apps.user_app.method import get_avatar_name
