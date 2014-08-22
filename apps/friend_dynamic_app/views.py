@@ -104,7 +104,7 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
     #获取单条消息列表
     if not kwargs.get('dynamicId') is None:
         friendDynamicList=FriendDynamic.objects.filter(id=kwargs.get('dynamicId'))
-        arg['friendDynamicList']=friendDynamicList_to_Dynamic(friendDynamicList, userId)
+        arg['friendDynamicList']=simplejson.dumps(friendDynamicList_to_Dynamic(friendDynamicList, userId),cls=MyEncoder)
         return arg
     elif type==0:
         friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
