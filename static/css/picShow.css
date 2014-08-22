@@ -32,6 +32,9 @@
 	margin: 5px 0 15px;
 	clear: both;
 }
+.centerImg{
+	max-width: 500px;
+}
 .actizPicShowExpand #expandCenterImg{
 	clear: both;
 	text-align: center;
