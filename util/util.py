@@ -92,4 +92,25 @@ def is_guide(userId,guide,guideField):
         return False
     else:
         return True
- 
+'''
+距离现在的时间
+@param dateTime:datetime 
+'''
+   
+def time_for_now(dateTime):
+    dateTime=dateTime.replace(tzinfo=None)
+    import datetime
+    now=datetime.datetime.today()
+    if now.year>dateTime.year:
+        return  '%s%s'%(now.year-dateTime.year,'年')
+    elif now.month>dateTime.month:
+        return  '%s%s'%(now.month-dateTime.month,'月')
+    elif now.day>dateTime.day:
+        return  '%s%s'%(now.day-dateTime.day,'天')
+    timedelta=(dateTime-now)
+    if timedelta.seconds<60:
+        return  '%s%s'%(timedelta.seconds,'秒')
+    elif timedelta.seconds<60*60:
+        return '%s%s'%(int(timedelta.seconds/60),'分')
+    elif timedelta.seconds<60*60*24:
+        return '%s%s'%(int(timedelta.seconds/60*60),'小时')

@@ -39,12 +39,12 @@
             right: 50px;
         }
         
-        #uploadAvatarCropSubmit{
+         /*#uploadAvatarCropSubmit{
 			 left: 140px;
     position: absolute;
     top: 120px;
 
-		}
+		}*/
         {% for p in preview_areas %}
             #uploadAvatarPreviewArea{{ p.size }} {
                 width: {{ p.size }}px;
@@ -197,10 +197,7 @@
         };
     </script>
     <div class="tip">
-<h5>请上传清晰美观的个人近照，给别人留下美好的第一印象。</h5>
-<p class="text-muted">
-<small>支持jpg、gif、png格式，单张照片在20k-8M之间；</small>
-</p>
+
 </div>
     <form id="uploadAvatarCropForm" action="{% url 'uploadavatar_crop' %}" method="post" target="uploadAvatarIframe" style="display: none;">
         {% csrf_token %}
@@ -212,15 +209,20 @@
     
     
     
-    <div id="uploadAvatarUploadArea">
+    <div id="uploadAvatarUploadArea" style=" left: 30px; position: relative;">
         <form id="uploadAvatarForm" action="{% url 'uploadavatar_upload' %}" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
             {% csrf_token %}
             <div id="uploadAvatarBtnLayout" >
+                <h5>请上传清晰美观的个人近照，给别人留下美好的第一印象。</h5>
                 <button class="btn btn-danger">{{ CHOOSE_IMAGE }}</button>
                 <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
+                <span class="text-muted">
+                 <small>支持jpg、gif、png格式，单张照片在20k-8M之间；</small>
+                 </span>
             </div>
         </form>
     </div>
+    <br>
     <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
     
     <div id="uploadAvatarSelectArea"></div>
@@ -234,7 +236,7 @@
     <div style="clear: both;"></div>
     
     <div id="uploadAvatarBtns">
-        <button id="uploadAvatarCropSubmit" class="btn btn-info" disabled="disabled">{{ CROP_IMAGE }}</button>
+        <button id="uploadAvatarCropSubmit" class="btn btn-pink btn_self_info btn-save" disabled="disabled">{{ CROP_IMAGE }}</button>
     </div>
     
     <div id="uploadAvatarCropResult" style="display: none;"></div>
