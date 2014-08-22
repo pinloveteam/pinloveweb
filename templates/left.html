@@ -15,44 +15,57 @@ function hide_pic(){
       </form>
       <button onclick="hide_pic();" style="float: right;position:absolute;z-index: 1">完成</button>
 </div>
+
 <div class="col-xs-3">
-	<div class="user_info card_panel">
-		<a href="/user/user_profile/">
-		   <img id="avatar"  alt="140x140" src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg"/>
-		</a>
-		<a href='/user/user_profile/#self_info_'>
-		   <div id="info_name" style="margin: 10px;font-weight: bold;font-size: 16px; display: inline-block;">
-			{{user.username}}
-		   </div>
-		</a>
-		<br><a onclick="upload_pic()" href="javascript:void(0);">上传图片</a>
-		<hr/>
-		<p id="profile_dynamic" style="margin:20px 0 20px 20px;" title='{{dynamic.1|safe}}'>
-		   {{dynamic.0|safe}}
-		</p>
-
-		<div class="sns_info">
-			<table class="table">
-				<tbody>
-					<tr class="js-follow-each">
-						<td><i class="icon_follow"></i></td>
-						<td><a href="/user/follow/1">关注</a></td>
-						<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
-					</tr>
-					<tr>
-						<td><i class="icon_fans"></i></td>
-						<td><a href="/user/follow/2">粉丝</a></td>
-						<td><a id="fans" href="/user/follow/2">{{fans}}</a></td>
-					</tr>
-					<tr class="js-follow-each">
-						<td><i class="icon_mutual_like"></i></td>
-						<td><a href="/user/follow/3">相互关注</a></td>
-						<td><a id="follow" href="/user/follow/3">{{follow}}</a></td>
-					</tr>
-				</tbody>
-			</table>
+	<div class="user_info card_panel" style="height: 344px;">
+		<div class="row">
+			<div class="col-xs-6">
+				<img style="margin: 10px;" width="100px" alt="140x140"
+					src="{{MEDIA_URL}}{{avatar_name}}-60.jpeg" />
+			</div>
+			<div class="col-xs-6">
+				<table class="table" style="margin-bottom: 0; margin-top: -1px;">
+					<tbody>
+						<tr>
+							<td><a href='/user/user_profile/'><i
+									class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;修改头像</a></td>
+						</tr>
+						<tr>
+							<td><a href='/user/user_profile/#self_info_'><i
+									class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;修改资料</a></td>
+						</tr>
+						<tr>
+							<td><i class="glyphicon glyphicon-star"></i>&nbsp;&nbsp;开通会员</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
+		<p
+			style="margin-left: 10px; font-weight: bold; font-size: 16px; color: #204854;">
+			{{user.username}}</p>
+		<p id="signature" style="margin-left: 10px;">{{dynamic.0|safe}}</p>
 	</div>
-
+	<div class="sns_info card_panel">
+		<table class="table">
+			<tbody>
+				<tr class="js-follow-each">
+					<td><i class="icon_follow"></i></td>
+					<td><a href="/user/follow/1">关注</a></td>
+					<td><a id="myFollow" href="/user/follow/1">{{myFollow}}</a></td>
+				</tr>
+				<tr>
+					<td><i class="icon_fans"></i></td>
+					<td><a href="/user/follow/2">粉丝</a></td>
+					<td><a id="fans" href="/user/follow/2">{{fans}}</a></td>
+				</tr>
+				<tr class="js-follow-each">
+					<td><i class="icon_mutual_like"></i></td>
+					<td><a href="/user/follow/3">相互关注</a></td>
+					<td><a id="follow" href="/user/follow/3">{{follow}}</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	<!--<div class="send_pic card_panel"></div>-->
 </div>

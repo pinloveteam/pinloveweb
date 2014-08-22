@@ -184,8 +184,7 @@ hr {
 
 /* chat tab */
 .chat {
-	height: 120px;
-	overflow: hidden;
+	height: 250px;
 }
 
 .chat_content_group.self {
@@ -218,12 +217,12 @@ hr {
 }
 
 .chat_content_group.self .chat_content {
-	background: #EBEDF3 repeat scroll 0 0;
+	background: #AED1E5 repeat scroll 0 0;
 }
 
 .chat_content {
 	position: relative;
-	background: #99CC33 repeat scroll 0 0;
+	background: #F5BAAA repeat scroll 0 0;
 	border-radius: 5px;
 	display: inline-block;
 	line-height: 1.4;
@@ -234,7 +233,7 @@ hr {
 }
 
 .cloudArrow {
-	background: #EBEDF3 repeat scroll 0 0;
+	background: #AED1E5 repeat scroll 0 0;
 	display: block;
 	font-size: 0;
 	height: 10px;
@@ -250,12 +249,11 @@ hr {
 }
 
 .chat_content_group.other .cloudArrow {
-	background: #99CC33 repeat scroll 0 0;
+	background: #F5BAAA repeat scroll 0 0;
 	left: -5px;
 }
 
 .chat_textarea {
-	resize: none;
 	display: inline;
 	width: 100%;
 	height: 35px;
@@ -297,14 +295,15 @@ hr {
 }
 
 .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3 {
-	top: 177px;
-	left: 95px;
+	top: 3px;
+	left: 125px;
 	opacity: 1;
-	background-image: url("../img/like.png");
+	cursor: pointer;
 }
 .icon_like_0 {
-	background-image: url("../img/like.png");
-	title: "未关注"
+	title: "未关注";
+	font-size: 20px;
+	color: #fff;
 }
 .icon_like_1 {
 	background-image: url("../img/slike.png");

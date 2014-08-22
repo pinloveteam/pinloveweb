@@ -100,7 +100,7 @@ UPLOAD_AVATAR_WEB_LAYOUT = {
 
 UPLOAD_AVATAR_TEXT = {
     'CHOOSE_IMAGE': u'选择图片',   #choose image
-    'CROP_IMAGE': u'上传',   #Crop
+    'CROP_IMAGE': u'保存',   #Crop
     'TEST_FUNC_NOT_PASSED': u'禁止',   #Forbidden
     'INVALID_IMAGE': u'非法文件，请重新选择',    #Invalid File, Please choose an image
     'NO_IMAGE': u'Please upload image',

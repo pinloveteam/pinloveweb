@@ -190,7 +190,7 @@ function init_dynamic(dynamicList){
 		dynamicObj=this;
 		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-60.jpeg');
 		dynamic.find('#username').html(this.publishUserName);
-		dynamic.find('#time').html(this.publishTime);
+		dynamic.find('#time').html(this.publishTime+'以前发布');
 		dynamic.find('#content').html(this.content);
 		dynamic.find('#agreeNum').html('('+this.argeeNum+')');
 		if(this.type==2){

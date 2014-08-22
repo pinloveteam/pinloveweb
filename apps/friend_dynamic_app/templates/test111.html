@@ -1,61 +1,71 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Upload a file in Django 1.5 using Dropzone.js</title>
-        {% load staticfiles %}
-        <link href="{% static 'css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
-        <style>
-          .dz-max-files-reached {background-color: red};
-        </style>
-    </head>
-    <body>
- 
-        <!-- IMPORTANT enctype attribute! -->
-        <form class="dropzone" id="my-dropzone" action="/dynamic/test/" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-        </form>
-        <button id="submit-all">
-            Submit all files
-        </button>
- 
-        <script src="{% static 'js/dropzone.min.js' %}"></script>
-        <script type="text/javascript">
-        Dropzone.options.myDropzone = {
-
-      		  // Prevents Dropzone from uploading dropped files immediately
-      		  autoProcessQueue: false,
-      		  maxFilesize: 1, // MB
-      		  dictFileTooBig:"图片不得大于 1MB",
-      		  //文件类型
-      		  acceptedFiles:".png,.jpg",
-      		  //文件类型错误提示
-      		  dictInvalidFileType:"照片格式不符合规范",
-      		  //uploadMultiple:true,
-      		  //最大文件数
-      		  maxFiles:4,
-      		  //删除文件
-      		 addRemoveLinks:"dictRemoveFile",
-      		 dictRemoveFile:"删除文件",
-      		  init: function() {
-      		    var submitButton = document.querySelector("#submit-all")
-      		        myDropzone = this; // closure
-
-      		    submitButton.addEventListener("click", function() {
-      		      myDropzone.processQueue(); // Tell Dropzone to process all queued files.
-      		    });
-                 
-      		  
-      		    // You might want to show the submit button only when 
-      		    // files are dropped here:
-      		    this.on("addedfile", function() {
-      		      // Show submit button here and/or inform user to click it.
-      		    });
-      		   this.on("maxfilesexceeded", function(file) { this.removeFile(file); });
-
-      		  }
-      		};
-
-        </script>
-    </body>
-</html>
+<div id="dynamic_clone" style="display: none;">
+	<div class="row">
+		<div class="col-xs-3">
+			<div id="avatar" class="avatar">
+				<img alt="140x140" src="" />
+			</div>
+			<p id="username" class="trend-name"></p>
+			<p id="time" class="trend-time"></p>
+		</div>
+		<div class="col-xs-9">
+			<div class="trend">
+				<div class="trend-content">
+					<center id="pic" style="clear: both">
+						<p></p>
+					</center>
+					<p id="content" class="trend-text">别碰爷，爷今天不爽，小心我要你哦~</p>
+				</div>
+				<div class="comment-btn">
+					<a id="agreeNum" class="comment-like"> <i
+						class="glyphicon glyphicon-heart" style="color: #80827F;">&nbsp;</i>
+						(32)
+					</a> <span
+						style="color: #C2C4C3; padding-right: 10px; font-size: 16px;">|</span>
+					<button class="btn btn-xs btn-primary">评论</button>
+				</div>
+				<div class="comment row">
+					<div class="col-xs-2">
+						<img width="30px" src="" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
+					</div>
+					<div class="col-xs-8">赞了这张照片</div>
+				</div>
+				<div class="comment row">
+					<div class="col-xs-2">
+						<img width="30px" src="img/image1.jpeg" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
+					</div>
+					<div class="col-xs-8">
+						<p class="comment-text">别碰爷，爷今天</p>
+					</div>
+					<div class="col-xs-2 comment-btn">
+						<button class="btn btn-xs btn-primary reply-btn">回复</button>
+					</div>
+				</div>
+				<div class="trend-reply">
+					<form action="/trend/send/" id="form1" name="form1" method="POST">
+						<input type="hidden" id="type" name="type" value="1">
+						<div class="publishInputArea">
+							<textarea id="publishTextArea" class="publishInputBefore"
+								name="content" style="color: rgb(0, 0, 0); height: 72px;"></textarea>
+							<div class="publishInputBottom f_gray_999">
+								<ul class="publishInputBottomLeft fn-left"
+									style="list-style: none outside none;">
+									<li target="#publishTextArea"
+										class="publishInputExpression fn-left">表情</li>
+								</ul>
+								<div class="fn-right">
+									<p class="wordNumber ">
+										还能输入 <span id="reserve">199</span> 字
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="underPublishInput">
+							<button class="btn btn-xs btn-primary fn-right" id="submit-all"
+								href="javascript:;" onclick="public()">回复</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
