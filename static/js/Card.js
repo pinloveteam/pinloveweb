@@ -144,6 +144,7 @@ window.Card = function(person){
 		       
 		       
 		    });
+		event.stopPropagation();
 	};
 	
 	
@@ -604,8 +605,8 @@ window.Card = function(person){
     //添加用户id
 	this.template.find('.card_panel').attr('id',person.userId);
 	//是否关注
-	var icon_like=this.template.find('.tool_bar :nth-child(2) ').children();
-	icon_like.removeClass().addClass('icon_like_'+person.isFriend);
+	var icon_like=this.template.find('.icon_like_0');
+	icon_like.removeClass('icon_like_0').addClass('icon_like_'+person.isFriend);
 	icon_like.attr('move-data',person.headImg+'-60.jpeg')
 	if(person.isFriend=='0'||person.isFriend=='1'){
 		icon_like.attr('move-to','js-follow')
@@ -637,7 +638,7 @@ window.Card = function(person){
 	
 	this.template.find('.icon_ding').on('click',ding);
 	
-	this.template.find("[class^='icon_like']").on('click',like);
+	this.template.find('i[class*="icon_like_"]').on('click',like);
 	
 	this.template.find(".test_match").on('click',test_match);
 	this.template.find('.dafen').find('button').unbind();

@@ -164,6 +164,9 @@
                 
                 updateCoors({'width': img_width}, sel);
             });
+            
+            $('div[id^="uploadAvatarPreviewArea"]:gt(0)').css("background-image","url('')"); 
+            $('#uploadAvatarSelectArea').css("background-image","url('')"); 
         };
         
         function updateCoors(img, selection) {

@@ -302,8 +302,8 @@ hr {
 }
 .icon_like_0 {
 	title: "未关注";
-	font-size: 20px;
-	color: #fff;
+	background-image: url("../img/like.png");
+	
 }
 .icon_like_1 {
 	background-image: url("../img/slike.png");

@@ -185,7 +185,7 @@
 
 	function loadRadarFrame(options) {
 		var dataArry = new Array();
-		var radarframe = $('<div class="col-xs-3" style="background-color: #100B31; height: 503px; padding: 25px;"></div>');
+		var radarframe = $('<div class="col-xs-3" style="background-color: #100B31; height: 507px; padding: 25px;"></div>');
 		radarframe.addClass('radius');
 		radarframe.click(function(){
 			return false;

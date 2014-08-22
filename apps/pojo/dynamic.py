@@ -86,7 +86,8 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
         dynamic.content=regex_expression(dynamic.content)
         dynamic.publishUserId=friendDynamic.publishUser.id
         dynamic.publishUserName=friendDynamic.publishUser.username
-        dynamic.avatarName=friendDynamic.get_profile()
+        from apps.user_app.method import get_avatar_name
+        dynamic.avatarName=get_avatar_name(userId, friendDynamic.publishUser.id)
         from util.util import time_for_now
         dynamic.publishTime=time_for_now( friendDynamic.publishTime)
         if friendDynamic.type==2:

@@ -16,7 +16,7 @@
 
 			.buy-nav {
 				position: relative;
-				top: 18px;
+				top: 8px;
 				left: 40px;
 			}
 
@@ -29,6 +29,7 @@
 				width: 100px;
 				text-align: center;
 				cursor: pointer;
+				float:left;
 			}
 
 			.buy-nav .active {
@@ -143,7 +144,7 @@
 				</ul>
 			</div>
 			
-			<div class="col-xs-9" style="height:0px; z-index: 10;" style="display: none;">
+			<div id="col-xs-frame" class="col-xs-9" style="height:0px; z-index: 10; display: none;">
 				<div class="card_panel" style="width: 100%;margin-top: 0;">
 				 <!-- 头像上传 -->
 				 
@@ -159,7 +160,7 @@
 				   </div>
 					
 				   <!--性格标签 -->
-				   <div id="personality" class="vip-panel" >
+				   <div id="personality" class="vip-panel"  style="display: none;">
 				      {% include "character_tags.html" %}
 				   </div>
 				   <!-- 认证 -->
@@ -184,6 +185,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	init_tab()
+	$('#col-xs-frame').show();
 	$('.buy-nav').find('li').click(function() {
 		href = $(this).attr('href');
 		if(href=="#upload_head"){

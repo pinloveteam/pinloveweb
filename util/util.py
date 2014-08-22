@@ -8,7 +8,7 @@ import string
 import random
 import urllib 
 from json import loads, JSONEncoder
-
+ 
 from django.core.serializers import serialize
 from django.db.models.query import QuerySet
 from django.utils import simplejson
@@ -20,14 +20,14 @@ def random_str(randomlength=32):
     a = list(string.ascii_letters)
     random.shuffle(a)
     return ''.join(a[:randomlength])
-
+ 
 def download_pic(url,filename):
 #     urllib.urlretrieve(url, "00000001.jpg")
     data = urllib.urlopen(url).read() 
     f = file(filename,"wb") 
     f.write(data) 
     f.close() 
-    
+     
 class DjangoJSONEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, QuerySet):
@@ -56,8 +56,8 @@ def model_to_dict(instance,fields=None):
                 args[field]=getattr(object,field)
         list.append(args)
     return list
-
-
+ 
+ 
 '''
 匹配表情
 '''  
@@ -65,12 +65,12 @@ def regex_expression(content):
     regex=u'{:pinlove_[0-9]{1,2}:}'
     import re
     return re.sub(regex, dashrepl, content)
-
+ 
 def dashrepl(matchobj):
     s=matchobj.group(0)
     num=s[10:-2]
     return '%s%s%s' % ('<img src="/static/img/48x48/',num,'.gif" style="width: 25px; height: 25px;">')
-
+ 
 '''
 判断是否引导过
 attridute:
@@ -113,4 +113,4 @@ def time_for_now(dateTime):
     elif timedelta.seconds<60*60:
         return '%s%s'%(int(timedelta.seconds/60),'分')
     elif timedelta.seconds<60*60*24:
-        return '%s%s'%(int(timedelta.seconds/60*60),'小时')
+        return '%s%s'%(int(timedelta.seconds/(60*60)),'小时')
