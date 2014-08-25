@@ -301,8 +301,10 @@ hr {
 	cursor: pointer;
 }
 .icon_like_0 {
+	color: #fff;
+	font-size: 20px;
 	title: "未关注";
-	background-image: url("../img/like.png");
+	content: "";
 	
 }
 .icon_like_1 {
@@ -314,8 +316,11 @@ hr {
 	title: "相互关注"
 }
 .icon_like_3 {
+	color: #ff7272;
+	font-size: 20px;
+	title: "相互关注";
+	content: "";
 	background-image: url("../img/olike.png");
-	title: "相互关注"
 }
 .icon_dislike {
 	top: 0px;

@@ -55,7 +55,6 @@
 			.comment {
 				padding-bottom: 10px;
 				margin-bottom: 10px;
-				border-bottom: solid 1px #C8C9CD;
 			}
 
 			.comment .comment-btn {
@@ -231,6 +230,7 @@ function init_dynamic(dynamicList){
 			}
 			});
 		dynamic.find('.trend').append(reply_clone);
+		$('#dynamic').append($('#dynamic_clone').find('hr').clone());
 	});
 };
 function init_agree(dynamic_div,agreeList){
@@ -436,6 +436,7 @@ function upload_photo_success(picName){
 			</div>
 		</div>
 	</div>
+	<hr style="border-color: #C8C9CD;margin: 0; margin-bottom: 20px;">
 	
 	            <div id="agree" class="comment row">
 					<div class="col-xs-2">

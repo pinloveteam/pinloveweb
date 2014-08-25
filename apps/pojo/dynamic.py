@@ -103,7 +103,8 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
             friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,reviewer_id__in=[userId,dynamic.publishUserId],receiver_id__in=[userId,dynamic.publishUserId],isDelete=False).order_by('-commentTime')
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List_by_ids([userId,dynamic.publishUserId],friendDynamic.id)
             dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id,user_id__in=[dynamic.publishUserId,userId]).count()
-        dynamic.commentList=simplejson.dumps(FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList).reverse(),cls=DynamicCommentEncoder)
+        friendDynamicCommentList=friendDynamicCommentList.reverse()
+        dynamic.commentList=simplejson.dumps(FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList),cls=DynamicCommentEncoder)
         for friendDynamicArgee in friendDynamicArgeeList:
             from apps.user_app.method import get_avatar_name
             dynamic.agreeList.append({'username':friendDynamicArgee['sender_name'],'avatarName':get_avatar_name(userId,friendDynamicArgee['sender_id']),'time':friendDynamicArgee['sendTime'].strftime("%m-%d %H:%M")})
