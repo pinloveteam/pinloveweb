@@ -43,8 +43,7 @@ class FriendDynamic(models.Model):
     commentNum=models.IntegerField(verbose_name="评论次数",default=0)
     objects=FriendDynamicManage()
     def save(self):
-        today=datetime.datetime.today()
-        self.publishTime=today
+        self.publishTime=datetime.datetime.today()
         super(FriendDynamic, self).save()
     def get_profile(self):
         userProfile=UserProfile.objects.get(user=self.publishUser)
@@ -132,6 +131,9 @@ class FriendDynamicArgee(models.Model):
     objects=FriendDynamicArgeeManage()
     time=models.DateTimeField(verbose_name="时间")
     isRead=models.NullBooleanField(verbose_name="是否阅读",default=False)
+    def save(self):
+        self.time=datetime.datetime.today()
+        super(FriendDynamicArgee, self).save()
     class Meta:
         verbose_name = u'点赞表' 
         verbose_name_plural = u'点赞表'

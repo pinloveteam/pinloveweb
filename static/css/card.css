@@ -267,11 +267,13 @@ hr {
 
 /* icon */
 .icon_profile, .icon_photo, .icon_msg, .icon_ding, .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3, .icon_dislike {
-	background: url("../img/profile.png") no-repeat;
 	margin-right: 3px;
 	display: inline-block;
 	height: 32px;
 	width: 32px;
+}
+.icon_profile{
+	background: url("../img/profile.png") no-repeat;
 }
 .icon_photo {
 	background-image: url("../img/photo.png");
@@ -300,11 +302,12 @@ hr {
 	opacity: 1;
 	cursor: pointer;
 }
-.icon_like_0 {
+.icon_like_0:before{
 	color: #fff;
 	font-size: 20px;
 	title: "未关注";
-	content: "";
+	content: "\e005";
+	background-image: url('../img/sli.png');
 	
 }
 .icon_like_1 {
@@ -315,12 +318,12 @@ hr {
 	background-image: url("../img/dlike.png");
 	title: "相互关注"
 }
-.icon_like_3 {
+.icon_like_3:before{
 	color: #ff7272;
 	font-size: 20px;
 	title: "相互关注";
-	content: "";
-	background-image: url("../img/olike.png");
+	content: "\e005";
+	background-image: url('/');
 }
 .icon_dislike {
 	top: 0px;
@@ -402,7 +405,10 @@ hr {
 	float: left;
 }
 .publishInputExpression {
-	background: url("{{STATIC_URL}}img/pop_expression.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+	background: url("/static/img/pop_expression.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
+}
+.publishInputPhoto{
+	background: url("/static/img/photo_icon.gif") no-repeat scroll left center rgba(0, 0, 0, 0);
 }
 .fn-left, .fn-right {
 	display: inline;

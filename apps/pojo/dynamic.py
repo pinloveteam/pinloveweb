@@ -100,14 +100,14 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List(userId,friendDynamic.id)
             dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id).count()
         else:
-            friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,reviewer_id__in=[userId,dynamic.publishUserId],receiver_id__in=[userId,dynamic.publishUserId],isDelete=False).order_by('-commentTime')
+            friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,reviewer_id__in=[userId,dynamic.publishUserId,None],receiver_id__in=[userId,dynamic.publishUserId,None],isDelete=False).order_by('-commentTime')
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List_by_ids([userId,dynamic.publishUserId],friendDynamic.id)
             dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id,user_id__in=[dynamic.publishUserId,userId]).count()
         friendDynamicCommentList=friendDynamicCommentList.reverse()
         dynamic.commentList=simplejson.dumps(FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList),cls=DynamicCommentEncoder)
         for friendDynamicArgee in friendDynamicArgeeList:
             from apps.user_app.method import get_avatar_name
-            dynamic.agreeList.append({'username':friendDynamicArgee['sender_name'],'avatarName':get_avatar_name(userId,friendDynamicArgee['sender_id']),'time':friendDynamicArgee['sendTime'].strftime("%m-%d %H:%M")})
+            dynamic.agreeList.append({'userId':friendDynamicArgee['sender_id'],'username':friendDynamicArgee['sender_name'],'avatarName':get_avatar_name(userId,friendDynamicArgee['sender_id']),'time':friendDynamicArgee['sendTime'].strftime("%m-%d %H:%M")})
         dynamicList.append(dynamic)
     return dynamicList
 

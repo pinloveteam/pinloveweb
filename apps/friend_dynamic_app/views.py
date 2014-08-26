@@ -295,44 +295,49 @@ def dynamic_list(request):
 '''  
 def update_photo(request): 
   try:
+    arg={}
+    from apps.friend_dynamic_app.dynamic_settings import UPLOAD_PHOTO_FORMAT, UPLOAD_PHOTO_TEXT
     if request.method == 'POST':
       if request.FILES :
-        arg={}
         # uppload image
-        f = request.FILES["file"]
+        files = request.FILES.getlist('file')
         type=request.POST.get('type',False)
-        imageName=f.name
-        from apps.friend_dynamic_app.dynamic_settings import UPLOAD_PHOTO_FORMAT,UPLOAD_PHOTO_TEXT
-        if not imageName[imageName.rindex('.')+1:].lower() in UPLOAD_PHOTO_FORMAT:
-            return HttpResponse(
-                "<script>window.parent.upload_photo_error('%s')</script>" % UPLOAD_PHOTO_TEXT['UPLOAD_FORMAT_ERROR']
-            )
-        parser = ImageFile.Parser()  
-        for chunk in f.chunks():
-            parser.feed(chunk)  
-        img = parser.close()
-        from util import util_settings
-        from util.util import random_str
-        pictureName='%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10))
-        if not  type:
-         if 'images_path' in request.session.keys():
-            list=request.session['images_path']
-            list.append(pictureName)
-            request.session['images_path']=list
-         else:
-            request.session['images_path']=[pictureName,]
-        name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
-        from apps.friend_dynamic_app.dynamic_settings import thumbnails,IMAGE_SAVE_FORMAT
-        img.save('%s%s%s'%(name,'.',IMAGE_SAVE_FORMAT))
-        img.thumbnail(thumbnails)
-        img.save('%s%s%s%s%s'%(name,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT))
+        for f in files:
+            imageName=f.name
+            if not imageName[imageName.rindex('.')+1:].lower() in UPLOAD_PHOTO_FORMAT:
+                return HttpResponse(
+                                    "<script>window.parent.upload_photo_error('%s')</script>" % UPLOAD_PHOTO_TEXT['UPLOAD_FORMAT_ERROR']
+                )
+        imageNameList=[]
+        for f in files:
+            imageName=f.name
+            parser = ImageFile.Parser()  
+            for chunk in f.chunks():
+                parser.feed(chunk)  
+            img = parser.close()
+            from util import util_settings
+            from util.util import random_str
+            pictureName='%s%s%s%s' % (request.user.id,'_',time.strftime('%Y%m%d',time.localtime(time.time())),random_str(randomlength=10))
+            if not  type:
+                if 'images_path' in request.session.keys():
+                    list=request.session['images_path']
+                    list.append(pictureName)
+                    request.session['images_path']=list
+                else:
+                    request.session['images_path']=[pictureName,]
+            name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
+            from apps.friend_dynamic_app.dynamic_settings import thumbnails,IMAGE_SAVE_FORMAT
+            img.save('%s%s%s'%(name,'.',IMAGE_SAVE_FORMAT))
+            img.thumbnail(thumbnails)
+            img.save('%s%s%s%s%s'%(name,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT))
+            imageNameList.append(pictureName)
         return HttpResponse(
-                "<script>window.parent.upload_photo_success('%s')</script>" % pictureName 
+                "<script>window.parent.upload_photo_success('%s')</script>" % simplejson.dumps(imageNameList)
             )
-  except :
+  except Exception as e:
         logger.exception('上传动态图片出错！')
         return HttpResponse(
-                "<script>window.parent.upload_photo_error('%s')</script>" % UPLOAD_PHOTO_TEXT['UPLOAD_FORMAT_ERROR']
+                "<script>window.parent.upload_photo_error('%s')</script>" % UPLOAD_PHOTO_TEXT['EORROR']
             )
 
 '''
@@ -377,31 +382,33 @@ def update_video(request):
 '''
 def agree(request):
     arg={}
-    if request.user.is_authenticated():
-        try:
-            id=int(request.GET.get('id'))
-        except:
-            arg['type']='error' 
-            json=simplejson.dumps(arg)
-            return json
-        argeeNum=FriendDynamic.objects.get(id=id).argeeNum
-        if FriendDynamicArgee.objects.filter(friendDynamic_id=id,user=request.user).exists():
-            FriendDynamicArgee.objects.get(friendDynamic_id=id).delete()
+    try:
+        dynamicId=int(request.REQUEST.get('dynamicId'))
+        argeeNum=FriendDynamic.objects.get(id=dynamicId).argeeNum
+        if FriendDynamicArgee.objects.filter(friendDynamic_id=dynamicId,user=request.user).exists():
+            FriendDynamicArgee.objects.get(friendDynamic_id=dynamicId).delete()
             argeeNum=argeeNum-1
-            FriendDynamic.objects.filter(id=id).update(argeeNum=argeeNum)
-            arg['type']='delSuccess'
+            FriendDynamic.objects.filter(id=dynamicId).update(argeeNum=argeeNum)
+            arg['result']='delSuccess'
         else:
             friendDynamicArgee=FriendDynamicArgee()
-            friendDynamicArgee.friendDynamic_id=id
+            friendDynamicArgee.friendDynamic_id=dynamicId
             friendDynamicArgee.user=request.user
             friendDynamicArgee.save()
             argeeNum=argeeNum+1
-            FriendDynamic.objects.filter(id=id).update(argeeNum=argeeNum)
-            arg['type']='addSuccess'  
-    else:
-        arg['type']='login'
-    json=simplejson.dumps(arg)
-    return HttpResponse(json)
+            FriendDynamic.objects.filter(id=dynamicId).update(argeeNum=argeeNum)
+            from apps.user_app.method import get_avatar_name
+            arg['obj']=simplejson.dumps([{'userId':friendDynamicArgee.user_id,'username':request.user.username,'avatarName':get_avatar_name(friendDynamicArgee.user_id,friendDynamicArgee.user_id),'time':friendDynamicArgee.time.strftime("%m-%d %H:%M")}])
+            arg['result']='addSuccess'  
+        json=simplejson.dumps(arg)
+        return HttpResponse(json)
+    except Exception as e:
+        logger.exception('添加删除点赞出错')
+        arg['result']='error' 
+        arg['error_message']=e.message
+        json=simplejson.dumps(arg)
+        return json
+ 
     
 '''
 查看评论
@@ -443,6 +450,8 @@ def comment(request):
             json=simplejson.dumps(arg)
             return HttpResponse(json)
         comment=FriendDynamicComment()
+        if len(content)==0:
+              arg={'type':'error','msg':'评论不能为空'}
         if len(receiverId)<=0:
             friendDynamic=FriendDynamic.objects.select_related('publishUser').get(id=dynamicId)
             if friendDynamic.publishUser.id!=request.user.id:

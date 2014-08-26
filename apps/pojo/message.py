@@ -105,6 +105,7 @@ def messagedynamics_to_message_page(messageDynamicList):
     for messageDynamic in messageDynamicList:
         message=messageDynamic
         message['sendTime']=message['sendTime'].strftime("%m-%d %H:%M")
+        message['content']=regex_expression(message['content'])
         if message['type']==2:
             #判断是否关注
             from apps.user_app.method import is_follow,is_follow_each

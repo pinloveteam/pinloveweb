@@ -252,3 +252,14 @@ li {
 .indexFooter p{
 	margin: 0;
 }
+.notice {
+    background-color: #f82c2c;
+    border-radius: 50%;
+    color: #fff;
+    display: inline-block;
+    font-size: 10px;
+    left: 18px;
+    position: absolute;
+    text-align: center;
+    width: 15px;
+}

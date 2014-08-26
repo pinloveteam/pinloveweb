@@ -115,13 +115,18 @@ $(document).ready(function(){
 		$('#update_file').click();
 	});
 	
-	$('#update_file').change(function(){
-		updateFileForm.submit();
+	$('#update_file').on('change',function(){
+		$('#updateFileForm').submit();
 	});
 	
 	//回复
 	$('form[name="relpy_form"]').submit(function(){
 		var context=$(this);
+		if(context.find('textarea').val().trim().length==0){
+			var body=$('<p>评论不能为空!</p>')
+			$.poplayer({body:body});
+			return false;
+		}
 		data=context.serialize()
 		$.ajax({
 			dataType:"json",
@@ -137,7 +142,7 @@ $(document).ready(function(){
 			success:function(data, textStatus){
 				if (data['type']=='success'){
 					init_comment(context.closest('.trend'),data['dynamicCommentList'])
-					context.find('#publishTextArea').val('');
+					context.find('textarea').val('');
 					context.closest('#reply').hide();
 			        }else if(data['type']=='error'){
 			        	var body=$('<p>删除失败!</p>')
@@ -183,6 +188,7 @@ function public(e){
 };
 
 //初始化动态
+var agree_status=true;
 function init_dynamic(dynamicList){
 	$(dynamicList).each(function(){
 		dynamic=$('#dynamic_clone').find('.row').first().clone();
@@ -201,11 +207,48 @@ function init_dynamic(dynamicList){
 			}
 		}
 		if(this.agreeList.length>0){
-			init_agree(dynamic,this.agreeList)
+			init_agree(dynamic,this.agreeList,0)
 		}
 		if(this.isAgree){
-			agree.find('.comment-like').find('li').css('color','color: #ff7979;')
+			dynamic.find('.comment-like').find('i').css('color','#ff7979')
 		}
+		dynamic.find('.comment-like').find('i').click(function(){
+			var conext=$(this);
+			var dynamicId=conext.closest('.trend').find('#dynamicId').val();
+			$.ajax({
+				dataType:"json",
+				 type: "POST",
+				url:'/dynamic/agree/',
+				data:{dynamicId:dynamicId,csrfmiddlewaretoken:getCookie('csrftoken')},
+				beforeSend:function(XMLHttpRequest){
+					agree_status=false;
+				},
+				complete:function(XMLHttpRequest, textStatus){
+					agree_status=true;
+				},
+				success:function(data, textStatus){
+					agreeNum=conext.next()
+					if(data.result=='addSuccess'){
+					  conext.css('color','#ff7979');
+					  Num=agreeNum.html().trim()
+					  agreeNum.html('('+(parseInt(Num.substring(1,Num.length-1))+1)+')')
+					  init_agree(conext.closest('.row'),$.parseJSON(data.obj),1)
+					}else if(data.result=='delSuccess'){
+						  conext.css('color','#80827F')
+						  Num=agreeNum.html().trim()
+						  agreeNum.html('('+(parseInt(Num.substring(1,Num.length-1))-1)+')')
+						  conext.closest('.trend').find('input[name="userId"][value="'+userId+'"]').closest('.row').remove();
+					  }else if(data.result=='error'){
+			        	 var body = $('<p>'+data.error_message+'</p>');
+			        }
+				},
+	            error: function(response){
+	            	var body=$('<p>网络异常!</p>')
+					 $.poplayer({body:body});
+	            },
+				
+			});
+		});
 		if(this.commentList.length>0){
 			init_comment(dynamic,$.parseJSON(this.commentList),this.publishUserId);
 		}
@@ -222,22 +265,33 @@ function init_dynamic(dynamicList){
 		reply_clone.find('.publishInputExpression').attr('target','#dynamic_'+this.id).click(publishInputExpression);
 		dynamic.find('.reply-btn,.btn-comment').click(function() {
 			reply=$(this).closest('.trend').find('.trend-reply');
-			reply.slideDown('slow');
-			comment=$(this).closest('#comment')
-			reply.find('#receiverId').val(comment.find('#reviewerId').val());
-			if(this.className.search('reply-btn')>0){
-				reply.find('textarea').val('回复'+comment.find('#username').html()+':')
+			if(reply.is(":hidden")){
+				reply.slideDown('slow');
+				comment=$(this).closest('#comment')
+				reply.find('#receiverId').val(comment.find('#reviewerId').val());
+				if(this.className.search('reply-btn')>0){
+					reply.find('textarea').val('回复'+comment.find('#username').html()+':')
+				}
+			}else{
+				reply.slideUp('slow');
 			}
+			
 			});
 		dynamic.find('.trend').append(reply_clone);
 		$('#dynamic').append($('#dynamic_clone').find('hr').clone());
 	});
 };
-function init_agree(dynamic_div,agreeList){
+function init_agree(dynamic_div,agreeList,type){
 	$(agreeList).each(function(){
 		agree=$('#dynamic_clone').find('#agree').clone();
 		agree.find('img').attr('src','/media/'+this.avatarName+'-60.jpeg').next().html(this.username);
-		dynamic_div.find('.trend').append(agree);
+		agree.find('input[name="userId"]').val(this.userId)
+		if(type==0){
+			dynamic_div.find('.trend').append(agree);
+		}else{
+			dynamic_div.find('.comment-btn').first().after(agree)
+		}
+		
 	});
 }
 //初始化评论
@@ -315,38 +369,42 @@ function upload_photo_error(error_message){
 	var body=$('<p>'+error_message+'</p>')
 	$.poplayer({body:body});
 };
-function upload_photo_success(picName){
-	var pic_div=$('<li><img width="70px" src="/media/images/'+picName+'-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>');
-	 pic_div.find('.glyphicon-remove').click(function(){
-		data={pictureName:picName,csrfmiddlewaretoken:getCookie('csrftoken')}
-		var context =$(this);
-		$.ajax({
-			dataType:"json",
-			 type: "POST",
-			url:'/dynamic/deletePhoto/',
-			data:data,
-			beforeSend:function(XMLHttpRequest){
-				context.attr('disabled',true);
-			},
-			complete:function(XMLHttpRequest, textStatus){
-				$('.follow').attr('disabled',false)
-			},
-			success:function(data, textStatus){
-				if (data.result=='success'){
-					context.parent().remove();
-			        }else{
-			        	var body=$('<p>'+data.error_message+'</p>')
-						 $.poplayer({body:body});
-			        }
-			},
-            error: function(response){
-            	var body=$('<p>网络异常!</p>')
-				 $.poplayer({body:body});
-            },
-			
+function upload_photo_success(picNameList){
+	$($.parseJSON(picNameList)).each(function(){
+		var pic_div=$('<li><img width="70px" src="/media/images/'+this+'-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>');
+		picName=this; 
+		pic_div.find('.glyphicon-remove').click(function(){
+			data={pictureName:picName,csrfmiddlewaretoken:getCookie('csrftoken')}
+			var context =$(this);
+			$.ajax({
+				dataType:"json",
+				 type: "POST",
+				url:'/dynamic/deletePhoto/',
+				data:data,
+				beforeSend:function(XMLHttpRequest){
+					context.attr('disabled',true);
+				},
+				complete:function(XMLHttpRequest, textStatus){
+					$('.follow').attr('disabled',false)
+				},
+				success:function(data, textStatus){
+					if (data.result=='success'){
+						context.parent().remove();
+				        }else{
+				        	var body=$('<p>'+data.error_message+'</p>')
+							 $.poplayer({body:body});
+				        }
+				},
+	            error: function(response){
+	            	var body=$('<p>网络异常!</p>')
+					 $.poplayer({body:body});
+	            },
+				
+			});
 		});
-	});
-	$('.upload-pic').find('ul').append(pic_div);
+		$('.upload-pic').find('ul').append(pic_div);
+		
+	})
 	
 }
 </script>
@@ -373,6 +431,8 @@ function upload_photo_success(picName){
 							<div class="publishInputBottom f_gray_999">
 								<ul class="publishInputBottomLeft fn-left" style="list-style: none outside none;">
 									<li target="#publishTextArea_1" class="publishInputExpression fn-left">表情</li>
+									
+									  <li  class="publishInputPhoto fn-left" id="publishInputPhoto">照片</li>
 								</ul>
 								<div class="fn-right">
 									<p class="wordNumber ">
@@ -382,13 +442,10 @@ function upload_photo_success(picName){
 							</div>
 						</div>
 					</form>
+					<form id="updateFileForm" enctype="multipart/form-data" method="POST" action="/dynamic/updatePhoto/" target='frameFile' > {% csrf_token %}
+					 <input id="update_file" type="file" multiple name="file" style="opacity: 0; width: 50px; height: 0px;"/>
+					</form>
 						<div class="underPublishInput">
-						<form id="updateFileForm" enctype="multipart/form-data" method="POST" action="/dynamic/updatePhoto/" target='frameFile'> {% csrf_token %}
-							<a id="publishInputPhoto" class="add-pic" href="javascript:void(0);"> 
-							<i class="glyphicon glyphicon-picture"></i>&nbsp;&nbsp;添加图片
-							</a>
-							<input id="update_file" type="file" name="file" style="opacity: 0; width: 50px; height: 0px;"/>
-						</form>
 							<button class="btn btn-xs btn-primary fn-right" id="submit-all" href="javascript:void(0);" onclick="public(this);">发布</button>
 						</div>
 					    <iframe id='frameFile' name='frameFile' style='display: none;'></iframe>
@@ -439,6 +496,7 @@ function upload_photo_success(picName){
 	<hr style="border-color: #C8C9CD;margin: 0; margin-bottom: 20px;">
 	
 	            <div id="agree" class="comment row">
+	                <input type="hidden" name="userId" value="">
 					<div class="col-xs-2">
 						<img width="30px" src="" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
 					</div>
