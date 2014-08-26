@@ -103,16 +103,16 @@ window.Card = function(person){
 	 venobox();
 	}
 	
-	var like= function(){
+	var like= function(event){
 	    var userId=$(this).parents('.card_panel').attr('id');
-		var icon_like=$(this).parents('.tool_bar :nth-child(2) ').children();
+		var icon_like=$(this);
 		$.getJSON("/user/update_follow/",{userId:userId},function(data) {
-			  if(data['type']==1){
-					icon_like.removeClass().addClass("icon_like_1")
+			  if(data.type==1){
+					icon_like.removeClass("icon_like_0 icon_like_1 icon_like_2 icon_like_3").addClass("icon_like_1")
 					myFollow=myFollow+1
 					$('#myFollow').html(myFollow)
-			  }else if(data['type']==2){
-				  icon_like.removeClass().addClass("icon_like_2")
+			  }else if(data.type==2){
+				  icon_like.removeClass("icon_like_0 icon_like_1 icon_like_2 icon_like_3").addClass("icon_like_2")
 					follow=follow+1
 					myFollow=myFollow+1
 					$('#follow').html(follow)
@@ -128,12 +128,12 @@ window.Card = function(person){
 				  
 				  }else{
 					  icon_like.following();
-				     if(data['type']==-1){
-				    	 icon_like.removeClass().addClass("icon_like_0") 
+				     if(data.type==-1){
+				    	 icon_like.removeClass("icon_like_0 icon_like_1 icon_like_2 icon_like_3").addClass("icon_like_0") 
 				    	 myFollow=myFollow-1
 					     $('#myFollow').html(myFollow)
 				     }else{
-				    	 icon_like.removeClass().addClass("icon_like_3") 
+				    	 icon_like.removeClass("icon_like_0 icon_like_1 icon_like_2 icon_like_3").addClass("icon_like_3") 
 				    	 follow=follow-1
 						 myFollow=myFollow-1
 						 $('#follow').html(follow)
@@ -593,7 +593,7 @@ window.Card = function(person){
 	}
 	this.template = $('#card').clone();
 
-	this.template.find('.username').html(person.username);
+	this.template.find('.username').html(person.username).parent().attr('href','/dynamic/person/?userId='+person.userId);
 	this.template.find('.tag').children().first().html(person.age).next().html(person.city);
 	this.template.find('.head').attr('src',person.headImg+'-250.jpeg');
 	this.template.find('.img-circle').attr('src',person.headImg+'-60.jpeg');
@@ -633,7 +633,10 @@ window.Card = function(person){
 	
 		
 	this.template.find('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
-	
+	this.template.find('.username').on('click',function(event){
+		event.stopPropagation();
+		});
+	this.template.find('.introBox').on('click',detail_info);
 	this.template.find('.icon_dislike').on('click',dislike);
 	
 	this.template.find('.icon_ding').on('click',ding);
@@ -642,7 +645,6 @@ window.Card = function(person){
 	
 	this.template.find(".test_match").on('click',test_match);
 	this.template.find('.dafen').find('button').unbind();
-	this.template.find('.introBox').on('click',detail_info);
 	//发送私信
 	if(person.isChat){
 		this.template.find('.btn_send_msg').on('click',sendMsg);

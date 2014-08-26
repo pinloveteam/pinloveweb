@@ -89,7 +89,7 @@ def person_dynamic(request):
             json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
             return HttpResponse(json, mimetype='application/json')
         return render(request, 'person_dynamic.html',arg )
-    except:
+    except Exception as e:
         logger.expction('用户个人动态中心,出错!')
 '''
 初始化动态
@@ -109,7 +109,7 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
     elif type==0:
         friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
     else:
-        friendDynamicList=FriendDynamic.objects.select_related('publishUser'),filter(publishUser_id=userId).order_by('-publishTime')
+        friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id=userId).order_by('-publishTime')
     data=page(request,friendDynamicList)
     friendDynamicList=friendDynamicList_to_Dynamic(data['pages'].object_list, userId)
     arg['friendDynamicList']=simplejson.dumps(friendDynamicList,cls=MyEncoder)
