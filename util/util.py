@@ -62,6 +62,8 @@ def model_to_dict(instance,fields=None):
 匹配表情
 '''  
 def regex_expression(content):
+    if not isinstance(content,basestring):
+        return content
     regex=u'{:pinlove_[0-9]{1,2}:}'
     import re
     return re.sub(regex, dashrepl, content)

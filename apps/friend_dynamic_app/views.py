@@ -105,11 +105,13 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
     if not kwargs.get('dynamicId') is None:
         friendDynamicList=FriendDynamic.objects.filter(id=kwargs.get('dynamicId'))
         arg['friendDynamicList']=simplejson.dumps(friendDynamicList_to_Dynamic(friendDynamicList, userId),cls=MyEncoder)
+        arg['publish']=False
         return arg
     elif type==0:
         friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
     else:
         friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id=userId).order_by('-publishTime')
+        arg['False']=False
     data=page(request,friendDynamicList)
     friendDynamicList=friendDynamicList_to_Dynamic(data['pages'].object_list, userId)
     arg['friendDynamicList']=simplejson.dumps(friendDynamicList,cls=MyEncoder)
@@ -407,7 +409,7 @@ def agree(request):
         arg['result']='error' 
         arg['error_message']=e.message
         json=simplejson.dumps(arg)
-        return json
+        return HttpResponse(json)
  
     
 '''

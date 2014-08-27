@@ -416,6 +416,7 @@ function upload_photo_success(picNameList){
 <div class="container">
 	<div class="row" style="margin-top: 63px;">
 		<div id="dynamic" class="col-xs-12">
+		   {%if no_publish %}
 			<div class="row">
 				<div class="col-xs-3">
 					<div class="avatar">
@@ -459,7 +460,7 @@ function upload_photo_success(picNameList){
 				</div>
 			</div>
 			<hr style="border-color: #C8C9CD; margin: 0; margin-bottom: 20px;" />
-			
+			{% endif %}
 
 		</div>
 	</div>
