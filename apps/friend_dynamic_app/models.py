@@ -43,7 +43,7 @@ class FriendDynamic(models.Model):
     commentNum=models.IntegerField(verbose_name="评论次数",default=0)
     objects=FriendDynamicManage()
     def save(self):
-        self.publishTime=datetime.datetime.today()
+        self.publishTime=datetime.datetime.now()
         super(FriendDynamic, self).save()
     def get_profile(self):
         userProfile=UserProfile.objects.get(user=self.publishUser)
@@ -132,7 +132,7 @@ class FriendDynamicArgee(models.Model):
     time=models.DateTimeField(verbose_name="时间")
     isRead=models.NullBooleanField(verbose_name="是否阅读",default=False)
     def save(self):
-        self.time=datetime.datetime.today()
+        self.time=datetime.datetime.now()
         super(FriendDynamicArgee, self).save()
     class Meta:
         verbose_name = u'点赞表' 
@@ -210,7 +210,7 @@ class FriendDynamicComment(models.Model):
            from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
            return DEFAULT_IMAGE_NAME
     def save(self):
-        today=datetime.datetime.today()
+        today=datetime.datetime.now()
         self.commentTime=today
         super(FriendDynamicComment, self).save()
     class Meta:
@@ -229,6 +229,6 @@ class Picture(models.Model):
         verbose_name_plural = u'图片表'
         db_table = "picture" 
     def save(self):
-        today=datetime.datetime.today()
+        today=datetime.datetime.now()
         self.createTime=today
         super(Picture, self).save()

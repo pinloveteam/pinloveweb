@@ -64,7 +64,7 @@ def dynamic(request):
     arg['user']=request.user
     from apps.user_app.method import get_avatar_name
     arg['avatar_name']=get_avatar_name(request.user.id,request.user.id)
-    if request.GET.get('type')=='ajax':
+    if request.is_ajax():
         from apps.pojo.dynamic import MyEncoder
         json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
         return HttpResponse(json, mimetype='application/json')
@@ -109,6 +109,7 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
         return arg
     elif type==0:
         friendDynamicList=FriendDynamic.objects.get_follow_list(userId)
+        arg['publish']=True
     else:
         friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id=userId).order_by('-publishTime')
         arg['False']=False
@@ -266,22 +267,15 @@ def send_dynamic(request):
 '''
 def del_dynamic(request):
     arg={}
-    if request.user.is_authenticated():
-        id=int(request.GET.get('id'))
-        type=int(request.GET.get('type'))
-        if type==1:
-            FriendDynamic.objects.get(id=id).delete()
-            from pinloveweb.method import get_dymainc_late
-            arg['dynamic']= get_dymainc_late(request.user.id)
-            arg['type']='success'
-        elif type==2:
-#             Picture.objects.filter(friendDynamic_id=id).delete()
+    try:
+        dynamicId=int(request.GET.get('dynamicId'))
+        if FriendDynamic.objects.filter(id=dynamicId).exists():
             FriendDynamic.objects.get(id=id).delete()
             arg['type']='success'
         else:
-            arg['type']='error'  
-    else:
-        arg['type']='login'
+            arg={'result':'error','error_message':'动态id不存在！'}
+    except Exception as e:
+        arg={'result':'error','error_message':e.message}
     json=simplejson.dumps(arg)
     return HttpResponse(json)
 

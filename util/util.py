@@ -109,8 +109,9 @@ def time_for_now(dateTime):
         return  '%s%s'%(now.month-dateTime.month,'月')
     elif now.day>dateTime.day:
         return  '%s%s'%(now.day-dateTime.day,'天')
-    timedelta=(dateTime-now)
+    timedelta=(now-dateTime)
     if timedelta.seconds<60:
+        return  '刚刚'
         return  '%s%s'%(timedelta.seconds,'秒')
     elif timedelta.seconds<60*60:
         return '%s%s'%(int(timedelta.seconds/60),'分')

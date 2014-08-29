@@ -9,6 +9,7 @@
   <script src="{{STATIC_URL}}js/picShow.js"></script>
   <script type="text/javascript" src="{{STATIC_URL}}js/jquery.rotate.js"></script>
   <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
+  <script type="text/javascript" src="{{STATIC_URL}}js/jquery.scroll.js"></script>
   <script type="text/javascript">
   var page={{next_page_number}};
   $(document).ready(function(){
@@ -416,7 +417,7 @@ function upload_photo_success(picNameList){
 <div class="container">
 	<div class="row" style="margin-top: 63px;">
 		<div id="dynamic" class="col-xs-12">
-		   {%if no_publish %}
+		   {%if publish %}
 			<div class="row">
 				<div class="col-xs-3">
 					<div class="avatar">
@@ -598,34 +599,6 @@ function sendExpression(e) {
 	var targettext = $(target);
 	targettext.insertAtCaret($(e).attr('action-text'));
 };
-(function($){
-	$.fn.extend({
-	insertAtCaret: function(myValue){
-	var $t=$(this)[0];
-	if (document.selection) {
-	this.focus();
-	sel = document.selection.createRange();
-	sel.text = myValue;
-	this.focus();
-	}
-	else
-	if ($t.selectionStart || $t.selectionStart == '0') {
-	var startPos = $t.selectionStart;
-	var endPos = $t.selectionEnd;
-	var scrollTop = $t.scrollTop;
-	$t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
-	this.focus();
-	$t.selectionStart = startPos + myValue.length;
-	$t.selectionEnd = startPos + myValue.length;
-	$t.scrollTop = scrollTop;
-	}
-	else {
-	this.value += myValue;
-	this.focus();
-	}
-	}
-	})
-	})(jQuery);
 		</script> 
 		<script>
 		//投票
@@ -786,4 +759,32 @@ function sendExpression(e) {
 			
 		}
 		</script> 
+		<script type="text/javascript">
+	   //滚动加载
+	   var next_page={{next_page_number|safe}}
+	   no_load=function(){
+		   $('#dynamic').append('<div class="col-xs-12" style="background-color:#fff;text-align:center;height:30px;" >没有跟多动态<div>')
+			stop_load_next_page();
+			return;
+	   };
+	   success=function(data){
+		   if( typeof(data)!="object"){
+   	    	data=$.parseJSON(data);
+   	    }
+   	    next_page=data['next_page_number']
+       	if(typeof(data.messageList)!="object"){
+       		data.messageList=$.parseJSON(data.friendDynamicList);
+       	}
+	    init_dynamic(data.messageList);
+	   };
+		$(window).scroll( function() { 
+				if(get_load_next_page()){
+			/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+				console.log("页面的文档高度 ："+$(document).height());
+				console.log('浏览器的高度：'+$(window).height()); */
+				loadData(no_load,success);
+				}
+			}); 
+
+</script>
 {% endblock %}

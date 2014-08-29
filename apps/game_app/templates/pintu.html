@@ -1,104 +1,107 @@
-﻿{% extends "base_later.html" %}
- {% load util_filter %}
+﻿{% extends "base_later.html" %} {% load util_filter %}
 <title>{% block title %} 拼爱网--缘分拼图 {% endblock %}</title>
 {% block staticfiles %}
 <link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 <style type="text/css">
-
-.kineticjs-content{
+.kineticjs-content {
 	position: absolute;
-	top:150px;
-	left:220px;
-	background-color:#fff;
+	top: 100px;
+	left: 100px;
+	background-color: #fff;
 	border-radius: 50%;
-	filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
-	-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
-	-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
-	box-shadow:2px 2px 10px #909090;/*opera或ie9*/
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
+		direction=120, strength=4); /*ie*/
+	-moz-box-shadow: 2px 2px 10px #909090; /*firefox*/
+	-webkit-box-shadow: 2px 2px 10px #909090; /*safari或chrome*/
+	box-shadow: 2px 2px 10px #909090; /*opera或ie9*/
 }
 
-#card,#nouser,#game_count_end{
+#card,#nouser,#game_count_end {
 	background-color: #FFF9D9;
-    border: 2px solid #000000;
-    height: 400px;
-    left: 260px;
-    position: absolute;
-    top: 140px;
-    width: 300px;
+	border: 2px solid #000000;
+	height: 400px;
+	left: 260px;
+	position: absolute;
+	top: 140px;
+	width: 300px;
 }
-#nouser,#game_count_end{
+
+#nouser,#game_count_end {
 	text-align: center;
 }
 
-.head{
+.head {
 	width: 80px;
 	height: 80px;
-	margin-left:30px;
+	margin-left: 30px;
 	margin-top: 6px;
 	display: inline-block;
 }
 
-.head_ask_friends{
-   width: 50px;
+.head_ask_friends {
+	width: 50px;
 	height: 50px;
-	margin-left:35px;
+	margin-left: 35px;
 	display: inline-block;
 }
-.img-circle,.head,.head_ask_friends,.record-user{
+
+.img-circle,.head,.head_ask_friends,.record-user {
 	border-radius: 50%;
 }
-.record-user{
+
+.record-user {
 	width: 50px;
 	height: 50px;
 	margin-bottom: 20px;
 	position: relative;
-	left:-26px;
+	left: -26px;
 }
-#request{
-	position: relative; 
+
+#request {
+	position: relative;
 	left: -10px;
 }
 
-
-
-#buy_page{
-	position: absolute; 
-	left: 670px; 
-	top: 130px; 
+#buy_page {
+	position: absolute;
+	left: 670px;
+	top: 130px;
 	width: 400px;
 	height: 400px;
 	background-image: url({{STATIC_URL}}img/拼图-84.jpg);
 }
 
-.num,.num1,.num3,.num4{
-	position: absolute; 
-	top: 30px; 
-	font-size:20px;
+.num,.num1,.num3,.num4 {
+	position: absolute;
+	top: 30px;
+	font-size: 20px;
 	margin-left: 18px;
 }
-.num1{
+
+.num1 {
 	top: 20px;
 	margin-left: 8px;
 }
 
-.num2{
-	position:relative;
+.num2 {
+	position: relative;
 	top: -18px;
 	margin-left: 0px;
 }
 
-.num3{
-	top:15px;
-	left:30px;
-	font-size:35px;
+.num3 {
+	top: 15px;
+	left: 30px;
+	font-size: 35px;
 	color: #ff0000;
-	font-weight:bold;
+	font-weight: bold;
 }
 
-.button_type_1,.button_type_2,.try_again,.share{
-	position:absolute;
+.button_type_1,.button_type_2,.try_again,.share {
+	position: absolute;
 	padding: 15px 15px 15px 20px;
 	display: inline-block;
 	top: -5px;
@@ -106,240 +109,247 @@
 	width: 40px;
 	height: 20px;
 	background-image: url({{STATIC_URL}}img/按钮-16.png);
-	background-repeat:no-repeat;
+	background-repeat: no-repeat;
 	cursor: pointer;
 	text-align: center
 }
 
-.button_type_2,.share,.try_again{
+.button_type_2,.share,.try_again {
 	top: 370px;
 	left: 360px;
 	width: 92px;
 	background-image: url({{STATIC_URL}}img/按钮-65.png);
 }
 
-.button_type_3{
-	position:absolute;
+.button_type_3 {
+	position: absolute;
 	width: 55px;
 	height: 55px;
 	display: inline-block;
 	cursor: pointer;
 	text-align: center
 }
-.checkbox,#checkbox1{
-	position:absolute;
+
+.checkbox,#checkbox1 {
+	position: absolute;
 	top: 30px;
 	left: 200px;
 }
 
-#checkbox1{
+#checkbox1 {
 	top: 385px;
 	left: 60px;
 	cursor: pointer;
 }
-#hi{
-	top:350px;	
+
+#hi {
+	top: 350px;
 	left: 20px;
 }
 
-#friend{
-	top:350px;	
+#friend {
+	top: 350px;
 	left: 200px;
 }
-.buy{
+
+.buy {
 	margin-top: 30px;
 	width: 340px;
 	height: 40px;
 	padding-top: 5px;
 	margin-left: 28px;
 	color: #ff5a39;
-	font-size:26px;
-	text-align:center;
+	font-size: 26px;
+	text-align: center;
 	background-color: #ffdd71;
 }
-.close,.recevie_close{
-	position:absolute;
+
+.close,.recevie_close {
+	position: absolute;
 	top: -3%;
-	left:96%;
+	left: 96%;
 	width: 32px;
 	height: 32px;
 	background-image: url({{STATIC_URL}}img/拼图-61.png);
 	cursor: pointer;
 }
 
-.online,.outline{
-    position:absolute;
+.online,.outline {
+	position: absolute;
 	top: 70%;
-	left:73%;
+	left: 73%;
 	width: 32px;
 	height: 32px;
 	cursor: pointer;
 	background-image: url({{STATIC_URL}}img/拼图-76.png);
-	background-repeat:no-repeat;
-}
-.outline{
-background-image: url({{STATIC_URL}}img/拼图-77.png);
+	background-repeat: no-repeat;
 }
 
-.text-orange{
+.outline {
+	background-image: url({{STATIC_URL}}img/拼图-77.png);
+}
+
+.text-orange {
 	color: #ff641f;
 }
 
 .count {
-				position: absolute;
-				top: 100px;
-				left: 130px;
-				padding: 10px;
-				width: 130px;
-				height: 60px;
-				background-color: #9CD0FF;
-				border: solid 1px #1B7CC1;
-				border-radius: 50px;
-			}
-.head_girl{
-	border:2px solid #f79421;
+	position: absolute;
+	top: 20px;
+	left: 50px;
+	padding: 10px;
+	width: 130px;
+	height: 60px;
+	background-color: #9CD0FF;
+	border: solid 1px #1B7CC1;
+	border-radius: 50px;
 }
 
-.head_boy{
-	border:2px solid #2afeef;
+.head_girl {
+	border: 2px solid #f79421;
 }
 
-.tag,.name{
-	text-align:center;
+.head_boy {
+	border: 2px solid #2afeef;
 }
 
-.name_girl,.name_boy,.name_girl_invite,.name_boy_invite{
-	position:absolute;
-	font-size:16px;
+.tag,.name {
+	text-align: center;
+}
+
+.name_girl,.name_boy,.name_girl_invite,.name_boy_invite {
+	position: absolute;
+	font-size: 16px;
 	color: #f79421;
-	top: 30px; 
+	top: 30px;
 	left: 120px;
 }
-.name_girl_invite,.name_boy_invite{
-  top: 10px; 
+
+.name_girl_invite,.name_boy_invite {
+	top: 10px;
 }
 
-.name_boy{
+.name_boy {
 	color: #2afeef;
 }
 
-#users,#recevie_users{
-    height: 270px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    position: relative;
-    top: 100px;
+#users,#recevie_users {
+	height: 270px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	position: relative;
+	top: 100px;
 }
 
-.user{
+.user {
 	width: 240px;
-	position: relative;	
+	position: relative;
 	display: inline-block;
 	margin-right: 30px;
 	margin-left: 30px;
 	margin-top: 20px;
 	background-color: #FFFFFF;
 	border: solid 1px #b3b3b3;
-	filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
-	-moz-box-shadow: 2px 2px 5px #909090;/*firefox*/
-	-webkit-box-shadow: 2px 2px 5px #909090;/*safari或chrome*/
-	box-shadow:2px 2px 5px #909090;/*opera或ie9*/
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
+		direction=120, strength=4); /*ie*/
+	-moz-box-shadow: 2px 2px 5px #909090; /*firefox*/
+	-webkit-box-shadow: 2px 2px 5px #909090; /*safari或chrome*/
+	box-shadow: 2px 2px 5px #909090; /*opera或ie9*/
 	cursor: pointer;
 }
-#buy_page ul{
-  margin-top: 100px;
+
+#buy_page ul {
+	margin-top: 100px;
 }
+
 #buy_page li {
 	position: relative;
-	list-style-type:none;
+	list-style-type: none;
 	margin-top: 30px;
 }
 
-.push{
+.push {
 	cursor: pointer;
 	position: absolute;
-	left: 365px; 
-	top: 285px;
+	left: 260px;
+	top: 240px;
 }
 
-#game_name{
-	position:absolute;
-	top:15px;
-	left:100px;
+#game_name {
+	position: absolute;
+	top: 15px;
+	left: 100px;
 }
 
-#invite,#recevie{
+#invite,#recevie {
 	height: 440px;
 	width: 641px;
-	position:absolute;
-	top:100px;
-	left:230px;
+	position: absolute;
+	top: 100px;
+	left: 230px;
 	background-image: url({{STATIC_URL}}img/接受邀请-59.jpg);
 }
 
-#pre,#next{
-	position:absolute;
-	top:400px;
-	left:130px;
+#pre,#next {
+	position: absolute;
+	top: 400px;
+	left: 130px;
 	cursor: pointer;
 }
 
-#next{
-	left:430px;
+#next {
+	left: 430px;
 }
+
 .information {
-    border: 2px solid #AFF0FF;
+	border: 2px solid #AFF0FF;
 	background-color: #FFFFFF;
-    height: 50px;
-    left: 560px;
-    position: absolute;
-    top: 200px;
-    width: 100px;
+	height: 50px;
+	left: 560px;
+	position: absolute;
+	top: 200px;
+	width: 100px;
 }
-.msg{
-  display:block;
- font-size: 17px;
- text-align:center;
-  padding:10px 0 ;  
-  color:#6FD1EF
+
+.msg {
+	display: block;
+	font-size: 17px;
+	text-align: center;
+	padding: 10px 0;
+	color: #6FD1EF
 }
-.num4{
-     top:20px;
-	left:130px;
-	font-size:35px;
+
+.num4 {
+	top: 20px;
+	left: 130px;
+	font-size: 35px;
 	color: #ff0000;
-	font-weight:bold;
+	font-weight: bold;
 }
 
 /* photo tab */
-.hoverbox
-{
+.hoverbox {
 	margin-top: 10px;
 	cursor: default;
 	list-style: none;
 }
 
-.hoverbox a
-{
+.hoverbox a {
 	cursor: default;
 }
 
-.hoverbox a .preview
-{
+.hoverbox a .preview {
 	display: none;
 }
 
-
-.hoverbox img
-{
-    height: 70px;
-    vertical-align: top;
-    width: 70px;
+.hoverbox img {
+	height: 70px;
+	vertical-align: top;
+	width: 70px;
 	max-width: 150px;
 }
 
-.hoverbox li
-{
+.hoverbox li {
 	color: inherit;
 	display: inline;
 	float: left;
@@ -347,27 +357,28 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 	position: relative;
 }
 
-.icon_profile,.icon_photo{
+.icon_profile,.icon_photo {
 	background: url("{{STATIC_URL}}img/profile.png") no-repeat;
-	margin-right:3px;
+	margin-right: 3px;
 	display: inline-block;
-    height: 32px;
-    width: 32px;
+	height: 32px;
+	width: 32px;
 }
-.icon_photo{
+
+.icon_photo {
 	background-image: url("{{STATIC_URL}}img/photo.png");
 }
 
-#tab{
+#tab {
 	position: absolute;
 	top: 340px;
 	left: 20px;
 }
 
-#record{
+#record {
 	position: absolute;
-	top:50px;
-	left:-105px;
+	top: 50px;
+	left: -105px;
 	width: 100px;
 	height: 100%;
 	background-color: #ffd2d4;
@@ -377,61 +388,63 @@ background-image: url({{STATIC_URL}}img/拼图-77.png);
 	overflow-x: hidden;
 }
 
-#record-cover{
+#record-cover {
 	position: absolute;
-	top:0px;
-	left:-20px;
+	top: 0px;
+	left: -20px;
 	width: 20px;
 	height: 100%;
 	background-color: #ffd2d4;
 	transition: 1s;
 }
 
-
-.record-user-list li{
-	list-style-type:none;
+.record-user-list li {
+	list-style-type: none;
 }
 
-#tab div{
+#tab div {
 	display: inline-block;
 	margin-left: 60px;
 }
-.recommend_hisotry{
-    position:absolute;
-	top:20px;
-	right:30px;
+
+.recommend_hisotry {
+	position: absolute;
+	top: 20px;
+	right: 30px;
 }
-.text-black{
+
+.text-black {
 	position: relative;
-	top:30px;
+	top: 30px;
 	margin-top: 20px;
 	font-size: 20px;
-	Line-height:50px;
+	Line-height: 50px;
 }
-.filter{
-  position: absolute;
-  left:50px;
+
+.filter {
+	position: absolute;
+	left: 50px;
 }
 
 #search_condition {
-				position: absolute;
-				left: 700px;
-				top: 240px;
-				width: 120px;
-				height: 250px;
-				background-color: #fff;
-				border: solid 8px #9CD0FF;
-				filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
-				-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
-				-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
-				box-shadow: 2px 2px 10px #909090;/*opera或ie9*/
-			}
+	position: absolute;
+	left: 600px;
+	top: 200px;
+	width: 120px;
+	height: 250px;
+	background-color: #fff;
+	border: solid 8px #9CD0FF;
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
+		direction=120, strength=4); /*ie*/
+	-moz-box-shadow: 2px 2px 10px #909090; /*firefox*/
+	-webkit-box-shadow: 2px 2px 10px #909090; /*safari或chrome*/
+	box-shadow: 2px 2px 10px #909090; /*opera或ie9*/
+}
 
-#search_condition > label {
-				margin-top: 30px;
-				margin-left: 10px;
-			}
-
+#search_condition>label {
+	margin-top: 30px;
+	margin-left: 10px;
+}
 </style>
 <script>
 function initialize() { 
@@ -477,103 +490,141 @@ removecloud();
 } 
 </script>
 {% endblock %}
-{% block css %}
-{% endblock %}
-{% block logo %}
-{% endblock %}
-{% block content %}
+ {% block css %} 
+ {% endblock %} 
+ {% block logo %} 
+ {%endblock %} 
+ {% block content %}
 <div class="wrap">
-	<div id="container"></div>
-    <!--  <a  href="javascript:void(0)" onclick="test_get_code();">测试code</a>-->
-    <div id="container"></div>
-    <img  class="push" src="{{STATIC_URL}}img/push-57.png"/>
-     <a href="javascript:void(0)"><img id="record_icon"   src="{{STATIC_URL}}img/RECORD.png" style="position: absolute;top:60px;left: 0px;border:none;"></a>
-<div id="card" style="position: absolute;display:none;" >
-<div class="close"></div>
-<div id="info" class="card" >
-</div>	
-<div id="info_clone" style="display: none;">	
-   <input type="hidden" id='userId'/>
-	<div class="head head_girl">
-		<a id="head_url" target="_blank" href=""><img src="" class="img-circle"></a>
-	</div>
-	<img id="filter_type" src="" style="position: absolute;margin-left: 30px;margin-top: 40px;display: none;width: 30px;height: 30px;">
-	<div class="name">
-		<h3 ><strong></strong></h3>
-	</div>
-	<div class="tag" >
-		<span class="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span class="city"></span>
-	</div>
-	<img src='{{STATIC_URL}}img/add_friend.png' title="send message" class="button_type_3" style="top:330px;left: 70px;" onclick="facebook_add_friend();">
-	<img src='{{STATIC_URL}}img/message.png' title="add friend" class="button_type_3" style="top:330px;left: 180px;" onclick="facebook_send_message();">
-</div>
-<div id="photo">
-	<div class="scroller">
-		<ul class="hoverbox">
-		
-		</ul>
-	</div>
-</div>
-</div>
+	<div class="container">
+		<div class="row" style="margin-top: 63px;">
+			{% include "left.html" %}
 
-<div id="nouser" style="display: none;">
-	<div class="close"></div>
-	<span class="text-black" id='pair_message' style="line-height: 40px;">没有匹配到用户!</span><br />
-	<!--  <span class="text-black free_chance">再试一次</span>-->
-	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
-	<div class="push try_again " style="left: 90px; top: 320px; width: 130px; height: 60px;">再试一次</div>
-</div>
-<div id="game_count_end" style="display: none;">
-	<div class="close"></div>
-	<span class="text-black" style="line-height:18px;">No more lives today, please come back tomorrow!</span><br />
-	<span class="text-black" style="font-size:15px">You can get <img src="/static/img/coin.png" height="25px" width="30px"/> instantly by asking your friends or buying</span><br />
-	<img src="{{STATIC_URL}}img/拼图-01.png"  style="margin-top: 30px;"/>
-	<div id="buy" class="try_again" style="left:50px; top: 320px;width:50px;background-image: url('/static/img/按钮-66.png');background-repeat:no-repeat;">buy</div>
-	<div class="try_again ask_friends" style="left:170px; top: 320px;background-image: url('/static/img/按钮-66.png');background-repeat:no-repeat;width:50px;" >help</div>
-</div>
+			<div class="col-xs-9">
+				<!--  <a  href="javascript:void(0)" onclick="test_get_code();">测试code</a>-->
+				<div id="container"></div>
+				<img class="push" src="{{STATIC_URL}}img/push-57.png" />
+				<!-- 
+				 <a href="javascript:void(0)">
+				   <img id="record_icon" src="{{STATIC_URL}}img/RECORD.png" style="position: absolute; top: 60px; left: 0px; border: none;">
+				 </a>
+				  -->
+				<div id="card" style="position: absolute; display: none;">
+					<div class="close"></div>
+					<div id="info" class="card"></div>
+					<div id="info_clone" style="display: none;">
+						<input type="hidden" id='userId' />
+						<div class="head head_girl">
+							<a id="head_url" target="_blank" href=""><img src=""
+								class="img-circle"></a>
+						</div>
+						<img id="filter_type" src=""
+							style="position: absolute; margin-left: 30px; margin-top: 40px; display: none; width: 30px; height: 30px;">
+						<div class="name">
+							<h3>
+								<strong></strong>
+							</h3>
+						</div>
+						<div class="tag">
+							<span class="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="city"></span>
+						</div>
+						<img src='{{STATIC_URL}}img/add_friend.png' title="send message"
+							class="button_type_3" style="top: 330px; left: 70px;"
+							onclick="facebook_add_friend();"> <img
+							src='{{STATIC_URL}}img/message.png' title="add friend"
+							class="button_type_3" style="top: 330px; left: 180px;"
+							onclick="facebook_send_message();">
+					</div>
+					<div id="photo">
+						<div class="scroller">
+							<ul class="hoverbox">
 
-<div class="count"><img style="height:30px;width:30px;position:absolute;left:10%;" src="{{STATIC_URL}}img/拼图-18.png"><span class="num" style="top: 20px;position:absolute;left:15%;">×{{pinLoveIcon}}</span></div>
+							</ul>
+						</div>
+					</div>
+				</div>
 
-<div id="search_condition">
-    <label><input type="radio" name="radiobutton" value="all" ><span>随机匹配</span></label>
-	<label><input type="radio" name="radiobutton" value="school" ><span>相同学校</span></label>
-	<label><input type="radio" name="radiobutton" value="work" ><span>相同工作</span></label>
-	<label><input type="radio" name="radiobutton" value="location" ><span>相同城市</span></label>
-</div>
+				<div id="nouser" style="display: none;">
+					<div class="close"></div>
+					<span class="text-black" id='pair_message'
+						style="line-height: 40px;">没有匹配到用户!</span><br />
+					<!--  <span class="text-black free_chance">再试一次</span>-->
+					<img src="{{STATIC_URL}}img/拼图-01.png" style="margin-top: 30px;" />
+					<div class="push try_again "
+						style="left: 90px; top: 320px; width: 130px; height: 60px;">再试一次</div>
+				</div>
+				<div id="game_count_end" style="display: none;">
+					<div class="close"></div>
+					<span class="text-black" style="line-height: 18px;">No more
+						lives today, please come back tomorrow!</span><br /> <span
+						class="text-black" style="font-size: 15px">You can get <img
+						src="/static/img/coin.png" height="25px" width="30px" /> instantly
+						by asking your friends or buying
+					</span><br /> <img src="{{STATIC_URL}}img/拼图-01.png"
+						style="margin-top: 30px;" />
+					<div id="buy" class="try_again"
+						style="left: 50px; top: 320px; width: 50px; background-image: url('/static/img/按钮-66.png'); background-repeat: no-repeat;">buy</div>
+					<div class="try_again ask_friends"
+						style="left: 170px; top: 320px; background-image: url('/static/img/按钮-66.png'); background-repeat: no-repeat; width: 50px;">help</div>
+				</div>
 
-<div id="recevie" style="display: none;">
-	<div class="recevie_close"></div>
-	<img id="inviteImg" src="{{STATIC_URL}}img/拼图-71.png" style="position: absolute;top:20px;left: 150px;"/>
-	<div id="recevie_users">
+				<div class="count">
+					<img
+						style="height: 30px; width: 30px; position: absolute; left: 10%;"
+						src="{{STATIC_URL}}img/拼图-18.png"><span class="num"
+						style="top: 20px; position: absolute; left: 15%;">×{{pinLoveIcon}}</span>
+				</div>
 
-	</div>
-	
-<div class="share" style="position: absolute;left: 230px;">thanks&share<span style="color:#FF0000">♥</span></div>
-</div>
+				<div id="search_condition">
+					<label><input type="radio" name="radiobutton" value="all"><span>随机匹配</span></label>
+					<label><input type="radio" name="radiobutton"
+						value="school"><span>相同学校</span></label> <label><input
+						type="radio" name="radiobutton" value="work"><span>相同工作</span></label>
+					<label><input type="radio" name="radiobutton"
+						value="location"><span>相同城市</span></label>
+				</div>
 
-<div id="invite" style="display: none;">
-	<div class="close"></div>
-	<span class="num3">{{userCount}}</span>
-	<img id="inviteImg" src="{{STATIC_URL}}img/接受邀请-60.png" style="position: absolute;top:5px;left: 60px;"/>
-	<span style="left: 120px;position: absolute;top: 80px;">search：</span><input type="text" id='search'  style="left: 200px;position: absolute;top: 80px;width:300px;">
-	<div id="users">
+				<div id="recevie" style="display: none;">
+					<div class="recevie_close"></div>
+					<img id="inviteImg" src="{{STATIC_URL}}img/拼图-71.png"
+						style="position: absolute; top: 20px; left: 150px;" />
+					<div id="recevie_users"></div>
 
-	</div>
-<div id="user" style="display: none;">
-	<div class="user">
-	    <input id="uid" type="hidden">
-	    <input class="username" type="hidden">
-		<div id="head" class="head">
-			<img src="" class="img-circle">
-		</div>
-		<span id="name"></span>
-		<input class="checkbox" type="checkbox" name="checkbox1" value="checkbox" > 
-	</div>	
-</div>
-<div id="checkbox1"><input id="send_all_box" type="checkbox" value="checkbox" ><span style="font-size:20px;color: red;">sellect all</div>
-<div class="button_type_2">send<span style="color:#FF0000">♥</span></div>
-</div>
+					<div class="share" style="position: absolute; left: 230px;">
+						thanks&share<span style="color: #FF0000">♥</span>
+					</div>
+				</div>
+
+				<div id="invite" style="display: none;">
+					<div class="close"></div>
+					<span class="num3">{{userCount}}</span> <img id="inviteImg"
+						src="{{STATIC_URL}}img/接受邀请-60.png"
+						style="position: absolute; top: 5px; left: 60px;" /> <span
+						style="left: 120px; position: absolute; top: 80px;">search：</span><input
+						type="text" id='search'
+						style="left: 200px; position: absolute; top: 80px; width: 300px;">
+					<div id="users"></div>
+					<div id="user" style="display: none;">
+						<div class="user">
+							<input id="uid" type="hidden"> <input class="username"
+								type="hidden">
+							<div id="head" class="head">
+								<img src="" class="img-circle">
+							</div>
+							<span id="name"></span><input class="checkbox" type="checkbox" name="checkbox1" value="checkbox">
+						</div>
+					</div>
+					<div id="checkbox1">
+						<input id="send_all_box" type="checkbox" value="checkbox"><span style="font-size: 20px; color: red;">sellect all</span>
+					</div>
+					<div class="button_type_2">
+					   send<span style="color: #FF0000">♥</span>
+					</div>
+				</div>
+			</div>
+     </div>
+				<!-- 
 <div id="record">
 	<ul class="record-user-list"  style="float: left;">
 	    {% for facebookUser in facebookUserListDcit %}
@@ -581,11 +632,15 @@ removecloud();
 	    {% endfor %}
 	</ul>
 </div>
+
 <div class="record-user head_boy record-user-clone"  style="display: none;"><a target="_blank" href="" ><img src="{{avatar_name}}" class="img-circle" title="" ></a></div>
 <div id="record-cover"></div>
-<div id="information" style="display: none;" class='information'>
-<span class="msg"></span>
-</div>
+				<div id="information" style="display: none;" class='information'>
+					<span class="msg"></span>
+				</div>
+
+      -->
+
 <script type="text/javascript">
 var  game_count=null;
 var  type=false;
@@ -856,7 +911,8 @@ function loadStage() {
         	});
         }
 	$(document).ready(function(){
-		loadStage()
+		change_navi();
+		 loadStage() 
 		initialize()
 		//转盘点击事件
 		$('.push').click(function(){
@@ -1057,7 +1113,7 @@ function loadStage() {
 	
 	
 </script>
- <script>
+				<script>
 //更新拼爱币
 function updateCoins(quantity,operation){
 	
@@ -1153,5 +1209,5 @@ function buyCoins(quantity) {
     }
 </script>
 
-</div>
-{% endblock %}
+			</div>
+			{% endblock %}

@@ -156,13 +156,11 @@ hr {
 
 /* picture tab */
 .hoverbox {
-	margin-top: 10px;
-	height: 150px;
-	list-style: none;
+	margin-left: -35px;
 }
 
 .hoverbox a {
-	cursor: default;
+	cursor: pointer;
 }
 
 .hoverbox a .preview {
@@ -170,16 +168,14 @@ hr {
 }
 
 .hoverbox img {
-	height: 50px;
-	width: 50px;
+	height: 70px;
+	width: 70px;
 }
 
 .hoverbox li {
-	color: inherit;
-	display: inline;
-	float: left;
-	margin: 1px;
-	position: relative;
+	margin: 5px;
+	display: inline-block;
+	margin-top: 10px;
 }
 
 /* chat tab */
@@ -302,26 +298,28 @@ hr {
 	opacity: 1;
 	cursor: pointer;
 }
-.icon_like_0{
+.icon_like_0:before{
+	color: #fff;
 	font-size: 20px;
 	title: "未关注";
-	background-image: url("../img/like.png");
+	content: "\e005";
+	background-image: url('../img/sli.png');
 	
 }
 .icon_like_1 {
-	font-size: 20px;
 	background-image: url("../img/slike.png");
 	title: "已关注"
 }
 .icon_like_2 {
-	font-size: 20px;
-	title: "关注";
 	background-image: url("../img/dlike.png");
-}
-.icon_like_3{
-	font-size: 20px;
-	background-image: url("../img/slike.png");
 	title: "相互关注"
+}
+.icon_like_3:before{
+	color: #ff7272;
+	font-size: 20px;
+	title: "相互关注";
+	content: "\e005";
+	background-image: url('/');
 }
 .icon_dislike {
 	top: 0px;

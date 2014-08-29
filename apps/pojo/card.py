@@ -27,7 +27,7 @@ class Card(object):
         self.income=income
         self.pictureList=[]
         #初始化图片
-        self.get_pic()
+        self.get_pic(0,50)
 #         self.jobIndustry=jobIndustry
 #         self.heighScore=heighScore
 #         self.incomeScore=incomeScore
@@ -52,8 +52,8 @@ class Card(object):
     '''
     获取用户图片
     '''
-    def get_pic(self):
-        pictureList=Picture.objects.filter(user_id=self.user_id).order_by('-createTime')[:50]
+    def get_pic(self,first,end):
+        pictureList=Picture.objects.filter(user_id=self.user_id).order_by('-createTime')[first:end]
         for picture in pictureList:
             from apps.friend_dynamic_app.dynamic_settings import IMAGE_SAVE_FORMAT,thumbnails
             smailPic='%s%s%s%s%s'%(picture.picPath,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT)

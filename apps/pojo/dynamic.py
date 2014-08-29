@@ -100,7 +100,8 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List(userId,friendDynamic.id)
             dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id).count()
         else:
-            friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,reviewer_id__in=[userId,dynamic.publishUserId,None],receiver_id__in=[userId,dynamic.publishUserId,None],isDelete=False).order_by('-commentTime')
+            from django.db.models.query_utils import Q
+            friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,reviewer_id__in=[userId,dynamic.publishUserId],isDelete=False).filter(Q(receiver_id__in=[userId,dynamic.publishUserId])|Q(receiver_id=None)).order_by('-commentTime')
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List_by_ids([userId,dynamic.publishUserId],friendDynamic.id)
             dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id,user_id__in=[dynamic.publishUserId,userId]).count()
         friendDynamicCommentList=friendDynamicCommentList.reverse()

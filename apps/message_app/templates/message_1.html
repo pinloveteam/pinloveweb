@@ -4,6 +4,7 @@
 {% block staticfiles %}
 <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.scroll.js"></script>
 
  <script>
 	$(document).ready(function(){
@@ -229,88 +230,33 @@
             };
         </script>
         <script type="text/javascript">
-		(function($){
-			$.fn.extend({
-			insertAtCaret: function(myValue){
-			var $t=$(this)[0];
-			if (document.selection) {
-			this.focus();
-			sel = document.selection.createRange();
-			sel.text = myValue;
-			this.focus();
-			}
-			else
-			if ($t.selectionStart || $t.selectionStart == '0') {
-			var startPos = $t.selectionStart;
-			var endPos = $t.selectionEnd;
-			var scrollTop = $t.scrollTop;
-			$t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
-			this.focus();
-			$t.selectionStart = startPos + myValue.length;
-			$t.selectionEnd = startPos + myValue.length;
-			$t.scrollTop = scrollTop;
-			}
-			else {
-			this.value += myValue;
-			this.focus();
-			}
-			}
-			})
-			})(jQuery);
-		
-		
 	   //滚动加载
-	    var next_page={{next_page_number|safe}}
-		var totalheight = 0; 
-        var load_message=true;
-		function loadData()
-		{ 
-		    totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
-
-		    if ($(document).height() <= totalheight) 
-			{ 
-				//加载数据
-				if(next_page==-1){
-					var no_dynamic=$('#no_dynamic')
-					$('.col-xs-9').append('<div>没有消息了</div>')
-					load_message=false
-					return;
-				}
-				 $.ajax({
-			         type: 'GET',
-			         url:window.location.pathname,
-			         data:{page:next_page},
-			         beforeSend: function(XMLHttpRequest){
-			         },
-			         success: function(data, textStatus){
-			        	    if( typeof(data)!="object"){
-			        	    	data=$.parseJSON(data);
-			        	    }
-			            	page=data['next_page_number']
-			            	if(typeof(data.messageList)!="object"){
-			            		data.messageList=$.parseJSON(data.messageList);
-			            	}
-			            	init_message(data.messageList);
-			         },
-			         complete: function(XMLHttpRequest, textStatus){
-			         },
-			         error: function(response){
-			             alert('网络异常!')
-			         }
-			     });
-		    } 
-		} 
-
+	   var next_page={{next_page_number|safe}}
+	   no_load=function(){
+	    	var no_dynamic=$('#no_dynamic')
+			$('.col-xs-9').append('<div>没有消息了</div>')
+			stop_load_next_page();
+			return;
+	   };
+	   success=function(data){
+		   if( typeof(data)!="object"){
+   	    	data=$.parseJSON(data);
+   	    }
+   	    next_page=data['next_page_number']
+       	if(typeof(data.messageList)!="object"){
+       		data.messageList=$.parseJSON(data.messageList);
+       	}
+       	init_message(data.messageList);
+	   };
 		$(window).scroll( function() { 
-			if(load_message){
-		/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
-			console.log("页面的文档高度 ："+$(document).height());
-			console.log('浏览器的高度：'+$(window).height()); */
-			loadData();
-			}
-		}); 
-
-
+				if(get_load_next_page()){
+			/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+				console.log("页面的文档高度 ："+$(document).height());
+				console.log('浏览器的高度：'+$(window).height()); */
+				loadData(no_load,success);
+				}
+			}); 
+		
 </script>
 {% endblock %}
 {% block css %}

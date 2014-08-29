@@ -253,13 +253,18 @@ li {
 	margin: 0;
 }
 .notice {
+	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
     background-color: #f82c2c;
     border-radius: 50%;
     color: #fff;
     display: inline-block;
     font-size: 10px;
-    left: 18px;
+    left: 15px;
+    top: -4px;
     position: absolute;
     text-align: center;
-    width: 15px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-weight:normal;
 }
