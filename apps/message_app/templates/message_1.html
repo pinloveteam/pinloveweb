@@ -227,7 +227,7 @@
                     	dynamic_agree_clone.find('#username').html(message.sender_name);
                     	dynamic_agree_clone.find('#time').html(message.sendTime);
                     	if(message.isRead==0){
-                       	 dynamic_comment_clone.addClass('unread')
+                    		dynamic_agree_clone.addClass('unread')
                         }
                         if(message.data.length>0){
                        	 message.data=$.parseJSON(message.data);
