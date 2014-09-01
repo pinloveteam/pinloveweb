@@ -38,7 +38,7 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['follow']=followEachCount
     #获得最近一条动态
     arg['dynamic']=get_dymainc_late(userProfile.user_id)
-    arg.update(get_no_read_web_count(userProfile.user_id))
+    arg.update(get_no_read_web_count(userProfile.user_id),fromPage=u'card')
     return arg
 
 '''
@@ -49,16 +49,21 @@ def init_person_info_for_card_page(userProfile,**kwargs):
          dynamicCommentCount 读取未读动态评论
          noReadCount  未读总信息
 '''
-def get_no_read_web_count(userId):
-    arg={}
-    #获取未读信息
-    from apps.message_app.method import get_no_read_message_count
-    arg['messageNoReadCount']=get_no_read_message_count(userId)
-    #读取未读动态评论
-    from apps.friend_dynamic_app.method import get_no_read_comment_count
-    arg['dynamicCommentCount']=get_no_read_comment_count(userId)
-    arg['noReadCount']= arg['messageNoReadCount']+arg['dynamicCommentCount']
-    return arg
+def get_no_read_web_count(userId,fromPage=None):
+    args={}
+    from apps.message_app.models import get_no_read_message_dynamic_list_count
+    args['noReadCount']= get_no_read_message_dynamic_list_count(userId)
+    if fromPage==u'card':
+        from apps.message_app.method import get_no_read_message_count
+        args['noReadMessageCount']=get_no_read_message_count(userId)
+    elif fromPage==u'message':
+        from apps.message_app.method import get_no_read_follow_message_count,get_no_read_message_count
+        args['noReadMessageCount']=get_no_read_message_count(userId)
+        from apps.friend_dynamic_app.method import get_no_read_agree_count,get_no_read_comment_count
+        args['noReadAgreeCount']=get_no_read_agree_count(userId)
+        args['noReadFollowMessageCount']=get_no_read_follow_message_count(userId)
+        args['noReadCommentCount']=get_no_read_comment_count(userId)
+    return args
 '''
 判断是否是相互关注
 attribute：

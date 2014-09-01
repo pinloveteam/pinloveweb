@@ -133,8 +133,8 @@ function change_navi(){
 var isChard=false;
 var noReadMessageCount={%if noReadMessageCount %}{{messageNoReadCount}}{%else%}0{%endif%}
 //拉取信息数量
-var time=1000*1;
-/* interval = self.setInterval("polling()", time);  */
+var time=1000*5;
+interval = self.setInterval("polling()", time); 
  var polling=function(){
 	  if(isChard){
 		  data={from:'card'}

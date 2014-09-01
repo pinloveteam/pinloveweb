@@ -23,7 +23,6 @@ from apps.recommend_app.models import MatchResult
 from django.db import transaction
 from django.utils import simplejson
 from pinloveweb.method import create_invite_code
-from apps.user_app.method import is_chat
 from django.views.decorators.http import require_POST
 logger = logging.getLogger(__name__)
 ####################
@@ -326,18 +325,16 @@ def check_register(request):
                           
 '''
 检查是否有新未读消息，有则返回数量
+@param from: card页面，  message页面
 '''                      
 def newcount(request):
     args={}
     try:
         userId=request.user.id
+        fromPage=request.REQUEST.get('from',False)
         #获取未读信息
-        from apps.message_app.method import get_no_read_message_count
-        args['messageNoReadCount']=get_no_read_message_count(userId)
-        #读取未读动态评论
-        from apps.friend_dynamic_app.method import get_no_read_comment_count
-        args['dynamicCommentCount']=get_no_read_comment_count(userId)
-        args['noReadCount']= args['messageNoReadCount']+args['dynamicCommentCount']
+        from pinloveweb.method import get_no_read_web_count
+        args=get_no_read_web_count(userId,fromPage=fromPage)
         args['result']='success'
     except Exception,e:
         logger.exception('检查是否有新未读消息,出错')

@@ -14,7 +14,7 @@ class RegistrationForm (UserCreationForm) :
         for key in self.fields:
             self.fields[key].widget.attrs['class'] = 'form-control'     #添加css class 样式
         self.fields['username'].widget.attrs.update({'style' : 'width: 110px;'})
-        self.fields['username'].widget.attrs['placeholder'] = r'用户名'
+        self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名,1-14位字符，英文字母、数字和下划线组成或中文7个字符'
         self.fields['password1'].widget.attrs['placeholder'] = r'请输入密码，6-20位字符，可由英文字母、数字和下划线组成'
         self.fields['password2'].widget.attrs['placeholder'] = r'再次输入密码'
     def validate(self, value):
@@ -25,6 +25,7 @@ class RegistrationForm (UserCreationForm) :
     email = forms.EmailField(required=True, label='邮件',widget=forms.TextInput(attrs={'placeholder': r'请输入常用邮箱'})) 
     gender=forms.ChoiceField(required=True, label='性别', choices=((u'M', u'男'), (u'F', u'女'), ),
                              widget=forms.RadioSelect())
+    USERNAME_LENGTH_LIMIT=14
     username=forms.RegexField(label=_("Username"), max_length=30,
         regex=ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}$',
         help_text=USERNAME_ERROR_MESSAGE,
@@ -47,6 +48,7 @@ class RegistrationForm (UserCreationForm) :
     error_messages = {
         'duplicate_email':r'邮件已被注册!',
         'duplicate_username': _("A user with that username already exists."),
+        'too_long_username':r'用户名长度超标!',
         'password_mismatch': _("The two password fields didn't match."),
     }
             
@@ -61,24 +63,19 @@ class RegistrationForm (UserCreationForm) :
         except User.DoesNotExist:
             return email
         raise forms.ValidationError(self.error_messages['duplicate_email'])
-#     def clean_username(self):
-#         # Since User.username is unique, this check is redundant,
-#         # but it sets a nicer error message than the ORM. See #13147.
-#         username = self.cleaned_data["username"]
+    def clean_username(self):
+        # Since User.username is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        username = self.cleaned_data["username"]
+        if len(username.encode('gbk'))>self.USERNAME_LENGTH_LIMIT:
+            raise forms.ValidationError(self.error_messages['too_long_username'])
 #         try:
 #             User._default_manager.get(username=username)
 #         except User.DoesNotExist:
 #             return username
 #         raise forms.ValidationError(self.error_messages['duplicate_username'])
 
-    # def save(self, commit=True) : 
-    #    user = super(UserCreationForm,self).save(commit=False)
-    #    user.email = self.cleaned_data['email']
 
-    #    if commit : 
-    #        user.save() 
-
-    #    return user 
     
 '''
 修改密码
