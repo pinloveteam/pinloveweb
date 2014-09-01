@@ -47,6 +47,9 @@ def message(request,template_name):
     else:
         pages['next_page_number']=-1
     args['messageList']=simplejson.dumps(messageDynamicsList)
+    #获取未读信息条数
+    from pinloveweb.method import get_no_read_web_count
+    args.update(get_no_read_web_count(user.id,fromPage=u'message'))
     if request.is_ajax():
         json=simplejson.dumps(args)
         return HttpResponse(json)
@@ -90,10 +93,9 @@ def message_list(request):
 '''
 关注消息列表
 '''
-def get_follow_message(request):
+def get_follow_message(request,template_name):
     args={}
     try:
-        if request.is_ajax():
             if MessageLog.objects.get_no_read_follow_message_count(request.user.id)>0:
                 followList=MessageLog.objects.get_follow_message_list(request.user.id,0)
                 data=page(request,followList)
@@ -112,9 +114,17 @@ def get_follow_message(request):
                 else:
                     args['next_page_number']=data['pages'].next_page_number()
             else:
-                data['next_page_number']=-1
-            json=simplejson.dumps(args)
-            return HttpResponse(json)
+                args['next_page_number']=-1
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
+            if request.is_ajax():
+                json=simplejson.dumps(args)
+                return HttpResponse(json)
+            else:
+                args['user']=request.user
+                from apps.user_app.method import get_avatar_name
+                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+                return render(request,template_name,args)
     except Exception ,e:
         logger.exception('关注消息列表出错!')
         args={'result':'error','error_message':'私信列表私信列表出错'}

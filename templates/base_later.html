@@ -60,28 +60,6 @@
 		        <div id="count" class="notice" {%ifequal noReadCount 0%}style="display: none;"{%endifequal%}>
 					{%ifequal noReadCount 0%}0{%else%}{{noReadCount}}{%endifequal%}
 			    </div>
-			   <!--  <div id='count-list' class="header-info-list js-list" style="{%ifequal noReadCount 0%}display: none;{%endifequal%}">
-			     <ul>
-				   <li class="js-message" style="width: 80px;{%ifequal messageNoReadCount 0%}display: none;{%endifequal%}"  >
-				     <a href="/message/no_read_message/">
-				      <span>未读消息
-				        <div id="messageCount" class="notice" style="left: 76px;" >
-						{%ifequal messageNoReadCount 0%}0{%else%}{{messageNoReadCount}}{%endifequal%}
-					    </div>
-					  </span>
-				    </a>
-				  </li>
-				  <li class="js-message" style="width: 80px;{%ifequal dynamicCommentCount 0%}display: none;{%endifequal%}">
-				   <a href="/dynamic/no_read_coment/">
-				     <span>未读评论
-				       <div id="dynamicCommentCount" class="notice" style="left: 76px;" >
-						{{dynamicCommentCount}}
-					  </div>
-					 </span>
-				   </a>
-				  </li>
-			     </ul>
-		        </div>--> 
 			</div>
 			<div class="header-info-user js-info-user glyphicon glyphicon-user">
 				<div class="header-info-list header-info-setting-list">
@@ -155,15 +133,22 @@ function change_navi(){
 var isChard=false;
 var noReadMessageCount={%if noReadMessageCount %}{{messageNoReadCount}}{%else%}0{%endif%}
 //拉取信息数量
-var time=1000*10;
-/* interval = self.setInterval("polling()", time); */
+var time=1000*1;
+/* interval = self.setInterval("polling()", time);  */
  var polling=function(){
-	   $.getJSON('/newCount/',function(data){
+	  if(isChard){
+		  data={from:'card'}
+	  }else if(window.location.pathname=='/message/'||window.location.pathname=='/dynamic/comment_list/'||window.location.pathname=='/message/message_list/'||window.location.pathname=='/dynamic/agree_list/'||window.location.pathname=='/message/follow_list/'){
+		  data={from:'message'}
+	  }
+	   $.getJSON('/newCount/',data,function(data){
 		   if(data.result=='success'){
-			   set_count(data.messageNoReadCount,data.dynamicCommentCount)
-			   if(data.messageNoReadCount-noReadMessageCount>0&&isChard){
-				   get_card_chat(data.messageNoReadCount-noReadMessageCount);
+			   set_count(data.noReadCount)
+			   if(isChard&&data.noReadMessageCount>0){
+				   get_card_chat(data.noReadMessageCount);
 				   noReadMessageCount=data.messageNoReadCount;
+			   }else if(data.noReadCommentCount!=undefined){
+				   set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
 			   }
 		   }else{
 			   clearTimeout(interval)
@@ -172,56 +157,16 @@ var time=1000*10;
    };
    
 
-function set_count(messageNoReadCount,dynamicCommentCount){
-	if(messageNoReadCount==null){
-		messageNoReadCount=get_no_read_message();
-	}else if(dynamicCommentCount==null){
-		dynamicCommentCount=get_no_read_dynamic_comment();
-	}
-	noReadCount=messageNoReadCount+dynamicCommentCount;
-	set_no_read_message(messageNoReadCount);
-	set_no_read_dynamic_comment(dynamicCommentCount);
+function set_count(noReadCount){
+	noReadCount=noReadCount;
 	$('#count').html(noReadCount);
 	if(noReadCount==0){
-		$('#count,#count-list').hide();
+		$('#count').hide();
 	}else{
-		$('#count,#count-list').show();
+		$('#count').show();
 	}
 }
-function set_no_read_message(count){
-	message=$('#messageCount');
-	messageLi=message.closest('li');
-	   messageCount=parseInt(message.html().trim());
-	   if(messageCount!=count){
-		   message.html(count);
-		   messageLi.show();
-	   }
-	   if(count==0&&(message.is('hide')==false)){
-		   messageLi.hide();
-	   }
-}
-function get_no_read_message(){
-	message=$('#messageCount');
-	messageCount=parseInt(message.html().trim());
-	return messageCount
-};
-function get_no_read_dynamic_comment(){
-	dynamicComment=$('#dynamicCommentCount');
-	dynamicCommentCount=parseInt(dynamicComment.html().trim());
-	return dynamicCommentCount
-};
-function set_no_read_dynamic_comment(count){
-	dynamicComment=$('#dynamicCommentCount');
-	dynamicCommentLi=dynamicComment.closest('li')
-	   dynamicCommentCount=parseInt(dynamicComment.html().trim());
-	   if(dynamicCommentCount!=count){
-		   dynamicComment.html(count);
-		   dynamicCommentLi.show();
-	   }
-	   if(count==0&&(dynamicComment.is('hide')==false)){
-		   dynamicCommentLi.hide();
-	   }
-}
+
 
 // 从Cookie获得信息
 function getCookie(name) {

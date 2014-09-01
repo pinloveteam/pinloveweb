@@ -25,3 +25,9 @@ def clean_dynamic_comment_by_ids(ids):
 '''  
 def clean_dynamic_argee_by_ids(ids):
     FriendDynamicArgee.objects.filter(id__in=ids).update(isRead=True)
+  
+'''
+获取点赞的未读数量
+'''  
+def get_no_read_agree_count(userId):
+    return FriendDynamicArgee.objects.get_no_read_agree_count(userId)

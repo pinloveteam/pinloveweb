@@ -10,6 +10,7 @@
 	$(document).ready(function(){
                 messageList={{messageList|safe }};
                 init_message(messageList);
+                menu();
                 //回复窗口
                 $('.reply-btn').click(function(){
      			   $(this).parents('.message').next().slideDown('slow');
@@ -57,7 +58,18 @@
 						
 					});
                 });
-                
+                function menu(){
+                	pathname=window.location.pathname;
+                	var context=null;
+                	$($('.nav').find('a')).each(function(){
+                		if(pathname==this.pathname){
+                			context=$(this).parent();
+                			return false; 
+                		}
+                	})
+                	$('.nav').children().removeClass('active');
+                	context.addClass('active');
+                }
                 //菜单切换
                 $('.nav').children().click(function(){
                 	var context=$(this);
@@ -77,7 +89,9 @@
         					},
         					success:function(data, textStatus){
         						$('.col-xs-9').children(':gt(0)').remove();
+        						data.messageList=$.parseJSON(data.messageList);
         						init_message(data.messageList);
+        						set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
         						},
         	                    error: function(response){
         	                    	/* var body=$('<p>网络异常!</p>')
@@ -93,6 +107,49 @@
                 	
                 });
             })
+            //左边菜单的未读信息数
+            var noReadFollowMessageCount={%ifequal noReadFollowMessageCount 0%}0{%else%}{{noReadFollowMessageCount}}{%endifequal%};
+            var	noReadMessageCount={%ifequal noReadMessageCount 0%}0{%else%}{{noReadMessageCount}}{%endifequal%};
+            var	noReadAgreeCount={%ifequal noReadAgreeCount 0%}0{%else%}{{noReadAgreeCount}}{%endifequal%};
+            var noReadCommentCount={%ifequal noReadCommentCount 0%}0{%else%}{{noReadCommentCount}}{%endifequal%};
+            function set_menu_count(noReadFollowMessage,noReadMessage,noReadAgree,noReadComment){
+		        if(noReadFollowMessage>0){
+		        	if(noReadFollowMessageCount!=noReadFollowMessage){
+		        		noReadFollowMessageCount=noReadFollowMessage;
+		        		$('#noReadFollowMessageCount').html(noReadFollowMessage).show();
+		        	}
+		        }else if($('#noReadFollowMessageCount').is(':hidden')==false){
+		        	('#noReadFollowMessageCount').hide();
+		        	noReadFollowMessageCount=noReadComment
+		        };
+		        if(noReadMessage>0){
+		        	if(noReadMessageCount!=noReadMessage){
+		        		noReadMessageCount=noReadMessage;
+		        		$('#noReadMessageCount').html(noReadMessage).show();
+		        	}
+		        }else if($('#noReadMessageCount').is(':hidden')==false){
+		        	('#noReadMessageCount').hide();
+		        	noReadFollowMessageCount=noReadComment
+		        };
+		        if(noReadAgree>0){
+		        	if(noReadAgreeCount!=noReadAgree){
+		        		noReadAgreeCount=noReadAgree;
+		        		$('#noReadAgreeCount').html(noReadAgree).show();
+		        	}
+		        }else if($('#noReadAgreeCount').is(':hidden')==false){
+		        	('#noReadAgreeCount').hide();
+		        	noReadFollowMessageCount=noReadComment
+		        };
+		        if(noReadComment>0){
+		        	if(noReadFollowMessageCount!=noReadComment){
+		        		noReadFollowMessageCount=noReadComment
+		        		$('#noReadCommentCount').html(noReadComment).show();
+		        	}
+		        }else if($('#noReadCommentCount').is(':hidden')==false){
+		        	$('#noReadCommentCount').hide();
+		        	noReadFollowMessageCount=noReadComment
+		        };
+	         };
             function init_message(messageList){
                 for(var i in messageList){
                     message=messageList[i]
@@ -164,6 +221,22 @@
                         }
                         $('.col-xs-9').append(follow_clone);
 
+                    }else if(message.type==3){
+                    	var dynamic_agree_clone=$('#message_clone').find('#dynamic_agree').clone();
+                    	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
+                    	dynamic_agree_clone.find('#username').html(message.sender_name);
+                    	dynamic_agree_clone.find('#time').html(message.sendTime);
+                    	if(message.isRead==0){
+                       	 dynamic_comment_clone.addClass('unread')
+                        }
+                        if(message.data.length>0){
+                       	 message.data=$.parseJSON(message.data);
+                       	dynamic_agree_clone.find('#dynamic_img_count').html('(共'+message.data.length+"张)");
+                       	dynamic_agree_clone.find('#dynamic_img').attr('src','/media/images/'+message.data[0]+'-140.jpg').parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
+                        }else{
+                        	dynamic_agree_clone.find('.message-img').last().children(':lt(2)').remove();
+                        }
+                    	$('.col-xs-9').append(dynamic_agree_clone);
                     }else if(message.type==5) {
                          var dynamic_comment_clone=$('#message_clone').find('#dynamic_comment').clone();
                          dynamic_comment_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
@@ -246,6 +319,7 @@
        	if(typeof(data.messageList)!="object"){
        		data.messageList=$.parseJSON(data.messageList);
        	}
+   	   set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
        	init_message(data.messageList);
 	   };
 		$(window).scroll( function() { 
@@ -381,20 +455,29 @@
 									<a id='message' href="/message/message_list/" onclick="return false;">
 										站内私信
 									</a>
+									<div id="noReadMessageCount" class="notice" style="left: 130px; top: 11px;{%ifequal noReadMessageCount 0%}display: none;{%endifequal%}"> 
+										{%ifequal noReadMessageCount 0%}0{%else%}{{noReadMessageCount}}{%endifequal%}</div>
 								</li>
 								<li>
 									<a id='dynamic' href="/dynamic/comment_list/" onclick="return false;">
 										动态评论
 									</a>
+									<div id="noReadCommentCount" class="notice" style="left: 130px; top: 11px;{%ifequal noReadCommentCount 0%}display: none;{%endifequal%}"> 
+										{%ifequal noReadCommentCount 0%}0{%else%}{{noReadCommentCount}}{%endifequal%}</div>
 								</li>
 								<li>
 									<a id='agree' href="/dynamic/agree_list/" onclick="return false;">
 										给我的“赞”
+										
 									</a>
+									<div id="noReadAgreeCount" class="notice" style="left: 130px; top: 11px;{%ifequal noReadAgreeCount 0%}display: none;{%endifequal%}">
+										 {%ifequal noReadAgreeCount 0%}0{%else%}{{noReadAgreeCount}}{%endifequal%}</div>
 								</li>
 								<li>
-									<a href="/message/follow_list" onclick="return false;">
+									<a id='follow' href="/message/follow_list/" onclick="return false;">
 										新的粉丝
+										<div id="noReadFollowMessageCount" class="notice" style="left: 130px; top: 11px;{%ifequal noReadFollowMessageCount 0%}display: none;{%endifequal%}"> 
+										{%ifequal noReadFollowMessageCount 0%}0{%else%}{{noReadFollowMessageCount}}{%endifequal%}</div>
 									</a>
 								</li>
 							</ul>
@@ -493,7 +576,13 @@
                                         赞了你的动态:
                                     </span>
                                     <div class="message-img">
-                                        <img src="img/haha.jpg"/>
+                                        <a href=""><img id="dynamic_img" src="img/haha.jpg"/></a>
+                                        <span id="dynamic_img_count">(共9张)</span>
+                                        <p>
+                                           <a>
+                                          <span id="dynamic_content" class="message-text">lalala</span>
+                                          </a>
+                                        </p>
                                     </div>
                                     <span   id="time" class="message-time">8月5日 14:44</span>
                                 </div>

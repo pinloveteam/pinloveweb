@@ -60,7 +60,7 @@ def search(request):
             from apps.search_app.forms import SUN_SIGN_CHOOSICE
             args['sunSign']=SUN_SIGN_CHOOSICE
             from pinloveweb.method import get_no_read_web_count
-            args.update(get_no_read_web_count(request.user.id))
+            args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
             return render(request, 'simple_search.html',args)
     except Exception as e:
         print e

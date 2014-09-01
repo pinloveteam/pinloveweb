@@ -13,6 +13,10 @@ def get_no_read_message_count(userId):
     count=MessageLog.objects.get_no_read_msessge_count(userId)[0]
     return count
 
+def get_no_read_follow_message_count(userId):
+    count=MessageLog.objects.get_no_read_follow_message_count(userId)
+    return count
+    
 '''
 将未读信息标记成已读
 '''

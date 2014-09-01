@@ -97,7 +97,7 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
         #获得评论
         if dynamic.publishUserId==userId:
             friendDynamicCommentList=FriendDynamicComment.objects.select_related('reviewer','receiver').filter(friendDynamic_id=friendDynamic.id,isDelete=False).order_by('-commentTime')
-            friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List(userId,friendDynamic.id)
+            friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List_by_dynamic(userId,friendDynamic.id)
             dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id).count()
         else:
             from django.db.models.query_utils import Q

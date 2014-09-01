@@ -126,10 +126,9 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
 获取评论列表
 如有未读消息显示未读，否则已读显示已读
 '''
-def comment_list(request):
+def comment_list(request,template_name):
     args={}
     try:
-        if request.is_ajax():
             if FriendDynamicComment.objects.get_no_read_comment_count(request.user.id)>0:
                 friendDynamicCommentList=FriendDynamicComment.objects.get_no_read_comment_list(request.user.id)
                 data=page(request,friendDynamicCommentList)
@@ -140,7 +139,7 @@ def comment_list(request):
                  data=page(request,friendDynamicCommentList)
             from apps.pojo.message import messagedynamics_to_message_page
             messageList=messagedynamics_to_message_page(data['pages'].object_list)
-            args['messageList']=messageList
+            args['messageList']=simplejson.dumps(messageList)
             if data['pages'].has_next():
                 #如果为未读
                 if data['pages'].object_list[0]['isRead']:
@@ -148,19 +147,26 @@ def comment_list(request):
                 else:
                     args['next_page_number']=data['pages'].next_page_number()
             else:
-                data['next_page_number']=-1
-            json=simplejson.dumps(args)
-            return HttpResponse(json)    
+                args['next_page_number']=-1
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id,u'message'))
+            if request.is_ajax():
+                json=simplejson.dumps(args)
+                return HttpResponse(json)    
+            else:
+                args['user']=request.user
+                from apps.user_app.method import get_avatar_name
+                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+                return render(request,template_name,args,)
     except Exception,e:
         logger.exception('获取评论列表,出错')
 
 '''
 获得赞的列表
 '''
-def agree_list(request):
+def agree_list(request,template_name):
     args={}
     try:
-        if request.is_ajax():
             if FriendDynamicArgee.objects.get_no_read_agree_count(request.user.id)>0:
                 friendDynamicArgeeList=FriendDynamicArgee.objects.get_no_read_agree_List(request.user.id)
                 data=page(request,friendDynamicArgeeList)
@@ -171,7 +177,7 @@ def agree_list(request):
                 data=page(request,friendDynamicArgeeList)
             from apps.pojo.message import messagedynamics_to_message_page
             messageList=messagedynamics_to_message_page(data['pages'].object_list)
-            args['messageList']=messageList
+            args['messageList']=simplejson.dumps(messageList)
             if data['pages'].has_next():
                 #如果为未读
                 if data['pages'].object_list[0]['isRead']:
@@ -179,9 +185,18 @@ def agree_list(request):
                 else:
                     args['next_page_number']=data['pages'].next_page_number()
             else:
-                data['next_page_number']=-1
-            json=simplejson.dumps(args)
-            return HttpResponse(json)    
+                args['next_page_number']=-1
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id,u'message'))
+            if request.is_ajax():
+                json=simplejson.dumps(args)
+                return HttpResponse(json)  
+            else:
+                args['user']=request.user
+                from apps.user_app.method import get_avatar_name
+                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+                return render(request,template_name,args)
+            
     except Exception,e:
         logger.exception('获取赞的列表,出错')
 
@@ -265,13 +280,14 @@ def send_dynamic(request):
 '''
  删除消息
 '''
+@require_POST
 def del_dynamic(request):
     arg={}
     try:
-        dynamicId=int(request.GET.get('dynamicId'))
+        dynamicId=int(request.REQUEST.get('dynamicId'))
         if FriendDynamic.objects.filter(id=dynamicId).exists():
-            FriendDynamic.objects.get(id=id).delete()
-            arg['type']='success'
+            FriendDynamic.objects.get(id=dynamicId).delete()
+            arg['result']='success'
         else:
             arg={'result':'error','error_message':'动态id不存在！'}
     except Exception as e:

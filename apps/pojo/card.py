@@ -60,6 +60,10 @@ class Card(object):
             pic='%s%s%s'%(picture.picPath,'.',IMAGE_SAVE_FORMAT)
             self.pictureList.append({'description':picture.description,'pic':pic,'smailPic':smailPic,'createTime':picture.createTime.strftime("%Y-%m-%d-%H")}) 
             
+    def limit_fileds(self):
+        if  isinstance(self.city,basestring) and len(self.city.encode('gbk'))>22:
+            if self.city.find(u' ')!=-1:
+                self.city=self.city[:self.city.find(u' ')]
     def _dict_(self):
         dict=vars(self) 
         for key in dict.keys():
@@ -111,6 +115,7 @@ def matchResultList_to_CardList(myId,matchResultList):
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
+       recommendResult.limit_fileds()
        recommendResultList.append(recommendResult)
     if len(matchResultList)>0:
         #关注情况
@@ -143,6 +148,7 @@ def userProfileList_to_CardList(myId,userProfileList):
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
+       recommendResult.limit_fileds()
        recommendResultList.append(recommendResult)
      #关注情况
      recommendResultList=is_focus_each_other(myId,recommendResultList)
@@ -194,6 +200,7 @@ def fllowList_to_CardList(myId,fllowList,type):
            isVote=False
         city=userProfile.city
         recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
+        recommendResult.limit_fileds()
         recommendResultList.append(recommendResult)
     #关注情况
     recommendResultList=is_focus_each_other(myId,recommendResultList)

@@ -17,7 +17,7 @@ urlpatterns = patterns('apps.message_app.views',
     ##########
     url(r'^$','message',{'template_name': 'message_1.html'}),
     url(r'^message_list/$','message_list'),
-    url(r'^follow_list/$','get_follow_message'),
+    url(r'^follow_list/$','get_follow_message',{'template_name': 'message_1.html'}),
     url(r'^detail/$', 'message_detail',{'template_name':'message_detail.html'}),
      url(r'^clean/$', 'clean'),
     url(r'^count/$', 'count'), 

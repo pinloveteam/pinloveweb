@@ -21,11 +21,13 @@
 {% block css %}
 
 	<style>
-			.trend-content {
+		.trend-content {
 				background-color: #fff;
 				-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 				-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				z-index: 100;
+				position: relative;
 			}
 			.trend-name, .trend-time {
 				margin-left: 80px;
@@ -45,6 +47,7 @@
 			.trend-reply {
 				display: none;
 			}
+			
 			.comment-btn {
 				text-align: right;
 			}
@@ -53,6 +56,7 @@
 				font-weight: bold;
 				padding: 0 10px;
 			}
+			
 			.comment {
 				padding-bottom: 10px;
 				margin-bottom: 10px;
@@ -98,6 +102,29 @@
 			
 			.btn-xs{
 				padding: 1px 15px;
+			}
+			
+			.delete{
+				position: absolute;
+				background-color: #fff;
+				padding: 2px 10px;
+				-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				top: 3;
+				right: 10px;
+				z-index: 1;
+				border-right: solid 4px #F39C12;
+				color: #F39C12;
+				cursor: pointer;
+				transition: right 0.5s;
+				-moz-transition: right 0.5s; /* Firefox 4 */
+				-webkit-transition: right 0.5s; /* Safari and Chrome */
+				-o-transition: right 0.5s; /* Opera */
+			}
+			
+			.trend:hover .delete{
+				right: -34px;
 			}
 		</style>	
 			
@@ -278,6 +305,10 @@ function init_dynamic(dynamicList){
 			}
 			
 			});
+		//删除动态
+		dynamic.find('.delete').click(function(){
+			del_dynamic(this);
+		});
 		dynamic.find('.trend').append(reply_clone);
 		$('#dynamic').append($('#dynamic_clone').find('hr').clone());
 	});
@@ -285,7 +316,8 @@ function init_dynamic(dynamicList){
 function init_agree(dynamic_div,agreeList,type){
 	$(agreeList).each(function(){
 		agree=$('#dynamic_clone').find('#agree').clone();
-		agree.find('img').attr('src','/media/'+this.avatarName+'-60.jpeg').next().html(this.username);
+		agree.find('img').attr('src','/media/'+this.avatarName+'-60.jpeg');
+		agree.find('#username').html(this.username);
 		agree.find('input[name="userId"]').val(this.userId)
 		if(type==0){
 			dynamic_div.find('.trend').append(agree);
@@ -364,7 +396,43 @@ function del_comment(e){
 	$.poplayer({body:body,btnFunc:btn});
 	
 };
-
+//删除动态
+function del_dynamic(e){
+	var conext=$(e);
+	var dynamicId=conext.closest('.trend').find('#dynamicId').val();
+	var body = $('<p>确认删除</p>');
+	btn=function(){
+	$.ajax({
+		dataType:"json",
+		 type: "POST",
+		url:'/dynamic/delDynamic/',
+		data:{dynamicId:dynamicId,csrfmiddlewaretoken:getCookie('csrftoken')},
+		beforeSend:function(XMLHttpRequest){
+			conext.unbind();
+		},
+		complete:function(XMLHttpRequest, textStatus){
+		},
+		success:function(data, textStatus){
+			if(data.result=='success'){
+			var row=conext.closest('.row');
+			row.next().remove();
+			row.remove();
+			var body = $('<p>删除成功</p>');
+			}else if(data.result=='error'){
+	        	 var body = $('<p>'+data.error_message+'</p>');
+	        }
+			$.poplayer({body:body});
+		},
+        error: function(response){
+        	var body=$('<p>网络异常!</p>')
+			 $.poplayer({body:body});
+        },
+		
+	});
+  };
+  $.poplayer({body:body,btnFunc:btn});
+	
+}
 //上传图片出错
 function upload_photo_error(error_message){
 	var body=$('<p>'+error_message+'</p>')
@@ -479,6 +547,7 @@ function upload_photo_success(picNameList){
 		</div>
 		<div class="col-xs-9">
 			<div  class="trend">
+			    <span class="delete"> 删除 </span>
 				<div class="trend-content">
 					<center id="pic" style="clear: both">
 						<p></p>
@@ -499,10 +568,13 @@ function upload_photo_success(picNameList){
 	
 	            <div id="agree" class="comment row">
 	                <input type="hidden" name="userId" value="">
-					<div class="col-xs-2">
-						<img width="30px" src="" /> &nbsp;&nbsp;&nbsp;<span>张三</span>
+					<div class="col-xs-1">
+						<img width="30px" src="" />
 					</div>
-					<div class="col-xs-8">赞了这个动态</div>
+					<div class="col-xs-9">
+					 <span id='username'>张三</span>
+					  赞了这张照片 
+					</div>
 				</div>
 				<div id="comment" class="comment row">
 				   <input id="commentId" type="hidden" value="">

@@ -76,7 +76,7 @@ def member(request):
         from pinloveweb.method import init_person_info_for_card_page
         args.update(init_person_info_for_card_page(userProfile))
         from pinloveweb.method import get_no_read_web_count
-        args.update(get_no_read_web_count(request.user.id))
+        args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
         return render(request,'buy.html',args)
     except Exception as e:
         errorMessage='会员购买页面出错'

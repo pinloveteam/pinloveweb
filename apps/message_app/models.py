@@ -384,7 +384,7 @@ from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id
 LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
 where  isDeletereceiver = False  AND receiver_id =%s and type=2 and isRead=0
         '''
-        return connection_to_db(sql,param=[userId,])[0]
+        return connection_to_db(sql,param=[userId,])[0][0]
         
     '''
     关注消息列表
