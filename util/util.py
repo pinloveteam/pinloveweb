@@ -99,22 +99,27 @@ def is_guide(userId,guide,guideField):
 @param dateTime:datetime 
 '''
    
+
 def time_for_now(dateTime):
-    dateTime=dateTime.replace(tzinfo=None)
+    import calendar
     import datetime
     now=datetime.datetime.today()
+    monthRange = calendar.monthrange(now.year,now.month)[1]
+    print monthRange
     timedelta=(now-dateTime)
-    if timedelta.days>365:
+    second=timedelta.total_seconds()
+    print second
+    if timedelta.days>=365:
         return  '%s%s'%(now.year-dateTime.year,'年以前')
-    elif now.month>dateTime.month and  timedelta.days>=28:
-        return  '%s%s'%(now.month-dateTime.month,'月以前')
-    elif now.day>dateTime.day and timedelta.seconds>60*60*24:
-        return  '%s%s'%(now.day-dateTime.day,'天以前')
-    elif timedelta.seconds<60*60*24:
-        return '%s%s'%(int(timedelta.seconds/(60*60)),'小时以前')
-    elif timedelta.seconds<60*60:
-        return '%s%s'%(int(timedelta.seconds/60),'分以前')
-    elif timedelta.seconds<60:
+    elif timedelta.days>=monthRange:
+        return  '%s%s'%(((now.year-dateTime.year)*12+(now.month-dateTime.month)),'月以前')
+    elif  second>=60*60*24:
+        return  '%s%s'%(int(second/(60*60*24)),'天以前')
+    elif second<60*60*24 and second>=60*60:
+        return '%s%s'%(int(second/(60*60)),'小时以前')
+    elif second<60*60 and second>=60:
+        return '%s%s'%(int(second/60),'分钟以前')
+    elif second<60:
         return  '刚刚'
-        return  '%s%s'%(timedelta.seconds,'秒')
+        return  '%s%s'%(second,'秒')
     
