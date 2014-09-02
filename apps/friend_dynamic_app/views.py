@@ -64,6 +64,8 @@ def dynamic(request):
     arg['user']=request.user
     from apps.user_app.method import get_avatar_name
     arg['avatar_name']=get_avatar_name(request.user.id,request.user.id)
+    from pinloveweb.method import get_no_read_web_count
+    arg.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
     if request.is_ajax():
         from apps.pojo.dynamic import MyEncoder
         json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
@@ -285,11 +287,11 @@ def del_dynamic(request):
     arg={}
     try:
         dynamicId=int(request.REQUEST.get('dynamicId'))
-        if FriendDynamic.objects.filter(id=dynamicId).exists():
+        if FriendDynamic.objects.filter(id=dynamicId,publishUser_id=request.user.id).exists():
             FriendDynamic.objects.get(id=dynamicId).delete()
             arg['result']='success'
         else:
-            arg={'result':'error','error_message':'动态id不存在！'}
+            arg={'result':'error','error_message':'没有删除权限！'}
     except Exception as e:
         arg={'result':'error','error_message':e.message}
     json=simplejson.dumps(arg)

@@ -54,4 +54,6 @@ def the_people_nearby(request):
     arg['pages']=userList
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
+    from pinloveweb.method import get_no_read_web_count
+    arg.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
     return render(request, 'the_people_nearby.html',arg )

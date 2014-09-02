@@ -33,6 +33,8 @@ def pintu(request):
     args={'pinLoveIcon':get_valid_score(userId)+get_charge_vailAmount(userId),'facebookUserListDcit':facebookUserListDcit}
     from pinloveweb.method import init_person_info_for_card_page
     args.update(init_person_info_for_card_page(userProfile))
+    from pinloveweb.method import get_no_read_web_count
+    args.update(get_no_read_web_count(request.user.id))
     return render(request, 'pintu.html',args)
 
 @csrf_exempt

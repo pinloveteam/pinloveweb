@@ -150,10 +150,11 @@ def userProfileList_to_CardList(myId,userProfileList):
        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
        recommendResult.limit_fileds()
        recommendResultList.append(recommendResult)
-     #关注情况
-     recommendResultList=is_focus_each_other(myId,recommendResultList)
-     #是否有聊天权限
-     recommendResultList=is_chat(myId,recommendResultList,)
+     if len(recommendResultList)>0:
+        #关注情况
+        recommendResultList=is_focus_each_other(myId,recommendResultList)
+        #是否有聊天权限
+        recommendResultList=is_chat(myId,recommendResultList,)
      return recommendResultList
  
 

@@ -139,7 +139,7 @@ $(document).ready(function(){
 			</div>
 		{%else%}
 		<div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre">请选择年龄</span> <span class="range" style="display: none;">-</span>   <span
+				&nbsp;&nbsp; <span class="range-pre">请选择年龄范围</span> <span class="range" style="display: none;">-</span>   <span
 					class="range-bak">  </span> <span class="range" style="display: none;">岁</span>
 			</div>
 			<div class="search-condition">
@@ -159,7 +159,7 @@ $(document).ready(function(){
 			</div>
 		{%else%}
 		<div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre"> 请选择身高 </span>  <span class="range" style="display: none;">-</span> <span
+				&nbsp;&nbsp; <span class="range-pre"> 请选择身高范围 </span>  <span class="range" style="display: none;">-</span> <span
 					class="range-bak">  </span>  <span class="range" style="display: none;">CM</span> 
 			</div>
 			<div class="search-condition">
@@ -198,7 +198,7 @@ $(document).ready(function(){
 		 
 		 {%else%}
 		 <div class="condition-head">
-				&nbsp;&nbsp; <span class="range-pre">请选择月收入</span><span class="range" style="display: none;"> -</span> <span
+				&nbsp;&nbsp; <span class="range-pre">请选择月收入范围</span><span class="range" style="display: none;"> -</span> <span
 					class="range-bak"></span><span class="range" style="display: none;">万/年</span>
 			</div>
 			<div class="search-condition">
@@ -230,7 +230,7 @@ $(document).ready(function(){
 			
 		</div>
 
-		<div id="sunSign" class="condition-panel {%if disable_sunSign%}searchDisable{%else%}searchAvailable {%endif%}">
+		<div id="sunSign" class="condition-panel sun-sign {%if disable_sunSign%}searchDisable{%else%}searchAvailable {%endif%}">
 		 <div class="condition-head">
 		     <div class="condition-row">
 			{% for sunSignBean in sunSign%}

@@ -8,12 +8,12 @@ from django.shortcuts import render
 from django.core.exceptions import ValidationError
 from util.page import page
 from apps.message_app.models import  Message, MessageLog
-from django.http.response import Http404, HttpResponse
+from django.http.response import  HttpResponse
 from django.utils import simplejson
 from apps.user_app.models import UserProfile
 import logging
 from django.db import transaction
-from apps.message_app.method import add_system_message_121
+from apps.message_app.method import add_message_121
 from pinloveweb.settings import ADMIN_ID
 logger=logging.getLogger(__name__)
 ###############################
@@ -58,10 +58,9 @@ def message(request,template_name):
 '''
 用户私信列表
 '''
-def message_list(request):
+def message_list(request,template_name):
     args={}
     try:
-        if request.is_ajax():
             if MessageLog.objects.get_no_read_msessge_count(request.user.id)>0:
                 messageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id)
                 data=page(request,messageLogList)
@@ -81,8 +80,17 @@ def message_list(request):
                     args['next_page_number']=data['pages'].next_page_number()
             else:
                 data['next_page_number']=-1
-            json=simplejson.dumps(args)
-            return HttpResponse(json)    
+            #获取未读信息条数
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
+            if request.is_ajax():
+                json=simplejson.dumps(args)
+                return HttpResponse(json)  
+            else:
+                args['user']=request.user
+                from apps.user_app.method import get_avatar_name
+                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+                return render(request,template_name,args)
             
     except Exception ,e:
         logger.exception('私信列表私信列表出错!')
@@ -100,9 +108,9 @@ def get_follow_message(request,template_name):
                 followList=MessageLog.objects.get_follow_message_list(request.user.id,0)
                 data=page(request,followList)
                 MessageIds=[messageLog['id'] for messageLog in data['pages'].object_list]
-                MessageLog.objects.filter(id__in=MessageIds).update(isRead=True)
+                MessageLog.objects.filter(message_id__in=MessageIds).update(isRead=True)
             else:
-                followList=MessageLog.objects.messagelog_list(request.user.id,1)
+                followList=MessageLog.objects.get_follow_message_list(request.user.id,1)
                 data=page(request,followList)
             from apps.pojo.message import messagedynamics_to_message_page
             messageList=messagedynamics_to_message_page(data['pages'].object_list)
@@ -288,7 +296,7 @@ def message_send(request):
         user=request.user
         receiver_id=request.REQUEST.get('receiver_id')
         reply_content=request.REQUEST.get('reply_content')
-        message=add_system_message_121(user.id,receiver_id,reply_content)
+        message=add_message_121(user.id,receiver_id,reply_content,1)
         args={'result':'success','messageTime':message.sendTime.strftime("%m-%d %H:%M")}  
     except Exception ,e:    
         logger.error('私信   发送,出粗')

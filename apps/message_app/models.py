@@ -308,34 +308,36 @@ ORDER BY sendTime DESC
         SELECT count(*) from (
 SELECT  u3.id
 from message u3 
-where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4) and now()<=u3.expireTime
+where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4 where u4.receiver_id=%s) and now()<=u3.expireTime
 UNION
 SELECT u2.id from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id
 where  isDeletereceiver = False  and isRead=0 AND receiver_id = %s
 ) s
         '''
-        return  connection_to_db(sql,param=[userId])[0]
+        return  connection_to_db(sql,param=[userId,userId])[0][0]
     
     '''
     获取所有未读消息
     '''
     def get_no_read_messagelog(self,userId,first=None,end=None):
         sql='''
-        SELECT * from (
-SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead
+     select * from(
+SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead,
+null as friendDynamic_id,null as friendDynamic_content  ,null as data
 from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id 
 LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
-where  isDeletereceiver = False  AND receiver_id =%s
+where  isDeletereceiver = False  and u1.isRead=False  AND receiver_id =%s
 UNION
-SELECT u3.id,u3.sender_id,u1.username as sender_name,u4.avatar_name,u4.avatar_name_status,%s as receiver_id,u3.content,u3.sendTime,u3.type,0 as isRead
+SELECT u3.id,u3.sender_id,u1.username as sender_name,u4.avatar_name,u4.avatar_name_status,%s as receiver_id,u3.content,u3.sendTime,u3.type,0 as isRead,
+null as friendDynamic_id,null as friendDynamic_content ,null as data
 from message u3 LEFT JOIN auth_user u1 on u1.id=u3.sender_id LEFT JOIN user_profile u4 on u4.user_id=u3.sender_id
-where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4) and now()<=u3.expireTime
-) s
+where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4 where u4.receiver_id=%s) and now()<=u3.expireTime
+)s 
 ORDER BY sendTime desc
         '''
         if first is not None :
             sql=sql+'  limit %s , %s'%(first,end)
-        return connection_to_db(sql,param=[userId,userId],type=True)
+        return connection_to_db(sql,param=[userId,userId,userId],type=True)
        
        
     '''
@@ -344,10 +346,11 @@ ORDER BY sendTime desc
     def messagelog_list(self,userId,first=None,end=None):
         sql='''
         SELECT * from (
-SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead
+SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead,
+null as friendDynamic_id,null as friendDynamic_content  ,null as data
 from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id 
 LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
-where  receiver_id =%s
+where  isDeletereceiver = False  AND receiver_id =%s
 ) s
 ORDER BY sendTime desc
         '''
@@ -391,10 +394,11 @@ where  isDeletereceiver = False  AND receiver_id =%s and type=2 and isRead=0
     '''
     def get_follow_message_list(self,userId,isRead,first=None,end=None):
         sql='''
-        SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead
+       SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead,
+null as friendDynamic_id,null as friendDynamic_content  ,null as data
 from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id 
 LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
-where  isDeletereceiver = False  AND receiver_id =%s and type=2 and isRead=%s
+where  isDeletereceiver = False   AND receiver_id =%s and u1.isRead=%s  and type=2
 ORDER BY sendTime desc
         '''
         if first is not None :

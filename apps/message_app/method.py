@@ -10,7 +10,7 @@ from apps.message_app.models import MessageLog, Message
 '''
 def get_no_read_message_count(userId):
     #获取未读消息的数量
-    count=MessageLog.objects.get_no_read_msessge_count(userId)[0]
+    count=MessageLog.objects.get_no_read_msessge_count(userId)
     return count
 
 def get_no_read_follow_message_count(userId):
@@ -33,14 +33,18 @@ def clean_message_by_user(senderId,receiverId):
        MessageLog.objects.clean_message_121(senderId, receiverId)
     
 '''
-添加一条系统消息
+添加一条消息
 一对一
+@param type: 0 系统单发消息
+            1   私信
+            2   加好友
 '''
-def add_system_message_121(senderId,receiverId,content):
-    message=Message(sender_id=senderId,content=content,type=0)
+def add_message_121(senderId,receiverId,content,type):
+    message=Message(sender_id=senderId,content=content,type=type)
     message.save()
-    MessageLog(receiver_id=receiverId,message=message)
+    MessageLog(receiver_id=receiverId,message=message).save()
     return message
+
     
 '''
 将消息中心的消息标记成已读

@@ -131,11 +131,12 @@ function change_navi(){
 	}
 }
 var isChard=false;
-var noReadMessageCount={%if noReadMessageCount %}{{messageNoReadCount}}{%else%}0{%endif%}
+var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
 //拉取信息数量
 var time=1000*5;
 interval = self.setInterval("polling()", time); 
  var polling=function(){
+	 var data={};
 	  if(isChard){
 		  data={from:'card'}
 	  }else if(window.location.pathname=='/message/'||window.location.pathname=='/dynamic/comment_list/'||window.location.pathname=='/message/message_list/'||window.location.pathname=='/dynamic/agree_list/'||window.location.pathname=='/message/follow_list/'){

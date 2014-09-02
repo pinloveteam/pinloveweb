@@ -27,7 +27,6 @@ from apps.pojo.card import MyEncoder
 from django.utils import simplejson
 from django.db import transaction
 from pinloveweb.forms import ChangePasswordForm
-from apps.message_app.method import add_system_message_121
 from pinloveweb.settings import ADMIN_ID
 logger=logging.getLogger(__name__)
 
@@ -153,6 +152,7 @@ return：
          返回提示
 '''
 def update_follow(request):
+  try:
     arg = {}
     type=int(request.GET.get('type',False))
     offset = request.GET.get('userId')
@@ -170,14 +170,17 @@ def update_follow(request):
         #发送消息费被关注的人
         from apps.user_app.user_settings import FOLLOW_MESSAGE
         reply_content=FOLLOW_MESSAGE%(request.user.username,request.user.id)
-        add_system_message_121(ADMIN_ID,offset,reply_content)
+        from apps.message_app.method import add_message_121
+        add_message_121(ADMIN_ID,offset,reply_content,2)
         if Follow.objects.filter(my_id=offset,follow=request.user).exists():
             arg['type']=2
         else:
             arg['type']=1
         arg['content'] = '关注成功'
-    json = simplejson.dumps(arg)
-    return HttpResponse(json)
+  except Exception as e:
+    arg={'type':'error','error_message':e.message}
+  json = simplejson.dumps(arg)
+  return HttpResponse(json)
 
 '''
 初始化个人信息页面

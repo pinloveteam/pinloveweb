@@ -89,7 +89,9 @@
         					},
         					success:function(data, textStatus){
         						$('.col-xs-9').children(':gt(0)').remove();
-        						data.messageList=$.parseJSON(data.messageList);
+        						if(typeof(data.messageList)!='object'){
+        							data.messageList=$.parseJSON(data.messageList);
+        						}
         						init_message(data.messageList);
         						set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
         						},
@@ -119,7 +121,7 @@
 		        		$('#noReadFollowMessageCount').html(noReadFollowMessage).show();
 		        	}
 		        }else if($('#noReadFollowMessageCount').is(':hidden')==false){
-		        	('#noReadFollowMessageCount').hide();
+		        	$('#noReadFollowMessageCount').hide();
 		        	noReadFollowMessageCount=noReadComment
 		        };
 		        if(noReadMessage>0){
@@ -137,8 +139,8 @@
 		        		$('#noReadAgreeCount').html(noReadAgree).show();
 		        	}
 		        }else if($('#noReadAgreeCount').is(':hidden')==false){
-		        	('#noReadAgreeCount').hide();
-		        	noReadFollowMessageCount=noReadComment
+		        	$('#noReadAgreeCount').hide();
+		        	noReadAgreeCount=noReadAgree;
 		        };
 		        if(noReadComment>0){
 		        	if(noReadFollowMessageCount!=noReadComment){
@@ -226,6 +228,7 @@
                     	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
                     	dynamic_agree_clone.find('#username').html(message.sender_name);
                     	dynamic_agree_clone.find('#time').html(message.sendTime);
+                    	dynamic_agree_clone.find('#dynamic_content').html(message.friendDynamic_content);
                     	if(message.isRead==0){
                     		dynamic_agree_clone.addClass('unread')
                         }
@@ -476,9 +479,9 @@
 								<li>
 									<a id='follow' href="/message/follow_list/" onclick="return false;">
 										新的粉丝
-										<div id="noReadFollowMessageCount" class="notice" style="left: 130px; top: 11px;{%ifequal noReadFollowMessageCount 0%}display: none;{%endifequal%}"> 
-										{%ifequal noReadFollowMessageCount 0%}0{%else%}{{noReadFollowMessageCount}}{%endifequal%}</div>
 									</a>
+									<div id="noReadFollowMessageCount" class="notice" style="left: 130px; top: 11px;{%ifequal noReadFollowMessageCount 0%}display: none;{%endifequal%}"> 
+										{%ifequal noReadFollowMessageCount 0%}0{%else%}{{noReadFollowMessageCount}}{%endifequal%}</div>
 								</li>
 							</ul>
 						</div>
