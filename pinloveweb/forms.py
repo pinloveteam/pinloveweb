@@ -69,6 +69,7 @@ class RegistrationForm (UserCreationForm) :
         username = self.cleaned_data["username"]
         if len(username.encode('gbk'))>self.USERNAME_LENGTH_LIMIT:
             raise forms.ValidationError(self.error_messages['too_long_username'])
+        return username
 #         try:
 #             User._default_manager.get(username=username)
 #         except User.DoesNotExist:
