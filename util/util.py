@@ -104,17 +104,17 @@ def time_for_now(dateTime):
     import datetime
     now=datetime.datetime.today()
     timedelta=(now-dateTime)
-    if timedelta.seconds<60:
+    if now.day>dateTime.day and timedelta.seconds>60*60*24:
+        return  '%s%s'%(now.day-dateTime.day,'天以前')
+    elif now.year>dateTime.year and timedelta.seconds>60*60*24:
+        return  '%s%s'%(now.year-dateTime.year,'年以前')
+    elif now.month>dateTime.month and timedelta.seconds>60*60*24:
+        return  '%s%s'%(now.month-dateTime.month,'月以前')
+    elif timedelta.seconds<60 :
         return  '刚刚'
         return  '%s%s'%(timedelta.seconds,'秒')
     elif timedelta.seconds<60*60:
         return '%s%s'%(int(timedelta.seconds/60),'分以前')
     elif timedelta.seconds<60*60*24:
         return '%s%s'%(int(timedelta.seconds/(60*60)),'小时以前')
-    elif now.day>dateTime.day:
-        return  '%s%s'%(now.day-dateTime.day,'天以前')
-    elif now.year>dateTime.year:
-        return  '%s%s'%(now.year-dateTime.year,'年以前')
-    elif now.month>dateTime.month:
-        return  '%s%s'%(now.month-dateTime.month,'月以前')
     

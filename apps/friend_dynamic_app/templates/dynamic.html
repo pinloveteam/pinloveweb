@@ -223,9 +223,12 @@ function init_dynamic(dynamicList){
 		dynamicObj=this;
 		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-60.jpeg');
 		dynamic.find('#username').html(this.publishUserName);
-		dynamic.find('#time').html(this.publishTime+'以前发布');
+		dynamic.find('#time').html(this.publishTime+'发布');
 		dynamic.find('#content').html(this.content);
 		dynamic.find('#agreeNum').html('('+this.argeeNum+')');
+		if(userId==this.publishUserId){
+			dynamic.find('.trend').prepend('<span class="delete">删除 </span>')
+		}
 		if(this.type==2){
 			dataList=Array();
 			imgList=this.data
@@ -547,7 +550,6 @@ function upload_photo_success(picNameList){
 		</div>
 		<div class="col-xs-9">
 			<div  class="trend">
-			    <span class="delete"> 删除 </span>
 				<div class="trend-content">
 					<center id="pic" style="clear: both">
 						<p></p>
@@ -573,7 +575,7 @@ function upload_photo_success(picNameList){
 					</div>
 					<div class="col-xs-9">
 					 <span id='username'>张三</span>
-					  赞了这张照片 
+					  点了赞 
 					</div>
 				</div>
 				<div id="comment" class="comment row">
