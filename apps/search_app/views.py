@@ -47,9 +47,6 @@ def search(request):
         else:
             userProfileList=UserProfile.objects.filter().exclude(user=request.user)
             searchList=get_recommend_list(request,userProfile,userProfileList)
-            if request.GET.get('ajax')=='true':
-                from pinloveweb.method import load_cards_by_ajax
-                return load_cards_by_ajax(request,searchList)
             from apps.pojo.card import MyEncoder
             searchList.object_list=simplejson.dumps(searchList.object_list,cls=MyEncoder)
             args['pages']=searchList
@@ -61,6 +58,9 @@ def search(request):
             args['sunSign']=SUN_SIGN_CHOOSICE
             from pinloveweb.method import get_no_read_web_count
             args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
+            if request.is_ajax():
+                from pinloveweb.method import load_cards_by_ajax
+                return load_cards_by_ajax(request,searchList)
             return render(request, 'simple_search.html',args)
     except Exception as e:
         print e

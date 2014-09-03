@@ -15,7 +15,7 @@ class MessageBean(object):
         self.id=kwargs.pop('id',None)
         self.senderId=kwargs.pop('sender_id',None)
         self.receiverId=kwargs.pop('receiver_id',None)
-        self.senderName=kwargs.pop('senderName',None)
+        self.senderName=kwargs.pop('sende_name',None)
         self.receiverName=kwargs.pop('receiverName',None)
         self.content=kwargs.pop('content',None)
         if self.content:
@@ -26,20 +26,10 @@ class MessageBean(object):
         self.isDeleteSender=kwargs.pop('isDeletereceiver',None)
         self.isDeletereceiver=kwargs.pop('isDeletereceiver',None)
         self.isRead=kwargs.pop('isRead',None)
-        self.avatarName=None if self.senderId is None else self.get_avatar_name(kwargs.get('userId'),type=kwargs.get('type'))
+        self.avatarName=get_avatar_name(kwargs.get('userId'),self.senderId)
         if not self.senderId  is  None:
             self.is_black_list()
         
-    '''
-    获取头像
-    myId当前用户的id
-    '''
-    def get_avatar_name(self,myId,type=None):
-        userId=self.senderId
-        if not type is None:
-            if myId==self.senderId:
-                userId=self.receiverId
-        return get_avatar_name(myId,userId)
         
     '''
     判断在不在黑名单

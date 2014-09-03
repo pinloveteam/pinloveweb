@@ -71,7 +71,7 @@ def message_list(request,template_name):
                 data=page(request,messageLogList)
             from apps.pojo.message import messagedynamics_to_message_page
             messageList=messagedynamics_to_message_page(data['pages'].object_list)
-            args['messageList']=messageList
+            args['messageList']=simplejson.dumps(messageList)
             if data['pages'].has_next():
                 #如果为未读
                 if data['pages'].object_list[0]['isRead']:

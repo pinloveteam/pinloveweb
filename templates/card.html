@@ -61,10 +61,10 @@ success=function(data){
    	    	}
 	 if(data.result=='success'){
 		 next_page=data['next_page_number']
-		    if(typeof(data.messageList)!="object"){
-		       	data.messageList=$.parseJSON(data.messageList);
+		    if(typeof(data.cards)!="object"){
+		    	data.cards=$.parseJSON(data.cards);
 		     }
-		   	  set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
+		      set_count(data.noReadCount)
 		      init_card(data.cards)
 		      venobox(); 
 	 }else{

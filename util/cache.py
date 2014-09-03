@@ -193,12 +193,12 @@ def init_profile_into_cache(userId):
 @return: list 黑名单列表
 '''
 def get_black_list_by_cache():
-    return  cache.get('BACKLIST',None)
+    return  cache.get('BACKLIST',[])
 '''
 将用户id缴入黑名单列表
 '''
 def set_black_list_by_cache(userId):
-    blackList=cache.get('BACKLIST',None)
+    blackList=cache.get('BACKLIST',[])
     blackList.append(userId)
     cache.set('BACKLIST',blackList)
 '''
