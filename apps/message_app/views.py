@@ -351,6 +351,7 @@ def get_no_read_messge_by_ids(request):
     except Exception,e:
         logger.exception('根据id获取未读信息,出错!')
         args={'result':'error','error_message':e.message}
+        json=simplejson.dumps(args,cls=MessageBeanEncoder)
         return HttpResponse(json)
 
 def message_test(request):
