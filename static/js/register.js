@@ -1,4 +1,4 @@
-var s=["id_country","id_stateProvince","id_city"];
+var area=["id_country","id_stateProvince","id_city"];
 var opt0 = ["请选择","请选择","请选择"]; 
 $(document).ready(function(){
 	
@@ -13,8 +13,8 @@ $(document).ready(function(){
 //       	 	});
 	 
 	 $(window).load(function() {
-	    	 for(i=0;i<s.length-1;i++)
-	 	        document.getElementById(s[i]).onblur=new Function("change("+(i+1)+")");
+	    	 for(i=0;i<area.length-1;i++)
+	 	        document.getElementById(area[i]).onblur=new Function("change("+(i+1)+")");
 	 	        change(0);
 	 	       $('#id_country').bind('change',function(){
 	 	    	  change(1)
@@ -47,12 +47,12 @@ $(document).ready(function(){
   var country=$('#id_country').find("option:selected").text();
 //  alert(country)
   var str="0";
-  for(i=0;i<v;i++){ str+=("_"+(document.getElementById(s[i]).selectedIndex-1));};
-  var ss=document.getElementById(s[v]);
+  for(i=0;i<v;i++){ str+=("_"+(document.getElementById(area[i]).selectedIndex-1));};
+  var ss=document.getElementById(area[v]);
   with(ss){
    length = 0;
    options[0]=new Option(opt0[v],opt0[v]);
-   if(v && document.getElementById(s[v-1]).selectedIndex>0 || !v)
+   if(v && document.getElementById(area[v-1]).selectedIndex>0 || !v)
    {
     if(dsy.Exists(str)){
      ar = dsy.Items[str];

@@ -54,11 +54,11 @@ def get_no_read_web_count(userId,fromPage=None):
     from apps.message_app.models import get_no_read_message_dynamic_list_count
     args['noReadCount']= get_no_read_message_dynamic_list_count(userId)
     if fromPage==u'card':
-        from apps.message_app.method import get_no_read_message_count
-        args['noReadMessageCount']=get_no_read_message_count(userId)
+        from apps.message_app.method import get_no_read_private_message_count
+        args['noReadMessageCount']=get_no_read_private_message_count(userId)
     elif fromPage==u'message':
-        from apps.message_app.method import get_no_read_follow_message_count,get_no_read_message_count
-        args['noReadMessageCount']=get_no_read_message_count(userId)
+        from apps.message_app.method import get_no_read_follow_message_count,get_no_read_private_message_count
+        args['noReadMessageCount']=get_no_read_private_message_count(userId)
         from apps.friend_dynamic_app.method import get_no_read_agree_count,get_no_read_comment_count
         args['noReadAgreeCount']=get_no_read_agree_count(userId)
         args['noReadFollowMessageCount']=get_no_read_follow_message_count(userId)

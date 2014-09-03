@@ -25,7 +25,7 @@ def message(request,template_name):
     args={}
     isRad=False
     user=request.user
-    from apps.message_app.models import get_message_dynamic_list,get_no_read_message_dynamic_list_count
+    from apps.message_app.models import get_no_read_message_dynamic_list_count,get_message_dynamic_list
     if get_no_read_message_dynamic_list_count(user.id)>0:
         messageDynamicList=get_message_dynamic_list(user.id,False)
     else:
@@ -61,7 +61,7 @@ def message(request,template_name):
 def message_list(request,template_name):
     args={}
     try:
-            if MessageLog.objects.get_no_read_msessge_count(request.user.id)>0:
+            if MessageLog.objects.get_no_read_private_msessge_count(request.user.id)>0:
                 messageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id)
                 data=page(request,messageLogList)
                 MessageIds=[messageLog['id'] for messageLog in data['pages'].object_list]
@@ -114,7 +114,7 @@ def get_follow_message(request,template_name):
                 data=page(request,followList)
             from apps.pojo.message import messagedynamics_to_message_page
             messageList=messagedynamics_to_message_page(data['pages'].object_list)
-            args['messageList']=messageList
+            args['messageList']=simplejson.dumps(messageList)
             if data['pages'].has_next():
                 #如果为未读
                 if data['pages'].object_list[0]['isRead']:
@@ -163,9 +163,8 @@ def message_detail(request,template_name):
                 args['next_page_number']=-1
             args['userId']=request.user.id
             #标记已读
-            from apps.message_app.method import clean_message_by_user,get_no_read_message_count
+            from apps.message_app.method import clean_message_by_user
             clean_message_by_user(senderId,request.user.id)
-#             args['messageCount']=get_no_read_message_count(receiverId)
         else:
             args={'result':'error','error_message':'传递参数出错!'}
         if request.is_ajax():
@@ -336,17 +335,23 @@ def get_no_read_messge_by_ids(request):
         userIdList=[int(x) for x in userIdString.split(',')]
         if num:
             messageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id, 0, num)
-            messageList=[message for message in messageLogList if  message.message.sender_id in userIdList]
+            messageList=[messageLog for messageLog in messageLogList if  messageLog['sender_id'] in userIdList]
         else:
-            msessageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id)
-        from apps.pojo.message import MessageLog_to_Message
-        messageBeanList=MessageLog_to_Message(messageList,request.user.id)
+            messageList=MessageLog.objects.get_no_read_messagelog(request.user.id)
+        MessageLog.objects.filter(message_id__in=[messageTmp['id'] for messageTmp in messageList]).update(isRead=True)
+        from apps.pojo.message import MessageLog_to_MessageBean
+        messageBeanList=MessageLog_to_MessageBean(messageList,request.user.id)
         args['messageList']=messageBeanList
+        #获取消息数
+        from pinloveweb.method import get_no_read_web_count
+        args.update(get_no_read_web_count(request.user,id))
         from apps.pojo.message import MessageBeanEncoder
         json=simplejson.dumps(args,cls=MessageBeanEncoder)
         return HttpResponse(json)
     except Exception,e:
         logger.exception('根据id获取未读信息,出错!')
+        args={'result':'error','error_message':e.message}
+        return HttpResponse(json)
 
 def message_test(request):
     return HttpResponse('abc')

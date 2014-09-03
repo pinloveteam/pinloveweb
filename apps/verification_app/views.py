@@ -107,7 +107,7 @@ def valid(request):
                 return  HttpResponse( "<script>window.parent.onUploadSuccess('education')</script>" )
             else:
                 errorMessage=[]
-                type={'education':u'学历','educationSchool':u'毕业学校','educationPicture':u'学历证明'}
+                type={'education':u'学历','educationSchool':u'毕业学校','educationPicture':u'学历证明',}
                 for item in educationValidForm.errors.items():
                     if item[0] in type.keys():
                        errorMessage.append([item[0],item[1][0]])

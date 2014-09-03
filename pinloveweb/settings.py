@@ -82,7 +82,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     #登录拦截     
-     'middleware.filter_middleware.AuthenticationMiddleware',
+     'middleware.authentication.AuthenticationMiddleware',
      #facebook
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCookieMiddleware',
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugTokenMiddleware',

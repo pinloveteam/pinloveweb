@@ -54,11 +54,13 @@ function loadData(no_load,success)
 	         url:window.location.pathname,
 	         data:{page:next_page},
 	         beforeSend: function(XMLHttpRequest){
+	        	 load_next_page=false;
 	         },
 	         success: function(data, textStatus){
 	        	 success(data);
 	         },
 	         complete: function(XMLHttpRequest, textStatus){
+	        	 load_next_page=true;
 	         },
 	         error: function(response){
 	             alert('网络异常!')

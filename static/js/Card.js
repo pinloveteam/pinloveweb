@@ -517,7 +517,14 @@ window.Card = function(person){
 			url:'/user/detailed_info/',
 			data:data,
 			dataType:"json",
+			beforeSend:function(XMLHttpRequest){
+				detail_info=false;
+			},
+			complete:function(XMLHttpRequest, textStatus){
+				detail_info=true;
+			},
 			success:function(data, textStatus){
+				if(data.result=='success'){
 					options={
 							compar:compare_flag,
 							type : 'frame',
@@ -538,7 +545,6 @@ window.Card = function(person){
 							 compare(userId,1,false)
 						 });
 					}
-					detail_info=true
 					$("div.computerMove").closest('.row').find('#appearancevote').click(function(){
 						vote(this);
 					});
@@ -580,10 +586,13 @@ window.Card = function(person){
 						
 					});
                     }
-			
+                	
+				}else if(data.result=='error'){
+					var body = $("<p>"+data.error_message+"</p>")
+					$.poplayer({body:body});
+				}
 			},
 			error:function(response){
-				detail_info=true;
 				var body = $("<p>网络异常!</p>")
 	        	 $.poplayer({body:body});
 			},
@@ -650,7 +659,7 @@ window.Card = function(person){
 		this.template.find('.btn_send_msg').on('click',sendMsg);
 		this.template.find(".icon_msg").on('click',init_msg);
 	}else{
-		this.template.find('#chat_tab').html('<span id="notChat">只有相互关注或者相互看过对方对我的打分才能聊天!</span>')
+		this.template.find('#chat_tab').html('<img id="notChat" src="/static/img/no_chat.gif"/>')
 	}
 	$('.card_row').append(this.template.children());
 	
@@ -723,6 +732,7 @@ function get_card_chat(num){
 						pane.jScrollPane();
 						api.scrollTo(0,9999);
 			      }
+			   set_count(data['noReadCount'])
 	   });
 	   };
 	  

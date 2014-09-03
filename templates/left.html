@@ -7,6 +7,13 @@ function upload_pic(){
 function hide_pic(){
 	$('#publishInputUploadPhotoArea2').hide();
 }
+//切换
+$(document).ready(function() {
+	$('.user_info').find('tbody a').click(function(){
+		init_tab();
+	})
+});
+
 </script>
 <div class="publishInputUploadPhotoArea" id="publishInputUploadPhotoArea2" style="width: 500px;position: absolute;top: 100px;left: 320px;display: none;">
     <form class="dropzone" id="my-dropzone" action="/dynamic/updatePhoto/" method="post" enctype="multipart/form-data">
@@ -27,7 +34,7 @@ function hide_pic(){
 				<table class="table" style="margin-bottom: 0; margin-top: -1px;">
 					<tbody>
 						<tr>
-							<td><a href='/user/user_profile/'><i
+							<td><a href='/user/user_profile/#upload_head_'><i
 									class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;修改头像</a></td>
 						</tr>
 						<tr>

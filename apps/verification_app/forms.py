@@ -61,6 +61,7 @@ class EducationValidForm(ModelForm):
         super(EducationValidForm,self).__init__(*args, **kwargs)
         self.fields['education'].choices=((u'',u'请选择'),(0,r'大专以下'),(1,r'大专'),(2,r'本科'),(3,r'硕士 '),(4,r'博士 '),)
         self.fields['education'].required=True
+        self.fields['educationPicture2'].required=False
         self.fields['educationPicture'].widget.attrs["style"] = "display:inline-block;"
         self.fields['educationPicture2'].widget.attrs["style"] = "display:inline-block;"
     educationPicture=forms.ImageField()

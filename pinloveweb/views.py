@@ -124,13 +124,14 @@ def loggedin(request,**kwargs) :
     disLikeUserIdList=get_cache_by_key(request.user.id)
     #获取推荐列表
     matchResultList=get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs)
+    from pinloveweb.method import get_no_read_web_count
+    arg.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
     if kwargs.get('card')==True:
         return matchResultList
-    if request.GET.get('ajax')=='true':
+    if request.is_ajax():
         from pinloveweb.method import load_cards_by_ajax
         return load_cards_by_ajax(request,matchResultList)
     from apps.pojo.card import MyEncoder
-    from django.utils import simplejson
     matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
     arg['pages']=matchResultList
     #判断是否是从注册页面过来
@@ -343,14 +344,15 @@ def newcount(request):
     return HttpResponse(json)
     
 def test(request):
-   try:
-      import hashlib
-      chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
-      return render(request,'test.html',{'chanel':chanel})
-   except :
-      logging.exception('sdsd')
-      logger.exception("An error occurred")
-      return HttpResponse('sd')
+    return render(request,'user-profile-1.html')
+#    try:
+#       import hashlib
+#       chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
+#       return render(request,'test.html',{'chanel':chanel})
+#    except :
+#       logging.exception('sdsd')
+#       logger.exception("An error occurred")
+#       return HttpResponse('sd')
 ############################
 @require_POST
 @csrf_exempt

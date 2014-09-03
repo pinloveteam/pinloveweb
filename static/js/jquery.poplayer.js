@@ -144,7 +144,7 @@
 		infoframe.click(function(){
 			return false;
 		});
-		var i1 = $('<div class="col-xs-4" style="padding-left: 0;"><img id="head" width="75px" src=""/></div><div class="col-xs-8" style="padding-right: 0;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>岁&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div>');
+		var i1 = $('<div class="col-xs-4" style="padding-left: 0;"><img id="head"  src=""/></div><div class="col-xs-8" style="padding-right: 0;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>岁&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div>');
 		i1.find('#head').attr('src', user.head);
 		i1.find('#name').html(user.name);
 		i1.find('#age').html(user.age);

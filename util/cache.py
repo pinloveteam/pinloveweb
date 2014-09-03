@@ -107,7 +107,7 @@ def has_recommend(user_id,field):
     user=recommend.get(user_id)
     if field =='userExpect':
         from apps.recommend_app.models import UserExpect
-        if not (UserExpect.objects.filter(user_id=user_id ,heighty1=0.00,heighty2=0.00,heighty3=0.00,heighty4=0.00,heighty5=0.00,heighty6=0.00,heighty7=0.00,heighty8=0.00).exists()):
+        if UserExpect.objects.filter(user_id=user_id).exists() and (not (UserExpect.objects.filter(user_id=user_id ,heighty1=0.00,heighty2=0.00,heighty3=0.00,heighty4=0.00,heighty5=0.00,heighty6=0.00,heighty7=0.00,heighty8=0.00).exists())):
             user['userExpect']=True
     elif field =='grade':
         from apps.recommend_app.models import Grade

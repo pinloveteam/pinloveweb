@@ -67,16 +67,17 @@ userId： int 用户id
 '''
 def detailed_info(request):
     try:
+        args={}
         userId=int(request.GET.get('userId'))
         compareId=request.GET.get('compareId',None)
+        from apps.user_app.method import detailed_info_div
+        if not compareId is None:
+            args=detailed_info_div(request.user.id,userId,compareId)
+        else:
+            args=detailed_info_div(request.user.id,userId)
     except Exception as e:
-        print 'userId转换失败'
-    args={}
-    from apps.user_app.method import detailed_info_div
-    if not compareId is None:
-        args=detailed_info_div(request.user.id,userId,compareId)
-    else:
-        args=detailed_info_div(request.user.id,userId)
+        logger.exception('用户详细信息，出错!')
+        args={'result':'error','error_message':e.message}
     json=simplejson.dumps(args)
     return HttpResponse(json)
 '''
@@ -171,7 +172,7 @@ def update_follow(request):
         from apps.user_app.user_settings import FOLLOW_MESSAGE
         reply_content=FOLLOW_MESSAGE%(request.user.username,request.user.id)
         from apps.message_app.method import add_message_121
-        add_message_121(ADMIN_ID,offset,reply_content,2)
+        add_message_121(request.user.id,offset,reply_content,2)
         if Follow.objects.filter(my_id=offset,follow=request.user).exists():
             arg['type']=2
         else:
@@ -251,7 +252,7 @@ def update_profile(request):
 #             tagList=request.REQUEST.get('tagList','').split(',')
             #保存 user_profle信息
             userProfile = userProfileForm.save(commit=False)
-            userProfile.user.username=request.POST['username']
+#             userProfile.user.username=request.POST['username']
 #             for field in ['country','stateProvince','city']:
 #                 setattr(userProfile,field,request.POST[field])
             #计算资料完成度

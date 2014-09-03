@@ -6,11 +6,11 @@ Created on 2014年6月26日
 '''
 from apps.message_app.models import MessageLog, Message
 '''
-获取未读信息
+获取未读私信
 '''
-def get_no_read_message_count(userId):
+def get_no_read_private_message_count(userId):
     #获取未读消息的数量
-    count=MessageLog.objects.get_no_read_msessge_count(userId)
+    count=MessageLog.objects.get_no_read_private_msessge_count(userId)
     return count
 
 def get_no_read_follow_message_count(userId):

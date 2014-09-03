@@ -142,8 +142,9 @@ def get_detail_info(myId,userId,socreForOther):
             voteScore=int(AppearanceVoteRecord.objects.get(user_id=myId,other_id=userId).score)
         else:
             voteScore=0
+    from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
     data={
-                        'head' : '%s%s%s'%('/media/',userProfile.avatar_name,'-110.jpeg'),
+                        'head' : '%s%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME,'-60.jpeg'),
                         'tag' : tags,
                         'name' : userProfile.user.username,
                         'userId':userProfile.user_id,
@@ -175,11 +176,17 @@ def detailed_info_div(myId,userId,compareId=None):
     args={}
     from apps.recommend_app.views import get_socre_for_other
     socreForOther=get_socre_for_other(myId,userId)
+    #判断个人信息是否填写完整
+    if socreForOther['result']=='error':
+        args['result']='error'
+        args['error_message']=socreForOther['error_message']
+        return args
     #获取页面详细信息
     args['user1']=get_detail_info(myId,userId,socreForOther)
     if not compareId is None:
         compareSocreForOther=get_socre_for_other(myId,compareId)
         args['user2']=get_detail_info(myId,compareId,compareSocreForOther)
+    args['result']='success'
     return args
     
 '''

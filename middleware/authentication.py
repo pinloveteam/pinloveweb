@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on Nov 19, 2013
 
@@ -8,6 +9,7 @@ import logging
 logger=logging.getLogger(__name__)
 import re
 from django.utils import simplejson
+#登录拦截中间件
 class AuthenticationMiddleware(object):   
     def process_request(self, request):  
         passList=['/user/reset_password/','/account/forget_password/','/account/auth/','/account/register/','/','/game/jigsaw/','/game/pintu_for_facebook/','/pay_app/icon/','/pay_app/exchange_game_count/','/game/request_life/','/game/confirm_request_life/(.+)/','/account/check_register/']
@@ -21,7 +23,7 @@ class AuthenticationMiddleware(object):
             if request.user.is_authenticated():
                 return None  
             else:
-                if request.REQUEST.get('ajax',False):
+                if request.is_ajax():
                     json=simplejson.dumps({'login':'invalid','redirectURL':'/?next='+request.path})
                     return HttpResponse(json)
                 if request.path in ['/account/loggedout/','/account/invalid/']:

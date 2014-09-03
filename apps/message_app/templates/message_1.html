@@ -10,66 +10,14 @@
 	$(document).ready(function(){
                 messageList={{messageList|safe }};
                 init_message(messageList);
-                menu();
+                init_menu();
                 //回复窗口
                 $('.reply-btn').click(function(){
      			   $(this).parents('.message').next().slideDown('slow');
      			   $(this).hide();
      			});
-                //关注
-                $('.follow').click(function(){
-                	var context=$(this);
-                	senderId=$(this).closest('#follow').find('#senderId').val();
-                	$.ajax({
-						dataType:"json",
-						url:'/user/update_follow',
-						data:{userId:senderId,type:1},
-						beforeSend:function(XMLHttpRequest){
-							context.attr('disabled',true);
-						},
-						complete:function(XMLHttpRequest, textStatus){
-							$('.follow').attr('disabled',false)
-						},
-						success:function(data, textStatus){
-							 var message='';
-							 if(data['result']=='follow'){
-								  var body=$('<p>已经关注!</p>')
-								  $.poplayer({body:body});
-								  return;
-							  }
-							  if(data['type']==1){
-									myFollow=myFollow+1
-									$('#myFollow').html(myFollow)
-									var body=$('<p>关注成功!</p>')
-									 $.poplayer({body:body});
-									 message='已经关注';
-							  }else if(data['type']==2){
-								    message='相互关注';
-									var body=$('<p>关注成功!</p>')
-									 $.poplayer({body:body});
-								  };
-								  context.html(message)
-								  
-						},
-	                    error: function(response){
-	                    	var body=$('<p>网络异常!</p>')
-							 $.poplayer({body:body});
-	                    },
-						
-					});
-                });
-                function menu(){
-                	pathname=window.location.pathname;
-                	var context=null;
-                	$($('.nav').find('a')).each(function(){
-                		if(pathname==this.pathname){
-                			context=$(this).parent();
-                			return false; 
-                		}
-                	})
-                	$('.nav').children().removeClass('active');
-                	context.addClass('active');
-                }
+              
+                
                 //菜单切换
                 $('.nav').children().click(function(){
                 	var context=$(this);
@@ -109,6 +57,49 @@
                 	
                 });
             })
+            //关注
+            function follow(){
+                	var context=$(this);
+                	senderId=$(this).closest('#follow').find('#senderId').val();
+                	$.ajax({
+						dataType:"json",
+						url:'/user/update_follow',
+						data:{userId:senderId,type:1},
+						beforeSend:function(XMLHttpRequest){
+							context.attr('disabled',true);
+						},
+						complete:function(XMLHttpRequest, textStatus){
+							$('.follow').attr('disabled',false)
+						},
+						success:function(data, textStatus){
+							 var message='';
+							 if(data['result']=='follow'){
+								  var body=$('<p>已经关注!</p>')
+								  $.poplayer({body:body});
+								  return;
+							  }
+							  if(data['type']==1){
+									myFollow=myFollow+1
+									$('#myFollow').html(myFollow)
+									var body=$('<p>关注成功!</p>')
+									 $.poplayer({body:body});
+									 message='已经关注';
+							  }else if(data['type']==2){
+								    message='相互关注';
+									var body=$('<p>关注成功!</p>')
+									 $.poplayer({body:body});
+								  };
+								  context.html(message)
+								  
+						},
+	                    error: function(response){
+	                    	var body=$('<p>网络异常!</p>')
+							 $.poplayer({body:body});
+	                    },
+						
+					});
+                };
+                
             //左边菜单的未读信息数
             var noReadFollowMessageCount={%ifequal noReadFollowMessageCount 0%}0{%else%}{{noReadFollowMessageCount}}{%endifequal%};
             var	noReadMessageCount={%ifequal noReadMessageCount 0%}0{%else%}{{noReadMessageCount}}{%endifequal%};
@@ -302,8 +293,24 @@
        			   $(this).parents('.message').next().slideDown('slow');
        			   $(this).hide();
        			});
+                 $('.follow').unbind(follow);
+                 $('.follow').click(follow);
 
             };
+           // 菜单初始化
+            function init_menu(){
+            	pathname=window.location.pathname;
+            	var context=null;
+            	$($('.nav').find('a')).each(function(){
+            		if(pathname==this.pathname){
+            			$('#nav_title').html($(this).html().trim());
+            			context=$(this).parent();
+            			return false; 
+            		}
+            	})
+            	$('.nav').children().removeClass('active');
+            	context.addClass('active');
+            }
         </script>
         <script type="text/javascript">
 	   //滚动加载
