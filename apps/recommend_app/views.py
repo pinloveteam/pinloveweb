@@ -166,7 +166,7 @@ def get_socre_for_other(userId,otherId):
                      for key in recommendStatus.keys():
                          if not recommendStatus[key]:
                              errorMessge+=dict[key]
-                     args={'result':'error','error_messge':'%s%s' %(errorMessge,u'未填写完整!')}
+                     args={'result':'error','error_message':'%s%s' %(errorMessge,u'未填写完整!')}
 #              else:
 #                  from apps.pojo.recommend import MarchResult_to_RecommendResult
 #                  matchResult=MarchResult_to_RecommendResult(matchResult)
