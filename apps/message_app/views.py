@@ -338,7 +338,7 @@ def get_no_read_messge_by_ids(request):
             messageList=[messageLog for messageLog in messageLogList if  messageLog['sender_id'] in userIdList]
         else:
             messageList=MessageLog.objects.get_no_read_messagelog(request.user.id)
-#         MessageLog.objects.filter(message_id__in=[messageTmp['id'] for messageTmp in messageList]).update(isRead=True)
+        MessageLog.objects.filter(message_id__in=[messageTmp['id'] for messageTmp in messageList]).update(isRead=True)
         from apps.pojo.message import MessageLog_to_MessageBean
         messageBeanList=MessageLog_to_MessageBean(messageList,request.user.id)
         args['messageList']=messageBeanList
