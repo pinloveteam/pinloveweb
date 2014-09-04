@@ -344,7 +344,7 @@ def get_no_read_messge_by_ids(request):
         args['messageList']=messageBeanList
 #         #获取消息数
         from apps.message_app.models import get_no_read_message_dynamic_list_count
-        args['noReadCount']=get_no_read_message_dynamic_list_count(request.user,id)
+        args.update(get_no_read_message_dynamic_list_count(request.user.id))
         from apps.pojo.message import MessageBeanEncoder
         json=simplejson.dumps(args,cls=MessageBeanEncoder)
         return HttpResponse(json)
