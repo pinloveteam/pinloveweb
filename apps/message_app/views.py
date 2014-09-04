@@ -338,13 +338,13 @@ def get_no_read_messge_by_ids(request):
             messageList=[messageLog for messageLog in messageLogList if  messageLog['sender_id'] in userIdList]
         else:
             messageList=MessageLog.objects.get_no_read_messagelog(request.user.id)
-        MessageLog.objects.filter(message_id__in=[messageTmp['id'] for messageTmp in messageList]).update(isRead=True)
+#         MessageLog.objects.filter(message_id__in=[messageTmp['id'] for messageTmp in messageList]).update(isRead=True)
         from apps.pojo.message import MessageLog_to_MessageBean
         messageBeanList=MessageLog_to_MessageBean(messageList,request.user.id)
         args['messageList']=messageBeanList
 #         #获取消息数
-#         from pinloveweb.method import get_no_read_web_count
-#         args.update(get_no_read_web_count(request.user,id))
+        from pinloveweb.method import get_no_read_web_count
+        args.update(get_no_read_web_count(request.user,id))
         from apps.pojo.message import MessageBeanEncoder
         json=simplejson.dumps(args,cls=MessageBeanEncoder)
         return HttpResponse(json)
