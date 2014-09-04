@@ -53,6 +53,8 @@ def get_no_read_web_count(userId,fromPage=None):
     args={}
     from apps.message_app.models import get_no_read_message_dynamic_list_count
     args['noReadCount']= get_no_read_message_dynamic_list_count(userId)
+    from apps.message_app.views import logger
+    logger.error(args['noReadCount'])
     if fromPage==u'card':
         from apps.message_app.method import get_no_read_private_message_count
         args['noReadMessageCount']=get_no_read_private_message_count(userId)
