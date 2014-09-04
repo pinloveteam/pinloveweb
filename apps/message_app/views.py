@@ -343,8 +343,8 @@ def get_no_read_messge_by_ids(request):
         messageBeanList=MessageLog_to_MessageBean(messageList,request.user.id)
         args['messageList']=messageBeanList
 #         #获取消息数
-        from pinloveweb.method import get_no_read_web_count
-        args.update(get_no_read_web_count(request.user,id))
+        from apps.message_app.models import get_no_read_message_dynamic_list_count
+        args['noReadCount']=get_no_read_message_dynamic_list_count(request.user,id)
         from apps.pojo.message import MessageBeanEncoder
         json=simplejson.dumps(args,cls=MessageBeanEncoder)
         return HttpResponse(json)
