@@ -1,36 +1,82 @@
 <script type="text/javascript" src="/static/js/dragdealer.js"></script>
 <link href="/static/css/dragdealer.css" rel="stylesheet">
 <script>
-		 $(function() {
-		 	var slider = ['slidera','sliderb','sliderc','sliderd','slidere','sliderf'];
-		 	var width = $('.dragdealer').width()-$('.handle').width();
-		 	slider.forEach(function(v){
-		 		new Dragdealer(v, {
-			    animationCallback: function(x, y) {
-			      var b = 0;
-			      surplus = parseInt($('#surplus').text());
-			      s = surplus + parseInt($('#'+v+' .value').text()?$('#'+v+' .value').text():0);
-			      $('#'+v+' .value').text(Math.round(x * s));
-			      
-			      slider.forEach(function(a){
-			      	 b = b + parseInt($('#'+a+' .value').text()?$('#'+a+' .value').text():0);
-			      });
-			      $('#surplus').text(100-b);
-			      this.bounds.availWidth = width * s / 100;
-			      
-			    }
-			  });
-		 	});
-			});
+$(function() {
+ 	var slider = ['slidera','sliderb','sliderc','sliderd','slidere','sliderf'];
+ 	var flag = [true,true,true,true,true,true];
+ 	var data = [{{heightweight}}/100,{{educationweight}}/100,{{incomeweight}}/100,{{appearanceweight}}/100,{{characterweight}}/100];
+ 	var width = $('.dragdealer').width()-$('.handle').width();
+ 	slider.forEach(function(v,k){
+ 		new Dragdealer(v, {
+	    animationCallback: function(x, y) {
+	      var b = 0;
+	      surplus = parseInt($('#surplus').text());
+	      s = surplus + parseInt($('#'+v+' .value').text()?$('#'+v+' .value').text():0);
+	      if(flag[k]){
+	      	s=100;
+	      	flag[k] = false;
+	      }
+	      $('#'+v+' .value').text(Math.round(x * s));
+	      $('#'+v+' .value').closest('.row').find('input').val(Math.round(x * s))
+	      slider.forEach(function(a){
+	      	 b = b + parseInt($('#'+a+' .value').text()?$('#'+a+' .value').text():0);
+	      });
+	      $('#surplus').text(100-b);
+	      this.bounds.availWidth = width * s / 100;
+	    },
+	    x:data[k]
+	  });
+ 	});
+	});
+$(document).ready(function(){
+	 //提交权重
+
+	 $("#update_weight").submit(function(){
+		    
+		     try{
+				    var weightData=$(this).find('input')
+				    var sum=0;
+				    for (var i=0; i<weightData.length; i++){
+				    	sum+=parseInt(weightData[i].value)
+				    }
+				    if (sum<100){
+				    	var body = $("<p>权重总和需为100%!</p>")
+					$.poplayer({body:body});
+				    	return false;
+				    }
+				 }catch(msg){
+				    	//alert('填写失误请重新填写！')
+				    	return false;
+				    }  
+			var data=$(this).serialize();
+			$.ajax({
+              type:'post',
+              url: "/recommend/update_weight/",
+              data:data,
+              success: function(data,textStatus){
+           	   data=$.parseJSON(data)
+           	   if(data.result== 'success'){
+           		   var body = $("<p>修改成功!</p>")
+						   $.poplayer({body:body});
+                  }else if(data.result == 'error'){
+               	   var body = $("<p>"+data.msg+"</p>")
+					$.poplayer({body:body});
+                  }
+              },
+          
+          });
+			  return false;
+		});
+});	
 </script>
-<p>总分=身高权重*身高得分+外貌权重*外貌得分+学历权重*学历得分+外貌权重*收入得分+性格权重*性格得分</p>
+<p>总分=身高权重*身高得分+外貌权重*外貌得分+学历权重*学历得分+外貌权重*收入得分+性格权重*性格得分</p>{{appearanceweight}}
 <form id="update_weight" action="" method="post">
      <div class="row" style="margin-top: 30px;">
 			<div class="col-xs-1">身高</div>
 			<div class="col-xs-11">
 				<div id="slidera" class="dragdealer">
 					<div class="handle red-bar">
-						<span class="value">{{heightweight}}</span>%
+						<span class="value"></span>%
 					</div>
 				</div>
 				<input type="hidden" name="height" value="{{heightweight}}">
@@ -41,7 +87,7 @@
 			<div class="col-xs-11">
 				<div id="sliderb" class="dragdealer">
 					<div class="handle red-bar">
-						<span class="value">{{educationweight}}</span>%
+						<span class="value"></span>%
 					</div>
 				</div>
 				<input type="hidden" name="education" value="{{educationweight}}">
@@ -53,7 +99,7 @@
 			<div class="col-xs-11">
 				<div id="sliderc" class="dragdealer">
 					<div class="handle red-bar">
-						<span class="value">{{incomeweight}}</span>%
+						<span class="value"></span>%
 					</div>
 				</div>
 				<input type="hidden" name="income" value="{{incomeweight}}">
@@ -65,10 +111,10 @@
 			<div class="col-xs-11">
 				<div id="sliderd" class="dragdealer">
 					<div class="handle red-bar">
-						<span class="value">{{appearanceweight}}</span>%
+						<span class="value"></span>%
 					</div>
 				</div>
-				<input type="hidden" name="character" value="{{appearanceweight}}">
+				<input type="hidden" name="appearance" value="{{appearanceweight}}">
 			</div>
 		</div>
 
@@ -77,7 +123,7 @@
 			<div class="col-xs-11">
 				<div id="slidere" class="dragdealer">
 					<div class="handle red-bar">
-						<span class="value">{{characterweight}}</span>%
+						<span class="value"></span>%
 					</div>
 				</div>
 				<input type="hidden" name="character" value="{{characterweight}}">

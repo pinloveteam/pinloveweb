@@ -15,8 +15,8 @@ class MessageBean(object):
         self.id=kwargs.pop('id',None)
         self.senderId=kwargs.pop('sender_id',None)
         self.receiverId=kwargs.pop('receiver_id',None)
-        self.senderName=kwargs.pop('sende_name',None)
-        self.receiverName=kwargs.pop('receiverName',None)
+        self.senderName=kwargs.pop('sender_name',None)
+        self.receiverName=kwargs.pop('receiver_name',None)
         self.content=kwargs.pop('content',None)
         if self.content:
             self.content=regex_expression(self.content)
