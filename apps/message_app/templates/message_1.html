@@ -13,8 +13,12 @@
                 init_menu();
                 //回复窗口
                 $('.reply-btn').click(function(){
-     			   $(this).parents('.message').next().slideDown('slow');
+                	var senderId=$(this).closest('#message').find('#senderId').val();
+     			   var reply=$(this).parents('.message').next();
+     			   reply.find('#senderId').val(senderId)
+     			   reply.slideDown('slow');
      			   $(this).hide();
+     			   
      			});
               
                 
@@ -161,9 +165,10 @@
                         $('.col-xs-9').append(message_reply);
                         message_reply.find('form').submit(function(){
                        	 var context=$(this);
+                         var senderId=context.find('#senderId').val()
                        	 publishTextArea=context.find('#publishTextArea');
                        	 content=publishTextArea.val();
-                       	 data={receiver_id:message.sender_id,reply_content:content,csrfmiddlewaretoken:getCookie('csrftoken')}
+                       	 data={receiver_id:senderId,reply_content:content,csrfmiddlewaretoken:getCookie('csrftoken')}
                        	 $.ajax({
         						dataType:"json",
         						 type: "POST",

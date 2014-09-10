@@ -41,8 +41,6 @@ def search(request):
                     userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
                                                height__gte=minHeigh,height__lte=maxHeigh,avatar_name_status='3',**searchSql).exclude(gender=userProfile.gender,user=request.user)
                     searchList=get_recommend_list(request,userProfile,userProfileList)
-                    from pinloveweb.method import load_cards_by_ajax
-                    return load_cards_by_ajax(request,searchList)
         
         else:
             userProfileList=UserProfile.objects.filter().exclude(user=request.user)
@@ -58,16 +56,17 @@ def search(request):
             args['sunSign']=SUN_SIGN_CHOOSICE
             from pinloveweb.method import get_no_read_web_count
             args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
-            if request.is_ajax():
-                from pinloveweb.method import load_cards_by_ajax
-                return load_cards_by_ajax(request,searchList)
+        if request.is_ajax():
+            from pinloveweb.method import load_cards_by_ajax
+            return load_cards_by_ajax(request,searchList)
+        else:
             return render(request, 'simple_search.html',args)
     except Exception as e:
         print e
 
 ################################
 def get_recommend_list(request,userProfile,userProfileList,**kwargs):
-    args=page(request,userProfileList)
+    args=page(request,userProfileList,page_num=2)
     matchResultList=args['pages']
     from apps.pojo.card import userProfileList_to_CardList
     matchResultList.object_list=userProfileList_to_CardList(request.user.id,matchResultList.object_list)

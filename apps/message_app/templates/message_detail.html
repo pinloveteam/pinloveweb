@@ -15,11 +15,11 @@
                 init_message_detail(messageList);
                 if(next_page==-1){
                 	var mroe=$('#message_clone').find('.mroe').clone();
-                	$('#message_list').append(mroe);
+                	$('#message_list').prepend(mroe);
                 	mroe.find('#more_content').html('没有更多信息!');
                 }else{
                 	var mroe=$('#message_clone').find('.mroe').clone();
-                	$('#message_list').append(mroe);
+                	$('#message_list').prepend(mroe);
                 	$('#more_content').click(function(){
                 		var context=$(this)
                 		$.ajax({
@@ -75,7 +75,7 @@
    			                      message_clone.find('#avatar').attr('src','/media/'+avatarName+'-60.jpeg');
    			                      message_clone.find('#content').html(content);
    			                      message_clone.find('#time').html(data.messageTime);
-   								 $('#message_list').prepend(message_clone);
+   								 $('#message_list').append(message_clone);
    								  publishTextArea.val('')
    							}
    							else{
@@ -157,9 +157,9 @@ function getCookie(name) {
                         message_clone.find('#content').html(message.content);
                         message_clone.find('#time').html(message.sendTime);
                         if($('#message_list').find('#more_content').length>0){
-                        	$('#message_list').find('.mroe').before(message_clone)
+                        	$('#message_list').find('.mroe').next().before(message_clone)
                         }else{
-                        	$('#message_list').append(message_clone);
+                        	$('#message_list').prepend(message_clone);
                         }
                        	
                  };
