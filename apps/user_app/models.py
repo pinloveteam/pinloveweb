@@ -138,7 +138,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     streetAddress = models.CharField(verbose_name=r"街道地址", max_length=255,null=True,blank=True,)
     INCOME_CHOICES = ((-1,"未填"),(1,"5万以下"))
     for income in range(5,100,1):  
-        INCOME_CHOICES += ((income, str(income)),)
+        INCOME_CHOICES += ((income, '%s%s'%(str(income),u'万')),)
     INCOME_CHOICES += ((100000, "100万以上"),)
     income = models.IntegerField(verbose_name=r"年薪（万元）", choices=INCOME_CHOICES, default=-1,null=True,blank=True,) # payRang=models.CharField(max_length=50)
    
