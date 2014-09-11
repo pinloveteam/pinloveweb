@@ -38,8 +38,10 @@ def search(request):
                     jobIndustry=searchForm.cleaned_data['jobIndustry']
                     if jobIndustry!='None' and jobIndustry!=u'':
                         searchSql['jobIndustry']=jobIndustry
+                    if education=='0':
+                        searchSql['education']=education
                     userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,avatar_name_status='3',**searchSql).exclude(gender=userProfile.gender,user=request.user)
+                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender,user=request.user)
                     searchList=get_recommend_list(request,userProfile,userProfileList)
         
         else:
