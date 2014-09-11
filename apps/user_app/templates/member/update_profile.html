@@ -22,6 +22,10 @@
         		$("#updateUserProfile").submit(function(){
                     
                     var data = $(this).serialize();
+                    var education=$(this).find('select[name="education"] option:selected').val();
+                    var educationSchool=$(this).find('input[name="educationSchool"]').val();
+                    var educationSchool_2=$(this).find('input[name="educationSchool_2"]').val();
+                    var income=$(this).find('select[name="income"] option:selected').val();
                     $.ajax({
                         type: $(this).attr('method'),
                         url: "/user/update_profile/",
@@ -47,6 +51,7 @@
                             			
                             		} */
                             		$('[id$="error"]').html("")
+                            		 update_certification(education,educationSchool,educationSchool_2,income)
                             		var body = $("<p>修改成功!</p>")
         							$.poplayer({body:body});
                             	}else{
@@ -72,6 +77,20 @@
                     return false;
                 });
             
+        		//
+        		function update_certification(education,educationSchool,educationSchool_2,income){
+        			if($('#certification').find('form[id="education_valid"]').length>0){
+        				form=$('#certification').find('form[id="education_valid"]');
+        				form.find('select[name="education"]').val(education);
+        				form.find('input[name="educationSchool"]').val(educationSchool);
+        				form.find('input[name="educationSchool_2"]').val(educationSchool_2);
+        			};
+        			if($('#certification').find('form[id="income_valid"]').length>0){
+        				$('#certification').find('form[id="income_valid"]').find('select[name="income"]').val(income);
+        			}
+        			
+        			
+        		};
         		//修改透明度
         		$('.tag-trigger').click(function(){
         			var opstr = $(this).css('opacity');

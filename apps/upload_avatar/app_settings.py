@@ -89,10 +89,12 @@ UPLOAD_AVATAR_WEB_LAYOUT = {
     'preview_areas': [
         {
             'size': 50,
+            'height':62,
             'text': '小 预览图'
         },
         {
             'size': 150,
+            'height':186,
             'text': '大预览图'
         },
     ]

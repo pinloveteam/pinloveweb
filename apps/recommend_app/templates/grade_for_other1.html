@@ -28,9 +28,13 @@
         $.jqplot.config.enablePlugins = true;
         //alert('sss')
       {%ifequal grade_for_other False%}
-      s2=[['160',0],['165',0],['170',0],['175',0],['180',0],['185',0],['190',0],['195',0]];
-       {%else%}
-         {% ifequal gender 'F' %}
+        {% ifequal gender 'F' %}
+         s2=[['160',0],['165',0],['170',0],['175',0],['180',0],['185',0],['190',0],['195',0]];
+         {%  else %}
+         s2=[['150',0],['155',0],['160',0],['165',0],['170',0],['175',0],['180',0],['185',0]]
+        {% endifequal %}
+      {%else%}
+       {% ifequal gender 'F' %}
          s2=[['160',{{grade_for_other.heighty1}}],['165',{{grade_for_other.heighty2}}],['170',{{grade_for_other.heighty3}}],['175',{{grade_for_other.heighty4}}],['180',{{grade_for_other.heighty5}}],['185',{{grade_for_other.heighty6}}],['190',{{grade_for_other.heighty7}}],['195',{{grade_for_other.heighty8}}]]
       {%  else %}
          s2=[['150',{{grade_for_other.heighty1}}],['155',{{grade_for_other.heighty2}}],['160',{{grade_for_other.heighty3}}],['165',{{grade_for_other.heighty4}}],['170',{{grade_for_other.heighty5}}],['175',{{grade_for_other.heighty6}}],['180',{{grade_for_other.heighty7}}],['185',{{grade_for_other.heighty8}}]]
@@ -84,17 +88,12 @@
             },
          axes: {
              xaxis: {
-            	 {%ifequal grade_for_other False%}
-            	 min:160,
-				 max:195,
-				 {%else%}
             	 {% ifequal gender 'F' %}
                  min:160,
 				 max:195,
                 {%  else %}
                  min:150,
 				 max:185,
-                {% endifequal %}
                 {% endifequal %}
 				 numberTicks:8,
                  tickOptions: {
@@ -209,5 +208,4 @@
  <input type="hidden" id="result" name="result" value="">
 <div id="chartdiv" ></div> 
 <button class="btn btn-pink btn-save">保存</button>
-
 </form> 
