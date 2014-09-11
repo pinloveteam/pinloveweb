@@ -31,7 +31,9 @@ logger = logging.getLogger(__name__)
 网站基本信息介绍
 '''
 def web(request,template_name):
-    return render(request,template_name,)
+    from pinloveweb.method import get_no_read_web_count
+    args=get_no_read_web_count(request.user.id)
+    return render(request,template_name,args)
 ####################
 
 def login(request) :

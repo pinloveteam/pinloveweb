@@ -445,7 +445,7 @@ def show_comment(request):
     commentIds=[comment.id for comment in commentList if comment.receiver_id==request.user.id]
     FriendDynamicComment.objects.filter(id__in=commentIds).update(isRead=True)
     from apps.pojo.dynamic import FriendDynamicCommentList_to_DynamicCommentList
-    dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList(commentList)
+    dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList(request.user.id,commentList)
     from apps.pojo.dynamic import DynamicCommentEncoder
     json=simplejson.dumps(dynamicCommentList,cls=DynamicCommentEncoder)
     return HttpResponse(json)
@@ -499,7 +499,7 @@ def comment(request):
         commentNum=FriendDynamic.objects.get(id=dynamicId).commentNum
         FriendDynamic.objects.filter(id=dynamicId).update(commentNum=commentNum+1)
         from apps.pojo.dynamic import FriendDynamicCommentList_to_DynamicCommentList
-        dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList([comment,])
+        dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList(request.user.id,[comment,])
         arg['type']='success'
         arg['dynamicCommentList']=dynamicCommentList
         from apps.pojo.dynamic import DynamicCommentEncoder

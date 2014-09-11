@@ -11,6 +11,9 @@ $(function(){
 		 if(this.id=='id_educationSchool_2'){
 			 provinceSchool.find('.proSelect  option[value="98"]').attr("selected",true)
 			 change_pro(98)
+		 }else{
+			 var selectPro =$("div[class='proSelect'] select").val()
+			 change_pro(selectPro)
 		 }
 //		  var top = $(this).position().top+22;
 //    	  var left = $(this).position().left;
@@ -103,8 +106,8 @@ $(function(){
 		  }else if("1"==flag){
 		    var selectPro = $("div[class='proSelect'] select").val();
 		    if("99"==selectPro){
-		    	
-		      $("#id_educationSchool").val($("div[class='proSelect'] input").val());
+		    	$(this).closest('.school_div').find('input[id^="id_educationSchool"]').val($(this).closest('.provinceSchool').find("div[class='proSelect'] input").val())
+		      //$("#id_educationSchool").val($("div[class='proSelect'] input").val());
 		    }
 		  	$("div[class='provinceSchool']").hide();
 		  }

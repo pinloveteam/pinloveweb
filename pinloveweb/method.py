@@ -104,6 +104,8 @@ def load_cards_by_ajax(request,cardList):
          data['has_next']=cardList.has_next()
          if cardList.has_next():
              data['next_page_number']=cardList.next_page_number()
+         else:
+             data['next_page_number']=-1
          if cardList.has_previous():
             data['previous_page_number']=cardList.previous_page_number()
          data['has_previous']=cardList.has_previous()

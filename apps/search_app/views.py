@@ -66,7 +66,7 @@ def search(request):
 
 ################################
 def get_recommend_list(request,userProfile,userProfileList,**kwargs):
-    args=page(request,userProfileList,page_num=2)
+    args=page(request,userProfileList)
     matchResultList=args['pages']
     from apps.pojo.card import userProfileList_to_CardList
     matchResultList.object_list=userProfileList_to_CardList(request.user.id,matchResultList.object_list)

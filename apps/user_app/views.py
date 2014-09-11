@@ -27,7 +27,6 @@ from apps.pojo.card import MyEncoder
 from django.utils import simplejson
 from django.db import transaction
 from pinloveweb.forms import ChangePasswordForm
-from pinloveweb.settings import ADMIN_ID
 logger=logging.getLogger(__name__)
 
 '''

@@ -165,6 +165,9 @@ def message_detail(request,template_name):
             #标记已读
             from apps.message_app.method import clean_message_by_user
             clean_message_by_user(senderId,request.user.id)
+            #获取未读信息条数
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
         else:
             args={'result':'error','error_message':'传递参数出错!'}
         if request.is_ajax():

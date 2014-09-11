@@ -33,7 +33,7 @@ class DynamicCommentEncoder(simplejson.JSONEncoder):
         dict=obj.__dict__
         return dict
 
-def FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList):
+def FriendDynamicCommentList_to_DynamicCommentList(userId,friendDynamicCommentList):
     dynamicCommentList=[]
     for friendDynamicComment in friendDynamicCommentList:
         id=friendDynamicComment.id
@@ -44,7 +44,8 @@ def FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList):
             receiver=None
         content=friendDynamicComment.content
         commentTime=friendDynamicComment.commentTime
-        reviewerAvatarName=friendDynamicComment.get_avatar_name(friendDynamicComment.reviewer.id)
+        from apps.user_app.method import get_avatar_name
+        reviewerAvatarName=get_avatar_name(userId, friendDynamicComment.reviewer.id)
         dynamicComment=DynamicComment(id,reviewer,receiver,content,commentTime,reviewerAvatarName)
         dynamicCommentList.append(dynamicComment)
     return dynamicCommentList
@@ -105,7 +106,7 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
             friendDynamicArgeeList=FriendDynamicArgee.objects.get_agree_List_by_ids([userId,dynamic.publishUserId],friendDynamic.id)
             dynamic.argeeNum=FriendDynamicArgee.objects.filter(friendDynamic_id=friendDynamic.id,user_id__in=[dynamic.publishUserId,userId]).count()
         friendDynamicCommentList=friendDynamicCommentList.reverse()
-        dynamic.commentList=simplejson.dumps(FriendDynamicCommentList_to_DynamicCommentList(friendDynamicCommentList),cls=DynamicCommentEncoder)
+        dynamic.commentList=simplejson.dumps(FriendDynamicCommentList_to_DynamicCommentList(userId,friendDynamicCommentList),cls=DynamicCommentEncoder)
         for friendDynamicArgee in friendDynamicArgeeList:
             from apps.user_app.method import get_avatar_name
             dynamic.agreeList.append({'userId':friendDynamicArgee['sender_id'],'username':friendDynamicArgee['sender_name'],'avatarName':get_avatar_name(userId,friendDynamicArgee['sender_id']),'time':friendDynamicArgee['sendTime'].strftime("%m-%d %H:%M")})
