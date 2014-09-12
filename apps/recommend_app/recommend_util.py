@@ -47,11 +47,8 @@ return：
 def cal_education(user_education,school):
         educationMap={'master':5,'doctor':10}
         if not School.objects.filter(name__startswith=school,name__endswith=school).exists():
-            return 40
-#             if user_education==-1:
-#                 return 40
-#             else:
-#                 return schoolTupe[4-user_education]
+            school=School.objects.all().order_by('-ranking')[0]
+            return cal_ranking_score(school)
         else :
             school=School.objects.get(name__startswith=school,name__endswith=school)
             if user_education==-1:

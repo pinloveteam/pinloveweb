@@ -45,7 +45,7 @@ def search(request):
                     searchList=get_recommend_list(request,userProfile,userProfileList)
         
         else:
-            userProfileList=UserProfile.objects.filter().exclude(user=request.user)
+            userProfileList=UserProfile.objects.filter().exclude(user=request.user).exclude(gender=userProfile.gender).filter(avatar_name_status='3')
             searchList=get_recommend_list(request,userProfile,userProfileList)
             from apps.pojo.card import MyEncoder
             searchList.object_list=simplejson.dumps(searchList.object_list,cls=MyEncoder)

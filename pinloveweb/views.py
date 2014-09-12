@@ -160,9 +160,9 @@ def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):
          matchResultList.object_list=matchResultList_to_CardList(request.user.id,matchResultList.object_list)
     else:
           if disLikeUserIdList is None: 
-              userProfileList=UserProfile.objects.exclude(gender=userProfile.gender, avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS,)
+              userProfileList=UserProfile.objects.filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS,)
           else:
-              userProfileList=UserProfile.objects.exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender, avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)
+              userProfileList=UserProfile.objects.filter(avatar_name_status='3').exclude(user_id__in=disLikeUserIdList).exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)
           arg=page(request,userProfileList,**kwargs)   
           matchResultList=arg['pages']
           from apps.pojo.card import userProfileList_to_CardList

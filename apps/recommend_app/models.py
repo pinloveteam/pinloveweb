@@ -72,6 +72,8 @@ class UserExpectManager(models.Manager):
         if UserExpect.objects.filter(user_id=user_id).exists():
             UserExpect.objects.filter(user_id=user_id).update(*args,**kwargs)
         else:
+            from apps.user_score_app.method import get_score_by_height_score
+            get_score_by_height_score(user_id)
             UserExpect(user_id=user_id,*args,**kwargs).save()
 class UserExpect(models.Model):
     user=models.ForeignKey(User,related_name='User')

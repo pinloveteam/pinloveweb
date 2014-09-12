@@ -12,6 +12,30 @@
     <link href="{{STATIC_URL}}css/poplayer.css" rel="stylesheet">
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.poplayer.js"></script>
     <script src="{{STATIC_URL}}js/jquery.loading.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+    $(document).ready(function() {
+    	$('.indexFooter .bd-btn').click(function () {
+    		var UA = navigator.userAgent.toLowerCase(); 
+    		var footer = $('.indexFooter .footer-bd');
+    		if(footer.css('display')=='none'){
+    			footer.slideDown(400);
+    			$('.indexFooter .btn-icon').css({
+    				'border-color':'#363636 transparent transparent transparent',
+    				'top':'10px'
+    			});
+    			jQuery('html').animate({scrollTop:footer.offset().top},400);
+    			jQuery('body').animate({scrollTop:footer.offset().top},400);
+    		 
+    		}else{
+    			footer.slideUp(400);
+    			$('.indexFooter .btn-icon').css({
+    				'border-color':'transparent transparent #363636 transparent',
+    				'top':'-10px'
+    			});
+    		}
+    	});
+    });
+    </script>
 	{% block staticfiles %}{% endblock %}
 	{% block css %}{% endblock %}
 </head> 
@@ -87,26 +111,6 @@
 </header>
 <script type="text/javascript">
 $(document).ready(function() {
-	$('.indexFooter .bd-btn').click(function () {
-		var UA = navigator.userAgent.toLowerCase(); 
-		var footer = $('.indexFooter .footer-bd');
-		if(footer.css('display')=='none'){
-			footer.slideDown(400);
-			$('.indexFooter .btn-icon').css({
-				'border-color':'#363636 transparent transparent transparent',
-				'top':'10px'
-			});
-			jQuery('html').animate({scrollTop:footer.offset().top},400);
-			jQuery('body').animate({scrollTop:footer.offset().top},400);
-		 
-		}else{
-			footer.slideUp(400);
-			$('.indexFooter .btn-icon').css({
-				'border-color':'transparent transparent #363636 transparent',
-				'top':'-10px'
-			});
-		}
-	});
 	//点击信息图标事件
 	$('#message_icon').click(function(){
 		window.location.href='/message/'

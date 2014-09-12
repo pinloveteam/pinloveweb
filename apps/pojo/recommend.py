@@ -22,7 +22,7 @@ class RecommendResult(object):
             self.appearanceScore=grade.appearancescore
         else:
             self.appearanceScore=kwargs.pop('appearanceMatchOtherScore')
-        self.heighScore=kwargs.pop('heighMatchOther',None)
+        self.heighScore=kwargs.pop('heighMatchOtherScore',None)
         self.characterScore=kwargs.pop('tagMatchOtherScore',None)
         self.scoreMyself=int(kwargs.pop('scoreMyself',None))
         self.scoreOther=int(kwargs.pop('scoreOther',None))

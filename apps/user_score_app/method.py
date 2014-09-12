@@ -92,7 +92,28 @@ def get_score_by_finish_proflie(userId,proflieTypeList):
         proflieData=PROFILE_SCORE.get(proflieType,False)
         if type:
             user_score_save(userId,'1004',data=proflieData)
-            
+   
+'''
+完成性格标签获取积分
+@param userId:用户id 
+'''
+def  get_score_by_character_tag(userId):
+    user_score_save(userId,'1011')    
+    
+'''
+完成TA的身高打分获取积分
+@param userId:用户id 
+'''
+def  get_score_by_height_score(userId):
+    user_score_save(userId,'1012')   
+    
+'''
+完整权重获取积分
+@param userId:用户id 
+'''
+def  get_score_by_weight(userId):
+    user_score_save(userId,'1013')   
+    
 '''
 消耗积分查看对象分数
 attridute:

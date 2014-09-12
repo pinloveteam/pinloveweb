@@ -39,24 +39,33 @@ def update_weight(request):
         appearance=float(request.POST.get('appearance',-1))/100
         education=float(request.POST.get('education',-1))/100
         character=float(request.POST.get('character',-1))/100
+   
+        if ( education<0 and character<0 and income<0 and appearance<0 and height<0):
+           flag=False
+           args['result']='error'
+           args['msg']='传输参数错误!'
+        if int(education+character+income+appearance+height)==1:
+            flag=False
+            args['result']='error'
+            args['msg']='数值总和不为100!'
+        if flag:
+            if Grade.objects.filter(user_id=request.user.id,heightweight=None).exists():
+                from apps.user_score_app.method import get_score_by_weight
+                get_score_by_weight(request.user.id)
+            Grade.objects.create_update_grade(request.user.id,heightweight=height,\
+                                          incomeweight=income,educationweight=education,appearanceweight=appearance,characterweight=character)
+            #判断推荐条件是否完善
+            from apps.recommend_app.recommend_util import cal_recommend
+            cal_recommend(request.user.id,['grade'])
+            args['result']='success'
+        else:
+            args['result']='error'
+    
     except Exception as e:
         flag=False
         args['result']='error'
         args['msg']='传输参类型错误！'
         logger.error('传输参类型错误！',e)
-    if ( education<0 and education<0 and income<0 and appearance<0 and height<0):
-        flag=False
-        args['result']='error'
-        args['msg']='传输参数错误！'
-    if flag:
-        Grade.objects.create_update_grade(request.user.id,heightweight=height,\
-                                          incomeweight=income,educationweight=education,appearanceweight=appearance,characterweight=character)
-        #判断推荐条件是否完善
-        from apps.recommend_app.recommend_util import cal_recommend
-        cal_recommend(request.user.id,['grade'])
-        args['result']='success'
-    else:
-        args['result']='error'
     json=simplejson.dumps(args)
     return HttpResponse(json)
 
@@ -189,6 +198,9 @@ def character_tags(request):
         if request.method=="POST":
             tagMyList=request.REQUEST.get('tagMyList','').split(',')
             tagOhterList=request.REQUEST.get('tagOhterList','').split(',')
+            if not UserTag.objects.filter(user_id=request.user.id).exists():
+                from apps.user_score_app.method import get_score_by_character_tag
+                get_score_by_character_tag(request.user.id)
             #保存tag
             UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagMyList)
             UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOhterList)

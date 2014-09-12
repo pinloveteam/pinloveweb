@@ -25,7 +25,7 @@ function guide(){
 	var firstCard=$('.card_row').children(":first");
 	firstCard.find('.username').attr('id','card-name');
 	firstCard.find("[class^='icon_like']").attr('id','like')
-	firstCard.find('.detail_info').attr('id','card-img')
+	firstCard.find('.card-introBox').attr('id','card-img')
 	var tour = {
 		id : "hello-hopscotch",
 		steps : [{
@@ -43,7 +43,9 @@ function guide(){
 			title : "查看动态",
 			content : "点击名字查看动态",
 			target : "card-name",
-			placement : "bottom"
+			placement : "bottom",
+			yOffset:-45,
+			xOffset:40
 		}, {
 			title : "关注",
 			content : "点击爱心关注",
