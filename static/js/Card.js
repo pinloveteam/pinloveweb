@@ -603,6 +603,8 @@ window.Card = function(person){
 	this.template = $('#card').clone();
 
 	this.template.find('.username').html(person.username).parent().attr('href','/dynamic/person/?userId='+person.userId);
+	this.template.find('.user_name').html(person.username);
+	this.template.find('.avatar_name').attr('src',person.headImg+'-60.jpeg')
 	this.template.find('.tag').children().first().html(person.age).next().html(person.city);
 	this.template.find('.head').attr('src',person.headImg+'-250.jpeg');
 	this.template.find('.img-circle').attr('src',person.headImg+'-60.jpeg');
@@ -633,7 +635,7 @@ window.Card = function(person){
 	}
 
 	for(i=0;i<person.pictureList.length;i++){
-		if(i<9){
+		if(i<6){
 			this.template.find('.hoverbox').append('<li><a class="venobox" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');
 		}else{
 			this.template.find('.hoverbox').append('<li><a  style="display:none;" class="venobox" data-gall="gall1_'+person.userId+'" href="/media/'+person.pictureList[i].pic+'" title="'+person.pictureList[i].description+'"><img alt="demo1" src="/media/'+person.pictureList[i].smailPic+'" title="demo1"></a></li>');

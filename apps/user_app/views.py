@@ -116,15 +116,16 @@ def follow(request,type,ajax='false'):
             cardList.object_list=fllowList_to_CardList(request.user.id,cardList.object_list,type)
         else:
             cardList.object_list=[]
-        ajax=request.GET.get('ajax')
-        if ajax =='true':
+        if cardList.has_next():
+            arg['next_page_number']=cardList.next_page_number()
+        else:
+            arg['next_page_number']=-1
+        if request.is_ajax():
             data={}
-            data['has_next']=cardList.has_next()
             if cardList.has_next():
-                data['next_page_number']=cardList.next_page_number()
-            if cardList.has_previous():
-               data['previous_page_number']=cardList.previous_page_number()
-            data['has_previous']=cardList.has_previous()
+                data['next_page_number']=arg['next_page_number']
+            else:
+                data['next_page_number']=-1
             data['result']='success'
             data['cards']=cardList.object_list
             json=simplejson.dumps(data,cls=MyEncoder)

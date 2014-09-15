@@ -76,6 +76,9 @@
 	left: 20%;
 }
 
+.js-popframe .col-xs-3 ,.js-popframe .left,.js-popframe .right{
+	height: 510px;
+}
 hr {
 	margin-bottom: 12px;
 	margin-top: 12px;

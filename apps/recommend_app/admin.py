@@ -8,7 +8,7 @@ from django.contrib import admin
 from apps.recommend_app.models import Grade, UserExpect, MatchResult
 class GradeAdmin(admin.ModelAdmin):
     list_display = ('user','heightweight', 'incomescore', 'incomeweight', 
-                    'educationscore', 'educationweight', 'appearancescore',
+                    'educationscore', 'educationweight', 'appearancescore','sysappearancescore',
                     'appearanceweight','characterweight','appearancesvote',)
 
     search_fields = ('user__username',)
