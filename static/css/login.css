@@ -7,7 +7,10 @@ body {
 	-moz-osx-font-smoothing: grayscale; 
 	font-size: 16px;
 }
-
+label{
+	font-weight: normal;
+	font-size: 14px;
+}
 .tR{
 	text-align: right;
 }
@@ -53,9 +56,6 @@ a:hover {
 
 #weibologin {
 	background-color: #EC0000;
-	position: relative;
-	top: -28.5px;
-	left: 200px;
 }
 .stage {
 	height: 591px;
@@ -130,15 +130,16 @@ a:hover {
 	border-right: solid 1px #fff;
 	text-align: center;
 }
-
+/*
 .radio-inline {
 	margin-left: 0 !important;
-}
+}*/
 
 .form-group {
 	width: 100%;
 	margin-left: 0 !important;
 	margin-right: 0 !important;
+	min-height: 35px;
 }
 
 .btn-login {

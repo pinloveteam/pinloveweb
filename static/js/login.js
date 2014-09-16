@@ -3,6 +3,9 @@ function submit(){
 }
 
 $(document).ready(function() {
+	if(!$('input[id^="id_gender_"]').is(':checked')){
+		$('input[id^="id_gender_0"]').attr('checked','checked')
+	}
 //     var height=document.body.clientHeight;
 //     if(height>400){
 //    	 $('.stage').css('height',height-50);
