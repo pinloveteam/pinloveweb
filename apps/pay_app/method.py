@@ -96,3 +96,22 @@ def charge_save(userId,type,*args,**kwargs):
 '''
 def get_charge_vailAmount(userId):
     return Charge.objects.get(user_id=userId).validAmount
+
+'''
+获得拼爱币数量(有效+赠送)
+@param userId: 用户id
+option：
+@param vailPinLoveIcon:有效拼爱币 
+@param freePinLoveIcon:免费拼爱币 
+'''
+def get_charge_amount(userId,**kwargs):
+    from apps.user_score_app.method import get_valid_score
+    if kwargs.get('vailPinLoveIcon',None)!=None:
+         return get_valid_score(userId)+kwargs.get('vailPinLoveIcon')
+    elif kwargs.get('freePinLoveIcon',None)!=None:
+        vailPinLoveIcon=Charge.objects.get(user_id=userId).validAmount
+        return kwargs.get('freePinLoveIcon')+vailPinLoveIcon
+    else:
+        vailPinLoveIcon=Charge.objects.get(user_id=userId).validAmount
+        return get_valid_score(userId)+vailPinLoveIcon
+   
