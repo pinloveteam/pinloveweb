@@ -45,7 +45,7 @@ def message(request,template_name):
         else:
             args['next_page_number']=pages['pages'].next_page_number()
     else:
-        pages['next_page_number']=-1
+        args['next_page_number']=-1
     args['messageList']=simplejson.dumps(messageDynamicsList)
     #获取未读信息条数
     from pinloveweb.method import get_no_read_web_count
@@ -79,7 +79,7 @@ def message_list(request,template_name):
                 else:
                     args['next_page_number']=data['pages'].next_page_number()
             else:
-                data['next_page_number']=-1
+                args['next_page_number']=-1
             #获取未读信息条数
             from pinloveweb.method import get_no_read_web_count
             args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))

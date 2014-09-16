@@ -43,7 +43,7 @@ easing : "swing"
 $("input[name='username']").blur(function(){
 	flag=true;
 	error_message=null
-	error=$(this).closest('.form-group').find('#username_error')
+	error=$('span[target="'+$(this).parent().attr('target')+'"]');
 	var username=this.value.trim();
 	if (username.length==0){
 		error_message='用户名不能为空!';
@@ -137,15 +137,15 @@ $('#id_email').blur(function(){
 $('input[name^="password"]').blur(function(){
 	flag=true;
 	error_message=''
-	error=$(this).parent().find('span[id$="error"]')
+	error=$('span[id="'+this.id+'_error"]')
 	var password=$(this).val();
 	if (password==undefined ||password.length==0){
-		error_message='不能为空!';
+		error_message='密码不能为空!';
 		flag=false;
 	}else{
 		re=/^[0-9a-zA-Z\xff_]{6,20}$/
 		if(!re.test(password)){
-			error_message='格式错误!';
+			error_message='密码格式错误!';
     		flag=false;
 	  }else if(this.id=='id_password2'){
 		  password1=$('#id_password1').val();

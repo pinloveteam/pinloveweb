@@ -117,6 +117,7 @@ def cal_user_vote(scoreId,scoredId,score,appearancescore,appearancesvote,type,**
     #判断是否打过分
     flag=True
     appearanceVoteRecord=None
+    scoreTmp=score
     if type==0:
         #前一次系统打分
         preScore=abs((appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)-kwargs.get('sysappearancescore')*DEFAULT_WEB_VOTE_NUM)/(appearancesvote-DEFAULT_WEB_VOTE_NUM))
@@ -131,12 +132,12 @@ def cal_user_vote(scoreId,scoredId,score,appearancescore,appearancesvote,type,**
         if flag:
             #前一次系统打分
             preScore=(appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)-appearanceVoteRecord.score)/(appearancesvote+DEFAULT_WEB_VOTE_NUM-1)
-            appearanceVoteRecord.score=score
+            appearanceVoteRecord.score=scoreTmp
             score=(preScore*(appearancesvote+DEFAULT_WEB_VOTE_NUM-1)+score)/(appearancesvote+DEFAULT_WEB_VOTE_NUM)
             appearanceVoteRecord.save()
         else:
             score=(appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)+score)/(appearancesvote+1+DEFAULT_WEB_VOTE_NUM)
-            appearanceVoteRecord.score=score
+            appearanceVoteRecord.score=scoreTmp
             appearanceVoteRecord.save()
     else:
         raise Exception('type 参数错误')    

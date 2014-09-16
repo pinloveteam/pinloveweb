@@ -44,7 +44,7 @@ def update_weight(request):
            flag=False
            args['result']='error'
            args['msg']='传输参数错误!'
-        if int(education+character+income+appearance+height)==1:
+        if int(education+character+income+appearance+height)!=1:
             flag=False
             args['result']='error'
             args['msg']='数值总和不为100!'

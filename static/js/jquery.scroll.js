@@ -49,6 +49,8 @@ function loadData(no_load,success)
 		if(next_page==-1){
 			return no_load()
 		}
+		if(load_next_page==true){
+		
 		 $.ajax({
 	         type: 'GET',
 	         url:window.location.pathname,
@@ -66,5 +68,7 @@ function loadData(no_load,success)
 	             alert('网络异常!')
 	         }
 	     });
+		 
+		};
     } 
 } 

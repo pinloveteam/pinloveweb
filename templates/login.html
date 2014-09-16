@@ -76,11 +76,27 @@
 							</center>
 						</div>
 						<div class="row">
-							<div class="col-xs-3"></div>
+							<div class="col-xs-3" style="padding-top: 10px;">
+								<div class="form-group error-msg tR">
+									 <span id ='gender_error' style="color: red;">{{gender_error}}</span>
+						             <span target="register_username"  id ='username_error' style="color: red;">{{username_error}}</span>
+								</div>
+								<div class="form-group error-msg tR">
+									<span id ='email_error' style="color: red;">{{email_error}}</span>
+								</div>
+								<div class="form-group error-msg tR">
+									<span id ='id_password1_error' style="color: red;">{{password1_error}}</span>
+								</div>
+								<div class="form-group error-msg tR">
+								</div>
+								<div class="form-group error-msg tR">
+									<span id ='id_password2_error' style="color: red;">{{password1_error}}</span>
+								</div>
+							</div>
 							<div class="main-left col-xs-3">
 							    <form  action="/account/register/" method="post"  role="form" class="form-horizontal">{% csrf_token %}
 									<div class="form-group">
-										<div class="col-xs-7" style="padding-left: 0;">
+										<div  target="register_username"  class="col-xs-7" style="padding-left: 0;">
 											{{user_form.username}}
 										</div>
 										<div class="col-xs-5" style="padding-left: 0;padding-right: 0;">
@@ -91,16 +107,12 @@
 							                   </label>
 							                 {% endfor %}
 										</div>
-										 <span id ='gender_error' style="color: red;">{{gender_error}}</p>
-						                 <span id ='username_error' style="color: red;">{{username_error}}</p>
 									</div>
 									<div class="form-group">
 										{{user_form.email}}
-										<span id ='email_error' style="color: red;">{{email_error}}</p>
 									</div>
 									<div class="form-group">
 										{{user_form.password1}}
-										<span id ='password1_error' style="color: red;">{{password1_error}}</p>
 									</div>
 									<div class="form-group">
 										<input id="id_inviteCode" class="form-control" type="text" id="email" value="" placeholder="邀请码"  name="inviteCode"/>
@@ -108,7 +120,6 @@
 									<input type="hidden" name="link" value="{{request.GET.link}}">
 									<div class="form-group">
 										{{user_form.password2}}
-										<span id ='password1_error' style="color: red;">{{password1_error}}</p>
 									</div>
 									<div class="form-group">
 										<input class="btn" type="submit" id="register" value="注册" />
@@ -118,13 +129,11 @@
 							<div class="main-right col-xs-3">
 								<form method="post" class="form-horizontal"  action="/account/auth/" method="post" >{% csrf_token %}
 								    <span style="color:red;font-size:15px">{{error_message}}</span>
-								  	<div class="form-group">
+								  	<div class="form-group" target="login_username" >
 								  	    <input class="form-control" type="text" id="inputemail" value="" name="username" id="username" placeholder="请输入用户名"/>
-								        <span id="username_error" style="color:red;font-size:15px"></span>
 									</div>
 									<div class="form-group">
-										<input class="form-control" type="password"  name="password" id="password" placeholder="请输入密码"  value=""/>
-										<span id="password_error" style="color:red;font-size:15px"></span>
+										<input class="form-control" type="password"  name="password" id="id_password" placeholder="请输入密码"  value=""/>
 									</div>
 									<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
 									<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
@@ -152,6 +161,14 @@
 										</button>
 									</div>
 								</form>
+							</div>
+							<div class="col-xs-3">
+								<div class="form-group error-msg">
+									<span target="login_username"  id="username_error" style="color:red;font-size:15px"></span>
+								</div>
+								<div class="form-group error-msg">
+									<span id="id_password_error" style="color:red;font-size:15px"></span>
+								</div>
 							</div>
 							<div class="col-xs-3"></div>
 						</div>
