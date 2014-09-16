@@ -55,8 +55,8 @@ def update_weight(request):
             Grade.objects.create_update_grade(request.user.id,heightweight=height,\
                                           incomeweight=income,educationweight=education,appearanceweight=appearance,characterweight=character)
             #判断推荐条件是否完善
-            from apps.recommend_app.recommend_util import cal_recommend
-            cal_recommend(request.user.id,['grade'])
+#             from apps.recommend_app.recommend_util import cal_recommend
+#             cal_recommend(request.user.id,['grade'])
             args['result']='success'
         else:
             args['result']='error'

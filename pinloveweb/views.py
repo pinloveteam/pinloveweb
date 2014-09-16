@@ -205,7 +205,7 @@ def register_user(request) :
             if request.REQUEST.get('inviteCode','')!='pinlove_fate':
                  args['user_form']=userForm
                  args['inviteCodeError']='输入正确的邀请码'
-                 return render(request, 'register.html', args)
+                 return render(request, 'login.html', args)
             userForm.save()
             username = userForm.cleaned_data['username']
             user = User.objects.get(username=username)
