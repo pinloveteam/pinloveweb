@@ -36,8 +36,11 @@ def init_person_info_for_card_page(userProfile,**kwargs):
     arg['myFollow']=myFollowCount
     arg['fans']=fansCount
     arg['follow']=followEachCount
+    #获取拼爱币数量
+    from apps.pay_app.method import get_charge_amount
+    arg['pinLoveCion']=get_charge_amount(userProfile.user_id)
     #获得最近一条动态
-    arg['dynamic']=get_dymainc_late(userProfile.user_id)
+    #arg['dynamic']=get_dymainc_late(userProfile.user_id)
     arg.update(get_no_read_web_count(userProfile.user_id),fromPage=u'card')
     return arg
 
