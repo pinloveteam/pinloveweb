@@ -115,13 +115,12 @@
 				
 				<div class="form-row">
 					<label class="form-label">昵称<span class="text-danger">*</span></label>
-					{{user.username}}
+					<input type="text" class="form-input" readonly="readonly" value="{{user.username}}" disabled>
+					
+					<label class="form-label" style="margin-left: 105px;">性别<span class="text-danger">*</span></label>
+									 {{gender_name}}
 				</div>
                 
-                <div class="form-row">
-					<label class="form-label">性别<span class="text-danger">*</span></label>
-							 {{gender_name}}
-				</div>
 						
 				<div class="form-row">
 					<label class="form-label">身高<span class="text-danger">*</span></label>

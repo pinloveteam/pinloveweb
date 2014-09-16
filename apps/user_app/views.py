@@ -289,10 +289,14 @@ def change_password(request,tempate_name):
     if request.method=="POST":
         changePasswordForm=ChangePasswordForm(request.POST)
         if changePasswordForm.is_valid():
-            user=request.user
-            user.set_password(changePasswordForm.cleaned_data['newpassword'])
-            user.save()
-            args={'change_result':True}
+            if not request.user.check_password(changePasswordForm.cleaned_data['oldpassword']):
+                args['changePasswordForm']=changePasswordForm
+                args['oldpasswordError']='旧密码不正确!'
+            else:
+                user=request.user
+                user.set_password(changePasswordForm.cleaned_data['newpassword'])
+                user.save()
+                args={'change_result':True}
         else:
             args['changePasswordForm']=changePasswordForm
             errors=changePasswordForm.errors.items()
