@@ -40,7 +40,7 @@ def update_weight(request):
         education=float(request.POST.get('education',-1))/100
         character=float(request.POST.get('character',-1))/100
    
-        if ( education<0 and character<0 and income<0 and appearance<0 and height<0):
+        if ( int(education)<0 and int(character)<0 and int(income)<0 and int(appearance)<0 and int(height)<0):
            flag=False
            args['result']='error'
            args['msg']='传输参数错误!'
@@ -64,7 +64,7 @@ def update_weight(request):
     except Exception as e:
         flag=False
         args['result']='error'
-        args['msg']='传输参类型错误！'
+        args['msg']=e.message
         logger.error('传输参类型错误！',e)
     json=simplejson.dumps(args)
     return HttpResponse(json)
