@@ -10,6 +10,9 @@
 	$(document).ready(function(){
                 messageList={{messageList|safe }};
                 init_message(messageList);
+                if(next_page==-1){
+                	no_load();
+                }
                 init_menu();
                 //回复窗口
                 $('.reply-btn').click(function(){
@@ -36,6 +39,7 @@
         					url:url,
         					data:{},
         					beforeSend:function(XMLHttpRequest){
+        						
         					},
         					complete:function(XMLHttpRequest, textStatus){
         					},
@@ -45,6 +49,9 @@
         							data.messageList=$.parseJSON(data.messageList);
         						}
         						init_message(data.messageList);
+        						if(next_page==-1){
+        		                	no_load();
+        		                }
         						set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
         						},
         	                    error: function(response){
@@ -298,7 +305,7 @@
        			   $(this).parents('.message').next().slideDown('slow');
        			   $(this).hide();
        			});
-                 $('.follow').unbind(follow);
+                 $('.follow').unbind();
                  $('.follow').click(follow);
 
             };
@@ -398,6 +405,7 @@
 
             .message-content {
                 padding-top: 10px;
+                min-height: 80px;
             }
 
             .message-content button {
@@ -572,11 +580,12 @@
                                     <span class="message-type">
                                         成了你的新粉丝
                                     </span>
+                                    <p></p>
                                     <button class="btn btn-xs btn-primary follow">
                                         关注TA
                                     </button>
-                                </div>
                                 <span  id="time"  class="message-time ">12月25日 14:44</span>
+                                </div>
                             </div>
 						</div>
 
