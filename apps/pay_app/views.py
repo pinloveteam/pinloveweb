@@ -70,8 +70,8 @@ def member(request):
         #购买拼爱币
         args['charge']=charge
         #全部拼爱币
-        from apps.user_score_app.method import get_valid_score
-        args['pinLoveIcon']=get_valid_score(request.user.id)+charge.validAmount
+        from apps.pay_app.method import get_charge_amount
+        args['pinLoveIcon']=get_charge_amount(request.user.id,vailPinLoveIcon=charge.validAmount)
         #初始化个人信息模块
         from pinloveweb.method import init_person_info_for_card_page
         args.update(init_person_info_for_card_page(userProfile))

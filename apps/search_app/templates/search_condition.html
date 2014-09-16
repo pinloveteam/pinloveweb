@@ -10,7 +10,7 @@ $(document).ready(function(){
 		 }
 	 });
 	 
-	 $('#id_minHeigh,id_maxHeigh').change(function(){
+	 $('#id_minHeigh,#id_maxHeigh').change(function(){
 		 minHeigh=parseInt($('#id_minHeigh').val());
 		 maxHeigh=parseInt($('#id_maxHeigh').val());
 		 if (maxHeigh<=minHeigh){
@@ -144,7 +144,7 @@ $(document).ready(function(){
 			</div>
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					{{searchForm.minAge}}
+					{{searchForm.minAge}}&nbsp;&nbsp;-&nbsp;
 					{{searchForm.maxAge}}(岁)
 				</div>
 			</div>
@@ -164,7 +164,7 @@ $(document).ready(function(){
 			</div>
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					{{searchForm.minHeigh}}
+					{{searchForm.minHeigh}}&nbsp;&nbsp;-&nbsp;
 					{{searchForm.maxHeigh}}(CM)
 				</div>
 			</div>
@@ -203,7 +203,7 @@ $(document).ready(function(){
 			</div>
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
-					{{searchForm.minIcome}}
+					{{searchForm.minIcome}}&nbsp;&nbsp;-&nbsp;
 					{{searchForm.maxIncome}}(万/年)
 				</div>
 			</div>
