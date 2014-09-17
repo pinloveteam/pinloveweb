@@ -272,7 +272,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         from apps.recommend_app.models import Grade
         if self.income!=None and self.income!=oldUserProfile.income:
             from apps.recommend_app.recommend_util import cal_income
-            incomes=cal_income(self.income)
+            incomes=cal_income(self.income,self.gender)
             if Grade.objects.filter(user=self.user).exists():
                 Grade.objects.filter(user=self.user).update(incomescore=incomes)
             else:

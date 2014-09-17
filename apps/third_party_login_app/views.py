@@ -28,9 +28,12 @@ from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto,\
-    FacebookUserInfo
+    FacebookUserInfo, ThirdPsartyLogin
 import urllib2
 from django.utils import simplejson
+from apps.third_party_login_app.forms import ConfirmInfo
+from django.db import transaction
+from django.views.decorators.http import require_POST
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
@@ -92,6 +95,7 @@ def sina_login_url(request):
 获取sina信息并登录个人主页
 '''
 def sina_login(request):
+    args={}
     try:
         code=request.REQUEST.get('code','')
         if code=='':
@@ -115,14 +119,17 @@ def sina_login(request):
     if not ThirdPsartyLogin.objects.filter(provider='1',uid=uid).exists():
             #获取用户信息
             user_info=client.users.show.get(uid=uid)
-            #创建用户
-            user=create_user(user_info['screen_name'].strip())
-            #创建第三方登录表信息
-            ThirdPsartyLogin(user=user,provider='1',uid=uid,access_token=access_token).save()
-            #创建用户详细信息
-            create_user_profile(user,user_info['gender'],)
-            #登录
-            login(request,user.username,DEFAULT_PASSWORD)
+            request.session['three_registe']={'provider':'1','uid':uid,'access_token':access_token}
+            initial={'username':user_info['screen_name'].strip(),'gender':user_info['gender']}
+            confirmInfo=ConfirmInfo(initial)
+            if not confirmInfo.is_valid():
+                args['error']=True
+                if confirmInfo.errors:
+                    for item in confirmInfo.errors.items():
+                        key='%s%s'%(item[0],'_error')
+                        args[key]=item[1][0]
+            args['confirmInfo']=confirmInfo
+            return render(request,'login_confirm_register.html',args)
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
@@ -237,7 +244,42 @@ def login(request,username,password):
      if not GetLocation(request)==None:
          UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
      
-           
+'''
+为第三方登录注册用户
+attribute:
+    username:用户名
+    fristName 
+    lastName
+return
+   user
+''' 
+@transaction.commit_on_success      
+@require_POST
+def register_by_three_party(request):
+    args ,kwarg={},{}
+    confirmInfo=ConfirmInfo(request.POST)
+    if confirmInfo.is_valid():
+        if request.session.get('three_registe',False):
+            kwarg=request.session.get('three_registe')
+            del request.session['three_registe']
+        else:
+            args={'error_message':u'该链接失效，请重试!'}
+            return render(request,'error.html',args)
+        #创建第三方登录表信息
+        user=create_user(confirmInfo.cleaned_data['username'],DEFAULT_PASSWORD,**kwarg)
+        ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
+        create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'],**kwarg)
+        return HttpResponseRedirect('/account/loggedin/?previous_page=register')
+    else:
+        args['confirmInfo']=confirmInfo
+        args['error']=True
+        if confirmInfo.errors:
+            for item in confirmInfo.errors.items():
+                key='%s%s'%(item[0],'_error')
+                args[key]=item[1][0]
+        return render(request,'login_confirm_register.html',args)
+    
+    
 '''
 为第三方登录创建用户
 attribute:
@@ -247,7 +289,7 @@ attribute:
 return
    user
 '''
-def create_user(username,**kwarg):
+def create_user(username,password,**kwarg):
     from django.contrib.auth.hashers import make_password
     user=User()
     user.username=username
@@ -255,7 +297,7 @@ def create_user(username,**kwarg):
         user.first_name=kwarg.get('firstName')
     if  kwarg.get('lastName')!=None:
         user.last_name=kwarg.get('lastName')
-    user.password=make_password(DEFAULT_PASSWORD)
+    user.password=make_password(password)
     user.is_active=True
     user.date_joined=datetime.datetime.today()
     user.last_login= datetime.datetime.today()
@@ -265,7 +307,7 @@ def create_user(username,**kwarg):
 '''
 为第三方用户创建用户信息信息
 '''
-def create_user_profile(user,gender,**kwarg):
+def create_user_profile(request,user,password,gender,**kwarg):
     userProfile=UserProfile(user=user)
     genderList=['m',u"男",'male']
     if gender in genderList:
@@ -276,6 +318,8 @@ def create_user_profile(user,gender,**kwarg):
         if kwarg.get('country')=='zh_CN':
             userProfile.country=='中国'
     userProfile.save()
+    from pinloveweb.method import create_register_extra_info
+    create_register_extra_info(request,user.id,user.username,password,gender,None)
     
 ##########other action######
 

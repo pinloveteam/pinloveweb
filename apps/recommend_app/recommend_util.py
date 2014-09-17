@@ -30,11 +30,12 @@ attribute ：
 returns:
       收入得分
 """
-def cal_income(user_income):
+def cal_income(user_income,gender):
     from apps.user_app.models import UserProfile
-    overIncomeCount=UserProfile.objects.filter(income__lte=user_income).count()+0.00
-    IncomeCount=User.objects.count()
-    print str(overIncomeCount)+" "+str(IncomeCount)
+    overIncomeCount=UserProfile.objects.filter(income__lte=user_income).exclude(gender=gender).exclude(income=-1).count()+0.00
+    overIncomeCount=overIncomeCount-int((UserProfile.objects.filter(income=user_income).exclude(gender=gender).exclude(income=-1).count()+0.00)/2)
+    IncomeCount=UserProfile.objects.exclude(gender=gender).exclude(income=-1).count()
+    #print str(overIncomeCount)+" "+str(IncomeCount)
     return (overIncomeCount/IncomeCount)*100
 '''
 根据学历，学校计算分数

@@ -65,8 +65,8 @@
 						<div class="row" style="position: relative;top: 0px;">
 							<div>
 								<span class="col-xs-3"></span>
-								<span class="col-xs-3" style="padding-left: 50px;">请输入你的基本信息以注册</span>
-								<span class="col-xs-3" style="padding-left: 50px;">直接登录</span>
+								<span class="col-xs-3" style="padding-left: 30px;">请输入你的基本信息以注册</span>
+								<span class="col-xs-3" style="padding-left: 30px;">直接登录</span>
 								<span class="col-xs-3"></span>
 							</div>
 						</div>
@@ -161,31 +161,30 @@
                     		       <a href="/third_party_login/facebook_login_url/" ><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
                     		        <a href="/third_party_login/twitter_login_url/" >twitter</a>
                      		   		{%endif %}
+                     		   		
                      		   		<div class="form-group">
-                     		   		</div>
-                     		   		<div class="form-group" style="width: 400px;">
-										<label>
-											<a href="/third_party_login/qq_login_url/" ><button class="btn-sm" id="qqlogin">
-												<img src="{{STATIC_URL}}img/qq.png" />&nbsp;使用QQ账号登录
-											</button></a>
-										</label>
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<label>
-										 <a href="/third_party_login/sina_login_url/" >
-											<button class="btn-sm" id="weibologin">
-												<img src="{{STATIC_URL}}img/sina-weibo.png" />&nbsp;使用微博账号登录
-											</button>
-											</a>
-										</label>
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<label>
-										 <a href="/third_party_login/facebook_login_url/" >
-											<button class="btn-sm" id="facebooklogin">
-												<img src="{{STATIC_URL}}img/facebook_login_logo.png" />&nbsp;使用facebook账号登录
-											</button>
-											</a>
-										</label>
-										
+										<div style="padding: 0;" class="col-xs-6">
+											<small>其他账号登录：</small>
+										</div>
+										<div style="padding: 0;" class="col-xs-6">
+											<ul class="list-inline">
+									   	 		<li>
+									   	 			<a title="QQ账号登录"  href="/third_party_login/qq_login_url/">
+									   	 				<img src="{{STATIC_URL}}img/qq_login_logo.png">
+									   	 			</a>
+									   	 		</li>
+									   	 		<li>
+									   	 			<a title="微博账号登录" href="/third_party_login/sina_login_url/" >
+									   	 				<img src="{{STATIC_URL}}img/sina_login_logo.png"">
+									   	 			</a>
+									   	 		</li>
+									   	 		<li>
+									   	 			<a title="facebook账号登录" href="/third_party_login/facebook_login_url/" >
+									   	 				<img src="{{STATIC_URL}}img/facebook_login_logo.png">
+									   	 			</a>
+									   	 		</li>
+									   	 	</ul>
+										</div>
 										
 									</div>
 							</div>

@@ -210,24 +210,8 @@ def register_user(request) :
             username = userForm.cleaned_data['username']
             user = User.objects.get(username=username)
             sex=userForm.cleaned_data['gender']
-            #创建二维码
-            Userlink=create_invite_code(user.id)
-            UserProfile(user_id=user.id,gender=sex,link=Userlink).save()
-            #生成激活码
-            from util.util import random_str
-            user_code = random_str()
-            #初始化所需表
-            from pinloveweb.method import init_table_in_register
-            init_table_in_register(user,user_code)
-            #注册成功赠送积分
-            from apps.user_score_app.method import get_score_by_invite_friend_register
-            if link:
-                get_score_by_invite_friend_register(link)
-            user = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
-            auth.login(request, user)
-            #内存里初始化个人相关信息
-            from util.cache import init_profile_into_cache
-            init_profile_into_cache(user.id)
+            from pinloveweb.method import create_register_extra_info
+            create_register_extra_info(request,user.id,user.username,userForm.cleaned_data['password1'],sex,link)
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         else : 
             args['user_form'] = userForm
@@ -346,7 +330,10 @@ def newcount(request):
     return HttpResponse(json)
     
 def test(request):
-    return render(request,'user-profile-1.html')
+    userProfile=UserProfile.objects.get(user=request.user)
+    from apps.recommend_app.recommend_util import cal_income
+    cal_income(userProfile.income,userProfile.gender)
+    return HttpResponse('success')
 #    try:
 #       import hashlib
 #       chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()

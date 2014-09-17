@@ -1,0 +1,72 @@
+{% extends "base_later.html" %}
+ {% block title %} 拼爱网 --确认信息{% endblock %}
+{% block css %}
+ <link href="/static/css/style.css" rel="stylesheet">
+{% endblock %}
+ {% block navigation %} {% endblock %} 
+ <script>
+$(document).ready(function() {
+	$('.indexFooter').click();
+	});
+</script>
+{% block content %}
+<div class="stage">
+			<div class="background"></div>
+			<div class="layer" style="color: #fff;z-index: 2;">
+				<div class="layer-top" style="margin-bottom: 100px;">
+					<div class="logo">
+						<a href="#">
+							<img src="/static/img/logo-02.png" width="150px" />
+						</a>
+					</div>
+				</div>
+				
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-5"></div>
+						<div class="col-xs-3">
+							<form action="/third_party_login/register_by_three_party/" method="post" role="form" class="form-horizontal">{% csrf_token %}
+								<div class="form-group">
+									<div class="col-xs-12">
+										<h4>确认信息</h4>
+									</div>
+									
+								</div>
+								<div class="form-group">
+									<div class="col-xs-4">
+										用户名:
+									</div>
+									<div class="col-xs-8">
+										{{confirmInfo.username}}
+										 <p target="login_username"  id="username_error" style="color:red;font-size:15px">{{username_error}}</p>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-4">
+										性&nbsp;&nbsp;&nbsp;别:
+									</div>
+									<div class="col-xs-8">
+										 {% for choice in confirmInfo.gender.field.choices %}
+										       <label >
+										        <input type="radio" id="id_{{confirmInfo.gender.html_name }}_{{ forloop.counter0 }}" value="{{ choice.0 }}" name="gender" {%ifequal confirmInfo.gender.value choice.0 %}checked="checked"{%endifequal%}/> 
+							                    {{ choice.1 }}
+							                   </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							                 {% endfor %}
+							                <span id ='gender_error' style="color: red;">{{gender_error}}</span>
+									</div>
+									
+								</div>
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input class="btn btn-primary" type="submit" id="register" value="提交" />
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="col-xs-4"></div>
+					</div>
+				</div>
+				
+</div>
+		</div>
+{% endblock %} 
