@@ -549,7 +549,6 @@ window.Card = function(person){
 						vote(this);
 					});
 					
-                    if(data.user1.scoreMy>0){
                     	
 					$('.btn-show-score').click(function() {
 						content=this;
@@ -585,7 +584,6 @@ window.Card = function(person){
 					});
 						
 					});
-                    }
                 	
 				}else if(data.result=='error'){
 					var body = $("<p>"+data.error_message+"</p>")
