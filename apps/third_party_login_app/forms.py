@@ -7,6 +7,7 @@ Created on 2014年9月17日
 from django import forms 
 import re
 from django.core import validators
+from django.contrib.auth.models import User
 USERNAME_ERROR_MESSAGE=u'必填。英文，1-14位字符，英文字母、数字和下划线组成或中文7个字符'
 class ConfirmInfo(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -38,6 +39,8 @@ class ConfirmInfo(forms.Form):
     }
         
     def clean_username(self):
+        if User.objects.filter(username=self.cleaned_data["username"]).exists():
+            raise forms.ValidationError(self.error_messages['duplicate_username'])
         # Since User.username is unique, this check is redundant,
         # but it sets a nicer error message than the ORM. See #13147.
         username = self.cleaned_data["username"]
