@@ -5,11 +5,13 @@ Created on 2014年1月9日
 @author: jin
 '''
 #用于初始化用户所需要的信息
-from apps.user_app.models import Follow, Verification, UserVerification
+from apps.user_app.models import Follow, Verification, UserVerification,\
+    UserProfile
 from django.utils import simplejson
 from django.http.response import HttpResponse
 from apps.friend_dynamic_app.models import FriendDynamic
 import hashlib
+from django.contrib import auth
 def init_person_info_for_card_page(userProfile,**kwargs):
     arg={}
     arg['avatar_name']=userProfile.avatar_name
@@ -179,25 +181,25 @@ def get_dymainc_late(userId):
 '''
 初始化注册所需的表
 '''
-def init_table_in_register(user,user_code):
+def init_table_in_register(user_id,username,user_code):
     #认证表
     verification= Verification()
-    verification.username = user.username
+    verification.username = username
     verification.verification_code = user_code
     verification.save()
     #创建用户验证信息
     userVerification=UserVerification()
-    userVerification.user=user
+    userVerification.user_id=user_id
     userVerification.save()
     #用户积分表
     from apps.user_score_app.models import UserScore
-    UserScore(user_id=user.id).save()
+    UserScore(user_id=user_id).save()
     #拼爱币表
     from apps.pay_app.models import Charge
-    Charge(user_id=user.id).save()
+    Charge(user_id=user_id).save()
     #分数表
     from apps.recommend_app.models import Grade
-    Grade(user_id=user.id).save()
+    Grade(user_id=user_id).save()
     
 '''
 发送激活邮件
@@ -231,3 +233,26 @@ def send_reset_password(user,user_code):
 '''
 def sign_channel(request):
     return hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
+
+'''
+初始化除了user，userfile 的所有表
+'''
+def create_register_extra_info(request,userId,username,password,gender,link):
+    #创建二维码
+    Userlink=create_invite_code(userId)
+    UserProfile(user_id=userId,gender=gender,link=Userlink).save()
+    #生成激活码
+    from util.util import random_str
+    user_code = random_str()
+    #初始化所需表
+    init_table_in_register(userId,username,user_code)
+    #注册成功赠送积分
+    from apps.user_score_app.method import get_score_by_invite_friend_register
+    if link:
+        get_score_by_invite_friend_register(link)
+        user = auth.authenticate(username=username, password=username)
+        auth.login(request, user)
+        #内存里初始化个人相关信息
+        from util.cache import init_profile_into_cache
+        init_profile_into_cache(user.id)
+        
