@@ -120,7 +120,12 @@ def sina_login(request):
             #获取用户信息
             user_info=client.users.show.get(uid=uid)
             request.session['three_registe']={'provider':'1','uid':uid,'access_token':access_token}
-            initial={'username':user_info['screen_name'].strip(),'gender':user_info['gender']}
+            genderList=['m',u"男",'male']
+            if user_info['gender'] in genderList:
+                gender='M'
+            else:
+                gender='F'
+            initial={'username':user_info['screen_name'].strip(),'gender':gender}
             confirmInfo=ConfirmInfo(initial)
             if not confirmInfo.is_valid():
                 args['error']=True
@@ -309,11 +314,6 @@ def create_user(username,password,**kwarg):
 '''
 def create_user_profile(request,user,password,gender,**kwarg):
     userProfile=UserProfile(user=user)
-    genderList=['m',u"男",'male']
-    if gender in genderList:
-        userProfile.gender='M'
-    else:
-        userProfile.gender='F'
     if kwarg.get('country')!=None:
         if kwarg.get('country')=='zh_CN':
             userProfile.country=='中国'
