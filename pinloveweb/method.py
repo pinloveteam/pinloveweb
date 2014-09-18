@@ -235,12 +235,12 @@ def sign_channel(request):
     return hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
 
 '''
-初始化除了user，userfile 的所有表
+初始化除了user的所有表
 '''
-def create_register_extra_info(request,userId,username,password,gender,link):
+def create_register_extra_user(request,userId,username,password,gender,link,**kwargs):
     #创建二维码
     Userlink=create_invite_code(userId)
-    UserProfile(user_id=userId,gender=gender,link=Userlink).save()
+    UserProfile(user_id=userId,gender=gender,link=Userlink,kwargs).save()
     #生成激活码
     from util.util import random_str
     user_code = random_str()

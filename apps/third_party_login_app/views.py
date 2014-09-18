@@ -274,6 +274,7 @@ def register_by_three_party(request):
         user=create_user(confirmInfo.cleaned_data['username'],DEFAULT_PASSWORD,**kwarg)
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
         create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'],**kwarg)
+        login(request,user.username,DEFAULT_PASSWORD)
         return HttpResponseRedirect('/account/loggedin/?previous_page=register')
     else:
         args['confirmInfo']=confirmInfo
@@ -313,13 +314,12 @@ def create_user(username,password,**kwarg):
 为第三方用户创建用户信息信息
 '''
 def create_user_profile(request,user,password,gender,**kwarg):
-    userProfile=UserProfile(user=user)
+    args={}
     if kwarg.get('country')!=None:
         if kwarg.get('country')=='zh_CN':
-            userProfile.country=='中国'
-    userProfile.save()
-    from pinloveweb.method import create_register_extra_info
-    create_register_extra_info(request,user.id,user.username,password,gender,None)
+            args['country']='中国'
+    from pinloveweb.method import create_register_extra_user
+    create_register_extra_user(request,user.id,user.username,password,gender,None,args)
     
 ##########other action######
 

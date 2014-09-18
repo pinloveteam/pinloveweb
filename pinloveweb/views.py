@@ -210,8 +210,8 @@ def register_user(request) :
             username = userForm.cleaned_data['username']
             user = User.objects.get(username=username)
             sex=userForm.cleaned_data['gender']
-            from pinloveweb.method import create_register_extra_info
-            create_register_extra_info(request,user.id,user.username,userForm.cleaned_data['password1'],sex,link)
+            from pinloveweb.method import create_register_extra_user
+            create_register_extra_user(request,user.id,user.username,userForm.cleaned_data['password1'],sex,link)
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         else : 
             args['user_form'] = userForm
