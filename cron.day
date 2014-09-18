@@ -1,5 +1,5 @@
 #!/bin/sh
 p=$PWD
 a = "hello world" 
-python $p/manage.py task cal_income
+/usr/local/lib/python $p/manage.py task cal_income
 echo $a
