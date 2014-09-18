@@ -319,7 +319,7 @@ def create_user_profile(request,user,password,gender,**kwarg):
         if kwarg.get('country')=='zh_CN':
             args['country']='中国'
     from pinloveweb.method import create_register_extra_user
-    create_register_extra_user(request,user.id,user.username,password,gender,None,args)
+    create_register_extra_user(request,user.id,user.username,password,gender,None,**args)
     
 ##########other action######
 
