@@ -50,6 +50,7 @@ def get_qq_login_url(request):
 获取qq信息并登录个人主页
 '''
 def qq_login(request):
+    args={}
     from apps.third_party_login_app.openqqpy import OpenQQClient
     client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL,scope='')
 #     log.error(request.GET.get('code'))
@@ -67,14 +68,24 @@ def qq_login(request):
         user_info=client.request_api('user/get_user_info')
         #判断是否获取错误
         if user_info['ret']==0:
-            #创建用户
-            user=create_user(user_info['nickname'].strip())
-            #创建第三方登录表信息
-            ThirdPsartyLogin(user=user,provider='0',uid=openid,access_token=access_token).save()
-            #创建用户详细信息
-            create_user_profile(user,user_info['gender'])
-            #登录
-            login(request,user.username,DEFAULT_PASSWORD)
+            
+            request.session['three_registe']={'provider':'0','uid':openid,'access_token':access_token}
+            genderList=['m',u"男",'male']
+            if user_info['gender'] in genderList:
+                gender='M'
+            else:
+                gender='F'
+            initial={'username':user_info['nickname'].strip(),'gender':gender}
+            confirmInfo=ConfirmInfo(initial)
+            if not confirmInfo.is_valid():
+                args['error']=True
+                if confirmInfo.errors:
+                    for item in confirmInfo.errors.items():
+                        key='%s%s'%(item[0],'_error')
+                        args[key]=item[1][0]
+            args['confirmInfo']=confirmInfo
+            return render(request,'login_confirm_register.html',args)
+            
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
@@ -155,6 +166,7 @@ def facebook_login_url(request):
     return HttpResponseRedirect(url)
 
 def facebook_login(request):
+    args={}
     from apps.third_party_login_app.facebook import get_access_token_from_code
     access=get_access_token_from_code(request.GET['code'],FACEBOOK_CALLBACK_URL, FaceBookAppID, FaceBookAppSecret)
     access_token=access['access_token']  #facebook返回的token
@@ -166,17 +178,23 @@ def facebook_login(request):
     user_info = graph.get_object('me')
     from apps.third_party_login_app.models import ThirdPsartyLogin
     if not ThirdPsartyLogin.objects.filter(provider='2',uid=user_info['id']).exists():
-            #创建用户
-            user=create_user(user_info['name'].strip(),
-                             firstName=user_info['first_name'].strip(),
-                             lastName=user_info['last_name'].strip(),
-                             )
-            #创建第三方登录表信息
-            ThirdPsartyLogin(user=user,provider='2',uid=user_info['id'],access_token=access_token).save()
-            #创建用户详细信息
-            create_user_profile(user,user_info['gender'].strip(),country=user_info['locale'],)
-            #登录
-            login(request,user.username,DEFAULT_PASSWORD)
+            request.session['three_registe']={'provider':'2','uid':user_info['id'],'access_token':access_token,'country':user_info['locale']}
+            genderList=['m',u"男",'male']
+            if user_info['gender'].strip() in genderList:
+                gender='M'
+            else:
+                gender='F'
+            initial={'username':user_info['name'].strip(),'gender':gender}
+            confirmInfo=ConfirmInfo(initial)
+            if not confirmInfo.is_valid():
+                args['error']=True
+                if confirmInfo.errors:
+                    for item in confirmInfo.errors.items():
+                        key='%s%s'%(item[0],'_error')
+                        args[key]=item[1][0]
+            args['confirmInfo']=confirmInfo
+            return render(request,'login_confirm_register.html',args)
+        
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='2',uid=user_info['id']).user
