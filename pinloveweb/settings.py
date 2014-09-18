@@ -39,7 +39,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = False
+USE_TZ = True
 
 
 
@@ -87,7 +87,8 @@ MIDDLEWARE_CLASSES = (
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCookieMiddleware',
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugTokenMiddleware',
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
-    'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware'
+    'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware',
+    'middleware.timezone.TimezoneMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #     'django.middleware.cache.UpdateCacheMiddleware',
@@ -152,7 +153,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 #     'djcelery',   
-#     'apps.task_app',    
+    'apps.task_app',    
 'apps.user_score_app', 
 'paypal.standard.ipn',
 'apps.alipay_app',
@@ -351,7 +352,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                               
+#                                
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -376,7 +377,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-                                   
+                                    
      'default': {
          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
          'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
