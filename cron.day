@@ -1,0 +1,4 @@
+#!/bin/sh
+a = "hello world" 
+python manage.py task cal_income
+echo $a
