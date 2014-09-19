@@ -32,9 +32,9 @@ returns:
 """
 def cal_income(user_income,gender):
     from apps.user_app.models import UserProfile
-    overIncomeCount=UserProfile.objects.filter(income__lte=user_income).exclude(gender=gender).exclude(income=-1).count()+0.00
-    overIncomeCount=overIncomeCount-int((UserProfile.objects.filter(income=user_income).exclude(gender=gender).exclude(income=-1).count()+0.00)/2)
-    IncomeCount=UserProfile.objects.exclude(gender=gender).exclude(income=-1).count()
+    overIncomeCount=UserProfile.objects.filter(income__lte=user_income).filter(gender=gender).exclude(income=-1).count()+0.00
+    overIncomeCount=overIncomeCount-int((UserProfile.objects.filter(income=user_income).filter(gender=gender).exclude(income=-1).count()+0.00)/2)
+    IncomeCount=UserProfile.objects.filter(gender=gender).exclude(income=-1).count()
     #print str(overIncomeCount)+" "+str(IncomeCount)
     return (overIncomeCount/IncomeCount)*100
 '''
@@ -45,17 +45,17 @@ attribute：
 return：
       score：学历分数
 '''
-def cal_education(user_education,school):
+def cal_education(user_education,school,gender):
         educationMap={'master':5,'doctor':10}
         if not School.objects.filter(name__startswith=school,name__endswith=school).exists():
             school=School.objects.all().order_by('-ranking')[0]
-            return cal_ranking_score(school)
+            return cal_ranking_score(school,gender)
         else :
             school=School.objects.get(name__startswith=school,name__endswith=school)
             if user_education==-1:
-                return cal_ranking_score(school)
+                return cal_ranking_score(school,gender)
             else:
-                score=cal_ranking_score(school)
+                score=cal_ranking_score(school,gender)
                 if user_education==3:
                     score+=educationMap.get('master')
                 if user_education==4:
@@ -67,7 +67,7 @@ def cal_education(user_education,school):
 '''
 计算排名
 '''            
-def cal_ranking_score(school):
+def cal_ranking_score(school,gender):
     #前20名为20档（一个名次一档）
     # 21-100名每10名为一档（比如说21-30为并列第21）
     # 100-最后每50名为一档（比如说101-150为并列第100）
@@ -80,19 +80,19 @@ def cal_ranking_score(school):
     sql="""
     SELECT count(*)
 from user_profile u1 LEFT JOIN school u2 on u1.educationSchool=u2.name
-where (ranking>%s and u2.country=%s) 
+where (ranking>%s and u2.country=%s and gender=%s) 
     """
     from django.db import connection
     cursor = connection.cursor()
-    cursor.execute(sql,[ranking,school.country])
+    cursor.execute(sql,[ranking,school.country,gender])
     schoolRankingCount=cursor.fetchone()[0]
     
     sql1="""
     SELECT count(*)
 from user_profile u1 LEFT JOIN school u2 on u1.educationSchool=u2.name
-where u2.country=%s 
+where u2.country=%s and gender=%s
     """
-    cursor.execute(sql1,[school.country])
+    cursor.execute(sql1,[school.country,gender])
     shcoolCount=cursor.fetchone()[0]
     cursor.close()
     #第一个用户
