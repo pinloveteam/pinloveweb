@@ -45,17 +45,17 @@ attribute：
 return：
       score：学历分数
 '''
-def cal_education(user_education,school,gender):
+def cal_education(user_education,school,gender,type):
         educationMap={'master':5,'doctor':10}
         if not School.objects.filter(name__startswith=school,name__endswith=school).exists():
             school=School.objects.all().order_by('-ranking')[0]
-            return cal_ranking_score(school,gender)
+            return cal_ranking_score(school,gender,type)
         else :
             school=School.objects.get(name__startswith=school,name__endswith=school)
             if user_education==-1:
-                return cal_ranking_score(school,gender)
+                return cal_ranking_score(school,gender,type)
             else:
-                score=cal_ranking_score(school,gender)
+                score=cal_ranking_score(school,gender,type)
                 if user_education==3:
                     score+=educationMap.get('master')
                 if user_education==4:
@@ -67,7 +67,7 @@ def cal_education(user_education,school,gender):
 '''
 计算排名
 '''            
-def cal_ranking_score(school,gender):
+def cal_ranking_score(school,gender,type):
     #前20名为20档（一个名次一档）
     # 21-100名每10名为一档（比如说21-30为并列第21）
     # 100-最后每50名为一档（比如说101-150为并列第100）
@@ -77,9 +77,14 @@ def cal_ranking_score(school,gender):
          ranking=((school.ranking-1)/10)*10+1
     elif school.ranking>100:
          ranking=((school.ranking-1)/50)*50+1
+         
+    if type==1:
+        school_sql='u1.educationSchool'
+    else:
+        school_sql='u1.educationSchool_2'
     sql="""
     SELECT count(*)
-from user_profile u1 LEFT JOIN school u2 on u1.educationSchool=u2.name
+from user_profile u1 LEFT JOIN school u2 on """+school_sql+"""=u2.name
 where (ranking>%s and u2.country=%s and gender=%s) 
     """
     from django.db import connection
@@ -89,7 +94,7 @@ where (ranking>%s and u2.country=%s and gender=%s)
     
     sql1="""
     SELECT count(*)
-from user_profile u1 LEFT JOIN school u2 on u1.educationSchool=u2.name
+from user_profile u1 LEFT JOIN school u2 on """+school_sql+"""=u2.name
 where u2.country=%s and gender=%s
     """
     cursor.execute(sql1,[school.country,gender])

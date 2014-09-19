@@ -28,12 +28,12 @@ def cal_education_task(user_id,gender,education,educationSchool,educationSchool_
         return False
     from apps.recommend_app.recommend_util import cal_education
     if educationSchool_2==None:
-        educationscore=cal_education(education,educationSchool,gender)
+        educationscore=cal_education(education,educationSchool,gender,1)
     else:
-        SchoolScore1=cal_education(education,educationSchool,gender)
+        SchoolScore1=cal_education(education,educationSchool,gender,1)
         SchoolScore2=0
         if educationSchool_2 != None and educationSchool_2.rstrip() !=u'':
-            SchoolScore2=cal_education(education,educationSchool_2,gender)
+            SchoolScore2=cal_education(education,educationSchool_2,gender,2)
         if SchoolScore1>SchoolScore2:
             educationscore=SchoolScore1
         else:
