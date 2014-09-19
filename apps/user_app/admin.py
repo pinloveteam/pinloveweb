@@ -23,7 +23,7 @@ class UserBasicProfile(UserProfile):
         verbose_name_plural = u'用户基本信息'
         
 class UserBasicProfileAdmin(admin.ModelAdmin):
-    list_display=('user','gender','get_birthday','age','height','education','educationSchool','income',)
+    list_display=('user','gender','get_birthday','age','height','education','educationSchool','educationSchool_2','income',)
     search_fields =('user__username','educationSchool',)
     readonly_fields=('age','link',)
     fields =('user','gender','year_of_birth','month_of_birth','day_of_birth',

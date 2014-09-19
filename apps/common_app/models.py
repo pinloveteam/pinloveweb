@@ -19,7 +19,7 @@ class School(models.Model):
     country=models.CharField(verbose_name=r'大学国家',max_length=2,choices=SCHOOL_COUNTRY_CHOICE,null=True)
     class Meta:
         verbose_name = u'学校' 
-        verbose_name_plural = u'关注表'
+        verbose_name_plural = u'学校'
         db_table = "school" 
 
 class AreaManager(models.Manager):

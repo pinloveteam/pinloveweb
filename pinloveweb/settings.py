@@ -88,7 +88,7 @@ MIDDLEWARE_CLASSES = (
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugTokenMiddleware',
 #     'apps.third_party_login_app.django_facebook.middleware.FacebookDebugCanvasMiddleware',
     'apps.third_party_login_app.django_facebook.middleware.FacebookMiddleware',
-    'middleware.timezone.TimezoneMiddleware'
+    #'middleware.timezone.TimezoneMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #     'django.middleware.cache.UpdateCacheMiddleware',
