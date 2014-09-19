@@ -23,7 +23,7 @@ def cal_income_task(user_id,income,gender):
 '''
 计算学历
 '''       
-def cal_education_task(user_id,gender,education,educationSchool,educationSchool_2):
+def cal_education_task(user_id,gender,education,educationSchool,educationSchool_2,test=False):
     if (educationSchool_2==None or educationSchool_2.rstrip() ==u'' )and (educationSchool==None or educationSchool.rstrip() ==u''):
         return False
     from apps.recommend_app.recommend_util import cal_education
@@ -41,3 +41,5 @@ def cal_education_task(user_id,gender,education,educationSchool,educationSchool_
 #             educationscore=cal_education(self.education,self.educationSchool)
         if Grade.objects.filter(user_id=user_id).exists():
             Grade.objects.filter(user_id=user_id).update(educationscore=educationscore)
+        if test:
+            return 'SchoolScore=%s,SchoolScore2=%s'%(SchoolScore1,SchoolScore2)
