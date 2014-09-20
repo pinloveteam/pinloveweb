@@ -330,10 +330,16 @@ def newcount(request):
     return HttpResponse(json)
     
 def test(request):
-    userProfile=UserProfile.objects.get(user=request.user)
-    from apps.recommend_app.recommend_util import cal_income
-    cal_income(userProfile.income,userProfile.gender)
-    return HttpResponse('success')
+    from apps.task_app.tasks import task_run
+    task_run()
+#     from django.utils import timezone
+#     import pytz
+#     pytz.common_timezones()
+#     current_tz=timezone.get_current_timezone_name()
+#     userProfile=UserProfile.objects.get(user=request.user)
+#     from apps.recommend_app.recommend_util import cal_income
+#     cal_income(userProfile.income,userProfile.gender)
+    return render(request,'test.html')
 #    try:
 #       import hashlib
 #       chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()

@@ -39,7 +39,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 
 
@@ -352,7 +352,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                                
+#                                 
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -377,7 +377,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-                                    
+                                     
      'default': {
          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
          'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
