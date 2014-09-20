@@ -1,0 +1,225 @@
+﻿{% extends "base_later.html" %}
+<title>{% block title %} 拼爱网--个人主页 {% endblock %}</title>
+{% load staticfiles %} {% block staticfiles %}
+<style>
+.mission-top {
+	text-align: center;
+	font-size: 16px;
+	background-color: #CEDEDE;
+	letter-spacing: 10px;
+}
+
+.mission-body {
+	padding: 30px 50px;
+}
+
+.ms {
+	text-align: center;
+	display: inline-block;
+	width: 120px;
+	background-color: #F2F2F2;
+}
+
+.ms-text {
+	color: #999;
+	padding: 5px;
+	height: 60px;
+}
+
+.ms-btn {
+	line-height: 1.5;
+	padding: 2px 8px;
+	color: #fff;
+	margin-bottom: 0;
+	cursor: pointer;
+}
+
+.ms-btn-a {
+	background-color: #EE4C36;
+}
+
+.ms-btn-a:hover {
+	background-color: #F0624F;
+}
+
+.ms-btn-b {
+	background-color: #F48273;
+}
+
+.ms-btn-c {
+	color: #8E8E8E;
+	background-color: #C9C9C9;
+	cursor: initial;
+}
+</style>
+{% endblock %} 
+{% block content %}
+<div class="wrap">
+	<div class="container" style="width: 1300px;">
+		<div class="row" style="margin-top: 63px;">
+			{% include "left.html" %}
+			<div class="col-xs-9">
+				<div class="mission card_panel">
+					<p class="mission-top">免费领取拼爱币</p>
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="mission-body">
+								<div class="ms">
+									<h4 class="ms-title">完善资料</h4>
+									<p class="ms-text">奖励2拼爱币</p>
+									 {%ifequal userProfileFinish False%}
+									 <p class="ms-btn ms-btn-c">已领取</p>
+									 {%else%}
+									  <a href="/user/user_profile/#self_info_"  target="_blank"><p class="ms-btn ms-btn-a">去完成</p></a>
+									 {%endifequal%}
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="mission-body">
+								<div class="ms">
+									<h4 class="ms-title">每日签到</h4>
+									<p class="ms-text">每日可签到5次每次领取2拼爱币</p>
+									<p class="ms-btn {%ifequal dayLoginCount DAY_LOGIN_COUNT%}ms-btn-c{%else%}ms-btn-a{%endifequal%}">{%ifequal dayLoginCount 0%}去完成{%else%}已领取{{dayLoginCount}}次{%endifequal%}</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="mission-body">
+								<div class="ms">
+									<h4 class="ms-title">邀请注册</h4>
+									<p class="ms-text">奖励2拼爱币</p>
+									<ul class="list-inline">
+										<li class="qq_share"></li>
+										<li>
+										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+										</li>
+										<li>
+										   <a href="javascript:void(0)" onclick="feeds();" target="_blank"><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="mission-body">
+								<div class="ms">
+									<h4 class="ms-title">邀请登录</h4>
+									<p class="ms-text">奖励2拼爱币</p>
+									<ul class="list-inline">
+										<li class="qq_share"></li>
+										<li>
+										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+										</li>
+										<li>
+										   <a href="javascript:void(0)" onclick="feeds();" target="_blank"><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="mission-body">
+								<div class="ms">
+									<h4 class="ms-title">头像认证</h4>
+									<p class="ms-text">奖励10拼爱币</p>
+									{%ifequal avatar_name_status '3'%}
+									<p class="ms-btn ms-btn-c">已完成</p>
+									{%else%}
+									  {%ifequal avatar_name_status '2'%}
+									    <p class="ms-btn ms-btn-c">正在审核</p>
+									  {%else%}
+									      <a href="/user/user_profile/#upload_head_" target="_blank"><p class="ms-btn ms-btn-a">去完成</p></a>
+									  {%endifequal%}
+									 {%endifequal%}
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="mission-body">
+								<div class="ms">
+									<h4 class="ms-title">收入认证</h4>
+									<p class="ms-text">奖励10拼爱币</p>
+									{%ifequal incomeValid '3'%}
+									<p class="ms-btn ms-btn-c">已完成</p>
+									{%else%}
+									  {%ifequal incomeValid '2'%}
+									    <p class="ms-btn ms-btn-c">正在审核</p>
+									  {%else%}
+									      <a href="/user/user_profile/#certification_" target="_blank"><p class="ms-btn ms-btn-a">去完成</p></a>
+									  {%endifequal%}
+									 {%endifequal%}
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="mission-body">
+								<div class="ms">
+									<h4 class="ms-title">学历认证</h4>
+									<p class="ms-text">奖励10拼爱币</p>
+									{%ifequal educationValid '3'%}
+									<p class="ms-btn ms-btn-c">已完成</p>
+									{%else%}
+									  {%ifequal educationValid '2'%}
+									    <p class="ms-btn ms-btn-c">正在审核</p>
+									  {%else%}
+									      <a href="/user/user_profile/#certification_" target="_blank"><p class="ms-btn ms-btn-c">去完成</p></a>
+									  {%endifequal%}
+									 {%endifequal%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<html xmlns:wb=“http://open.weibo.com/wb”>
+<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+<!-- QQ分享  -->
+(function(){
+var p = {
+url:'http://pinlove.com?link=178035UbXsdf3', /*获取URL，可加上来自分享到QQ标识，方便统计*/
+desc:'亲，我在用拼爱pinlove，来看看哈！', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
+title:'', /*分享标题(可选)*/
+summary:'', /*分享摘要(可选)*/
+pics:'', /*分享图片(可选)*/
+flash: '', /*视频地址(可选)*/
+site:'', /*分享来源(可选) 如：QQ分享*/
+style:'203',
+width:16,
+height:16
+};
+var s = [];
+for(var i in p){
+s.push(i + '=' + encodeURIComponent(p[i]||''));
+}
+
+$('.qq_share').append(['<a class="qcShareQQDiv" href="http://connect.qq.com/widget/shareqq/index.html?',s.join('&'),'" target="_blank"><img src="{{STATIC_URL}}img/qq_login_logo.png"></a>'].join(''));
+})();
+</script>
+
+<script type="text/javascript">
+var appId=1412943645609984
+$(document).ready(function() {
+	  $.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+	    FB.init({
+	      appId:appId,
+	    });     
+	  });
+	});
+function feeds(){
+	FB.ui({
+		  method: 'feed',
+		  link: 'https://developers.facebook.com/docs/dialogs/',
+		  app_id:appId,
+		  caption: '我注册了拼爱网，强烈推荐你来啊 ：{{ request.get_host }}/?link={{link}}',
+		  description:'',
+		  name:'pinlove web'
+		}, function(response){});
+}
+</script>
+{% endblock %} 
