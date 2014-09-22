@@ -8,6 +8,7 @@ from apps.user_app.models import UserProfile, UserVerification
 from apps.user_score_app.models import UserScore, UserScoreDtail
 from django.shortcuts import render
 from django.http.response import HttpResponse
+from django.utils import simplejson
 
 def user_score(request):
     arg={}
@@ -84,9 +85,13 @@ def get_free_pinloveicon(request,template_name):
         args['userProfileFinish']=False
         fields = ( 'income','weight','jobIndustry',
         'height', 'education', 'day_of_birth','educationSchool','city')
-        for field in fields:
-            if  not getattr(userProfile,field) in [-1,'N',None,u'',u'地级市、县',u'国家',u'请选择']:
-                args['userProfileFinish']=True
+        if userProfile.finish!=None:
+            finishList=simplejson.loads(userProfile.finish)
+            for field in fields:
+                if field not in finishList:
+                    args['userProfileFinish']=True
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(userProfile))
         return render(request,template_name,args)
     except  Exception as e:
         args={'error_message':e.message}

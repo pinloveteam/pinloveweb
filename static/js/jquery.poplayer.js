@@ -19,7 +19,8 @@
 			head : '确认',
 			body : 'message',
 			btnText : '确定',
-			btnFunc : ''
+			btnFunc : '',
+			singleBtn :true
 		};
 		var options = $.extend(defaults, options);
 
@@ -124,7 +125,15 @@
 		var dialog = $('<div class="poplayer"><div class="poplayer-confirm"><div class="poplayer-confirm-head"><span class="poplayer-confirm-head-text text-white"></span><span class="poplayer-close-btn text-white">X</span></div><div class="poplayer-confirm-body"></div><div class="poplayer-confirm-bottom"><button class="btn btn-info btn-close"></button></div></div></div>');
 		dialog.find('.poplayer-confirm-head-text').html(options.head);
 		dialog.find('.poplayer-confirm-body').html(options.body);
-		dialog.find('button').html(options.btnText).bind('click', options.btnFunc);
+		dialog.find('button').first().html(options.btnText).bind('click', options.btnFunc);
+		
+		if(!options.singleBtn){
+			var btn = $('<button class="btn btn-info btn-close">重新成付款</button>');
+			btn.click(function(){
+				alert('d');
+			});
+			dialog.find('.poplayer-confirm-bottom').append(btn);
+		}
 		return dialog;
 	}
 
@@ -193,6 +202,18 @@
 		var r1 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px;padding-left: 0;"><span id="score" class="score-big" style="color: red;"></span><span class="text">分</span></div></div><div class="row"><div class="col-xs-12"><button id="compare_button" class="btn btn-xs btn-danger compare-btn">与其他用户对比</button></div></div>');
 		r1.find('#head').attr('src', options.user1.head);
 		r1.find('#score').html(options.user1.score);
+		if(options.user1.data[0]==undefined){
+			r1.find('#score').next().remove();
+			r1.find('#score').remove();
+			var info = r1.find('#compare_button').parent();
+			r1.find('#compare_button').remove();
+			var txt = $('<br /><p class="text-white">如需查看对方的雷达图和打分，必须完善你的<span class="text-red">择偶标准</span>。<a href="/user/user_profile/#self_info_">点此</a>完善资料<p>');
+			info.append(txt);
+			txt.find('a').click(function(){
+				var url = $(this).attr('href');
+				window.open(url);
+			});
+		}
 		radarframe.append(r1);
 
 //		var r3 = $('<div class="row"><div class="col-xs-12"><button class="btn btn-xs btn-danger">与其他用户对比</button></div></div>')

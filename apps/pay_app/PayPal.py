@@ -26,7 +26,7 @@ def asks_for_money(userId,amount=0,price=0.00,currency='USB',data=''):
         "item_name": "pinlove",
         "invoice": order.orderId,
         "notify_url": '%s%s%s' %('http://',DOMAIN,"/pay/paypal/"),
-        "return": '%s%s%s' %('http://',DOMAIN,"/pay/member/"),
+        "return": '%s%s%s' %('http://',DOMAIN,"/success/?title=paypal支付成功&success_message=paypal支付成功!"),
         "cancel_return": '%s%s%s' %('http://',DOMAIN,"/pay/paypal_cancel/"),
     }
 

@@ -586,8 +586,17 @@ window.Card = function(person){
 					});
                 	
 				}else if(data.result=='error'){
-					var body = $("<p>"+data.error_message+"</p>")
-					$.poplayer({body:body});
+					data.user1.data=[undefined,undefined,undefined,undefined,undefined];
+					options={
+							compar:compare_flag,
+							type : 'frame',
+							user1 : data.user1,
+					}
+					if(compare_flag){
+						options.user2= data.user2
+						
+					}
+					$.poplayer(options);
 				}
 			},
 			error:function(response){

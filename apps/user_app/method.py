@@ -3,6 +3,7 @@ import sys
 from apps.user_app.models import UserProfile, UserTag, Follow,\
     BrowseOherScoreHistory, BlackList, Denounce
 from apps.recommend_app.models import  AppearanceVoteRecord
+from django.utils import simplejson
 reload(sys) # Python2.5 初始化后会删除 sys.setdefaultencoding 这个方法，我们需要重新载入   
 sys.setdefaultencoding('utf-8')  
 '''
@@ -46,15 +47,23 @@ def get_profile_finish_percent_and_score(userProfile,oldUserProfile):
         'height', 'education', 'day_of_birth','educationSchool','city')
     updateFields=[]
     num=0
+    finishList=None
+    if userProfile.finish !=None:
+        finishList=simplejson.loads(userProfile.finish)
+    else:
+        finishList=[]
     for field in fields:
         if  not getattr(userProfile,field) in [-1,'N',None,u'',u'地级市、县',u'国家',u'请选择']:
             if getattr(userProfile,field)!=getattr(oldUserProfile,field):
-                updateFields.append(field)
+                if field not in finishList:
+                    updateFields.append(field)
             num+=1
     from apps.user_score_app.method import get_score_by_finish_proflie
     profileFinsihPercent=int((num+0.00)/len(fields)*100)
     if profileFinsihPercent>userProfile.profileFinsihPercent:
         get_score_by_finish_proflie(userProfile.user_id,updateFields)
+        finishList.extend(updateFields)
+        userProfile.finish=simplejson.dumps(finishList)
         userProfile.profileFinsihPercent=profileFinsihPercent
     return userProfile
 
@@ -133,15 +142,10 @@ def get_detail_info(myId,userId,socreForOther):
     tagList=UserTag.objects.select_related('tag').filter(user_id=userId,type=0)
     tags=[]
     for tag in tagList:
-        tags.append(tag.tag.content)
+        if tag.tag.id<24:
+            tags.append(tag.tag.content)
     isVote=False
     voteScore=-1
-    if userProfile.avatar_name_status=='3':
-        isVote=True
-        if AppearanceVoteRecord.objects.filter(user_id=myId,other_id=userId).exists():
-            voteScore=int(AppearanceVoteRecord.objects.get(user_id=myId,other_id=userId).score)
-        else:
-            voteScore=0
     from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
     data={
                         'head' : '%s%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME,'-60.jpeg'),
@@ -149,18 +153,27 @@ def get_detail_info(myId,userId,socreForOther):
                         'name' : userProfile.user.username,
                         'userId':userProfile.user_id,
                         'age' : ('%s%s' % (userProfile.age ,'岁')) if userProfile.age!=None  else userProfile.age,
-                        'city' : userProfile.city,
+                        'city' :  userProfile.limit_city_length(),
                         'height' :('%s%s' % (userProfile.height,'cm')) if userProfile.height!=-1 else userProfile.height,
                         'education' : userProfile.get_education_display(),
                         'income' : userProfile.get_income_display(),
                         'trade' : userProfile.get_jobIndustry_display(),
                         'constellation' : userProfile.get_sunSign_display(),
-                        'score' :int(socreForOther['matchResult']['scoreOther']),
+                    }
+    if socreForOther['result']=='success':
+        if userProfile.avatar_name_status=='3':
+            isVote=True
+            if AppearanceVoteRecord.objects.filter(user_id=myId,other_id=userId).exists():
+                voteScore=int(AppearanceVoteRecord.objects.get(user_id=myId,other_id=userId).score)
+            else:
+                voteScore=0
+        data.update({
+                     'score' :int(socreForOther['matchResult']['scoreOther']),
                         'isVote':isVote,
                         'voteScore':voteScore,
                         'scoreMy':int(socreForOther['matchResult'].get('scoreMyself',-3)),
                         'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
-                    }
+                     })
     for  key in data.keys():
         if data[key] in missing_value:
             data[key]='未填'
@@ -180,6 +193,7 @@ def detailed_info_div(myId,userId,compareId=None):
     if socreForOther['result']=='error':
         args['result']='error'
         args['error_message']=socreForOther['error_message']
+        args['user1']=get_detail_info(myId,userId,socreForOther)
         return args
     #获取页面详细信息
     args['user1']=get_detail_info(myId,userId,socreForOther)
@@ -205,3 +219,13 @@ def is_follow(myId,followId):
 def is_follow_each(myId,followId):
     userList=[myId,followId]
     return Follow.objects.filter(my_id__in=[myId,followId],follow_id__in=[myId,followId]).count()>=2
+
+def get_select_info(className,*args,**kwargs):
+    from apps.user_app.models import get_models
+    classModels=get_models(className)
+    if classModels==None:
+        return None
+    else:
+        include=kwargs['include']
+        exclude=kwargs['exclude']
+        return classModels.filter(**include).exclude(**exclude)

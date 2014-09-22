@@ -1,15 +1,15 @@
 
 			<div class="buy-nav">
 				<ul class=" list-inline">
-					<li href="#vip" class="active">会员增值服务</li>
-					<li href="#buy_coin">兑换拼爱币</li>
+					{%if False%}<li href="#vip" class="active">会员增值服务</li> {%endif%}
+					<li href="#buy_coin" class="active">兑换拼爱币</li>
 					<li href="#redeem">拼爱币赎回</li>
 					<li href="#record">交易记录</li>
 				</ul>
 			</div>
 			<div class="col-xs-9" style="height: 0px; z-index: 10;">
 				<div class="card_panel" style="width: 100%; margin-top: 0;">
-					<div id="vip" class="vip-panel">
+					{%if False%}<div id="vip" class="vip-panel">
 						<p>
 							<b>想知道Ta对你的打分吗?</b>
 						</p>
@@ -40,9 +40,9 @@
 								<button class="btn btn-info">立即开通</button>
 							</div>
 						</div>
-					</div>
+					</div>{%endif%}
 
-					<div id="buy_coin" class="vip-panel" style="display: none;">
+					<div id="buy_coin" class="vip-panel" >
 						<p>
 							<b>什么是拼爱币?</b>
 						</p>

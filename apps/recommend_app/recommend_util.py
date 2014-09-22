@@ -85,12 +85,22 @@ def cal_ranking_score(school,gender,type):
     sql="""
     SELECT count(*)
 from user_profile u1 LEFT JOIN school u2 on """+school_sql+"""=u2.name
-where (ranking>%s and u2.country=%s and gender=%s) 
+where (ranking>=%s and u2.country=%s and gender=%s) 
     """
     from django.db import connection
     cursor = connection.cursor()
     cursor.execute(sql,[ranking,school.country,gender])
     schoolRankingCount=cursor.fetchone()[0]
+    
+    sql2="""
+    SELECT count(*)
+from user_profile u1 LEFT JOIN school u2 on """+school_sql+"""=u2.name
+where (ranking=%s and u2.country=%s and gender=%s) 
+    """
+    cursor = connection.cursor()
+    cursor.execute(sql2,[ranking,school.country,gender])
+    schoolRankingCountCurrent=cursor.fetchone()[0]
+    schoolRankingCount=schoolRankingCount-int((schoolRankingCountCurrent+0.00)/2)
     
     sql1="""
     SELECT count(*)

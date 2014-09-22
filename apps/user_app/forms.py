@@ -23,6 +23,9 @@ class UserProfileForm(ModelForm):
                 self.fields[key].choices=self.fields[key].choices[1:]
             self.fields[key].required = False
             self.fields[key].widget.attrs['class']='form-input'
+#         for key in self.initial:
+#             if self.initial[key] not in [-1,None,'-1'] and isinstance(self.fields[key],TypedChoiceField):
+#                 self.fields[key].choices=self.fields[key].choices[1:]
     
 #     def clean_age(self):
 #         instance = getattr(self, 'instance', None)

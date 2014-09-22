@@ -16,39 +16,63 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	change_navi()
+	guide()
 	{%if first%}
 	guide()
 	{%endif%}
 })
+guide_1=false;
 function guide(){
 	//向导
 	var firstCard=$('.card_row').children(":first");
 	firstCard.find('.username').attr('id','card-name');
-	firstCard.find("[class^='icon_like']").attr('id','like')
+	firstCard.find(".glyphicon").attr('id','like')
 	firstCard.find('.card-introBox').attr('id','card-img')
+	firstCard.find('.icon_dislike').attr('id','icon_dislike')
+	firstCard.find('.name').css('top','250px');
+	firstCard.find('.tag').css('top','0px');
 	var tour = {
 		id : "hello-hopscotch",
 		steps : [{
+			title : "不喜欢",
+			content : "点击则不再推荐该用户",
+			target : "icon_dislike",
+			placement : "bottom",
+			xOffset:-10
+		},
+		{
 			title : "查看详细信息",
 			content : "点击头像查看详细信息,雷达图",
 			target : "card-img",
 			placement : "bottom",
-			xOffset:10
+			yOffset:-200,
+			xOffset:100
 		}, {
 			title : "查看动态",
 			content : "点击名字查看动态",
 			target : "card-name",
 			placement : "bottom",
-			yOffset:-45,
-			xOffset:40
+			yOffset:-15,
+			xOffset:50
 		}, {
 			title : "关注",
 			content : "点击爱心关注",
 			target : "like",
-			placement : "bottom"
+			placement : "bottom",
+			yOffset:-10,
+			xOffset:-2,
 		}]
 	};
 	hopscotch.startTour(tour);
+	/*hopscotch.listen('end', function(){
+		firstCard.find('.name').css('top','307px');
+		firstCard.find('.tag').css('top','-20px');
+	});
+	hopscotch.listen('close', function(){
+		firstCard.find('.name').css('top','307px');
+		firstCard.find('.tag').css('top','-20px');
+	});*/
+	
 }
 </script>
 {% endblock %}

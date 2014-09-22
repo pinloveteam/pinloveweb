@@ -841,6 +841,14 @@ function sendExpression(e) {
 			stop_load_next_page();
 			return;
 	   };
+	   loading=function(flag){
+		   if(flag){
+			   $('#dynamic').append('<div class="col-xs-12" style="background-color:#fff;text-align:center;height:30px;" >没有跟多动态<div>')
+		   }else{
+			   
+		   }
+		   
+	   };
 	   success=function(data){
 		   if( typeof(data)!="object"){
    	    	data=$.parseJSON(data);

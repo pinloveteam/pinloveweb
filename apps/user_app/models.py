@@ -18,7 +18,18 @@ from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT, ADMIN_ID
 # from util.singal import cal_recommend_user
 from apps.common_app.models import Tag
 import datetime
+from django.utils import simplejson
 
+'''
+获得Model
+'''
+def get_models(className):
+    classModels=globals().get(className,False)
+    if classModels==False:
+        return classModels
+    else:
+        return None
+    
 class UserProfileManager(models.Manager):
     '''
     根据用户id获取用户详细信息
@@ -135,6 +146,13 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     stateProvince = models.CharField(verbose_name=r"所在省", max_length=50,null=True,blank=True,) 
     
     city = models.CharField(verbose_name=r"所在城市", max_length=50,null=True,blank=True,) 
+    '''
+    限制城市长度
+    '''
+    def limit_city_length(self,limit_length=12):
+        if  isinstance(self.city,basestring) and len(self.city.encode('gbk'))>limit_length:
+            if self.city.find(u' ')!=-1:
+                return self.city[:self.city.find(u' ')]
     streetAddress = models.CharField(verbose_name=r"街道地址", max_length=255,null=True,blank=True,)
     INCOME_CHOICES = ((-1,"未填"),(1,"5万以下"))
     for income in range(5,100,1):  
@@ -255,6 +273,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     profileFinsihPercent=models.SmallIntegerField(verbose_name=r'资料完成度',default=0,null=True,blank=True,)
     member=models.SmallIntegerField(verbose_name=r'资料完成度',default=0,choices=((0,u'普通用户'),(1,u'会员'),),null=True,blank=True,)
     guide=models.CharField(verbose_name=r'引导',max_length=255,null=True,blank=True,)
+    finish=models.CharField(verbose_name=r'个人信息完成字段',max_length=255,null=True,blank=True,)
     #定制管理器
     objects = UserProfileManager()
     
@@ -280,12 +299,12 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         if self.education!=-1 and (not self.educationSchool in [None,u'']) and (self.education != oldUserProfile.education or  self.educationSchool!=oldUserProfile.educationSchool or self.educationSchool_2!=oldUserProfile.educationSchool_2):
             from apps.recommend_app.recommend_util import cal_education
             if self.educationSchool_2==None:
-                educationscore=cal_education(self.education,self.educationSchool,self.gender)
+                educationscore=cal_education(self.education,self.educationSchool,self.gender,1)
             else:
-                SchoolScore1=cal_education(self.education,self.educationSchool,self.gender)
+                SchoolScore1=cal_education(self.education,self.educationSchool,self.gender,1)
                 SchoolScore2=0
                 if self.educationSchool_2 != None and self.educationSchool_2.rstrip() !=u'':
-                    SchoolScore2=cal_education(self.education,self.educationSchool_2,self.gender)
+                    SchoolScore2=cal_education(self.education,self.educationSchool_2,self.gender,2)
                 if SchoolScore1>SchoolScore2:
                     educationscore=SchoolScore1
                 else:

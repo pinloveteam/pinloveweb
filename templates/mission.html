@@ -66,7 +66,7 @@
 							<div class="mission-body">
 								<div class="ms">
 									<h4 class="ms-title">完善资料</h4>
-									<p class="ms-text">奖励2拼爱币</p>
+									<p class="ms-text">每完成一项信息奖励2拼爱币</p>
 									 {%ifequal userProfileFinish False%}
 									 <p class="ms-btn ms-btn-c">已领取</p>
 									 {%else%}
@@ -181,8 +181,8 @@
 <!-- QQ分享  -->
 (function(){
 var p = {
-url:'http://pinlove.com?link=178035UbXsdf3', /*获取URL，可加上来自分享到QQ标识，方便统计*/
-desc:'亲，我在用拼爱pinlove，来看看哈！', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
+url:'http://pinlove.com?link={{link}}', /*获取URL，可加上来自分享到QQ标识，方便统计*/
+desc:'我在用拼爱pinlove，来看看哈！www.pinlove.com?link={{link}}', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
 title:'', /*分享标题(可选)*/
 summary:'', /*分享摘要(可选)*/
 pics:'', /*分享图片(可选)*/
@@ -202,7 +202,7 @@ $('.qq_share').append(['<a class="qcShareQQDiv" href="http://connect.qq.com/widg
 </script>
 
 <script type="text/javascript">
-var appId=1412943645609984
+var appId=400350543428768;
 $(document).ready(function() {
 	  $.ajaxSetup({ cache: true });
 	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
@@ -216,8 +216,8 @@ function feeds(){
 		  method: 'feed',
 		  link: 'https://developers.facebook.com/docs/dialogs/',
 		  app_id:appId,
-		  caption: '我注册了拼爱网，强烈推荐你来啊 ：{{ request.get_host }}/?link={{link}}',
-		  description:'',
+		  caption: '我注册了拼爱网，强烈推荐你来啊 ',
+		  description:'我注册了拼爱网，强烈推荐你来啊 ：www.pinlove.com/?link={{link}}',
 		  name:'pinlove web'
 		}, function(response){});
 }

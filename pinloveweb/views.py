@@ -212,6 +212,8 @@ def register_user(request) :
             sex=userForm.cleaned_data['gender']
             from pinloveweb.method import create_register_extra_user
             create_register_extra_user(request,user.id,user.username,userForm.cleaned_data['password1'],sex,link)
+            authenticate = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
+            auth.login(request, authenticate)
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         else : 
             args['user_form'] = userForm
@@ -329,9 +331,18 @@ def newcount(request):
     json=simplejson.dumps(args)
     return HttpResponse(json)
     
+'''
+ 成功页面
+'''
+def success(request):
+    args={}
+    args['title']=request.REQUEST.get('title',None)
+    args['success_message']=request.REQUEST.get('success_message',None)
+    return render(request,'success.html',args)
+    
 def test(request):
-    from apps.task_app.tasks import task_run
-    task_run()
+#     from apps.task_app.tasks import task_run
+#     task_run()
 #     from django.utils import timezone
 #     import pytz
 #     pytz.common_timezones()
@@ -339,7 +350,7 @@ def test(request):
 #     userProfile=UserProfile.objects.get(user=request.user)
 #     from apps.recommend_app.recommend_util import cal_income
 #     cal_income(userProfile.income,userProfile.gender)
-    return render(request,'test.html')
+    return render(request,'success.html')
 #    try:
 #       import hashlib
 #       chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
