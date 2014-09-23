@@ -39,7 +39,7 @@ function get_load_next_page(){
 }
 //滚动加载
 //no_load不加载   ,success成功
-function loadData(no_load,success)
+function loadData(no_load,success,loading)
 { 
     totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
 
@@ -56,12 +56,14 @@ function loadData(no_load,success)
 	         url:window.location.pathname,
 	         data:{page:next_page},
 	         beforeSend: function(XMLHttpRequest){
+	        	 loading(true);
 	        	 load_next_page=false;
 	         },
 	         success: function(data, textStatus){
 	        	 success(data);
 	         },
 	         complete: function(XMLHttpRequest, textStatus){
+	        	 loading(false);
 	        	 load_next_page=true;
 	         },
 	         error: function(response){

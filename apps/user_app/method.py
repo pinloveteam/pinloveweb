@@ -148,7 +148,7 @@ def get_detail_info(myId,userId,socreForOther):
     voteScore=-1
     from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
     data={
-                        'head' : '%s%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME,'-60.jpeg'),
+                        'head' : '%s%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME,'-100.jpeg'),
                         'tag' : tags,
                         'name' : userProfile.user.username,
                         'userId':userProfile.user_id,

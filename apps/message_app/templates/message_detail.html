@@ -72,7 +72,7 @@
    							if (data.result=='success'){
    								 var body=$('<p>发送成功!</p>')
    								 var message_clone=$('#message_clone').find('.self').clone();
-   			                      message_clone.find('#avatar').attr('src','/media/'+avatarName+'-60.jpeg');
+   			                      message_clone.find('#avatar').attr('src','/media/'+avatarName+'-100.jpeg');
    			                      message_clone.find('#content').html(content);
    			                      message_clone.find('#time').html(data.messageTime);
    								 $('#message_list').append(message_clone);
@@ -152,7 +152,7 @@ function getCookie(name) {
                     else{
                     	var message_clone=$('#message_clone').find('.other').clone();
                      }
-                        message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
+                        message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                         //message_clone.find('#username').html(message.sender_name);
                         message_clone.find('#content').html(message.content);
                         message_clone.find('#time').html(message.sendTime);

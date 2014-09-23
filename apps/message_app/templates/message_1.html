@@ -160,7 +160,7 @@
                     if(message.type==0 ||message.type==1){
                         var message_clone=$('#message_clone').find('#message').clone();
                         message_clone.find('#senderId').val(message.sender_id);
-                        message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
+                        message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                         message_clone.find('#username').html(message.sender_name);
                         message_clone.find('#content').html(message.content).parent().attr('href','/message/detail/?senderId='+message.sender_id);
                         message_clone.find('#time').html(message.sendTime);
@@ -209,7 +209,7 @@
                     }else if(message.type==2) {
                         var follow_clone=$('#message_clone').find('#follow').clone();
                         follow_clone.find('#senderId').val(message.sender_id);
-                        follow_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
+                        follow_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                         follow_clone.find('#username').html(message.sender_name);
                         follow_clone.find('#time').html(message.sendTime);
                         if(message.isRead==0){
@@ -228,7 +228,7 @@
 
                     }else if(message.type==3){
                     	var dynamic_agree_clone=$('#message_clone').find('#dynamic_agree').clone();
-                    	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
+                    	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                     	dynamic_agree_clone.find('#username').html(message.sender_name);
                     	dynamic_agree_clone.find('#time').html(message.sendTime);
                     	dynamic_agree_clone.find('#dynamic_content').html(message.friendDynamic_content);
@@ -245,7 +245,7 @@
                     	$('.col-xs-9').append(dynamic_agree_clone);
                     }else if(message.type==5) {
                          var dynamic_comment_clone=$('#message_clone').find('#dynamic_comment').clone();
-                         dynamic_comment_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-60.jpeg');
+                         dynamic_comment_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                          dynamic_comment_clone.find('#username').html(message.sender_name);
                          dynamic_comment_clone.find('#content').html(message.content);
                          dynamic_comment_clone.find('#time').html(message.sendTime);
@@ -333,6 +333,14 @@
 			stop_load_next_page();
 			return;
 	   };
+	   loading=function(flag){
+		   if(flag){
+			   $('.col-xs-9').popLoading();
+		   }else{
+			   $('.col-xs-9').removeLoading();
+		   }
+		   
+	   };
 	   success=function(data){
 		   if( typeof(data)!="object"){
    	    	data=$.parseJSON(data);
@@ -349,7 +357,7 @@
 			/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
 				console.log("页面的文档高度 ："+$(document).height());
 				console.log('浏览器的高度：'+$(window).height()); */
-				loadData(no_load,success);
+				loadData(no_load,success,loading);
 				}
 			}); 
 		
@@ -535,6 +543,7 @@
                                         回复
                                     </button>
                                    <span id="time" class="message-time">8月5日 14:44</span>
+                                   <span class="message-report">拉黑/举报</span>
                                 </div>
 
                              </div>
@@ -585,6 +594,7 @@
                                         关注TA
                                     </button>
                                 <span  id="time"  class="message-time ">12月25日 14:44</span>
+                                <span class="message-report">拉黑/举报</span>
                                 </div>
                             </div>
 						</div>
@@ -609,6 +619,7 @@
                                         </p>
                                     </div>
                                     <span   id="time" class="message-time">8月5日 14:44</span>
+                                    <span class="message-report">拉黑/举报</span>
                                 </div>
                             </div>
 
@@ -641,6 +652,7 @@
                                         回复
                                     </button>
                                     <span id="time"  class="message-time">8月5日 14:44</span>
+                                    <span class="message-report">拉黑/举报</span>
                                 </div>
                             </div>
 

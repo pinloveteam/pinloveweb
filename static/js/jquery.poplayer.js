@@ -153,7 +153,7 @@
 		infoframe.click(function(){
 			return false;
 		});
-		var i1 = $('<div class="col-xs-4" style="padding-left: 0;"><img id="head" width="75px" src=""/></div><div class="col-xs-8" style="padding-right: 0;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; padding-left:6px; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div>');
+		var i1 = $('<div class="row"><div class="col-xs-4" style="padding-left: 0;"><img id="head" width="75px" src=""/></div><div class="col-xs-8" style="padding-right: 0;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; padding-left:6px; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div></div>');
 		i1.find('#head').attr('src', user.head);
 		i1.find('#name').html(user.name);
 		i1.find('#age').html(user.age);
@@ -176,7 +176,7 @@
 			i2.find('.tags').append('<span class="tag">' + e + '</span>');
 		});
 
-		var i3 = $('<div class="row"><hr /><p class="title">详细信息</p><table class="table"><tbody><tr><td>身高：<span id="height"></span></td><td>学历：<span id="education"></span></td></tr><tr><td>年龄：<span id="age"></span></td><td>收入：<span id="income"></span></td></tr><tr><td>行业：<span id="trade"></span></td><td>星座：<span id="constellation"></span></td></tr></tbody></table></div>');
+		var i3 = $('<div class="row"><p class="title">详细信息</p><table class="table"><tbody><tr><td>身高：<span id="height"></span></td><td>学历：<span id="education"></span></td></tr><tr><td>年龄：<span id="age"></span></td><td>收入：<span id="income"></span></td></tr><tr><td>行业：<span id="trade"></span></td><td>星座：<span id="constellation"></span></td></tr></tbody></table></div>');
 		i3.find('#height').html(user.height);
 		i3.find('#education').html(user.education);
 		i3.find('#age').html(user.age);

@@ -55,6 +55,14 @@ function init_card(cards){
 no_load=function(){
 	    	return;
 	    	};
+loading=function(flag){
+	 		   if(flag){
+	 			  $('.card_row').popLoading();
+	 		   }else{
+	 			  $('.card_row').removeLoading();
+	 		   }
+	 		   
+	 	   };
 success=function(data){
 	if(typeof(data)!="object"){
    	    	data=$.parseJSON(data);
@@ -77,7 +85,7 @@ $(window).scroll( function() {
 		/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
 		console.log("页面的文档高度 ："+$(document).height());
 		console.log('浏览器的高度：'+$(window).height()); */
-		loadData(no_load,success);
+		loadData(no_load,success,loading);
 		}
 }); 
 

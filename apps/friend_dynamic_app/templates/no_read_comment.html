@@ -357,7 +357,7 @@ function init_comment(commentList,dynamicId){
 	$(commentList).each(function(){
 		var comment=$('.comment_clone').clone()
 		comment.removeClass('comment_clone')
-		comment.find('.comments-head').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
+		comment.find('.comments-head').attr('src','/media/'+this.reviewerAvatarName+'-100.jpeg')
 		comments_edit=comment.find('.comments-edit')
 		if(this.receiverName==null ){
 			comment.find('.commentary-username').html(this.reviewerName+'：')
@@ -533,7 +533,7 @@ function del_comment(){
 								<div class="divArrow gray-panel" style="left: 500px;"></div>
 								<div class="comments-list">
 								<div class="comments">
-										<img class="comments-head" src="{{MEDIA_URL}}{{comment.reviewerAvatarName}}-60.jpeg"/>
+										<img class="comments-head" src="{{MEDIA_URL}}{{comment.reviewerAvatarName}}-100.jpeg"/>
 										<div class="comments-text">
 											<a href="#">
 												{{comment.commentTime}}：

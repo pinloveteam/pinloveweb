@@ -5,6 +5,7 @@
 <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/card.js"></script>
 <style type="text/css">
 .kineticjs-content {
 	position: absolute;
@@ -595,11 +596,71 @@ removecloud();
 						thanks&share<span style="color: #FF0000">♥</span>
 					</div>
 				</div>
+				
+				<div class="card card_panel col-xs-6 hideable" style="position: absolute;top: 100px;left: 200px;display: none;">
+							<div class="tabbable">
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab12">
+										<div class="introBox">
+											<img class="head" width="250px" src=".\img\fbb.jpg">
+											<div class="card-introBox" title="点击查看详细信息"></div>
+
+											<div class="name">
+												<span class="username"></span>
+												<s class="name-arrow"></s>
+												<i move-data="./img/image1.jpeg" move-to="js-follow" class="Q-buy-btn glyphicon glyphicon-heart icon_like_0" title="喜欢"></i>
+												<div class="tag">
+													<span class="label label-success"></span>&nbsp;&nbsp;&nbsp; <span class="label label-danger"></span>
+												</div>
+											</div>
+										</div>
+										<div class="tool_bar">
+											<a href="#">
+												<i class="icon_ding" title="固定"></i>
+											</a>
+											<!--<a href="#" class="">
+								<i move-data="./img/image1.jpeg" move-to="js-follow" class="Q-buy-btn icon_like_0" title="喜欢"></i>
+								</a>-->
+											<a href="#">
+												<i class="icon_dislike" title="不喜欢"></i>
+											</a>
+										</div>
+									</div>
+									<div class="tab-pane" id="tab13">
+										<div class="scroller">
+											<ul class="hoverbox"></ul>
+										</div>
+									</div>
+									<div class="tab-pane chat_tab" id="tab10">
+										<div class="chat"></div>
+										<textarea rows="1" class="chat_textarea"></textarea>
+										<button class="btn btn-xs btn-primary btn_send_msg">
+											发送
+										</button>
+										<a href="#" class="venoboxframe" data-type="iframe">
+								聊天记录
+							</a>
+									</div>
+								</div>
+								<div class="btn-group card-nav">
+									<button type="button" class="btn btn-default btn-lg" href="#tab12" data-toggle="tab" style="border-left: none;">
+										<span class="glyphicon glyphicon-info-sign"></span>
+									</button>
+									<button type="button" class="btn btn-default btn-lg" href="#tab13" data-toggle="tab">
+										<span class="glyphicon glyphicon-picture"></span>
+									</button>
+									<button type="button" class="btn btn-default btn-lg" href="#tab10" data-toggle="tab" style="border-right: none;">
+										<span class="glyphicon glyphicon-comment"></span>
+									</button>
+								</div>
+							</div>
+						</div>
+						
 
 				<div id="invite" style="display: none;">
 					<div class="close"></div>
 					<span class="num3">{{userCount}}</span> <img id="inviteImg"
-						src="{{STATIC_URL}}img/接受邀请-60.png"
+						src="{{STATIC_URL}}img/接受邀请-100.png"
 						style="position: absolute; top: 5px; left: 60px;" /> <span
 						style="left: 120px; position: absolute; top: 80px;">search：</span><input
 						type="text" id='search'
@@ -628,7 +689,7 @@ removecloud();
 <div id="record">
 	<ul class="record-user-list"  style="float: left;">
 	    {% for facebookUser in facebookUserListDcit %}
-	       <li><div class="record-user head_boy "><a target="_blank"  href="{{facebookUser.user_id}}" ><img style="width:45px;height:45px;" src="{{MEDIA_URL}}{%ifequal avatar_name_status 3%}{{facebookUser.avatar_name}}-60.jpeg{%else%}user_img/image-60.jpeg{%endifequal%}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.city}} age:{{facebookUser.age}}"></a></div></li>
+	       <li><div class="record-user head_boy "><a target="_blank"  href="{{facebookUser.user_id}}" ><img style="width:45px;height:45px;" src="{{MEDIA_URL}}{%ifequal avatar_name_status 3%}{{facebookUser.avatar_name}}-100.jpeg{%else%}user_img/image-100.jpeg{%endifequal%}" class="img-circle" title="username:{{facebookUser.username}}  location:{{facebookUser.city}} age:{{facebookUser.age}}"></a></div></li>
 	    {% endfor %}
 	</ul>
 </div>
@@ -742,7 +803,11 @@ function loadStage() {
         	 }
         	 if(data[0]=='0'){
         		  if(data[2].filter=='all' || data[2].filter==null){
-        			  $('#pair_message').html("没有匹配到用户,请再试一次!")
+        			  var body=$('<p>没有匹配到用户,请再试一次!</p>')
+        			  var hehe = function(){
+	            			StartGame(data.type);
+	            			}
+	            	$.poplayer({body:body,btnFunc:hehe});
         		  }else{
         			  $('#pair_message').html("Oooooops, no same "+data[2].filter+" match .Please try other match types!")
         		  }
@@ -754,7 +819,9 @@ function loadStage() {
         		  type=1;
         		 }
         	 if(data[0]=='2'){
-        	 var template = $('#info_clone').clone();
+        		 
+            new Card(new Person(cards.username,cards.age,cards.city,'/media/'+cards.avatar_name,cards.user_id,cards.followStatus,cards.pictureList,cards.isChat));
+        	/* var template = $('#info_clone').clone();
         	 template.find('#userId').val(data[2]['uid']);
         	 template.find('.img-circle').attr('src',data[2]['avatar']);
         	 if (data[2]['filter_pic']!=''){
@@ -797,7 +864,7 @@ function loadStage() {
         			 $('.hoverbox').append('<li><a id="firstlink"   style="display:none;" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.picPath+' title='+facebookPhotoList[i].fields.description+'><img alt="demo1" src='+facebookPhotoList[i].fields.picPath+' title='+facebookPhotoList[i].fields.description+'></a></li>')
         		 }
         	     
-        	 }
+        	 }*/
         	
         	  }
         	 clearInterval(Time);

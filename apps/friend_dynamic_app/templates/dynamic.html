@@ -221,7 +221,7 @@ function init_dynamic(dynamicList){
 	$(dynamicList).each(function(){
 		dynamic=$('#dynamic_clone').find('.row').first().clone();
 		dynamicObj=this;
-		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-60.jpeg');
+		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-100.jpeg');
 		dynamic.find('#username').html(this.publishUserName);
 		dynamic.find('#time').html(this.publishTime+'发布');
 		dynamic.find('#content').html(this.content);
@@ -319,7 +319,7 @@ function init_dynamic(dynamicList){
 function init_agree(dynamic_div,agreeList,type){
 	$(agreeList).each(function(){
 		agree=$('#dynamic_clone').find('#agree').clone();
-		agree.find('img').attr('src','/media/'+this.avatarName+'-60.jpeg');
+		agree.find('img').attr('src','/media/'+this.avatarName+'-100.jpeg');
 		agree.find('#username').html(this.username);
 		agree.find('input[name="userId"]').val(this.userId)
 		if(type==0){
@@ -334,7 +334,7 @@ function init_agree(dynamic_div,agreeList,type){
 function init_comment(dynamic_div,commentList,publishUserId){
 	$(commentList).each(function(){
 		var comment=$('#dynamic_clone').find('#comment').clone();
-		comment.find('img').attr('src','/media/'+this.reviewerAvatarName+'-60.jpeg')
+		comment.find('img').attr('src','/media/'+this.reviewerAvatarName+'-100.jpeg')
 		reviewerHref=comment.find('#username').html(this.reviewerName).parent().attr('id',this.reviewerId)
 		if(this.receiverName!=null){
 			reviewerHref.after('&nbsp;回复&nbsp;<a id="'+this.receiverId+'" href="javascript:void(0)"><span>'+this.receiverName+'</span><a>:');
@@ -492,7 +492,7 @@ function upload_photo_success(picNameList){
 			<div class="row">
 				<div class="col-xs-3">
 					<div class="avatar">
-						<img alt="140x140" src="/media/{{avatar_name}}-60.jpeg" />
+						<img alt="140x140" src="/media/{{avatar_name}}-100.jpeg" />
 					</div>
 					<p class="trend-name">发布新的动态</p>
 				</div>
@@ -843,9 +843,9 @@ function sendExpression(e) {
 	   };
 	   loading=function(flag){
 		   if(flag){
-			   $('#dynamic').append('<div class="col-xs-12" style="background-color:#fff;text-align:center;height:30px;" >没有跟多动态<div>')
+			   $('#dynamic').popLoading();
 		   }else{
-			   
+			   $('#dynamic').removeLoading();
 		   }
 		   
 	   };
@@ -864,7 +864,7 @@ function sendExpression(e) {
 			/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
 				console.log("页面的文档高度 ："+$(document).height());
 				console.log('浏览器的高度：'+$(window).height()); */
-				loadData(no_load,success);
+				loadData(no_load,success,loading);
 				}
 			}); 
 

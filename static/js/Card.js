@@ -609,10 +609,10 @@ window.Card = function(person){
 
 	this.template.find('.username').html(person.username).parent().attr('href','/dynamic/person/?userId='+person.userId);
 	this.template.find('.user_name').html(person.username);
-	this.template.find('.avatar_name').attr('src',person.headImg+'-60.jpeg')
+	this.template.find('.avatar_name').attr('src',person.headImg+'-100.jpeg')
 	this.template.find('.tag').children().first().html(person.age).next().html(person.city);
 	this.template.find('.head').attr('src',person.headImg+'-250.jpeg');
-	this.template.find('.img-circle').attr('src',person.headImg+'-60.jpeg');
+	this.template.find('.img-circle').attr('src',person.headImg+'-100.jpeg');
 	this.template.find('.card').attr('id',person.username);
 	this.template.find('.other_name').attr('title',person.username);
 	this.template.find('#dynamic').attr('href','/dynamic/person/?userId='+person.userId);
@@ -623,7 +623,7 @@ window.Card = function(person){
 	//是否关注
 	var icon_like=this.template.find('.icon_like_0');
 	icon_like.removeClass('icon_like_0').addClass('icon_like_'+person.isFriend);
-	icon_like.attr('move-data',person.headImg+'-60.jpeg')
+	icon_like.attr('move-data',person.headImg+'-100.jpeg')
 	if(person.isFriend=='0'||person.isFriend=='1'){
 		icon_like.attr('move-to','js-follow')
 	}else{
