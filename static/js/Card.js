@@ -85,16 +85,14 @@ window.Card = function(person){
 	var dislike = function(){
 		var userId=$(this).parents('.card').attr('id');
 		var temp=$(this)
-	    $.getJSON("/user/dislike/",{userId:userId,page:next_page_number-1},function(data) {
+	    $.getJSON("/user/dislike/",{userId:userId,page:next_page-1},function(data) {
 		  if(data['result']=='success'){
 			 temp.parents('.card').hide('slow');
 			 card=data['card'];
-			 var avatar_name='/media/'+card.avatar_name;
-			 new Card(new Person(card.username,card.age,card.city,avatar_name,card.user_id,card.isFriend));
+			 new Card(new Person(cards.username,cards.age,cards.city,'/media/'+cards.avatar_name,cards.user_id,cards.followStatus,cards.pictureList,cards.isChat));
 			 if (data['has_next']){
 			 }else{
-				 next_page_number=-1;
-				 $('.next').hide();
+				 next_page=-1;
 			 }
 		 }else if(data['result']=='remove_card'){
 			temp.parents('.card').hide('slow');

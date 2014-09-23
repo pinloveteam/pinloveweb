@@ -57,7 +57,6 @@ def dislike(request):
         arg['has_next']=True
 #     arg['next_page']=matchResult.has_next()
     arg['result']='success'
-    from apps.pojo.card import MyEncoder
     json=simplejson.dumps(arg,cls=MyEncoder)
     return HttpResponse(json)
 '''
