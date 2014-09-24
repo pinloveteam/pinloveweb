@@ -67,11 +67,11 @@
 								<div class="ms">
 									<h4 class="ms-title">完善资料</h4>
 									<p class="ms-text">每完成一项信息奖励2拼爱币</p>
-									 {%ifequal userProfileFinish False%}
-									 <p class="ms-btn ms-btn-c">已领取</p>
+									 {%if userProfileFinish %}
+									 <a href="/user/user_profile/#self_info_"  target="_blank"><p class="ms-btn ms-btn-a">去完成</p></a>
 									 {%else%}
-									  <a href="/user/user_profile/#self_info_"  target="_blank"><p class="ms-btn ms-btn-a">去完成</p></a>
-									 {%endifequal%}
+									  <p class="ms-btn ms-btn-c">已领取</p>
+									 {%endif%}
 									
 								</div>
 							</div>
@@ -93,7 +93,7 @@
 									<ul class="list-inline">
 										<li class="qq_share"></li>
 										<li>
-										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在我在用拼爱pinlove，来看看哈！http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
 										</li>
 										<li>
 										   <a href="javascript:void(0)" onclick="feeds();" target="_blank"><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
@@ -110,7 +110,7 @@
 									<ul class="list-inline">
 										<li class="qq_share"></li>
 										<li>
-										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在我在用拼爱pinlove，来看看哈！http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
 										</li>
 										<li>
 										   <a href="javascript:void(0)" onclick="feeds();" target="_blank"><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
@@ -164,7 +164,7 @@
 									  {%ifequal educationValid '2'%}
 									    <p class="ms-btn ms-btn-c">正在审核</p>
 									  {%else%}
-									      <a href="/user/user_profile/#certification_" target="_blank"><p class="ms-btn ms-btn-c">去完成</p></a>
+									      <a href="/user/user_profile/#certification_" target="_blank"><p class="ms-btn ms-btn-a">去完成</p></a>
 									  {%endifequal%}
 									 {%endifequal%}
 								</div>

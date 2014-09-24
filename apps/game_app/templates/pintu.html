@@ -675,19 +675,19 @@ function loadStage() {
 	            if(textStatus == 'success'){
 	             	data=$.parseJSON(data)
 	            	if( data.type=='score'){
-	            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+	            		var body = $("<p>如果匹配成功,消耗拼爱币:"+data.amount+"</p>")
 	            		var hehe = function(){
 	            			StartGame(data.type);
 	            			}
 	            		$.poplayer({body:body,btnFunc:hehe});
 	            	}else if( data.type=='charge') {
-	            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+	            		var body = $("<p>如果匹配成功,消耗拼爱币:"+data.amount+"</p>")
 	            		var hehe = function(){
 	            			StartGame(data.type);
 	            			}
 	            		$.poplayer({body:body,btnFunc:hehe});
 	            	}else if(data.type=='less'){
-	            		var body = $("<p>请充值!</p>")
+	            		var body = $("<p>拼爱币不足以支付，请充值!</p>")
 	            		 $.poplayer({body:body});
 	            	} 
 	            }
