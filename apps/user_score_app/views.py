@@ -90,6 +90,8 @@ def get_free_pinloveicon(request,template_name):
             for field in fields:
                 if field not in finishList:
                     args['userProfileFinish']=True
+        else:
+            args['userProfileFinish']=True
         from pinloveweb.method import init_person_info_for_card_page
         args.update(init_person_info_for_card_page(userProfile))
         return render(request,template_name,args)
