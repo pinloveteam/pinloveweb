@@ -383,7 +383,6 @@ class YuanfenjigsawWeb:
             city = matching_user.city
             age = matching_user.age
             avatar = matching_user.get_avatar_image()
-            facebookPhotoList =serializers.serialize('json',Picture.objects.filter(user_id=uid))
             filter_pic='';
             if self.filter=='location' and self.filter_match!=None:
                 filter_pic='/static/img/facebook_location.png'
@@ -391,8 +390,15 @@ class YuanfenjigsawWeb:
                 filter_pic='/static/img/facebook_school.png'
             if self.filter=='work' and self.filter_match!=None:
                 filter_pic='/static/img/facebook_work.png'
-            return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,'facebookPhotoList':facebookPhotoList,
-                                                       'avatar':avatar,'filter_pic':filter_pic,'filter_match':self.filter_match}]
+            
+            from apps.pay_app.method import get_charge_amount
+            game_count=get_charge_amount(self.uid)
+            from apps.pojo.card import userProfileList_to_CardList
+            card=userProfileList_to_CardList(self.uid,[matching_user,])[0]
+            from apps.pojo.card import MyEncoder
+            card=simplejson.dumps(card,cls=MyEncoder)
+            return [cache.get('MATCH_SUCCESS'),pieces,{'username':username,'city':city,'age':age,'uid':uid,'game_count':game_count,
+                                                       'avatar':avatar,'filter_pic':filter_pic,'filter_match':self.filter_match,"card":card}]
         else :  
             return [cache.get('NO_MATCHING_USER'),pieces,{'filter':self.filter}]
 

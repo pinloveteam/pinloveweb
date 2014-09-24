@@ -28,9 +28,8 @@ def pintu(request):
     userProfile=UserProfile.objects.get(user_id=userId)
     from apps.game_app.models import get_recommend_history_web
     facebookUserListDcit=get_recommend_history_web(userId)
-    from apps.pay_app.method import get_charge_vailAmount
-    from apps.user_score_app.method import get_valid_score
-    args={'pinLoveIcon':get_valid_score(userId)+get_charge_vailAmount(userId),'facebookUserListDcit':facebookUserListDcit}
+    from apps.pay_app.method import get_charge_amount
+    args={'pinLoveIcon':get_charge_amount(userId),'facebookUserListDcit':facebookUserListDcit}
     from pinloveweb.method import init_person_info_for_card_page
     args.update(init_person_info_for_card_page(userProfile))
     from pinloveweb.method import get_no_read_web_count

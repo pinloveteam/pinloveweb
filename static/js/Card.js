@@ -668,6 +668,10 @@ window.Card = function(person){
 	}else{
 		this.template.find('#chat_tab').html('<img id="notChat" src="/static/img/no_chat.gif"/>')
 	}
+	if($('.card_row').length==0){
+		this.template.children().hide();
+		$('#search_condition').after(this.template.children());
+	}
 	$('.card_row').append(this.template.children());
 	
 	$(function(){

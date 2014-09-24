@@ -3,449 +3,75 @@
 {% block staticfiles %}
 <link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
+<script src="{{STATIC_URL}}js/hopscotch-0.1.2.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/kinetic-v5.0.0.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/card.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.follow.js"></script>
 <style type="text/css">
 .kineticjs-content {
-	position: absolute;
-	top: 100px;
-	left: 100px;
-	background-color: #fff;
-	border-radius: 50%;
-	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
-		direction=120, strength=4); /*ie*/
-	-moz-box-shadow: 2px 2px 10px #909090; /*firefox*/
-	-webkit-box-shadow: 2px 2px 10px #909090; /*safari或chrome*/
-	box-shadow: 2px 2px 10px #909090; /*opera或ie9*/
-}
+				position: absolute;
+				top: 90px;
+				left: 100px;
+				background-color: #fff;
+				border-radius: 50%;
+				filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
+				-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+				-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
+				box-shadow: 2px 2px 10px #909090;/*opera或ie9*/
+			}
 
-#card,#nouser,#game_count_end {
-	background-color: #FFF9D9;
-	border: 2px solid #000000;
-	height: 400px;
-	left: 180px;
-	position: absolute;
-	top: 140px;
-	width: 300px;
-}
+			#search_condition {
+				position: absolute;
+				left: 560px;
+				top: 180px;
+				width: 120px;
+				height: 250px;
+				background-color: #fff;
+				border: solid 8px #9CD0FF;
+				filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*ie*/
+				-moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
+				-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
+				box-shadow: 2px 2px 10px #909090;/*opera或ie9*/
+			}
 
-#nouser,#game_count_end {
-	text-align: center;
-}
+			#search_condition > label {
+				margin-top: 30px;
+				margin-left: 10px;
+			}
 
-.head {
-	width: 80px;
-	height: 80px;
-	margin-left: 30px;
-	margin-top: 6px;
-	display: inline-block;
-}
+			.num {
+				position: absolute;
+				top: 20px;
+				font-size: 20px;
+				margin-left: 18px;
+			}
 
-.head_ask_friends {
-	width: 50px;
-	height: 50px;
-	margin-left: 35px;
-	display: inline-block;
-}
+			.count {
+				position: absolute;
+				top: 40px;
+				left: 30px;
+				padding: 10px;
+				width: 130px;
+				height: 60px;
+				background-color: #9CD0FF;
+				border: solid 1px #1B7CC1;
+				border-radius: 50px;
+			}
 
-.img-circle,.head,.head_ask_friends,.record-user {
-	border-radius: 50%;
-}
-
-.record-user {
-	width: 50px;
-	height: 50px;
-	margin-bottom: 20px;
-	position: relative;
-	left: -26px;
-}
-
-#request {
-	position: relative;
-	left: -10px;
-}
-
-#buy_page {
-	position: absolute;
-	left: 670px;
-	top: 130px;
-	width: 400px;
-	height: 400px;
-	background-image: url({{STATIC_URL}}img/拼图-84.jpg);
-}
-
-.num,.num1,.num3,.num4 {
-	position: absolute;
-	top: 30px;
-	font-size: 20px;
-	margin-left: 18px;
-}
-
-.num1 {
-	top: 20px;
-	margin-left: 8px;
-}
-
-.num2 {
-	position: relative;
-	top: -18px;
-	margin-left: 0px;
-}
-
-.num3 {
-	top: 15px;
-	left: 30px;
-	font-size: 35px;
-	color: #ff0000;
-	font-weight: bold;
-}
-
-.button_type_1,.button_type_2,.try_again,.share {
-	position: absolute;
-	padding: 15px 15px 15px 20px;
-	display: inline-block;
-	top: -5px;
-	left: 240px;
-	width: 40px;
-	height: 20px;
-	background-image: url({{STATIC_URL}}img/按钮-16.png);
-	background-repeat: no-repeat;
-	cursor: pointer;
-	text-align: center
-}
-
-.button_type_2,.share,.try_again {
-	top: 370px;
-	left: 360px;
-	width: 92px;
-	background-image: url({{STATIC_URL}}img/按钮-65.png);
-}
-
-.button_type_3 {
-	position: absolute;
-	width: 55px;
-	height: 55px;
-	display: inline-block;
-	cursor: pointer;
-	text-align: center
-}
-
-.checkbox,#checkbox1 {
-	position: absolute;
-	top: 30px;
-	left: 200px;
-}
-
-#checkbox1 {
-	top: 385px;
-	left: 60px;
-	cursor: pointer;
-}
-
-#hi {
-	top: 350px;
-	left: 20px;
-}
-
-#friend {
-	top: 350px;
-	left: 200px;
-}
-
-.buy {
-	margin-top: 30px;
-	width: 340px;
-	height: 40px;
-	padding-top: 5px;
-	margin-left: 28px;
-	color: #ff5a39;
-	font-size: 26px;
-	text-align: center;
-	background-color: #ffdd71;
-}
-
-.close,.recevie_close {
-	position: absolute;
-	top: -3%;
-	left: 96%;
-	width: 32px;
-	height: 32px;
-	background-image: url({{STATIC_URL}}img/拼图-61.png);
-	cursor: pointer;
-}
-
-.online,.outline {
-	position: absolute;
-	top: 70%;
-	left: 73%;
-	width: 32px;
-	height: 32px;
-	cursor: pointer;
-	background-image: url({{STATIC_URL}}img/拼图-76.png);
-	background-repeat: no-repeat;
-}
-
-.outline {
-	background-image: url({{STATIC_URL}}img/拼图-77.png);
-}
-
-.text-orange {
-	color: #ff641f;
-}
-
-.count {
-	position: absolute;
-	top: 20px;
-	left: 50px;
-	padding: 10px;
-	width: 130px;
-	height: 60px;
-	background-color: #9CD0FF;
-	border: solid 1px #1B7CC1;
-	border-radius: 50px;
-}
-
-.head_girl {
-	border: 2px solid #f79421;
-}
-
-.head_boy {
-	border: 2px solid #2afeef;
-}
-
-.tag,.name {
-	text-align: center;
-}
-
-.name_girl,.name_boy,.name_girl_invite,.name_boy_invite {
-	position: absolute;
-	font-size: 16px;
-	color: #f79421;
-	top: 30px;
-	left: 120px;
-}
-
-.name_girl_invite,.name_boy_invite {
-	top: 10px;
-}
-
-.name_boy {
-	color: #2afeef;
-}
-
-#users,#recevie_users {
-	height: 270px;
-	overflow-x: hidden;
-	overflow-y: scroll;
-	position: relative;
-	top: 100px;
-}
-
-.user {
-	width: 240px;
-	position: relative;
-	display: inline-block;
-	margin-right: 30px;
-	margin-left: 30px;
-	margin-top: 20px;
-	background-color: #FFFFFF;
-	border: solid 1px #b3b3b3;
-	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
-		direction=120, strength=4); /*ie*/
-	-moz-box-shadow: 2px 2px 5px #909090; /*firefox*/
-	-webkit-box-shadow: 2px 2px 5px #909090; /*safari或chrome*/
-	box-shadow: 2px 2px 5px #909090; /*opera或ie9*/
-	cursor: pointer;
-}
-
-#buy_page ul {
-	margin-top: 100px;
-}
-
-#buy_page li {
-	position: relative;
-	list-style-type: none;
-	margin-top: 30px;
-}
-
-.push {
-	cursor: pointer;
-	position: absolute;
-	left: 260px;
-	top: 240px;
-}
-
-#game_name {
-	position: absolute;
-	top: 15px;
-	left: 100px;
-}
-
-#invite,#recevie {
-	height: 440px;
-	width: 641px;
-	position: absolute;
-	top: 100px;
-	left: 230px;
-	background-image: url({{STATIC_URL}}img/接受邀请-59.jpg);
-}
-
-#pre,#next {
-	position: absolute;
-	top: 400px;
-	left: 130px;
-	cursor: pointer;
-}
-
-#next {
-	left: 430px;
-}
-
-.information {
-	border: 2px solid #AFF0FF;
-	background-color: #FFFFFF;
-	height: 50px;
-	left: 560px;
-	position: absolute;
-	top: 200px;
-	width: 100px;
-}
-
-.msg {
-	display: block;
-	font-size: 17px;
-	text-align: center;
-	padding: 10px 0;
-	color: #6FD1EF
-}
-
-.num4 {
-	top: 20px;
-	left: 130px;
-	font-size: 35px;
-	color: #ff0000;
-	font-weight: bold;
-}
-
-/* photo tab */
-.hoverbox {
-	margin-top: 10px;
-	cursor: default;
-	list-style: none;
-}
-
-.hoverbox a {
-	cursor: default;
-}
-
-.hoverbox a .preview {
-	display: none;
-}
-
-.hoverbox img {
-	height: 70px;
-	vertical-align: top;
-	width: 70px;
-	max-width: 150px;
-}
-
-.hoverbox li {
-	color: inherit;
-	display: inline;
-	float: left;
-	margin: 1px;
-	position: relative;
-}
-
-.icon_profile,.icon_photo {
-	background: url("{{STATIC_URL}}img/profile.png") no-repeat;
-	margin-right: 3px;
-	display: inline-block;
-	height: 32px;
-	width: 32px;
-}
-
-.icon_photo {
-	background-image: url("{{STATIC_URL}}img/photo.png");
-}
-
-#tab {
-	position: absolute;
-	top: 340px;
-	left: 20px;
-}
-
-#record {
-	position: absolute;
-	top: 50px;
-	left: -105px;
-	width: 100px;
-	height: 100%;
-	background-color: #ffd2d4;
-	border: solid 1px #f4c696;
-	transition: 1s;
-	overflow: scroll;
-	overflow-x: hidden;
-}
-
-#record-cover {
-	position: absolute;
-	top: 0px;
-	left: -20px;
-	width: 20px;
-	height: 100%;
-	background-color: #ffd2d4;
-	transition: 1s;
-}
-
-.record-user-list li {
-	list-style-type: none;
-}
-
-#tab div {
-	display: inline-block;
-	margin-left: 60px;
-}
-
-.recommend_hisotry {
-	position: absolute;
-	top: 20px;
-	right: 30px;
-}
-
-.text-black {
-	position: relative;
-	top: 30px;
-	margin-top: 20px;
-	font-size: 20px;
-	Line-height: 50px;
-}
-
-.filter {
-	position: absolute;
-	left: 50px;
-}
-
-#search_condition {
-	position: absolute;
-	left: 600px;
-	top: 200px;
-	width: 120px;
-	height: 250px;
-	background-color: #fff;
-	border: solid 8px #9CD0FF;
-	filter: progid:DXImageTransform.Microsoft.Shadow(color=#909090,
-		direction=120, strength=4); /*ie*/
-	-moz-box-shadow: 2px 2px 10px #909090; /*firefox*/
-	-webkit-box-shadow: 2px 2px 10px #909090; /*safari或chrome*/
-	box-shadow: 2px 2px 10px #909090; /*opera或ie9*/
-}
-
-#search_condition>label {
-	margin-top: 30px;
-	margin-left: 10px;
-}
+			.push {
+				cursor: pointer;
+				position: absolute;
+				left: 255px;
+				top: 240px;
+			}
+			
+			.card{
+				position: absolute;
+				top: 165px;
+				left: 700px;
+			}
 </style>
 <script>
 function initialize() { 
@@ -489,6 +115,10 @@ if (document.readyState == "complete" ) //当页面加载完毕移除页面遮�
 removecloud(); 
 } 
 } 
+//关注
+var myFollow={% if myFollow %}{{myFollow}}{%else%}0{% endif %}
+var follow={% if follow %}{{follow}}{%else%}0{% endif %}
+var fans={% if fans %}{{fans}}{%else%}0{% endif %}
 </script>
 {% endblock %}
  {% block css %} 
@@ -510,7 +140,7 @@ removecloud();
 				   <img id="record_icon" src="{{STATIC_URL}}img/RECORD.png" style="position: absolute; top: 60px; left: 0px; border: none;">
 				 </a>
 				  -->
-				<div id="card" style="position: absolute; display: none;">
+				<div  style="position: absolute; display: none;">
 					<div class="close"></div>
 					<div id="info" class="card"></div>
 					<div id="info_clone" style="display: none;">
@@ -597,63 +227,70 @@ removecloud();
 					</div>
 				</div>
 				
-				<div class="card card_panel col-xs-6 hideable" style="position: absolute;top: 100px;left: 200px;display: none;">
+				<div id="card" style="display: none;">
+				<div class="card card_panel col-xs-6 hideable" style="position: absolute;top: 100px;left: 200px;">
 							<div class="tabbable">
-								<div class="tab-content">
-									<div class="tab-pane active" id="tab12">
-										<div class="introBox">
-											<img class="head" width="250px" src=".\img\fbb.jpg">
-											<div class="card-introBox" title="点击查看详细信息"></div>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab12">
+					<div class="introBox">
+						<img class="head" width="250px" src="">
+						<div class="card-introBox" title="点击查看详细信息"></div>
 
-											<div class="name">
-												<span class="username"></span>
-												<s class="name-arrow"></s>
-												<i move-data="./img/image1.jpeg" move-to="js-follow" class="Q-buy-btn glyphicon glyphicon-heart icon_like_0" title="喜欢"></i>
-												<div class="tag">
-													<span class="label label-success"></span>&nbsp;&nbsp;&nbsp; <span class="label label-danger"></span>
-												</div>
-											</div>
-										</div>
-										<div class="tool_bar">
-											<a href="#">
-												<i class="icon_ding" title="固定"></i>
-											</a>
-											<!--<a href="#" class="">
-								<i move-data="./img/image1.jpeg" move-to="js-follow" class="Q-buy-btn icon_like_0" title="喜欢"></i>
-								</a>-->
-											<a href="#">
-												<i class="icon_dislike" title="不喜欢"></i>
-											</a>
-										</div>
-									</div>
-									<div class="tab-pane" id="tab13">
-										<div class="scroller">
-											<ul class="hoverbox"></ul>
-										</div>
-									</div>
-									<div class="tab-pane chat_tab" id="tab10">
-										<div class="chat"></div>
-										<textarea rows="1" class="chat_textarea"></textarea>
-										<button class="btn btn-xs btn-primary btn_send_msg">
-											发送
-										</button>
-										<a href="#" class="venoboxframe" data-type="iframe">
-								聊天记录
-							</a>
-									</div>
-								</div>
-								<div class="btn-group card-nav">
-									<button type="button" class="btn btn-default btn-lg" href="#tab12" data-toggle="tab" style="border-left: none;">
-										<span class="glyphicon glyphicon-info-sign"></span>
-									</button>
-									<button type="button" class="btn btn-default btn-lg" href="#tab13" data-toggle="tab">
-										<span class="glyphicon glyphicon-picture"></span>
-									</button>
-									<button type="button" class="btn btn-default btn-lg" href="#tab10" data-toggle="tab" style="border-right: none;">
-										<span class="glyphicon glyphicon-comment"></span>
-									</button>
-								</div>
+						<div class="name">
+							<a herf=""><span class="username"></a></span> <s class="name-arrow"></s>
+							<i class="Q-buy-btn glyphicon  icon_like_0" title="喜欢" move-to="js-follow" move-data="./img/image1.jpeg"></i>
+							<div class="tag">
+								<span id="age" class="label label-success"></span>&nbsp;&nbsp;&nbsp;
+								<span id="location" class="label label-danger"></span>
 							</div>
+						</div>
+					</div>
+					<div class="tool_bar">
+						<a href="javascript:void(0)"><i class="icon_dislike" title="不喜欢"></i></a>
+						<!--
+								<a href="javascript:void(0)"><i class="icon_ding" title="固定"></i></a>
+			   	   	   	        <a href="javascript:void(0)"><i move-data="" move-to="js-follow" class="icon_like_0" title="喜欢"></i></a>
+			   	   	   	   	   	<a href="javascript:void(0)"><i class="icon_dislike" title="不喜欢"></i></a>
+							    -->
+					</div>
+				</div>
+				<div class="tab-pane" id="tab13">
+				           <div class="tab-top">
+								<img class="avatar_name" src="" width="60px"/>
+								<span class ="user_name" style="font-size: 16px;margin-left: 40px;"></span>
+							</div>
+					<div class="scroller">
+						<ul class="hoverbox"></ul>
+					</div>
+				</div>
+				<div class="tab-pane chat_tab" id="tab10">
+					<div id="chat_tab">
+					   <div class="tab-top">
+								<img class="avatar_name" src="" width="60px"/>
+								<span class ="user_name" style="font-size: 16px;margin-left: 40px;"></span>
+						</div>
+						<div class="chat"></div>
+						<textarea rows="1" class="chat_textarea"></textarea>
+						<button class="btn btn-xs btn-primary  btn_send_msg">发送</button>
+					</div>
+				</div>
+			</div>
+			<div class="btn-group card-nav">
+				<button type="button" class="btn btn-default btn-lg" href="#tab12"
+					data-toggle="tab" style="border-left: none;">
+					<span class="glyphicon glyphicon-info-sign"></span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg" href="#tab13"
+					data-toggle="tab">
+					<span class="glyphicon glyphicon-picture"></span>
+				</button>
+				<button type="button" class="btn btn-default btn-lg" href="#tab10"
+					data-toggle="tab" style="border-right: none;">
+					<span class="glyphicon glyphicon-comment"></span>
+				</button>
+			</div>
+		</div>
+		</div>
 						</div>
 						
 
@@ -803,11 +440,7 @@ function loadStage() {
         	 }
         	 if(data[0]=='0'){
         		  if(data[2].filter=='all' || data[2].filter==null){
-        			  var body=$('<p>没有匹配到用户,请再试一次!</p>')
-        			  var hehe = function(){
-	            			StartGame(data.type);
-	            			}
-	            	$.poplayer({body:body,btnFunc:hehe});
+        			  
         		  }else{
         			  $('#pair_message').html("Oooooops, no same "+data[2].filter+" match .Please try other match types!")
         		  }
@@ -819,53 +452,17 @@ function loadStage() {
         		  type=1;
         		 }
         	 if(data[0]=='2'){
-        		 
-            new Card(new Person(cards.username,cards.age,cards.city,'/media/'+cards.avatar_name,cards.user_id,cards.followStatus,cards.pictureList,cards.isChat));
-        	/* var template = $('#info_clone').clone();
-        	 template.find('#userId').val(data[2]['uid']);
-        	 template.find('.img-circle').attr('src',data[2]['avatar']);
-        	 if (data[2]['filter_pic']!=''){
-        		 template.find('#filter_type').attr('src',data[2]['filter_pic']).attr('title',data[2]['filter_match']);
-        		 template.find('#filter_type').show();
-        	 }
-        	 template.find('#head_url').attr('href',"https://www.facebook.com/"+data[2]['uid'])
-        	 if (data[2]['username'].length>26){
-        		 var username=data[2]['username'].substring(0,26)
-        		 template.find('strong').html(username+'...');
-        	 }else{
-        		 template.find('strong').html(data[2]['username']);
-        	 }
-        	 template.find('strong').attr('title',data[2]['username'])
-        	 if (data[2]['age']!=null){
-        		 template.find('.age').html(data[2]['age'].toString()+'岁');
-        	 }
-        	 if (data[2]['age']!=null){
-        		 template.find('.city').html(data[2]['city'])
-        	 }
-        	  $('#info').html('');
-        	 $('#info').append(template.children());
-        	 //添加匹配记录
-        	 var record_user=$('.record-user-clone').clone();
-        	 record_user.find('.img-circle').attr('src',data[2]['smallAvatar']);
-        	 record_user.find('.img-circle').attr('title','username:'+data[2]['username']+' '+'location:'+data[2]['city']);
-        	 record_user.find('a').attr('href',"https://www.facebook.com/"+data[2]['uid']);
-        	 record_user.removeClass('record-user-clone')
-        	 $('.record-user-list').prepend("<li>");
-        	 $('.record-user-list').children().first().append(record_user)
-        	 type=2
-        	 facebookPhotoList=data[2]['facebookPhotoList']
-        	 facebookPhotoList=$.parseJSON(facebookPhotoList)
-        	 $('.hoverbox').children().remove()
-        	  $('#tab').show()
-        	 for(var i=0 ;i<facebookPhotoList.length;i++){
-        		 if (i<6){
-        			 $('.hoverbox').append('<li><a id="firstlink" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.picPath+' title='+facebookPhotoList[i].fields.description+'><img alt="demo1" src='+facebookPhotoList[i].fields.picPath+' title='+facebookPhotoList[i].fields.description+'></a></li>')
-        		 }else{
-        			 $('.hoverbox').append('<li><a id="firstlink"   style="display:none;" class="venobox" data-gall="gall1" href='+facebookPhotoList[i].fields.picPath+' title='+facebookPhotoList[i].fields.description+'><img alt="demo1" src='+facebookPhotoList[i].fields.picPath+' title='+facebookPhotoList[i].fields.description+'></a></li>')
+        		 cards=data[2].card
+        		 if (typeof(cards)!='object'){
+        			 cards=$.parseJSON(cards)
         		 }
-        	     
-        	 }*/
-        	
+            new Card(new Person(cards.username,cards.age,cards.city,'/media/'+cards.avatar_name,cards.user_id,cards.followStatus,cards.pictureList,cards.isChat));
+            $('.icon_dislike').unbind();
+            $('.icon_dislike').click(function(){
+            	$(this).closest('.card').remove();
+            });
+            game_count=data[2].game_count
+            type=2
         	  }
         	 clearInterval(Time);
         	 if(type==1){
@@ -937,10 +534,16 @@ function loadStage() {
 		  });
           if (type==2){
         	  set_game_count(game_count)
-        	  $('.record-user-list').children().first().children().show()
-        	  $('#card').show('slow');
+        	  /*$('.record-user-list').children().first().children().show()*/
+              $('#search_condition').next().show();
+        	  venobox();
           }else if(type==0){
-        	  $('#nouser').show('slow');
+        	  var body=$('<p>没有匹配到用户,请再试一次!</p>')
+			  var hehe = function(){
+        		  check_score_PLrice();
+        			}
+        	$.poplayer({body:body,btnFunc:hehe});
+        	  /*$('#nouser').show('slow');*/
           }else if(type==1){
         	  $('#game_count_end').show('slow');
           }
