@@ -59,7 +59,7 @@ if UPLOAD_AVATAR_GET_UID_FUNC is None:
 
 # How many different size your wanna resize.
 # NOTICE, the value MUST be list, even if there are only one size.
-UPLOAD_AVATAR_RESIZE_SIZE = getattr(settings, 'UPLOAD_AVATAR_RESIZE_SIZE', [[250,312],[60,75]])
+UPLOAD_AVATAR_RESIZE_SIZE = getattr(settings, 'UPLOAD_AVATAR_RESIZE_SIZE', [[250,312],[100,125]])
 # Avatar default size which will be shown in you website,
 # this is for call user.get_avatar_path(), user.get_avatar_url() more convenient
 UPLOAD_AVATAR_DEFAULT_SIZE = getattr(settings, 'UPLOAD_AVATAR_DEFAULT_SIZE', 110)
