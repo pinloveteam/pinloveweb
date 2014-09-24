@@ -214,6 +214,9 @@ def register_user(request) :
             create_register_extra_user(request,user.id,user.username,userForm.cleaned_data['password1'],sex,link)
             authenticate = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
             auth.login(request, authenticate)
+            #登录奖励
+            from apps.user_score_app.method import get_score_by_invite_friend_login,get_score_by_user_login
+            get_score_by_user_login(request.user.id)
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         else : 
             args['user_form'] = userForm
