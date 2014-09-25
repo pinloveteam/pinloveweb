@@ -83,6 +83,11 @@
 							$('.follow').attr('disabled',false)
 						},
 						success:function(data, textStatus){
+							if(data['type']=='error'){
+								var body=$('<p>'+data['error_message']+'</p>')
+								 $.poplayer({body:body});
+								return false;
+							}
 							 var message='';
 							 if(data['result']=='follow'){
 								  var body=$('<p>已经关注!</p>')
@@ -164,6 +169,9 @@
                         message_clone.find('#username').html(message.sender_name);
                         message_clone.find('#content').html(message.content).parent().attr('href','/message/detail/?senderId='+message.sender_id);
                         message_clone.find('#time').html(message.sendTime);
+                        if(message.isBlackList){
+                          	 message_clone.find('.message-report').html('取消拉黑');
+                          };
                         if(message.isRead==0){
                         	message_clone.addClass('unread')
                         }
@@ -194,7 +202,10 @@
         								  context.closest('#message-reply').hide('slow').prev().find('.reply-btn').show();
         							}
         							else{
-        								var body=$('<p>发送失败!</p>')
+        								var body=$('<p>'+data.error_message+'</p>')
+        							   publishTextArea.val('')
+      								  context.closest('#message-reply').hide('slow').prev().find('.reply-btn').show();
+        								
         							}
         							 $.poplayer({body:body});
         						},
@@ -215,6 +226,9 @@
                         if(message.isRead==0){
                         	follow_clone.addClass('unread')
                         }
+                        if(message.isBlackList){
+                        	follow_clone.find('.message-report').html('取消拉黑');
+                         };
                         if(message.fllow_type==1){
                         	follow_btn=follow_clone.find('.follow')
                         	follow_btn.html('已经关注');
@@ -228,6 +242,7 @@
 
                     }else if(message.type==3){
                     	var dynamic_agree_clone=$('#message_clone').find('#dynamic_agree').clone();
+                    	dynamic_agree_clone.find('#senderId').val(message.sender_id);
                     	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                     	dynamic_agree_clone.find('#username').html(message.sender_name);
                     	dynamic_agree_clone.find('#time').html(message.sendTime);
@@ -235,6 +250,9 @@
                     	if(message.isRead==0){
                     		dynamic_agree_clone.addClass('unread')
                         }
+                    	if(message.isBlackList){
+                    		dynamic_agree_clone.find('.message-report').html('取消拉黑');
+                         };
                         if(message.data.length>0){
                        	 message.data=$.parseJSON(message.data);
                        	dynamic_agree_clone.find('#dynamic_img_count').html('(共'+message.data.length+"张)");
@@ -245,6 +263,7 @@
                     	$('.col-xs-9').append(dynamic_agree_clone);
                     }else if(message.type==5) {
                          var dynamic_comment_clone=$('#message_clone').find('#dynamic_comment').clone();
+                         dynamic_comment_clone.find('#senderId').val(message.sender_id);
                          dynamic_comment_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                          dynamic_comment_clone.find('#username').html(message.sender_name);
                          dynamic_comment_clone.find('#content').html(message.content);
@@ -252,6 +271,9 @@
                          if(message.isRead==0){
                         	 dynamic_comment_clone.addClass('unread')
                          }
+                         if(message.isBlackList){
+                        	 dynamic_comment_clone.find('.message-report').html('取消拉黑');
+                          };
                          if(message.data.length>0){
                         	 message.data=$.parseJSON(message.data);
                              dynamic_comment_clone.find('#dynamic_img_count').html('(共'+message.data.length+"张)");
@@ -307,6 +329,47 @@
        			});
                  $('.follow').unbind();
                  $('.follow').click(follow);
+                 $('.message-report').unbind();
+                 $('.message-report').click(function(){
+                	var message=$(this).closest('.message');
+                	var senderId=message.find('#senderId').val();
+                	var senderName=message.find('#username').html().trim();
+                	data={userId:senderId,csrfmiddlewaretoken:getCookie('csrftoken')}
+                	content=$(this)
+                	hehe=function(){
+                		$.ajax({
+    						dataType:"json",
+    						 type: "POST",
+    						url:'/user/black_list/',
+    						data:data,
+    						beforeSend:function(XMLHttpRequest){
+    						},
+    						complete:function(XMLHttpRequest, textStatus){
+    						},
+    						success:function(data, textStatus){
+    							if (data.result=='success'){
+    								if(data.type==1){
+    									var body=$('<p>添加成功!</p>');
+    									content.html('取消拉黑');
+    								}else if(data.type==-1){
+    									var body=$('<p>取消成功!</p>')
+    									content.html('拉黑');
+    								}
+    							}else{
+    								var body=$('<p>'+data.error_message+'</p>')
+    							}
+    							 $.poplayer({body:body});
+    						},
+    	                    error: function(response){
+    	                    	var body=$('<p>网络异常!</p>')
+    							 $.poplayer({body:body});
+    	                    },
+    						
+    					});
+                	}
+                	 var body=$('<p>确认添加'+senderName+'进入黑名单!</p>')
+						 $.poplayer({body:body,btnFunc:hehe});
+                 })
 
             };
            // 菜单初始化
@@ -406,10 +469,20 @@
                 font-weight: bold;
                 vertical-align: top;
             }
-            .message-time {
+            .message-report,.message-time {
                 font-size: 12px;
                 color: #777;
             }
+            .message-report{
+				display: none;
+				cursor: pointer;
+				margin-left: 10px;
+			}
+			
+			.message:hover .message-report{
+				display: inline-block;
+			}
+			
 
             .message-content {
                 padding-top: 10px;
@@ -543,7 +616,7 @@
                                         回复
                                     </button>
                                    <span id="time" class="message-time">8月5日 14:44</span>
-                                   <span class="message-report">拉黑/举报</span>
+                                   <span class="message-report">拉黑</span>
                                 </div>
 
                              </div>
@@ -594,12 +667,13 @@
                                         关注TA
                                     </button>
                                 <span  id="time"  class="message-time ">12月25日 14:44</span>
-                                <span class="message-report">拉黑/举报</span>
+                                <span class="message-report">拉黑</span>
                                 </div>
                             </div>
 						</div>
 
 						<div id="dynamic_agree" class="message row">
+						<input type="hidden" id="senderId" value="">
 							<div class="col-xs-1">
                                 <img id="avatar" class="avatar-50" src="img/image1.jpeg"/>
 							</div>
@@ -619,13 +693,14 @@
                                         </p>
                                     </div>
                                     <span   id="time" class="message-time">8月5日 14:44</span>
-                                    <span class="message-report">拉黑/举报</span>
+                                    <span class="message-report">拉黑</span>
                                 </div>
                             </div>
 
 						</div>
 
 						<div id="dynamic_comment" class="message row">
+						<input type="hidden" id="senderId" value="">
 							<div class="col-xs-1">
                                 <img id="avatar" class="avatar-50" src="img/image1.jpeg"/>
 
@@ -652,7 +727,7 @@
                                         回复
                                     </button>
                                     <span id="time"  class="message-time">8月5日 14:44</span>
-                                    <span class="message-report">拉黑/举报</span>
+                                    <span class="message-report">拉黑</span>
                                 </div>
                             </div>
 

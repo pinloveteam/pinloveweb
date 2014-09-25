@@ -81,8 +81,8 @@ def auth_view(request) :
         #邀请
         link=request.REQUEST.get('link',False)
         #内存里初始化个人相关信息
-        from util.cache import init_profile_into_cache
-        init_profile_into_cache(user.id)
+        from util.cache import init_info_in_login
+        init_info_in_login(user.id)
         if link:
             get_score_by_invite_friend_login(link,request.user.id)
         # Redirect to a success page 
@@ -96,6 +96,9 @@ def auth_view(request) :
             return response
         #获取ip 地址
         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
+        #将个人相关信息插入缓存
+        from util.cache import init_info_in_login
+        init_info_in_login(user.id)
         #获取登录成=成功跳转地址
         from util.urls import next_url
         redirectURL = next_url(request)
@@ -177,7 +180,8 @@ def invalid_login(request) :
     return render(request, 'invalid_login.html')
     
 def logout(request) : 
-    
+    from util.cache import del_cache_in_logout
+    del_cache_in_logout(request.user.id)
     auth.logout(request)
     if 'messageList' in request.session.keys():
         del request.session['messageList']
@@ -227,7 +231,6 @@ def register_user(request) :
                     args[key]=item[1][0]
     else : 
         args['user_form']= RegistrationForm() 
-    
     return render(request, 'login.html', args)
     
 def register_success(request) : 
@@ -353,6 +356,8 @@ def test(request):
 #     userProfile=UserProfile.objects.get(user=request.user)
 #     from apps.recommend_app.recommend_util import cal_income
 #     cal_income(userProfile.income,userProfile.gender)
+    from apps.user_score_app.method import get_score_by_invite_friend_register
+    get_score_by_invite_friend_register(u'51044YHoqI')
     return render(request,'success.html')
 #    try:
 #       import hashlib

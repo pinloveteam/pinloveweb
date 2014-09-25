@@ -66,7 +66,7 @@
 							<div class="mission-body">
 								<div class="ms">
 									<h4 class="ms-title">完善资料</h4>
-									<p class="ms-text">每完成一项信息奖励2拼爱币</p>
+									<p class="ms-text">每完成一项信息奖励1拼爱币</p>
 									 {%if userProfileFinish %}
 									 <a href="/user/user_profile/#self_info_"  target="_blank"><p class="ms-btn ms-btn-a">去完成</p></a>
 									 {%else%}
@@ -89,11 +89,11 @@
 							<div class="mission-body">
 								<div class="ms">
 									<h4 class="ms-title">邀请注册</h4>
-									<p class="ms-text">奖励2拼爱币</p>
+									<p class="ms-text">奖励10拼爱币</p>
 									<ul class="list-inline">
 										<li class="qq_share"></li>
 										<li>
-										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在我在用拼爱pinlove，来看看哈！http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link={{link}}&title=我在用拼爱网pinlove，快来看看哈！http://pinlove.com?link={{link}}" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
 										</li>
 										<li>
 										   <a href="javascript:void(0)" onclick="feeds();" target="_blank"><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
@@ -110,7 +110,7 @@
 									<ul class="list-inline">
 										<li class="qq_share"></li>
 										<li>
-										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link=178035UbXsdf3&title=我在我在用拼爱pinlove，来看看哈！http://pinlove.com?link=178035UbXsdf3" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
+										  <a href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com?link={{link}}&title=我在用拼爱网pinlove，快来看看哈！http://pinlove.com?link={{link}}" target="_blank"><img src="{{STATIC_URL}}img/sina_login_logo.png" style="height:16;width:36;"></a>
 										</li>
 										<li>
 										   <a href="javascript:void(0)" onclick="feeds();" target="_blank"><img src="{{STATIC_URL}}img/facebook_login_logo.png" style="height:16;width:36;"></a>
@@ -182,7 +182,7 @@
 (function(){
 var p = {
 url:'http://pinlove.com?link={{link}}', /*获取URL，可加上来自分享到QQ标识，方便统计*/
-desc:'我在用拼爱pinlove，来看看哈！', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
+desc:'我在用拼爱 pinlove，快来看看哈！', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
 title:'', /*分享标题(可选)*/
 summary:'', /*分享摘要(可选)*/
 pics:'', /*分享图片(可选)*/
@@ -216,7 +216,7 @@ function feeds(){
 		  method: 'feed',
 		  link: 'https://developers.facebook.com/docs/dialogs/',
 		  app_id:appId,
-		  caption: '我注册了拼爱网，强烈推荐你来啊 ',
+		  caption: '我在用拼爱网pinlove，快来看看哈！ ',
 		  description:'',
 		  name:'pinlove web'
 		}, function(response){});

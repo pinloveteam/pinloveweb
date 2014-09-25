@@ -118,7 +118,7 @@
 									<div class="form-group">
 										<input id="id_inviteCode" class="form-control" type="text" id="email" value="" placeholder="邀请码"  name="inviteCode"/>
 									</div>
-									<input type="hidden" name="link" value="{{request.GET.link}}">
+									<input type="hidden" name="link" value="{%if request.GET.link%}{{request.GET.link}}{%else%}{{link}}{%endif%}">
 									<div class="form-group">
 										{{user_form.password2}}
 									</div>

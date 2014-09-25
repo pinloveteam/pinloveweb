@@ -400,20 +400,24 @@ def agree(request):
         dynamicId=int(request.REQUEST.get('dynamicId'))
         argeeNum=FriendDynamic.objects.get(id=dynamicId).argeeNum
         if FriendDynamicArgee.objects.filter(friendDynamic_id=dynamicId,user=request.user).exists():
-            FriendDynamicArgee.objects.get(friendDynamic_id=dynamicId).delete()
+            FriendDynamicArgee.objects.get(friendDynamic_id=dynamicId,user=request.user).delete()
             argeeNum=argeeNum-1
             FriendDynamic.objects.filter(id=dynamicId).update(argeeNum=argeeNum)
             arg['result']='delSuccess'
         else:
-            friendDynamicArgee=FriendDynamicArgee()
-            friendDynamicArgee.friendDynamic_id=dynamicId
-            friendDynamicArgee.user=request.user
-            friendDynamicArgee.save()
-            argeeNum=argeeNum+1
-            FriendDynamic.objects.filter(id=dynamicId).update(argeeNum=argeeNum)
-            from apps.user_app.method import get_avatar_name
-            arg['obj']=simplejson.dumps([{'userId':friendDynamicArgee.user_id,'username':request.user.username,'avatarName':get_avatar_name(friendDynamicArgee.user_id,friendDynamicArgee.user_id),'time':friendDynamicArgee.time.strftime("%m-%d %H:%M")}])
-            arg['result']='addSuccess'  
+            from util.cache import is_black_list
+            if is_black_list(int(FriendDynamic.objects.get(id=dynamicId).publishUser_id),int(request.user.id)):
+                arg={'result':'error','error_message':'该用户已经将你拉入黑名单，你不能点赞!'} 
+            else:
+                friendDynamicArgee=FriendDynamicArgee()
+                friendDynamicArgee.friendDynamic_id=dynamicId
+                friendDynamicArgee.user=request.user
+                friendDynamicArgee.save()
+                argeeNum=argeeNum+1
+                FriendDynamic.objects.filter(id=dynamicId).update(argeeNum=argeeNum)
+                from apps.user_app.method import get_avatar_name
+                arg['obj']=simplejson.dumps([{'userId':friendDynamicArgee.user_id,'username':request.user.username,'avatarName':get_avatar_name(friendDynamicArgee.user_id,friendDynamicArgee.user_id),'time':friendDynamicArgee.time.strftime("%m-%d %H:%M")}])
+                arg['result']='addSuccess'  
         json=simplejson.dumps(arg)
         return HttpResponse(json)
     except Exception as e:
@@ -470,6 +474,11 @@ def comment(request):
             friendDynamic=FriendDynamic.objects.select_related('publishUser').get(id=dynamicId)
             if friendDynamic.publishUser.id!=request.user.id:
                 comment.receiver_id=friendDynamic.publishUser.id
+            from util.cache import is_black_list
+            if is_black_list(int(comment.receiver_id),int(request.user.id)):
+                arg={'type':'error','error_message':'该用户已经将你拉入黑名单，你不能评论!'} 
+                json=simplejson.dumps(arg)
+                return HttpResponse(json)
         elif int(receiverId)==request.user.id:
             arg={'type':'error','msg':'能自己对自己评论'}
             json=simplejson.dumps(arg)

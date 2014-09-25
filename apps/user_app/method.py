@@ -111,7 +111,7 @@ def update_black_list(myId,otherId):
    
 '''
 def get_black_list(userId):
-    return BlackList.objects.filter(my_id=userId)
+    return [int(user.other_id) for user in BlackList.objects.filter(my_id=userId)]
 '''
  举报用户
 '''

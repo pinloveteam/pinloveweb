@@ -17,6 +17,25 @@ def init_cache():
     int_user_score()
 
 '''
+在登录是初始化cache信息
+'''
+def init_info_in_login(userId):
+    info={}
+    if len(get_profile_cache(userId))>0:
+        del_profile_cache(userId)
+    #初始化黑名单
+    from apps.user_app.method import get_black_list
+    BACKLIST=get_black_list(userId)
+    info['BACKLIST']=BACKLIST
+    set_profile_cache(userId,info)
+
+'''
+在登出是删除cache信息
+'''  
+def del_cache_in_logout(userId):
+    if len(get_profile_cache(userId))>0:
+        del_profile_cache(userId)
+'''
 初始化游戏缓存
 '''
 def init_game_cache():
@@ -151,7 +170,27 @@ def set_cache(key,value):
         data.append(value)
         cache.set(key,data)
     
+'''
+获取用户个人的cache信息
+@param userId:  用户id
+'''
+def get_profile_cache(userId):
+    return cache.get('%s%s'%('pinlove_',userId),{})
 
+'''
+修改用户个人的cache信息
+@param userId:  用户id
+@param info: 用户cache信息
+'''
+def set_profile_cache(userId,info):
+    cache.set('%s%s'%('pinlove_',userId),info)
+
+'''
+删除用户个人的cache信息
+@param userId:  用户id
+'''  
+def del_profile_cache(userId,):
+    cache.delete('%s%s'%('pinlove_',userId))
 '''
 备份缓存数据  
 backupType： 备份数据类型
@@ -179,33 +218,37 @@ def restore_backup_cache(backupType,time):
         cache.set(menthod,simplejson.loads(data))
 
 '''
-初始化个人所需要的信息到cache中
-@param userId:用户id 
-'''
-def init_profile_into_cache(userId):
-    from apps.user_app.method import get_black_list
-    balckList=get_black_list(userId)
-    BACKLIST=[user.other_id for user in balckList]
-    cache.set('BACKLIST',BACKLIST)
-
-'''
 获得黑名单列表
 @return: list 黑名单列表
 '''
-def get_black_list_by_cache():
-    return  cache.get('BACKLIST',[])
+def get_black_list_by_cache(myId):
+    profile=get_profile_cache(myId)
+    blackList=profile.get('BACKLIST',[])
+    return  blackList
 '''
 将用户id缴入黑名单列表
 '''
-def set_black_list_by_cache(userId):
-    blackList=cache.get('BACKLIST',[])
+def set_black_list_by_cache(myId,userId):
+    profile=get_profile_cache(myId)
+    blackList=profile.get('BACKLIST',[])
     blackList.append(userId)
-    cache.set('BACKLIST',blackList)
+    profile['BACKLIST']=blackList
+    set_profile_cache(myId,profile)
+    
+def is_black_list(myId,userId):
+    profile=get_profile_cache(myId)
+    blackList=profile.get('BACKLIST',[])
+    if userId in blackList:
+        return True
+    else:
+        return False
 '''
-获得黑名单列表
+删除黑名单列表
 @return: list 黑名单列表
 '''
-def del_attribute_black_list_by_cache(userId):
-    blackList=cache.get('BACKLIST',None)
+def del_attribute_black_list_by_cache(myId,userId):
+    profile=get_profile_cache(myId)
+    blackList=profile.get('BACKLIST',[])
     blackList.remove(userId)
-    cache.set('BACKLIST',blackList)
+    profile['BACKLIST']=blackList
+    set_profile_cache(myId,profile)

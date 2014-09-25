@@ -296,10 +296,15 @@ def message_send(request):
     args={}
     try:
         user=request.user
-        receiver_id=request.REQUEST.get('receiver_id')
-        reply_content=request.REQUEST.get('reply_content')
-        message=add_message_121(user.id,receiver_id,reply_content,1)
-        args={'result':'success','messageTime':message.sendTime.strftime("%m-%d %H:%M")}  
+        receiver_id=int(request.REQUEST.get('receiver_id'))
+        #判断是否在黑名单
+        from util.cache import is_black_list
+        if is_black_list(request.user.id,receiver_id):
+            args={'result':'error','error_message':'该用户已经将你拉入黑名单，你不能发送信息!'}   
+        else:
+            reply_content=request.REQUEST.get('reply_content')
+            message=add_message_121(user.id,receiver_id,reply_content,1)
+            args={'result':'success','messageTime':message.sendTime.strftime("%m-%d %H:%M")}  
     except Exception ,e:    
         logger.error('私信   发送,出粗')
         args={'result':'error','error_message':'发送私信出错!'}   

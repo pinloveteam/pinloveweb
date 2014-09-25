@@ -217,7 +217,7 @@ function onUploadError(data){
 	<button class="btn btn-success cerbtn" disabled="true">{{educationValid}}</button>
 	{% endifequal %}
 </div>
-<div id="cer_education" class="cer_tab gray-panel">
+<div id="cer_education" class="cer_tab gray-panel" style="height: 200px;">
 	<div class="divArrow gray-panel"></div>
 	{% ifequal educationValid '未认证'%}
 	<form id='education_valid' action="/verification/valid/" method="POST"
@@ -295,11 +295,10 @@ function onUploadError(data){
 			
 		</div>
 
-		<button class="btn btn-info  cer_button">提交</button>
+		<button class="btn btn-info  cer_button" style="top:150px">提交</button>
 	</div>
 	</form>
-	<iframe name="education_valid_iframe" id="education_valid_iframe"
-		width="1" height="1" marginwidth="0" marginheight="0" scrolling="no"
+	<iframe name="education_valid_iframe" id="education_valid_iframe" width="1" height="1" marginwidth="0" marginheight="0" scrolling="no"
 		frameborder="0"></iframe>
 	{% endifequal %}
 </div>

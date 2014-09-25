@@ -30,7 +30,6 @@
             border: 1px solid #74BADD;
             overflow: hidden;
             float: left;
-            margin-left: 30px;
             background:url("{{STATIC_URL}}img/信息设置-29.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
         }
         
@@ -221,7 +220,7 @@
     
     
     
-    <div id="uploadAvatarUploadArea" style=" left: 30px; position: relative;">
+    <div id="uploadAvatarUploadArea">
         <form id="uploadAvatarForm" action="{% url 'uploadavatar_upload' %}" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
             {% csrf_token %}
             <div id="uploadAvatarBtnLayout" >

@@ -250,9 +250,4 @@ def create_register_extra_user(request,userId,username,password,gender,link,**kw
     from apps.user_score_app.method import get_score_by_invite_friend_register
     if link:
         get_score_by_invite_friend_register(link)
-        user = auth.authenticate(username=username, password=username)
-        auth.login(request, user)
-        #内存里初始化个人相关信息
-        from util.cache import init_profile_into_cache
-        init_profile_into_cache(user.id)
         

@@ -173,7 +173,7 @@ $(document).ready(function(){
 					context.find('textarea').val('');
 					context.closest('#reply').hide();
 			        }else if(data['type']=='error'){
-			        	var body=$('<p>删除失败!</p>')
+			        	var body=$('<p>'+data['error_message']+'</p>')
 			        	$.poplayer({body:body});
 			        }else{
 			            window.location.href='http://127.0.0.1:8000/';
@@ -271,6 +271,7 @@ function init_dynamic(dynamicList){
 						  conext.closest('.trend').find('input[name="userId"][value="'+userId+'"]').closest('.row').remove();
 					  }else if(data.result=='error'){
 			        	 var body = $('<p>'+data.error_message+'</p>');
+			        	 $.poplayer({body:body});
 			        }
 				},
 	            error: function(response){

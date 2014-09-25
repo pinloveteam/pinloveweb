@@ -27,20 +27,9 @@ class MessageBean(object):
         self.isDeletereceiver=kwargs.pop('isDeletereceiver',None)
         self.isRead=kwargs.pop('isRead',None)
         self.avatarName=get_avatar_name(kwargs.get('userId'),self.senderId)
-        if not self.senderId  is  None:
-            self.is_black_list()
         
         
-    '''
-    判断在不在黑名单
-    '''
-    def is_black_list(self):
-        from util.cache import get_black_list_by_cache
-        blackList=get_black_list_by_cache()
-        if self.senderId in blackList:
-            self.isBlackList=True
-        else:
-            self.isBlackList=False
+    
         
     def get_messagebean(self,obj,userId,**kwargs):
         message=obj.message
@@ -59,7 +48,6 @@ class MessageBean(object):
         self.senderName=message.sender.username
         self.receiverName=obj.receiver.username
         self.avatarName=self.get_avatar_name(self,userId)
-        self.is_black_list()
         
     
         
@@ -87,6 +75,7 @@ def MessageLog_to_Message(messageLogList,userId,**kwargs):
         messageBeanList.append(messageBean)
     return messageBeanList
 
+
 '''
 转换为页面的消息信息
 '''
@@ -107,5 +96,8 @@ def messagedynamics_to_message_page(messageDynamicList):
                 message['fllow_type']=2
             else:
                 message['fllow_type']=0
+        #判断黑名单
+        from util.cache import is_black_list
+        message['isBlackList']=is_black_list(message['receiver_id'],message['sender_id'])
         messageList.append(message)
     return messageList

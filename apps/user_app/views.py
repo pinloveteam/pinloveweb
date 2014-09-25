@@ -155,8 +155,11 @@ def update_follow(request):
   try:
     arg = {}
     type=int(request.GET.get('type',False))
-    offset = request.GET.get('userId')
-    if Follow.objects.filter(my=request.user,follow_id=offset).exists():
+    offset =int(request.GET.get('userId'))
+    from util.cache import is_black_list
+    if is_black_list(request.user.id,offset):
+        arg={'type':'error','error_message':'该用户已经将你拉入黑名单，你不能添加关注!'} 
+    elif Follow.objects.filter(my=request.user,follow_id=offset).exists():
         if type==1:
             return HttpResponse(simplejson.dumps({'result':'follow'}))
         Follow.objects.filter(my=request.user,follow=offset).delete()
@@ -351,10 +354,10 @@ def black_list(request):
         result=update_black_list(request.user.id,userId)
         if result==1:
             from util.cache import set_black_list_by_cache
-            set_black_list_by_cache(userId)
+            set_black_list_by_cache(request.user.id,userId)
         elif result==-1:
             from util.cache import del_attribute_black_list_by_cache
-            del_attribute_black_list_by_cache(userId)
+            del_attribute_black_list_by_cache(request.user.id,userId)
         args={'result':'success','type':result}
     except Exception ,e:
         logger.exception('更新黑名单出错')

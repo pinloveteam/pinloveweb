@@ -35,6 +35,10 @@
 				-webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
 				box-shadow: 2px 2px 10px #909090;/*opera或ie9*/
 			}
+			#search_condition > div {
+				margin-top: 30px;
+				margin-left: 10px;
+			}
 
 			#search_condition > label {
 				margin-top: 30px;
@@ -208,12 +212,21 @@ var fans={% if fans %}{{fans}}{%else%}0{% endif %}
 				</div>
 
 				<div id="search_condition">
+				<div class="radio">
 					<label><input type="radio" name="radiobutton" value="all"><span>随机匹配</span></label>
+				</div>
+				<div class="radio">
 					<label><input type="radio" name="radiobutton"
-						value="school"><span>相同学校</span></label> <label><input
+						value="school"><span>相同学校</span></label> 
+				</div>
+				<div class="radio">
+				<label><input
 						type="radio" name="radiobutton" value="work"><span>相同工作</span></label>
-					<label><input type="radio" name="radiobutton"
+				</div>
+				<div class="radio">
+				<label><input type="radio" name="radiobutton"
 						value="location"><span>相同城市</span></label>
+				</div>
 				</div>
 
 				<div id="recevie" style="display: none;">

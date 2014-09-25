@@ -105,6 +105,11 @@ window.Card = function(person){
 	    var userId=$(this).parents('.card_panel').attr('id');
 		var icon_like=$(this);
 		$.getJSON("/user/update_follow/",{userId:userId},function(data) {
+			  if(type.type=='error'){
+				  var body = $("<p>"+data['error_messge']+"</p>")
+		       	   $.poplayer({body:body});
+				   return false;
+			  }
 			  if(data.type==1){
 					icon_like.removeClass("icon_like_0 icon_like_1 icon_like_2 icon_like_3").addClass("icon_like_1")
 					myFollow=myFollow+1
