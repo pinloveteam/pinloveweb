@@ -343,6 +343,10 @@ hr {
 	background-image: url("../img/dlike.png");
 	title: "相互关注"
 }
+.icon_like_3 {
+	background-image: url("../img/olike.png");
+	title: "被关注"
+}
 .icon_like_0{
 	background-image: url('../img/like.png');
 	
