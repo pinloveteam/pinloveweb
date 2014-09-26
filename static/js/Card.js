@@ -106,7 +106,7 @@ window.Card = function(person){
 		var icon_like=$(this);
 		$.getJSON("/user/update_follow/",{userId:userId},function(data) {
 			  if(data.type=='error'){
-				  var body = $("<p>"+data['error_messge']+"</p>")
+				  var body = $("<p>"+data.error_message+"</p>")
 		       	   $.poplayer({body:body});
 				   return false;
 			  }
