@@ -18,7 +18,7 @@ from util.page import page
 from apps.the_people_nearby.views import GetLocation
 import logging
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseServerError
 from apps.recommend_app.models import MatchResult
 from django.db import transaction
 from django.utils import simplejson
@@ -195,6 +195,25 @@ def loggedout(request) :
     
     return render(request, 'loggedout.html')
 
+#上传进度
+def upload_progress(request):
+    """
+    Return JSON object with information about the progress of an upload.
+    """
+    progress_id = ''
+    if 'X-Progress-ID' in request.GET:
+        progress_id = request.GET['X-Progress-ID']
+    elif 'X-Progress-ID' in request.META:
+        progress_id = request.META['X-Progress-ID']
+    if progress_id:
+        cache_key = "%s_%s" % (request.META['REMOTE_ADDR'], progress_id)
+        from django.core.cache import cache
+        data = cache.get(cache_key)
+        return HttpResponse(simplejson.dumps(data))
+    else:
+        return HttpResponseServerError('Server Error: You must provide X-Progress-ID header or query param.')
+    
+
 @transaction.commit_on_success      
 def register_user(request) : 
     args = {}
@@ -340,6 +359,7 @@ def newcount(request):
 '''
  成功页面
 '''
+@csrf_exempt
 def success(request):
     args={}
     args['title']=request.REQUEST.get('title',None)
@@ -356,9 +376,8 @@ def test(request):
 #     userProfile=UserProfile.objects.get(user=request.user)
 #     from apps.recommend_app.recommend_util import cal_income
 #     cal_income(userProfile.income,userProfile.gender)
-    from apps.user_score_app.method import get_score_by_invite_friend_register
-    get_score_by_invite_friend_register(u'51044YHoqI')
-    return render(request,'success.html')
+   user=getattr(request,'user',None)
+   return render(request,'error.html',{'error_message':'支付失败!','link':'/','link_title':'返回首页','username':user.username if user else '没有'})
 #    try:
 #       import hashlib
 #       chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
