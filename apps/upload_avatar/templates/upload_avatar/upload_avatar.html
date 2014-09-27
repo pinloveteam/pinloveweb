@@ -63,7 +63,6 @@
             $('#uploadAvatarBtnLayout button').click(function(){
                 return false;
             });
-            
             var input_width = 0;
             var input_height = 0;
             
@@ -83,6 +82,8 @@
                 var fileanme = $(this).val().toLowerCase().replace(/^\s+|\s+$/g, '');
                 if(!p.test(fileanme)){alert("{{ INVALID_IMAGE }}"); return;}
                 $('#uploadAvatarForm').submit();
+                $('#uploadAvatarBtnLayout').popLoading();
+                $('#uploadAvatarBtnLayout').children().eq(4).find('small').html('正在上传，请稍等...')
                 $(this).val('');
                 $('#uploadAvatarCropSubmit').removeAttr('disabled');
             });
@@ -117,11 +118,13 @@
         });
         
         function upload_avatar_error(error_msg) {
+        	$('#uploadAvatarBtnLayout').removeLoading();
             alert(error_msg);
         };
         
         
         function upload_avatar_success(image_url) {
+        	$('#uploadAvatarBtnLayout').removeLoading();
             $('#uploadAvatarSelectArea').empty();
             $('#uploadAvatarPreviewArea div').empty();
             $('#uploadAvatarPreviewArea div').append('<img />');
