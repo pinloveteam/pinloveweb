@@ -355,6 +355,8 @@ def black_list(request):
         if result==1:
             from util.cache import set_black_list_by_cache
             set_black_list_by_cache(request.user.id,userId)
+            if Follow.objects.filter(my_id=request.user.id,follow_id=userId).exists():
+                Follow.objects.filter(my_id=request.user.id,follow_id=userId).delete()
         elif result==-1:
             from util.cache import del_attribute_black_list_by_cache
             del_attribute_black_list_by_cache(request.user.id,userId)
