@@ -226,8 +226,9 @@ def paypal_success(request):
 
 @csrf_exempt
 def paypal_cancel(request):
-    logging.error('paypal_cancel')
-    return HttpResponse('paypal_cancel')
+    #logging.error('paypal_cancel')
+    user=getattr(request,'user',None)
+    return render(request,'error.html',{'error_message':'支付失败!','link':'/','link_title':'返回首页','username':user.username if user else '没有'})
 
 
 

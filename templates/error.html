@@ -14,7 +14,6 @@
 <div class="wrap">
 			<div class="container">
 				<div class="row form-panel">
-					<form class="form-horizontal" role="form">
 						<fieldset >
 							<div class="form-head">
 								<h4 class="h4_text">出错了！</h4>
@@ -31,13 +30,19 @@
 						<div class="form-group text-center"  >
 								<!-- Button -->
 								<div >
+									{%if link %}
+									<button class="btn btn-pink" onclick="location.href='{{link}}'">
+										{{link_title}} 用户名：{{username}}
+									</button>
+									{% else %}
 									<button class="btn btn-pink" onclick=" history.back();">
 										返回
 									</button>
+									
+									{%endif%}
 								</div>
 							</div>
 						</fieldset>
-					</form>
 				</div>
 			</div>
 		</div>
