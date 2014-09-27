@@ -475,7 +475,7 @@ def comment(request):
             if friendDynamic.publishUser.id!=request.user.id:
                 comment.receiver_id=friendDynamic.publishUser.id
             from util.cache import is_black_list
-            if is_black_list(int(comment.receiver_id),int(request.user.id)):
+            if comment.receiver_id is not None and is_black_list(int(comment.receiver_id),int(request.user.id)):
                 arg={'type':'error','error_message':'该用户已经将你拉入黑名单，你不能评论!'} 
                 json=simplejson.dumps(arg)
                 return HttpResponse(json)
