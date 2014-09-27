@@ -229,6 +229,8 @@ def get_black_list_by_cache(myId):
 将用户id缴入黑名单列表
 '''
 def set_black_list_by_cache(myId,userId):
+    myId=int(myId)
+    userId=int(userId)
     profile=get_profile_cache(myId)
     blackList=profile.get('BACKLIST',[])
     blackList.append(userId)

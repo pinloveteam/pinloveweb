@@ -85,9 +85,15 @@ def grade_for_other(request):
             flag=False
             args['result']='error'
             args['msg']='传输参数错误！'
+        s=result.split(',')
+        for temp in s:
+            if float(temp)>100.00:
+               flag=False
+               args['result']='error'
+               args['msg']='数据不得大于100！' 
+               break;
         if flag:
-            s=result.split(',')
-            UserExpect.objects.create_update_by_uid(user_id=request.user.id,heighty1=float(s[1]),heighty2=float(s[3]),heighty3=float(s[5]),heighty4=float(s[7]),heighty5=float(s[9]) ,heighty6=float(s[11]),heighty7=float(s[13]),heighty8=float(s[15]))
+            UserExpect.objects.create_update_by_uid(user_id=request.user.id,heighty1=float(s[0]),heighty2=float(s[1]),heighty3=float(s[2]),heighty4=float(s[3]),heighty5=float(s[4]) ,heighty6=float(s[5]),heighty7=float(s[6]),heighty8=float(s[7]))
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
             cal_recommend(request.user.id,['userExpect'])     

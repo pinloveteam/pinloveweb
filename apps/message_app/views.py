@@ -299,7 +299,7 @@ def message_send(request):
         receiver_id=int(request.REQUEST.get('receiver_id'))
         #判断是否在黑名单
         from util.cache import is_black_list
-        if is_black_list(request.user.id,receiver_id):
+        if is_black_list(receiver_id,request.user.id):
             args={'result':'error','error_message':'该用户已经将你拉入黑名单，你不能发送信息!'}   
         else:
             reply_content=request.REQUEST.get('reply_content')

@@ -170,7 +170,7 @@
                         message_clone.find('#content').html(message.content).parent().attr('href','/message/detail/?senderId='+message.sender_id);
                         message_clone.find('#time').html(message.sendTime);
                         if(message.isBlackList){
-                          	 message_clone.find('.message-report').html('取消拉黑');
+                          	 message_clone.find('.message-report').html('取消黑名单');
                           };
                         if(message.isRead==0){
                         	message_clone.addClass('unread')
@@ -227,7 +227,7 @@
                         	follow_clone.addClass('unread')
                         }
                         if(message.isBlackList){
-                        	follow_clone.find('.message-report').html('取消拉黑');
+                        	follow_clone.find('.message-report').html('取消黑名单');
                          };
                         if(message.fllow_type==1){
                         	follow_btn=follow_clone.find('.follow')
@@ -251,7 +251,7 @@
                     		dynamic_agree_clone.addClass('unread')
                         }
                     	if(message.isBlackList){
-                    		dynamic_agree_clone.find('.message-report').html('取消拉黑');
+                    		dynamic_agree_clone.find('.message-report').html('取消黑名单');
                          };
                         if(message.data.length>0){
                        	 message.data=$.parseJSON(message.data);
@@ -272,7 +272,7 @@
                         	 dynamic_comment_clone.addClass('unread')
                          }
                          if(message.isBlackList){
-                        	 dynamic_comment_clone.find('.message-report').html('取消拉黑');
+                        	 dynamic_comment_clone.find('.message-report').html('取消黑名单');
                           };
                          if(message.data.length>0){
                         	 message.data=$.parseJSON(message.data);
@@ -350,10 +350,10 @@
     							if (data.result=='success'){
     								if(data.type==1){
     									var body=$('<p>添加成功!</p>');
-    									content.html('取消拉黑');
+    									content.html('取消黑名单');
     								}else if(data.type==-1){
     									var body=$('<p>取消成功!</p>')
-    									content.html('拉黑');
+    									content.html('拉入黑名单');
     								}
     							}else{
     								var body=$('<p>'+data.error_message+'</p>')
@@ -367,7 +367,7 @@
     						
     					});
                 	}
-                	 var body=$('<p>确认添加'+senderName+'进入黑名单!</p>')
+                	 var body=$('<p>确认将'+senderName+content.html()+'</p>')
 						 $.poplayer({body:body,btnFunc:hehe});
                  })
 
@@ -693,7 +693,7 @@
                                         </p>
                                     </div>
                                     <span   id="time" class="message-time">8月5日 14:44</span>
-                                    <span class="message-report">拉黑</span>
+                                    <span class="message-report">拉入黑名单</span>
                                 </div>
                             </div>
 
@@ -727,7 +727,7 @@
                                         回复
                                     </button>
                                     <span id="time"  class="message-time">8月5日 14:44</span>
-                                    <span class="message-report">拉黑</span>
+                                    <span class="message-report">取消黑名单</span>
                                 </div>
                             </div>
 

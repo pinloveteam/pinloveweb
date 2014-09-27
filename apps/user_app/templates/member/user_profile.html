@@ -109,10 +109,10 @@
 			</div>
 			
 			<div class="col-xs-9" >
-				<div class="card_panel" style="width: 100%;margin-top: 0;">
+				<div class="card_panel" style="width: 100%;margin-top: 0;" >
 				 <!-- 头像上传 -->
 				 
-				  <div id="upload_head" class="vip-panel" style="padding-top: -10px;">
+				  <div id="upload_head" class="vip-panel" style="padding-top: -10px;display: none;">
                            {%include "upload_avatar/upload_avatar.html"%}
                            
                    </div>
@@ -124,7 +124,7 @@
 				   </div>
 					
 				   <!--性格标签 -->
-				   <div id="personality" class="vip-panel" >
+				   <div id="personality" class="vip-panel" style="display: none;" >
 				      {% include "character_tags.html" %}
 				   </div>
 				   <!-- 认证 -->
@@ -132,11 +132,11 @@
 						{% include "verfication.html" %}
 					</div>
 				   <!-- 权重 -->
-					<div id="weight" class="vip-panel"  >
+					<div id="weight" class="vip-panel" style="display: none;" >
 					     {% include "update_weight.html" %}
 					</div>
 					<!-- 另一半打分 -->
-					<div id="progress" class="vip-panel" >
+					<div id="progress" class="vip-panel" style="display: none;" >
 					{% include "grade_for_other1.html" %}
 					</div>
 				</div>
