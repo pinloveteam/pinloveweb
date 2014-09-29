@@ -36,6 +36,7 @@ from apps.user_app.models import _delete_crop_avatar_on_disk, UserProfile
 from pinloveweb.settings import MEDIA_URL
 from apps.upload_avatar.app_settings import UPLOAD_AVATAR_MIX_SIZE,\
     UPLOAD_AVATAR_FORMAT
+from django.http.response import HttpResponseServerError
 
 
 border_size = UPLOAD_AVATAR_WEB_LAYOUT['crop_image_area_size']
@@ -60,7 +61,6 @@ def protected(func):
                 "<script>window.parent.upload_avatar_error('%s')</script>" % e
             )
     return deco
-
 
 @protected
 def upload_avatar(request):

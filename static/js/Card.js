@@ -344,32 +344,6 @@ window.Card = function(person){
 		$('.other_name').on('click',compareRadar);
 	}*/
 	
-	/*创建雷达图
-	data[list]*/
-	function create_dialog(data){
-		dialog=$('.poplayer')
-		var ctx = dialog.find('canvas').get(0).getContext("2d");
-		var datasets = {
-			fillColor : "rgba(0,0,0,0)",
-			strokeColor : "rgb(0,151,36)",
-			pointColor : "rgb(0,151,36)",
-			data:data
-		}
-		var data = {
-				labels : ["学历", "性格", "收入", "样貌", "身高"],
-				datasets : [datasets]
-			};
-		var myNewChart = new Chart(ctx).Radar(data, {
-			scaleOverride : true,
-			scaleSteps : 4,
-			scaleStepWidth : 25,
-			scaleStartValue : 0,
-			scaleLineColor : "rgba(0,0,0,.5)",
-			scaleShowLabels : true,
-			angleLineColor : "rgba(0,0,0,.5)"
-		});
-		return dialog;
-	}
 	var compare_cancle = function(){
 		$('.chosen').removeClass('chosen');
 		$('.compare').show();
@@ -455,7 +429,7 @@ window.Card = function(person){
 		$('.compare-btn_1').closest('.col-xs-4').remove();
 		$('.compare-btn').html('对比');
 		$('.score_other').remove();
-		dialog=create_dialog(diaogList);
+		$('.js-popframe').createRadarDialog(diaogList);
 		$('.poplayer').css('left','25%').css('width','780px');
 		 $('.compare-btn').click(function(){compare(userId,1)})
 		 compare_flag=false;
@@ -482,6 +456,8 @@ window.Card = function(person){
 			success:function(data, textStatus){
 				if(textStatus=='success'){
 					if(data['result']=='success'){
+						$('.js-popframe').createRadarDialog([data['data']])
+						$('.js-popframe').find('#score').html(data['score'])
 						var body = $("<p>投票成功!</p>")
 					}else if(data['result']=='error'){
 						var body = $("<p>"+data['error_message']+"<p>")

@@ -1,7 +1,4 @@
 	<script type="text/javascript" src="{{STATIC_URL}}js/draggable/highcharts.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/draggable/highcharts-more.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/draggable/draggable-points.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/draggable/dragdealer.js"></script>
    <style>
    #chartdiv{
     height:400px;
@@ -17,7 +14,7 @@
 </style>
    <script class="code" type="text/javascript">
    var categories=[];
-   var series_data=[0,0,0,0,0,0,0,0,0];
+   var series_data=[0,0,0,0,0,0,0,0];
    {% ifequal gender 'F' %}
    categories=['160cm', '165cm', '170cm', '175cm', '180cm', '185cm', '190cm', '195cm'];
     {%  else %}

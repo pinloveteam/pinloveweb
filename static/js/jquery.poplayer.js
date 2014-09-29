@@ -219,15 +219,7 @@
 //		var r3 = $('<div class="row"><div class="col-xs-12"><button class="btn btn-xs btn-danger">与其他用户对比</button></div></div>')
 		var r2 = $('<div class="row"><canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas></div>');
 		radarframe.append(r2);
-		var ctx = radarframe.find('canvas').get(0).getContext("2d");
-		var datasets = {
-			fillColor : "rgba(0,0,0,0)",
-			strokeColor : "rgb(0,151,36)",
-			pointColor : "rgb(0,151,36)",
-			data : options.user1.data
-		}
-
-		dataArry.push(datasets);
+		dataArry.push(options.user1.data);
 		if (options.compar == true) {
 			radarframe.removeClass('radius');
 			r1.find('.compare-btn').html('取消对比');
@@ -235,19 +227,32 @@
 			r3.find('#head').attr('src', options.user2.head);
 			r3.find('#score').html(options.user2.score);
 			radarframe.append(r3);
-			var datasets2 = {
-				fillColor : "rgba(0,0,0,0)",
-				strokeColor : "rgb(241,23,25)",
-				pointColor : "rgb(241,23,25)",
-				data : options.user2.data
-			}
-			dataArry.push(datasets2);
+			dataArry.push(options.user2.data);
 		}
+        radarframe.createRadarDialog(dataArry)
+		return radarframe;
+	}
+	
+	//创建雷达图
+	$.fn.createRadarDialog = function(dataList) {
+	    dataArry=new Array()
+		var strokeColorList=["rgb(0,151,36)","rgb(241,23,25)"];
+		var pointColorList=["rgb(0,151,36)","rgb(241,23,25)"];
+		for(var i=0 ;i<dataList.length;i++){
+		var datasets = {
+				fillColor : "rgba(0,0,0,0)",
+				strokeColor : strokeColorList[i],
+				pointColor : pointColorList[i],
+				data : dataList[i]
+			};
+		dataArry.push(datasets);
+		};
+	   
+		var ctx = $(this).find('canvas').get(0).getContext("2d");
 		var data = {
 			labels : ["教育程度", "性格", "收入情况", "样貌", "身高"],
 			datasets : dataArry
 		};
-
 		var myNewChart = new Chart(ctx).Radar(data, {
 			scaleOverride : true,
 			scaleSteps : 4,
@@ -258,9 +263,7 @@
 			pointLabelFontColor : '#fff',
 			angleLineColor : "rgba(255,255,255,.5)"
 		});
-
-		return radarframe;
-	}
+	};
 
 
 	$.poplayer = function(options) {

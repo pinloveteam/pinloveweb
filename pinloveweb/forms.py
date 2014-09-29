@@ -3,10 +3,11 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django import forms 
 from django.contrib.auth.models import User 
 from django.contrib.auth.forms import UserCreationForm
-from util.form_util import HorizRadioRenderer
 import re
 from django.core import validators
-USERNAME_ERROR_MESSAGE=u'必填。英文，或者中文，或者下划线开头,2～20个字符'
+from django.core.cache import cache
+from django.core.files.uploadhandler import FileUploadHandler
+USERNAME_ERROR_MESSAGE=u'必填。英文，1-14位字符，英文字母、数字和下划线组成或中文7个字符'
 class RegistrationForm (UserCreationForm) : 
     
     def __init__(self, *args, **kwargs):
@@ -17,6 +18,10 @@ class RegistrationForm (UserCreationForm) :
         self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名,1-14位字符，英文字母、数字和下划线组成或中文7个字符'
         self.fields['password1'].widget.attrs['placeholder'] = r'请输入密码，6-20位字符，可由英文字母、数字和下划线组成'
         self.fields['password2'].widget.attrs['placeholder'] = r'再次输入密码'
+        #字段必须的错误提示改为中文
+        for field in self.fields.values():
+            field.error_messages = {'required':'{fieldname}必须要填!'.format(
+                fieldname=field.label)}
     def validate(self, value):
         "Check if value consists only of valid emails."
 
@@ -89,18 +94,68 @@ class ChangePasswordForm(forms.Form):
         self.fields['oldpassword'].widget.attrs['placeholder'] = r'请输入原密码'
         self.fields['newpassword'].widget.attrs['placeholder'] = r'6-20位字符，可由英文字母、数字和下划线组成'
         self.fields['newpassword1'].widget.attrs['placeholder'] = r'再次输入密码'
+        
     oldpassword=forms.RegexField(label=_(u"原密码"),widget=forms.PasswordInput,regex=r'^[0-9a-zA-Z\xff_]{6,20}$', help_text=r"请输入原密码",error_messages={
-            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'})
+            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'},required=True)
     newpassword=forms.RegexField(label=_(u"新密码"),widget=forms.PasswordInput,regex=r'^[0-9a-zA-Z\xff_]{6,20}$', help_text=r"6-20位字符，可由英文字母、数字和下划线组成",error_messages={
-            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'})
+            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'},required=True)
     newpassword1=forms.RegexField(label=_(u"确认密码"),widget=forms.PasswordInput,regex=r'^[0-9a-zA-Z\xff_]{6,20}$', help_text=r"再次输入密码",error_messages={
-            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'})
+            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'},required=True)
     
     error_messages={
-                   'check_password_error':u'输入密码不相等!'
+                   'check_password_error':u'输入密码不相等!',
+                   'password_incorrect':u'原密码错误!',
                    }
+    
     def clean_newpassword1(self):
         newpassword=self.cleaned_data['newpassword']
         newpassword1=self.cleaned_data['newpassword1']
         if(newpassword!=newpassword1):
             raise forms.ValidationError(self.error_messages['check_password_error'])
+        return newpassword1
+     
+   
+'''
+进度条
+'''
+class UploadProgressCachedHandler(FileUploadHandler):
+    """
+    Tracks progress for file uploads.
+    The http post request must contain a header or query parameter, 'X-Progress-ID'
+    which should contain a unique string to identify the upload to be tracked.
+    """
+
+    def __init__(self, request=None):
+        super(UploadProgressCachedHandler, self).__init__(request)
+        self.progress_id = None
+        self.cache_key = None
+
+    def handle_raw_input(self, input_data, META, content_length, boundary, encoding=None):
+        self.content_length = content_length
+        if 'X-Progress-ID' in self.request.GET :
+            self.progress_id = self.request.GET['X-Progress-ID']
+        elif 'X-Progress-ID' in self.request.META:
+            self.progress_id = self.request.META['X-Progress-ID']
+        if self.progress_id:
+            self.cache_key = "%s_%s" % (self.request.META['REMOTE_ADDR'], self.progress_id )
+            cache.set(self.cache_key, {
+                'length': self.content_length,
+                'uploaded' : 0
+            })
+
+    def new_file(self, field_name, file_name, content_type, content_length, charset=None):
+        pass
+
+    def receive_data_chunk(self, raw_data, start):
+        if self.cache_key:
+            data = cache.get(self.cache_key)
+            data['uploaded'] += self.chunk_size
+            cache.set(self.cache_key, data)
+        return raw_data
+    
+    def file_complete(self, file_size):
+        pass
+
+    def upload_complete(self):
+        if self.cache_key:
+            cache.delete(self.cache_key)

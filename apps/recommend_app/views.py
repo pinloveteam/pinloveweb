@@ -282,7 +282,10 @@ def user_vote(request):
             from apps.recommend_app.recommend_util import cal_user_vote
             score=cal_user_vote(request.user.id,userId,score,geadeInstance.appearancescore,geadeInstance.appearancesvote,1)
             Grade.objects.filter(user_id=userId).update(appearancescore=score['score'],appearancesvote=geadeInstance.appearancesvote if score['flag'] else geadeInstance.appearancesvote+1)
-            args={'result':'success'}
+            socreForOther=get_socre_for_other(request.user.id,userId)
+            data=[socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
+            score=int(socreForOther['matchResult']['scoreOther'])
+            args={'result':'success','data' :data,'score' : score}
         json = simplejson.dumps(args)
         return HttpResponse(json)
     except Exception,e:
