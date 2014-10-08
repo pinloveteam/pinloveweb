@@ -115,7 +115,7 @@ hr {
 	display: inline-block;
 	background-color: #428BCA;
 	padding: 3px 0;
-	width: 150px;
+	width: 180px;
 	text-align: center;
 }
 .name-arrow {
@@ -293,8 +293,9 @@ hr {
 
 .chat_textarea {
 	display: inline;
-	width: 100%;
+	width: 95%;
 	height: 35px;
+	margin: 0 5px;
 }
 
 .btn_send_msg {
@@ -327,7 +328,7 @@ hr {
 
 .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3 {
 	top: 3px;
-	left: 125px;
+	left: 155px;
 	opacity: 1;
 	cursor: pointer;
 }
@@ -350,6 +351,7 @@ hr {
 .icon_dislike {
 	top: 0px;
 	right: -10px;
+	opacity: 1;
 	background: url("../img/dislike.png") no-repeat;
 }
 
@@ -369,7 +371,7 @@ hr {
 	background-image: url("../img/相互关注.png");
 }
 
-.card :hover .icon_ding ,.card :hover .icon_dislike {
+.card :hover .icon_ding  {
 	 opacity: 1;
 }
 

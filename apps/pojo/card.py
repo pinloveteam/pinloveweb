@@ -174,17 +174,6 @@ def fllowList_to_CardList(myId,fllowList,type):
             userList.append(myFollow.my)
     userProfileList=UserProfile.objects.select_related().filter(user_id__in=userList)
     for userProfile in userProfileList:
-#         #获取推荐分数
-#         if  MatchResult.objects.filter(my_id=user.id,other_id=userProfile.user_id).exists():
-#             matchResult=MatchResult.objects.select_related('other').get(my_id=user.id,other_id=userProfile.user_id)
-#             grade=Grade.objects.get(user=matchResult.other)
-#             heighScore=matchResult.heighMatchOtherScore
-#             incomeScore=grade.incomescore
-#             edcationScore=grade.educationscore
-#             appearanceScore=grade.appearancescore
-#             characterScore=matchResult.tagMatchOtherScore
-#         else:
-#             heighScore,incomeScore,edcationScore,appearanceScore,characterScore=0,0,0,0,0
         userId=userProfile.user_id
         username=userProfile.user.username
         height=userProfile.height

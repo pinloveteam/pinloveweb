@@ -15,13 +15,13 @@ class RegistrationForm (UserCreationForm) :
         for key in self.fields:
             self.fields[key].widget.attrs['class'] = 'form-control'     #添加css class 样式
         self.fields['username'].widget.attrs.update({'style' : 'width: 110px;'})
-        self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名,1-14位字符，英文字母、数字和下划线组成或中文7个字符'
+        self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名,9位字符，中英字母、数字和下划线组成'
         self.fields['password1'].widget.attrs['placeholder'] = r'请输入密码，6-20位字符，可由英文字母、数字和下划线组成'
         self.fields['password2'].widget.attrs['placeholder'] = r'再次输入密码'
         #字段必须的错误提示改为中文
         for field in self.fields.values():
             field.error_messages = {'required':'{fieldname}必须要填!'.format(
-                fieldname=field.label)}
+                fieldname=unicode(field.label))}
     def validate(self, value):
         "Check if value consists only of valid emails."
 
@@ -32,7 +32,7 @@ class RegistrationForm (UserCreationForm) :
                              widget=forms.RadioSelect())
     USERNAME_LENGTH_LIMIT=14
     username=forms.RegexField(label=_("Username"), max_length=30,
-        regex=ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}$',
+        regex=ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,9}$',
         help_text=USERNAME_ERROR_MESSAGE,
         error_messages={
             'invalid':USERNAME_ERROR_MESSAGE},
@@ -68,13 +68,13 @@ class RegistrationForm (UserCreationForm) :
         except User.DoesNotExist:
             return email
         raise forms.ValidationError(self.error_messages['duplicate_email'])
-    def clean_username(self):
+#     def clean_username(self):
         # Since User.username is unique, this check is redundant,
         # but it sets a nicer error message than the ORM. See #13147.
-        username = self.cleaned_data["username"]
-        if len(username.encode('gbk'))>self.USERNAME_LENGTH_LIMIT:
-            raise forms.ValidationError(self.error_messages['too_long_username'])
-        return username
+#         username = self.cleaned_data["username"]
+#         if len(username.encode('gbk'))>self.USERNAME_LENGTH_LIMIT:
+#             raise forms.ValidationError(self.error_messages['too_long_username'])
+#         return username
 #         try:
 #             User._default_manager.get(username=username)
 #         except User.DoesNotExist:

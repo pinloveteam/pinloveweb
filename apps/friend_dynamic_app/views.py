@@ -31,6 +31,8 @@ def dynamic(request):
     if request.method=="POST":
         flag=True
         content=request.POST.get('content').strip()
+        p = re.compile('[.(\n|\r)]*')
+        content=p.sub('',content)
         if content.rstrip()=='':
             arg['error']={'error':u'发布内容不能为空！'}
             flag=False
