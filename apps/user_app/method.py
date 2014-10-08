@@ -159,6 +159,7 @@ def get_detail_info(myId,userId,socreForOther):
                         'income' : userProfile.get_income_display(),
                         'trade' : userProfile.get_jobIndustry_display(),
                         'constellation' : userProfile.get_sunSign_display(),
+                        'isVote':False,
                     }
     if socreForOther['result']=='success':
         if userProfile.avatar_name_status=='3':
