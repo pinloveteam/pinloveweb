@@ -58,13 +58,11 @@ $(document).ready(function(){
 	            	data=$.parseJSON(data)
 	            	$('.card_row').children().hide('slow');
 	            	if (data['has_next']){
-						 next_page_number=data['next_page_number'];
+						 next_page=data['next_page_number'];
 					 }else{
-						 next_page_number=-1;
+						 next_page=-1;
 						 $('.next').hide();
 					 }
-	            	previous_page_number=-1;
-	            	 $('.prev').hide();
 	            	 $('.card_row').children().remove()
 	            	 var cards=data['cards'];
 	            	 init_card(cards);
@@ -204,7 +202,7 @@ $(document).ready(function(){
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
 					{{searchForm.minIcome}}&nbsp;&nbsp;-&nbsp;
-					{{searchForm.maxIncome}}万/年
+					{{searchForm.maxIncome}}&nbsp;&nbsp;万/年
 				</div>
 			</div>
 		 {%endif%}
