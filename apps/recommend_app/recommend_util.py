@@ -36,7 +36,7 @@ def cal_income(user_income,gender):
     overIncomeCount=overIncomeCount-int((UserProfile.objects.filter(income=user_income).filter(gender=gender).exclude(income=-1).count()+0.00)/2)
     IncomeCount=UserProfile.objects.filter(gender=gender).exclude(income=-1).count()
     #print str(overIncomeCount)+" "+str(IncomeCount)
-    return (overIncomeCount/IncomeCount)*100
+    return (overIncomeCount/IncomeCount)*100 if IncomeCount>0 else 100
 '''
 根据学历，学校计算分数
 attribute：

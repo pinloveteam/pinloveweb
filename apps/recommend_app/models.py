@@ -193,6 +193,21 @@ class AppearanceVoteRecord(models.Model):
         verbose_name_plural = u'投票记录表'
         db_table=u'appearance_vote_record'
     
+'''
+不推荐用户
+'''
+class NotRecommendUser(models.Model):
+    my=models.ForeignKey(User,related_name='not_recommend_user_id',verbose_name=u'用户id')
+    other=models.ForeignKey(User,related_name='not_recommend_other_id',verbose_name=u'不推荐用户用户')
+    createTime=models.DateTimeField(verbose_name=u'创建时间',)
+    
+    def save(self,*args,**kwargs):
+        self.createTime=datetime.datetime.now()
+        super(NotRecommendUser,self).save(*args,**kwargs)
+    class Meta:
+        verbose_name=u'不推荐用户'
+        verbose_name_plural = u'不推荐用户'
+        db_table='not_recommend_user'
 # '''
 # 触发推荐事件
 # '''

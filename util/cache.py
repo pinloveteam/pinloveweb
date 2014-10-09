@@ -27,6 +27,9 @@ def init_info_in_login(userId):
     from apps.user_app.method import get_black_list
     BACKLIST=get_black_list(userId)
     info['BACKLIST']=BACKLIST
+    #初始化不推荐用户
+    from apps.recommend_app.method import get_no_recommend_list
+    info['NORECOMMENDLIST']=get_no_recommend_list(userId)
     set_profile_cache(userId,info)
 
 '''
@@ -217,6 +220,7 @@ def restore_backup_cache(backupType,time):
         data=getattr(backupCache,menthod)
         cache.set(menthod,simplejson.loads(data))
 
+###########黑名单################
 '''
 获得黑名单列表
 @return: list 黑名单列表
@@ -254,3 +258,38 @@ def del_attribute_black_list_by_cache(myId,userId):
     blackList.remove(userId)
     profile['BACKLIST']=blackList
     set_profile_cache(myId,profile)
+    ###########黑名单################
+    
+    
+    ############不推荐用户###############
+'''
+获得不推荐用户列表
+@return: list 不推荐用户列表
+'''
+def get_no_recomend_list_by_cache(myId):
+    profile=get_profile_cache(myId)
+    blackList=profile.get('NORECOMMENDLIST',[])
+    return  blackList
+'''
+将用户id加入不推荐用户列表
+'''
+def set_no_recomend_list_by_cache(myId,userId):
+    myId=int(myId)
+    userId=int(userId)
+    profile=get_profile_cache(myId)
+    blackList=profile.get('NORECOMMENDLIST',[])
+    blackList.append(userId)
+    profile['NORECOMMENDLIST']=blackList
+    set_profile_cache(myId,profile)
+    
+'''
+删除不推荐用户
+@return: list 不推荐用户列表
+'''
+def del_no_recomend_list_by_cache(myId,userId):
+    profile=get_profile_cache(myId)
+    blackList=profile.get('NORECOMMENDLIST',[])
+    blackList.remove(userId)
+    profile['NORECOMMENDLIST']=blackList
+    set_profile_cache(myId,profile)
+    ############不推荐用户###############

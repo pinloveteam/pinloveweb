@@ -166,7 +166,7 @@ $('input[name^="password"]').blur(function(){
   		error.html(error_message)
   	}
 });
-$('#login_form .form-control').keyup(function(event){
+$('#id_password1,#id_password').keyup(function(event){
 	if(event.keyCode ==13){
 	    $(this).closest('form').submit();
 	  }

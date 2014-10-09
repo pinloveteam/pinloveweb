@@ -80,9 +80,6 @@ def auth_view(request) :
         get_score_by_user_login(request.user.id)
         #邀请
         link=request.REQUEST.get('link',False)
-        #内存里初始化个人相关信息
-        from util.cache import init_info_in_login
-        init_info_in_login(user.id)
         if link:
             get_score_by_invite_friend_login(link,request.user.id)
         # Redirect to a success page 
@@ -111,14 +108,7 @@ def auth_view(request) :
         link = request.REQUEST.get('link','')
         next = request.REQUEST.get('next','')
         return render(request,'login.html',{'error':'True','error_message':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
-'''
-根据key 获取缓存数据
-'''
-def get_cache_by_key(key):
-    cache_key = key
-    from django.core.cache import cache
-    data = cache.get(cache_key)
-    return data
+
 
 def loggedin(request,**kwargs) :
     arg={} 
@@ -126,7 +116,8 @@ def loggedin(request,**kwargs) :
     flag=MatchResult.objects.is_exist_by_userid(request.user.id)
     userProfile=UserProfile.objects.get_user_info(request.user.id)
     #从缓存中获取不推荐用户id
-    disLikeUserIdList=get_cache_by_key(request.user.id)
+    from util.cache import get_no_recomend_list_by_cache
+    disLikeUserIdList=get_no_recomend_list_by_cache(request.user.id)
     #获取推荐列表
     matchResultList=get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs)
     from pinloveweb.method import get_no_read_web_count

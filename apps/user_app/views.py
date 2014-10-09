@@ -42,8 +42,10 @@ def dislike(request):
         page=int(request.GET.get('page'))
     except Exception:
             raise '转换失败'
-    from util.cache import set_cache
-    set_cache(request.user.id,userId)
+    from apps.recommend_app.method import update_no_recommend_update_black_list
+    from util.cache import set_no_recomend_list_by_cache
+    if update_no_recommend_update_black_list(request.user.id,userId)==1:
+        set_no_recomend_list_by_cache(request.user.id,int(userId))
     #如果没有下一页，则直接移除卡片
     if  page < 0:
         arg['result']='remove_card'

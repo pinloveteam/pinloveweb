@@ -4,7 +4,7 @@ Created on 2014年4月22日
 
 @author: jin
 '''
-from apps.recommend_app.models import MatchResult
+from apps.recommend_app.models import MatchResult, NotRecommendUser
 import logging
 
 '''
@@ -58,4 +58,25 @@ def get_matchresult(request,otherId):
             return matchResult
     except Exception as e:
         logging.error('获得匹配结果get_matchresult:出现错误!'+e)
-     
+'''
+更新不喜欢
+myId  用户id
+otherId 不喜欢用户id
+
+'''
+def update_no_recommend_update_black_list(myId,otherId):  
+    if not NotRecommendUser.objects.filter(my_id=myId,other_id=otherId).exists():
+        NotRecommendUser(my_id=myId,other_id=otherId).save()
+        return 1
+    else:
+        NotRecommendUser.objects.filter(my_id=myId,other_id=otherId).delete()
+        return -1 
+    
+'''
+根据用户名获取不推荐用户列表
+@param userId:用户id
+@return:  NotRecommendUser[NotRecommendUserList] 不推荐用户列表
+   
+'''
+def get_no_recommend_list(userId):
+    return [int(user.other_id) for user in NotRecommendUser.objects.filter(my_id=userId)]

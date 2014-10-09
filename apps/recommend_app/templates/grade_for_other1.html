@@ -1,4 +1,5 @@
 	<script type="text/javascript" src="{{STATIC_URL}}js/draggable/highcharts.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/draggable-points.js"></script>
    <style>
    #chartdiv{
     height:400px;
@@ -26,7 +27,7 @@
   {% endifequal %}
 
     $(document).ready(function () {
-    	var chart = new Highcharts.Chart({
+var chart = new Highcharts.Chart({
     		
     	    chart: {
     	        renderTo: 'container',

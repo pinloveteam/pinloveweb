@@ -41,7 +41,7 @@ urlpatterns = patterns('',
     url(r'^account/check_register/$', 'pinloveweb.views.check_register'),
    url(r'^newCount/$', 'pinloveweb.views.newcount'),
    url(r'^success/$', 'pinloveweb.views.success'),
-   
+   #url(r'^upload_progress/$', 'pinloveweb.views.upload_progress'),
     
     # User Profile 
     (r'^user/', include('apps.user_app.urls')), 
