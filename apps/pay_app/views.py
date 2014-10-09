@@ -79,9 +79,9 @@ def member(request):
         args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
         return render(request,'buy.html',args)
     except Exception as e:
-        errorMessage='会员购买页面出错'
-        logger.exception('%s%s%s' %(errorMessage,'出错原因:',e))
-        return render(request,'buy.html',{'errorMessage':errorMessage})
+        error_message=('%s%s%s' %('会员购买页面出错!','出错原因:',e.message))
+        logger.exception(error_message)
+        return render(request,'error.html',{'error_message':error_message})
 
 #===============================
 #下订单，并跳转到第三方制度
