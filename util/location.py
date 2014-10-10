@@ -18,11 +18,12 @@ def get_IP(request):
 获得位置
 '''
 def get_location(request):
-    import httplib
-    httpClient = httplib.HTTPConnection('192.151.154.154', 80, timeout=30)
-    httpClient.request('GET', '%s%s'%('/json/',get_IP(request)))
-    response = httpClient.getresponse()
+    import urllib2
+    url='%s%s'%('http://freegeoip.net/json/',get_IP(request))
+    req = urllib2.Request(url)
+    response = urllib2.urlopen(req)
     return simplejson.loads(response.read())
+
 
 '''
 获取城市代码

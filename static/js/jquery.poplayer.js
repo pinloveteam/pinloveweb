@@ -250,7 +250,7 @@
 	   
 		var ctx = $(this).find('canvas').get(0).getContext("2d");
 		var data = {
-			labels : ["教育程度", "性格", "收入情况", "样貌", "身高"],
+			labels : ["教育程度", "性格", "收入情况", "相貌", "身高"],
 			datasets : dataArry
 		};
 		var myNewChart = new Chart(ctx).Radar(data, {
