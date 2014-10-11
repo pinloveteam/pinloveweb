@@ -55,24 +55,6 @@
 		};
 	};
 	
-	function Score(s) {
-		num = s;
-		clearInterval(Time);
-		Time = setInterval(Start, 3);
-		progress.css({
-			width : num + "%"
-		});
-	}
-
-	function Start() {
-		if (i <= num) {
-			score.html(i);
-			i++;
-		} else {
-			clearInterval(Time);
-			i = 0;
-		}
-	} 
 	function computerMove(){
 	                var $div = $("div.computerMove");
 	                if($div.length==0){
@@ -184,7 +166,7 @@
 		i3.find('#income').html(user.income);
 		i3.find('#constellation').html(user.constellation);
 
-		var i4 = $('<div class="row"><hr /><p class="title">为TA打分</p><div class="col-xs-6" style="padding: 0;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"><div class="computerMove"></div></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span>分<input id="vote_value" type="hidden" value=""></div><div class="col-xs-3"><button id="appearancevote" class="btn btn-xs btn-primary">确认</button></div></div>');
+		var i4 = $('<div class="row"><hr /><p class="title">为TA相貌打分</p><div class="col-xs-6" style="padding: 0;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"><div class="computerMove"></div></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span>分<input id="vote_value" type="hidden" value=""></div><div class="col-xs-3"><button id="appearancevote" class="btn btn-xs btn-primary">确认</button></div></div>');
 		//判断能不能投票
 		is_vote(i4,user.isVote,user.voteScore);
 		infoframe.append(i1).append(i2).append(i3).append(i4);
@@ -271,3 +253,21 @@
 	}
 })(jQuery, window, document, undefined);
 
+function Score(s) {
+	num = s;
+	clearInterval(Time);
+	Time = setInterval(Start, 3);
+	progress.css({
+		width : num + "%"
+	});
+}
+
+function Start() {
+	if (i <= num) {
+		score.html(i);
+		i++;
+	} else {
+		clearInterval(Time);
+		i = 0;
+	}
+} 

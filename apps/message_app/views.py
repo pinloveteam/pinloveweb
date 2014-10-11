@@ -311,21 +311,6 @@ def message_send(request):
     json = simplejson.dumps(args)
     return HttpResponse(json)
 
-'''
-获得最近三条消息
-'''
-def get_noread_messges_by_userid(request):
-    userId=request.GET.get('userId')
-    user=request.user
-    messageList=MessageLog.objects.get_nr_message_list_121(user.id,userId)
-    if len(messageList)==0:
-        #获取未读的message和最近发出的三条message
-        messageList=MessageLog.objects.get_message_list_121(user.id,userId,first=0,end=3)
-    from util.util import regex_expression
-    result=[{'sender_id':message['sender_id'],'receiver_id':message['receiver_id'],'content':regex_expression(message['content'])} for message in messageList ]
-    result=result[::-1]
-    json = simplejson.dumps(result)
-    return HttpResponse(json, mimetype="application/json")
 
 
 '''
@@ -339,11 +324,12 @@ def get_no_read_messge_by_ids(request):
     args={}
     try:
         userIdString=request.REQUEST.get('userIds')
-        num=int(request.REQUEST.get('num',False))
+        num=int(request.REQUEST.get('num',-1))
         userIdList=[int(x) for x in userIdString.split(',')]
-        if num:
-            messageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id, 0, num)
-            messageList=[messageLog for messageLog in messageLogList if  messageLog['sender_id'] in userIdList]
+        if num!=-1:
+            messageList=MessageLog.objects.get_no_read_messagelog(request.user.id, 0, num,userList=userIdList)
+        elif len(userIdList)>0:
+            messageList=MessageLog.objects.get_no_read_messagelog(request.user.id,userList=userIdList)
         else:
             messageList=MessageLog.objects.get_no_read_messagelog(request.user.id)
         MessageLog.objects.filter(message_id__in=[messageTmp['id'] for messageTmp in messageList]).update(isRead=True)
@@ -367,92 +353,13 @@ def message_test(request):
 ##############################
 
 
-'''
-过去消息列表
-attribute： 
-     type  列表类型(systemNoRead,system,messageNoRead,message)
-'''
-def list(request):
-    arg={}
-    if request.user.is_authenticated():
-        type=request.GET.get('type').strip()
-        if type==u"systemNoRead":
-            #获取未读系统消息
-            arg['type']='systemNoRead'
-            messageList=Notify.objects.filter(type='0',receiver=request.user,isRead=False).order_by('sendTime')
-        elif type==u'system':
-            #获取系统消息的总数
-            arg['type']='system'
-            messageList=Notify.objects.filter(type='0',receiver=request.user).order_by('sendTime')
-        elif type==u'messageNoRead':
-            #获取未读私信消息
-            arg['type']=u'messageNoRead'
-            messageList=Message.objects.filter(receiver=request.user,isRead=False,isDeletereceiver=False).order_by('sendTime')
-            len(messageList)
-            Message.objects.filter(receiver=request.user.id,isRead=False,isDeletereceiver=False).update(isRead=True)  
-        elif type==u'message':
-            #获取全部私信消息
-            arg['type']='message'
-            
-            messageList=Message.objects.raw('SELECT DISTINCT sender_id,id,receiver_id,content,sendTime,count(id) as count from message where isDeleteSender=0  ORDER BY sendTime')
-        else:    
-            raise ValidationError(u"没有获得type")
-        arg=dict(page(request,messageList),**arg)
-        if type=='message' or type=='messageNoRead':
-            return render(request,'message_list.html',arg)
-        else:
-            return render(request,'notify_list.html',arg)
-    else:
-        return render(request, 'login.html', arg,) 
 
-    
-'''
-  删除系统消息
-  attribute：notify_id （int）系统消息id
-  return： result（boolean） 删除结果  True:删除成功；False：删除失败
-'''
-def delete_notify(request):
-    try:
-        notifyId=request.GET.get('notify_id')
-    except:
-        result = False 
-        json = simplejson.dumps(result)
-        return HttpResponse(json)
-#     Notify.objects.filter(id=notifyId).delete()
-    result = True
-    json = simplejson.dumps(result)
-    return HttpResponse(json)
     
 
     
     
 
-    
 
-'''
-获得未读的消息个数
-attribute：
-
-return：
-     systemNoReadCount  (int)：系统未读消息
-     messageNoReadCount (int):私信未读消息
-'''    
-def has_new_message(request):
-    arg={}
-    if request.user.is_authenticated():
-         #获取未读系统消息的数量
-        systemNoReadCount=Notify.objects.filter(type='0',receiver=request.user,isRead=False).count()
-        #获取未读私信消息的数量
-        messageNoReadCount=Message.objects.filter(receiver=request.user,isRead=False,isDeletereceiver=False).count()
-        arg['systemNoReadCount']=systemNoReadCount
-        arg['messageNoReadCount']=messageNoReadCount
-        arg['isLogin']=True
-        json = simplejson.dumps(arg)
-        return HttpResponse(json)
-    else:
-        arg['isLogin']=False  
-        json = simplejson.dumps(arg)
-        return HttpResponse(json)
     
 
 

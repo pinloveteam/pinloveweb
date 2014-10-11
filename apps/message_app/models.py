@@ -157,28 +157,6 @@ ORDER BY sendTime DESC
             sql=sql+'limit %s , %s'%(first,end)
         return  connection_to_db(sql,param=[userId,otherId,userId,otherId],type=True)
     
-    '''
-获得两个用户的未读私信
-    '''
-    def get_nr_message_list_121(self,receiverId,senderId,first=None,end=None): 
-        sql='''
-   
-SELECT u1.*,u2.*,u3.username as receiverName,u4.username as senderName from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id
-INNER JOIN auth_user u3 on u1.receiver_id=u3.id INNER JOIN auth_user u4 on u2.sender_id=u4.id
-where  isDeletereceiver = False  AND receiver_id in (%s,%s) and sender_id in (%s,%s)
-and u2.sendTime >=(
-SELECT sendTime 
-from message_log m1  LEFT JOIN message m2 on m1.message_id=m2.id
-where isDeletereceiver = False  and isRead=False and m1.receiver_id=%s and m2.sender_id=%s
-ORDER BY sendTime
-limit 0,1
-)
-ORDER BY sendTime DESC
- '''
-        if first is not None:
-            sql=sql+'limit %s , %s'%(first,end)
-        return  connection_to_db(sql,param=[receiverId,senderId,receiverId,senderId,receiverId,senderId,],type=True)
-   
        
     '''
     获取用户未读消息数量
@@ -198,8 +176,12 @@ where  isDeletereceiver = False  and isRead=0 AND receiver_id = %s and type=1
     
     '''
     获取所有未读消息
+    @param userList:选择用户列表 
     '''
-    def get_no_read_messagelog(self,userId,first=None,end=None):
+    def get_no_read_messagelog(self,userId,first=None,end=None,userList=None):
+        userListSql=''
+        if userList is not None:
+            userListSql=('WHERE sender_id in ('+('%s,'*len(userList))[:-1]+')')%tuple(userList)
         sql='''
      select * from(
 SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead,
@@ -212,7 +194,7 @@ SELECT u3.id,u3.sender_id,u1.username as sender_name,u4.avatar_name,u4.avatar_na
 null as friendDynamic_id,null as friendDynamic_content ,null as data
 from message u3 LEFT JOIN auth_user u1 on u1.id=u3.sender_id LEFT JOIN user_profile u4 on u4.user_id=u3.sender_id
 where u3.type=0 and u3.id not in (SELECT u4.message_id from message_log u4 where u4.receiver_id=%s) and now()<=u3.expireTime
-)s 
+)s '''+userListSql+'''
 ORDER BY sendTime desc
         '''
         if first is not None :

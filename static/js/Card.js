@@ -40,34 +40,42 @@ var sendMsg = function(){
 }
 
 //初始化对话框
-var init_msg = function(){
-    panel = $(this).parents('.card-nav').prev().find('.chat');
-	 panel.jScrollPane();
-	  var userId=$(this).parents('.card_panel').attr('id');
-	   $.getJSON("/message/get_noread_messges/",{userId:userId,ajax:true},function(data) {
-		   if (data['login']=='invalid'){
-			   alert("请先登录");
-			   window.location =data['redirectURL'];
-		   }
-		   panel.children().children().children().remove();
-		   for(var message in data){
-			   if (userId!=data[message].receiver_id){
-				   var api = panel.data('jsp');
-					var chat = panel.find('.jspPane');
-					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
-					panel.jScrollPane();
-					api.scrollTo(0,9999);
-			   }else{
-				   var api = panel.data('jsp');
-				    var chat = panel.find('.jspPane');
-					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
-					panel.jScrollPane();
-					api.scrollTo(0,9999);
-			   }
-	    	  
-	      }
-	   });	
-};
+//var init_msg = function(){
+//    panel = $(this).parents('.card-nav').prev().find('.chat');
+//	 panel.jScrollPane();
+//	  var userId=$(this).parents('.card_panel').attr('id');
+//	   $.getJSON("/message/get_no_read_messge_by_ids/",{userIds:userId},function(data) {
+//		   messageBean=data['messageList'][message]
+//   	       var api = pane.data('jsp');
+//		   panel.children().children().children().remove();
+//			var chat = $('#'+messageBean.senderId).find('.jspPane')
+//			chat.append('<div class="chat_content_group other"><div class="chat_content">'+messageBean.content+'<div class="cloudArrow "></div></div></div>');
+//			pane.jScrollPane();
+//			api.scrollTo(0,9999);
+//			
+//		   if (data['login']=='invalid'){
+//			   alert("请先登录");
+//			   window.location =data['redirectURL'];
+//		   }
+//		   panel.children().children().children().remove();
+//		   for(var message in data){
+//			   if (userId!=data[message].receiver_id){
+//				   var api = panel.data('jsp');
+//					var chat = panel.find('.jspPane');
+//					chat.append('<div class="chat_content_group other"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+//					panel.jScrollPane();
+//					api.scrollTo(0,9999);
+//			   }else{
+//				   var api = panel.data('jsp');
+//				    var chat = panel.find('.jspPane');
+//					chat.append('<div class="chat_content_group self"><div class="chat_content">'+data[message].content+'<div class="cloudArrow "></div></div></div>');
+//					panel.jScrollPane();
+//					api.scrollTo(0,9999);
+//			   }
+//	    	  
+//	      }
+//	   });	
+//};
 
 window.Card = function(person){
 	var test_match= function(){
@@ -126,7 +134,7 @@ window.Card = function(person){
 						var chat_tab=$('#card').find('#chat_tab')
 						card.find('#chat_tab').html(chat_tab.children());
 						card.find('.btn_send_msg').on('click',sendMsg);
-						card.find(".icon_msg").on('click',init_msg);
+//						card.find(".glyphicon-comment").on('click',init_msg);
 					}
 				  
 				  }else{
@@ -629,7 +637,7 @@ window.Card = function(person){
 	}
 	
 		
-	this.template.find('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.icon_msg,.test_match,.introBox').unbind();
+	this.template.find('.icon_dislike,.icon_ding,.btn_send_msg,[class^="icon_like"],.glyphicon-comment,.test_match,.introBox').unbind();
 	this.template.find('.username').on('click',function(event){
 		event.stopPropagation();
 		});
@@ -645,7 +653,7 @@ window.Card = function(person){
 	//发送私信
 	if(person.isChat){
 		this.template.find('.btn_send_msg').on('click',sendMsg);
-		this.template.find(".icon_msg").on('click',init_msg);
+//		this.template.find(".glyphicon-comment").on('click',init_msg);
 	}else{
 		this.template.find('#chat_tab').html('<img id="notChat" src="/static/img/no_chat.gif"/>')
 	}
@@ -689,7 +697,7 @@ function buy_score_for_other(context,userId){
 							var chat_tab=$('#card').find('#chat_tab')
 							card.find('#chat_tab').html(chat_tab.children());
 							card.find('.btn_send_msg').on('click',sendMsg);
-							card.find(".icon_msg").on('click',init_msg);
+//							card.find(".glyphicon-comment").on('click',init_msg);
 						}
 					}
 				}else if(data['result']=='error'){
