@@ -1,5 +1,5 @@
 ﻿{% extends "base_later.html" %} {% load util_filter %}
-<title>{% block title %} 拼爱网--缘分拼图 {% endblock %}</title>
+<title>{% block title %} 拼爱网 - 缘分拼图 {% endblock %}</title>
 {% block staticfiles %}
 <link href="{{STATIC_URL}}css/venobox.css" rel="stylesheet">
 <link href="{{STATIC_URL}}css/card.css" rel="stylesheet">
@@ -9,6 +9,8 @@
 <script type="text/javascript" src="{{STATIC_URL}}js/venobox.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/Card.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.follow.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.jscrollpane.min.js"></script>
+<link href="{{STATIC_URL}}css/jquery.jscrollpane.css" rel="stylesheet">
 <style type="text/css">
 .kineticjs-content {
 				position: absolute;
@@ -206,9 +208,9 @@ var fans={% if fans %}{{fans}}{%else%}0{% endif %}
 
 				<div class="count">
 					<img
-						style="height: 30px; width: 30px; position: absolute; left: 10%;"
+						style="height: 30px; width: 30px; position: absolute; left: 10%;top: 15px;"
 						src="{{STATIC_URL}}img/拼图-18.png"><span class="num"
-						style="top: 20px; position: absolute; left: 15%;">×{{pinLoveIcon}}</span>
+						style="top: 15px; position: absolute; left: 17%;">×{{pinLoveIcon}}</span>
 				</div>
 
 				<div id="search_condition">
@@ -470,6 +472,8 @@ function loadStage() {
         			 cards=$.parseJSON(cards)
         		 }
             new Card(new Person(cards.username,cards.age,cards.city,'/media/'+cards.avatar_name,cards.user_id,cards.followStatus,cards.pictureList,cards.isChat));
+            pane = $('.chat');
+            pane.jScrollPane();
             $('.icon_dislike').unbind();
             $('.icon_dislike').click(function(){
             	$(this).closest('.card').remove();
@@ -791,6 +795,7 @@ function loadStage() {
 	
 	function set_game_count(count){
 		$('.count').find('.num').html('x'+count)
+		$('.js-count').html(count)
 		$('#user_count').html(count)
 	}
 	

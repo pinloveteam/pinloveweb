@@ -337,6 +337,7 @@ class YuanfenjigsawWeb:
         return matching_uid
     
     def get_matching_user(self):
+        return UserProfile.objects.select_related('user').get(user_id=4)
         if  self.gender == 'M':
             matching_uid=self.match_uid('WEB_BOYS','WEB_GIRLS')
         else : 

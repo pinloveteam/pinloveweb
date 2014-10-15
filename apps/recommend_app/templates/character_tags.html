@@ -75,7 +75,11 @@ $(document).ready(function() {
                     	data=$.parseJSON(data)
                     	if(data.result=='success'){
                     		var body = $("<p>保存成功!</p>")
-                			$.poplayer({body:body});
+                    		var button=function(){
+                    			$('.buy-nav').find('li').eq(3).click();
+                    		};
+							$.poplayer({body:body,btnFunc:button});
+							$('.poplayer button').html('继续');
                     	}else{
                     		var body = $("<p>"+data.error_messge+"</p>")
                 			$.poplayer({body:body});

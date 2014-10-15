@@ -135,7 +135,7 @@
 		infoframe.click(function(){
 			return false;
 		});
-		var i1 = $('<div class="row"><div class="col-xs-4" style="padding-left: 0;"><img id="head" width="75px" src=""/></div><div class="col-xs-8" style="padding-right: 0;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; padding-left:6px; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div></div>');
+		var i1 = $('<div class="row"><div class="col-xs-4" style="padding-left: 0;"><img id="head" width="75px" src=""/></div><div class="col-xs-8" style="padding-right: 0;height: 80px;"><input type="hidden" id="userId" value=""><div class="name"><span id="name"></span><div class="info"><span id="age"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="city"></span></div></div><div class="score-other"><div style="position: relative; top: 10px;"><p>TA对你的打分</p></div><div class="col-xs-8" style="padding: 0; display: none;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div></div><div class="col-xs-4" style="padding-right: 0; padding-left:6px; display: none;"><span class="score">0</span>分</div><button class="btn btn-xs btn-info btn-show-score">查看TA对你的打分</button></div></div></div></div>');
 		i1.find('#head').attr('src', user.head);
 		i1.find('#name').html(user.name);
 		i1.find('#age').html(user.age);
@@ -181,7 +181,7 @@
 		radarframe.click(function(){
 			return false;
 		});
-		var r1 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px;padding-left: 0;"><span id="score" class="score-big" style="color: red;"></span><span class="text">分</span></div></div><div class="row"><div class="col-xs-12"><button id="compare_button" class="btn btn-xs btn-danger compare-btn">与其他用户对比</button></div></div>');
+		var r1 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px; padding-left: 0px; height: 60px;top: -20px;"><div><span style="color: white;">TA的得分</span></div><div><span id="score" class="score-big" style="color: red;">0</span><span class="text">分</span></div></div></div><div class="row"><div class="col-xs-12"><button id="compare_button" class="btn btn-xs btn-danger compare-btn">与其他用户对比</button></div></div>');
 		r1.find('#head').attr('src', options.user1.head);
 		r1.find('#score').html(options.user1.score);
 		if(options.user1.data[0]==undefined){

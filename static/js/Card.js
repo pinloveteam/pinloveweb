@@ -660,6 +660,7 @@ window.Card = function(person){
 	if($('.card_row').length==0){
 		this.template.children().hide();
 		$('#search_condition').after(this.template.children());
+		return;
 	}
 	$('.card_row').append(this.template.children());
 	

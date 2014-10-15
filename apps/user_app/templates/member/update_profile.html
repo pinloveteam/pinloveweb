@@ -53,7 +53,11 @@
                             		$('[id$="error"]').html("")
                             		 update_certification(education,educationSchool,educationSchool_2,income)
                             		var body = $("<p>修改成功!</p>")
-        							$.poplayer({body:body});
+                            		var button=function(){
+                            			$('.buy-nav').find('li').eq(2).click();
+                            		};
+        							$.poplayer({body:body,btnFunc:button});
+        							$('.poplayer button').html('继续');
                             	}else{
                             		errors=data.errors
                             		for(i=0;i<errors.length;i++){

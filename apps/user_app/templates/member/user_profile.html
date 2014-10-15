@@ -1,5 +1,5 @@
 {% extends "base_later.html" %} 
-{% block title %} 拼爱网——个人主页 {% endblock%}
+{% block title %} 拼爱网 - 个人主页 {% endblock%}
 {% block staticfiles %}
 <link href="{{STATIC_URL}}css/docs.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css" type="text/css" />
@@ -164,7 +164,7 @@ $(document).ready(function() {
 		$('.vip-panel').hide();
 		$(href).show();
 		window.location.hash=href+'_'
-		init_weight_guide(href)
+		//init_weight_guide(href)
 	});
 	
 	$('.cerbtn').click(function(){

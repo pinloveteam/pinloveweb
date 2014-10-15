@@ -3,6 +3,7 @@ from django.shortcuts import render
 from apps.user_app.models import UserProfile, Follow
 import httplib
 from xml.dom import minidom
+from django.utils import simplejson
 def GetIp(request):
     if 'HTTP_X_FORWARDED_FOR' in request.META:
         return request.META['HTTP_X_FORWARDED_FOR']
@@ -13,17 +14,12 @@ def GetLocation(request):
     httpClient = None
     
     try:
-        httpClient = httplib.HTTPConnection('192.151.154.154', 80, timeout=30)
-        httpClient.request('GET', '/xml/'+GetIp(request))
-    
-        response = httpClient.getresponse()
-        dom = minidom.parseString(response.read())      
-        root = dom.firstChild      
-        childs = root.childNodes    
-        for child in childs:  
-            if child.nodeName == 'City':
-                return child.childNodes[0].data
-    
+        import urllib2
+        url='%s%s'%('http://freegeoip.net/json/',GetIp(request))
+        req = urllib2.Request(url)
+        response = urllib2.urlopen(req)
+        locationInfo= simplejson.loads(response.read())
+        return locationInfo.get('city','')
     except Exception, e:
         print e
     finally:
@@ -33,7 +29,7 @@ def GetLocation(request):
 def the_people_nearby(request):
     arg = {}
     userProfile=UserProfile.objects.get_user_info(request.user.id)
-    userProfileList =  UserProfile.objects.filter(lastLoginAddress=GetLocation(request)).exclude(user=request.user).exclude(gender=userProfile.gender)
+    userProfileList =  UserProfile.objects.filter(lastLoginAddress=GetLocation(request)).exclude(user=request.user).filter(avatar_name_status='3').exclude(gender=userProfile.gender)
     #分页
     from util.page import page
     arg=page(request,userProfileList)

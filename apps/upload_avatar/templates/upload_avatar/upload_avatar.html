@@ -206,7 +206,11 @@
         
         function crop_avatar_success(msg,avatar_name) {
         	var body = $('<p>'+msg+'</p>');
-        	$.poplayer({body:body});
+        	var button=function(){
+        		$('.buy-nav').find('li').eq(1).click();
+    		};
+			$.poplayer({body:body,btnFunc:button});
+			$('.poplayer button').html('继续');
         	$('#avatar').attr('src',avatar_name+'-100.jpeg')
         };
     </script>
@@ -231,7 +235,7 @@
                 <button class="btn btn-danger">{{ CHOOSE_IMAGE }}</button>
                 <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
                 <span class="text-muted">
-                 <small>支持jpg、gif、png格式，单张照片在20k-8M之间；</small>
+                 <small>支持jpg, gif, png格式，照片文件大小需在20K – 8M 之间。</small>
                  </span>
             </div>
         </form>

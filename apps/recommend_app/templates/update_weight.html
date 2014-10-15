@@ -57,8 +57,14 @@ $(document).ready(function(){
               success: function(data,textStatus){
            	   data=$.parseJSON(data)
            	   if(data.result== 'success'){
-           		   var body = $("<p>修改成功!</p>")
-						   $.poplayer({body:body});
+           		   var body = $("<p>修改成功!</p>");
+           		var button=function(){
+           			$('.buy-nav').find('li').eq(4).click();
+        		};
+				$.poplayer({body:body,btnFunc:button});
+				$('.poplayer button').html('继续');
+
+
                   }else if(data.result == 'error'){
                	   var body = $("<p>"+data.msg+"</p>")
 					$.poplayer({body:body});
@@ -70,7 +76,10 @@ $(document).ready(function(){
 		});
 });	
 </script>
-<p>总分=身高权重*身高得分+外貌权重*外貌得分+学历权重*学历得分+外貌权重*收入得分+性格权重*性格得分</p>
+<p>
+您最看中TA的哪些方面？是身高还是学历？请标出 TA的各个方面在您心中的重要程度，以帮助系统更好的向您推荐。TA的总分由您定义的权重和TA在各个方面得分累积计算得出：
+</p>
+<p>总分=身高权重×身高得分+外貌权重×外貌得分+学历权重×学历得分+外貌权重×收入得分+性格权重×性格得分</p>
 <form id="update_weight" action="" method="post">
      <div class="row" style="margin-top: 30px;">
 			<div class="col-xs-1">身高</div>

@@ -12,6 +12,8 @@ $(document).ready(function() {
 	$('.user_info').find('tbody a').click(function(){
 		try
 		{ 
+		hash=this.href.substring(this.href.search('#'),this.href.length)
+		window.location.hash=hash
 		init_tab();
 		}
 		catch (e)

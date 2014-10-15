@@ -200,7 +200,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
 ####user_appearance###
     self_evaluation=models.FloatField(verbose_name=r"自我评价",choices=((0.0,r'未填'),(0.35,r'普通'),(0.70,r'不错'),(1.00,r'很好')),null=True,blank=True,default=0.0)
     CHOICE_WEIGHT=((-1,r'未填'),)
-    for i in range(20,300,1):
+    for i in range(40,300,1):
         CHOICE_WEIGHT+=((i,str(i)),)
     weight=models.SmallIntegerField(verbose_name=r"体重(kg)",choices=CHOICE_WEIGHT,null=True,blank=True,default=-1)
     
