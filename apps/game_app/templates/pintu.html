@@ -471,7 +471,7 @@ function loadStage() {
         		 if (typeof(cards)!='object'){
         			 cards=$.parseJSON(cards)
         		 }
-            new Card(new Person(cards.username,cards.age,cards.city,'/media/'+cards.avatar_name,cards.user_id,cards.followStatus,cards.pictureList,cards.isChat));
+            new Card(new Person(cards.username,cards.age,cards.city,'/media/'+cards.avatar_name,cards.user_id,cards.followStatus,cards.pictureList,cards.isChat,cards.avatar_name_status));
             pane = $('.chat');
             pane.jScrollPane();
             $('.icon_dislike').unbind();

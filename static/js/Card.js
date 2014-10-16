@@ -605,6 +605,11 @@ window.Card = function(person){
 	this.template.find('.card').attr('id',person.username);
 	this.template.find('.other_name').attr('title',person.username);
 	this.template.find('#dynamic').attr('href','/dynamic/person/?userId='+person.userId);
+	if(person.avatar_name_status=='2'){
+		this.template.find('.card-introBox').append('<div class="avatar_status"><span>头像正在审核中</span></div>');
+	}else if(person.avatar_name_status=='4'){
+		this.template.find('.card-introBox').append('<div class="avatar_status"><span>头像审核未通过</span></div>');
+	};
 	//初始化详细信息href
 //	this.template.find('.introBox').attr('href','/user/detailed_info/'+person.userId.toString());
     //添加用户id
@@ -670,7 +675,7 @@ window.Card = function(person){
 	
 }
 
-function Person(username,age,city,headImg,userId,isFriend,pictureList,isChat){
+function Person(username,age,city,headImg,userId,isFriend,pictureList,isChat,avatar_name_status){
 	this.username = username;
 	this.age = age;
 	this.city = city;
@@ -678,7 +683,8 @@ function Person(username,age,city,headImg,userId,isFriend,pictureList,isChat){
 	this.userId=userId;
 	this.isFriend=isFriend;
 	this.pictureList=pictureList;
-	this.isChat=isChat
+	this.isChat=isChat;
+	this.avatar_name_status=avatar_name_status;
 	
 }
 function buy_score_for_other(context,userId){

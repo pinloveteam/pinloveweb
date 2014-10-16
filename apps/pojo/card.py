@@ -18,7 +18,7 @@ from apps.user_app.method import is_chat
 
 empty_result_list=[-1,'N',None]
 class Card(object):
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,):
+    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,avatar_name_status='3'):
         self.user_id=userId
         self.username=username
         self.height=height
@@ -45,6 +45,7 @@ class Card(object):
         '''
         self.followStatus=followStatus
         self.avatar_name=avatar_name
+        self.avatar_name_status=avatar_name_status
         self.isVote=isVote
         self.city=city
         self.isChat=False
@@ -61,7 +62,7 @@ class Card(object):
             self.pictureList.append({'description':picture.description,'pic':pic,'smailPic':smailPic,'createTime':picture.createTime.strftime("%Y-%m-%d-%H")}) 
             
     def limit_fileds(self):
-        if  isinstance(self.city,basestring) and len(self.city.encode('gbk'))>22:
+        if  isinstance(self.city,basestring) and len(self.city.encode('gbk'))>20:
             if self.city.find(u' ')!=-1:
                 self.city=self.city[:self.city.find(u' ')]
     def _dict_(self):
@@ -185,11 +186,14 @@ def fllowList_to_CardList(myId,fllowList,type):
         if userProfile.avatar_name_status=='3':
            avatar_name=userProfile.avatar_name
            isVote=True
-        else:
+        elif userProfile.avatar_name_status=='1':
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
+        else:
+            avatar_name=userProfile.avatar_name
+            isVote=False
         city=userProfile.city
-        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
+        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,userProfile.avatar_name_status)
         recommendResult.limit_fileds()
         recommendResultList.append(recommendResult)
     #关注情况

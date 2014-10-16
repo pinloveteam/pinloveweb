@@ -480,3 +480,11 @@ hr {
 	cursor: pointer;
 	background-color: #fff;
 }
+.avatar_status {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.3);
+    color: #fff;
+    display: block;
+    height: 25px;
+    padding: 0 17px;
+	text-align: center;
+}
