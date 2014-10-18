@@ -139,11 +139,18 @@ var chart = new Highcharts.Chart({
                             });
                             return false;
                         });
-        
+        $('[data-toggle="popover"]').popover({
+        	html: true,
+		    trigger: 'hover',
+		    'placement': 'bottom',
+		    content:    '<div><p>您可以拖动曲线图里的点获得想要的曲线，如图：</p><img style="width:500px" src="/static/img/Ta_height_example.png" /></div>',
+		    template: '<div class="popover" style="max-width: 550px;"><div class="arrow"></div><div class="popover-inner"><div class="popover-content" ><p></p></div></div></div>'
+		});
     
     });
     
 </script>
+<span>给出您眼中最中意TA的身高得分，拖出TA的身高曲线图，我们为你匹配最合适的Ta&nbsp;&nbsp;</span><span class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left" ></span><br>
 <form id="grade_for_other" action="" method="POST">{% csrf_token %}
  <input type="hidden" id="result" name="result" value="">
 <div id="container" style="height: 400px;width: 778px;"></div>

@@ -177,6 +177,8 @@
                         }
                         $('.col-xs-9').append(message_clone);
                         var message_reply=$('#message_clone').find('#message-reply').clone();
+                        message_reply.find('.publishInputExpression,textarea').attr('target','message_'+message.id);
+                        message_reply.find('.publishInputExpression').click(publishInputExpression);
                         $('.col-xs-9').append(message_reply);
                         message_reply.find('form').submit(function(){
                        	 var context=$(this);
@@ -425,6 +427,50 @@
 			}); 
 		
 </script>
+<script>
+function publishInputExpression(event){
+	var e=window.event || event;
+	if(e.stopPropagation){
+		e.stopPropagation();
+	}else{
+		e.cancelBubble = true;
+	}
+	var obj = $(this);
+	var offset = obj.offset();
+	var left = offset.left + 10;
+	var top = offset.top + 30;
+	var target = obj.attr('target');
+	if (($('.emoji-list').html()) == '') {
+		for ( i = 0; i <= 95; i++) {
+			$('.emoji-list').append('<li onclick="sendExpression(this);" action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/' + i + '.gif"/></li>');
+		}
+	}
+	$('#emoji-layer').css({
+		left : left,
+		top : top
+	});
+	$('#emoji-layer').attr('target', target);
+	$('#emoji-layer').toggle();
+}
+
+$("#emoji-layer").click(function(event){
+	var e=window.event || event;
+	if(e.stopPropagation){
+		e.stopPropagation();
+	}else{
+		e.cancelBubble = true;
+	}
+});
+
+document.onclick = function(){
+	$("#emoji-layer").hide();
+};
+function sendExpression(e) {
+	var target = $('#emoji-layer').attr('target');
+	var targettext = $('textarea[target="'+target+'"]');
+	targettext.insertAtCaret($(e).attr('action-text'));
+};
+		</script> 
 {% endblock %}
 {% block css %}
 		<style>
@@ -733,4 +779,9 @@
 
 						</div>
                         </div>
+                        
+                        <div id="emoji-layer" style="display: none;">
+	<div class="controlArrow" style="border-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 1) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0); left: 20px;"></div>
+	  <ul class="emoji-list"></ul>
+</div>
 {% endblock %}

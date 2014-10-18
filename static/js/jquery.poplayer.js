@@ -175,13 +175,18 @@
 	}
 
 	function loadRadarFrame(options) {
+		var INFO={
+				'score_full':'该用户信息没有填写完整',
+				'score_tooltip':'如果雷达图中的某项分数为0，则该用户可能没有完整填写该项信息。',
+		};score_warn='该用户信息没有填写完整';
+		var score_warn_content=''
 		var dataArry = new Array();
 		var radarframe = $('<div class="col-xs-3" style="background-color: #100B31; padding: 25px;"></div>');
 		radarframe.addClass('radius');
 		radarframe.click(function(){
 			return false;
 		});
-		var r1 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px; padding-left: 0px; height: 60px;top: -20px;"><div><span style="color: white;">TA的得分</span></div><div><span id="score" class="score-big" style="color: red;">0</span><span class="text">分</span></div></div></div><div class="row"><div class="col-xs-12"><button id="compare_button" class="btn btn-xs btn-danger compare-btn">与其他用户对比</button></div></div>');
+		var r1 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px; padding-left: 0px; height: 60px;top: -20px;"><div><span style="color: white;">TA的得分</span></div><div><span id="score" class="score-big" style="color: red;">0</span><span class="text">分</span></div></div></div><div class="row"><div class="col-xs-12"><button id="compare_button" class="btn btn-xs btn-danger compare-btn">与其他用户对比</button></div><div class="col-xs-12 info_warn" ></div></div>');
 		r1.find('#head').attr('src', options.user1.head);
 		r1.find('#score').html(options.user1.score);
 		if(options.user1.data[0]==undefined){
@@ -195,7 +200,20 @@
 				var url = $(this).attr('href');
 				window.open(url);
 			});
+		}else{
+			for(var key in options.user1.data){
+				if(options.user1.data[key]==0){
+					r1.find('.info_warn').append('<span style="text-align: center;color: red;">'+INFO['score_full']+'</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#e7e7e7;" data-toggle="popover" data-placement="left" data-content="'+INFO['score_tooltip']+'" ></span>');
+					r1.find('[data-toggle="popover"]').popover({
+					    trigger: 'hover',
+					    'placement': 'top',
+					    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+					});
+					break;
+				}
+			};
 		}
+		
 		radarframe.append(r1);
 
 //		var r3 = $('<div class="row"><div class="col-xs-12"><button class="btn btn-xs btn-danger">与其他用户对比</button></div></div>')
@@ -205,9 +223,20 @@
 		if (options.compar == true) {
 			radarframe.removeClass('radius');
 			r1.find('.compare-btn').html('取消对比');
-			var r3 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px;padding-left: 0;"><span id="score" class="score-big" style="color: green;"></span><span class="text">分</span></div></div>');
+			var r3 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px; padding-left: 0px; height: 60px;top: -20px;"><div><span style="color: white;">TA的得分</span></div><span id="score" class="score-big" style="color: green;"></span><span class="text">分</span></div><div class="col-xs-12 info_warn"><p style="text-align: center;color: red;"></p></div></div>');
 			r3.find('#head').attr('src', options.user2.head);
 			r3.find('#score').html(options.user2.score);
+			for(var key in options.user2.data){
+				if(options.user1.data[key]==0){
+					r3.find('.info_warn').append('<span style="text-align: center;color: red;">'+INFO['score_full']+'</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#e7e7e7;" data-toggle="popover" data-placement="left" data-content="'+INFO['score_tooltip']+'" ></span>');
+					r3.find('[data-toggle="popover"]').popover({
+					    trigger: 'hover',
+					    'placement': 'top',
+					    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+					});
+					break;
+				}
+			};
 			radarframe.append(r3);
 			dataArry.push(options.user2.data);
 		}

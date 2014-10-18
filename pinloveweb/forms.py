@@ -32,12 +32,12 @@ class RegistrationForm (UserCreationForm) :
                              widget=forms.RadioSelect())
     USERNAME_LENGTH_LIMIT=14
     username=forms.RegexField(label=_("Username"), max_length=30,
-        regex=ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,9}$',
+        regex=ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_\s]{1,9}$',
         help_text=USERNAME_ERROR_MESSAGE,
         error_messages={
             'invalid':USERNAME_ERROR_MESSAGE},
         validators=[
-            validators.RegexValidator(re.compile(ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}$'), USERNAME_ERROR_MESSAGE, 'invalid')]
+            validators.RegexValidator(re.compile(ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_\s]{1,19}$'), USERNAME_ERROR_MESSAGE, 'invalid')]
                               )
     password1=forms.RegexField(label=_("Password"),widget=forms.PasswordInput,
         regex=r'^[0-9a-zA-Z\xff_]{6,20}$',

@@ -95,6 +95,11 @@ $(document).ready(function() {
 		$(href).show();
 	});
 	
+	//提示
+	$('[data-toggle="popover"]').popover({
+	    trigger: 'hover',
+	    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+	});
 	
 });
 function get_record(){
