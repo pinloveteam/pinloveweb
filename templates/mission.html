@@ -1,5 +1,5 @@
 ﻿{% extends "base_later.html" %}
-<title>{% block title %} 拼爱网——任务页面{% endblock %}</title>
+<title>{% block title %} 拼爱网 - 任务页面{% endblock %}</title>
 {% load staticfiles %} {% block staticfiles %}
 <style>
 .mission-top {
@@ -80,7 +80,7 @@
 							<div class="mission-body">
 								<div class="ms">
 									<h4 class="ms-title">每日签到</h4>
-									<p class="ms-text">每日可签到5次每次领取2拼爱币</p>
+									<p class="ms-text">每次签到领取2拼爱币， 每日最多领取5次</p>
 									<p class="ms-btn {%ifequal dayLoginCount DAY_LOGIN_COUNT%}ms-btn-c{%else%}ms-btn-a{%endifequal%}">{%ifequal dayLoginCount 0%}去完成{%else%}已领取{{dayLoginCount}}次{%endifequal%}</p>
 								</div>
 							</div>

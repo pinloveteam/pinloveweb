@@ -148,7 +148,8 @@ def crop_avatar(request):
             
     box = [int(x * ratio) for x in [x1, y1, x2, y2]]
     rotate=0-int(float(request.POST['rotate']))
-    orig=orig.rotate(rotate)
+    if rotate!=0:
+        orig=orig.rotate(rotate)
     avatar = orig.crop(box)
     avatar_name, _ = os.path.splitext(upim.image)
     count = UserProfile.objects.filter(user_id=get_uid(request)).count()

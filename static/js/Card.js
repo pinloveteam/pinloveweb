@@ -547,13 +547,13 @@ window.Card = function(person){
 							success:function(data, textStatus){
 								if(textStatus == 'success'){
 					            	if( data.type=='score'){
-					            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+					            		var body = $("<p>查看Ta对你的打分需消耗"+data.amount+"拼爱币。请确认？</p>")
 					            		var hehe = function(){
 					            			score_my(content,userId,data.type);
 					            			}
 					            		$.poplayer({body:body,btnFunc:hehe});
 					            	}else if( data.type=='charge') {
-					            		var body = $("<p>消耗拼爱币:"+data.amount+"</p>")
+					            		var body = $("<p>查看Ta对你的打分需消耗"+data.amount+"拼爱币。请确认？</p>")
 					            		var hehe = function(){
 					            			score_my(content,userId,data.type)
 					            			}

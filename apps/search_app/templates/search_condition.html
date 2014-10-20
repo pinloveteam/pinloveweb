@@ -126,7 +126,7 @@ $(document).ready(function(){
 
 </SCRIPT>
 <div class="col-xs-3">
-	<div class="card_panel" style="width: 250px;">
+	<div class="card_panel" style="width: 255px;">
 	 <form id="search_form" action="" method="POST" >{% csrf_token %}
 	<div class="search-panel">
 		<p class="search-title">搜索</p>
@@ -163,7 +163,7 @@ $(document).ready(function(){
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
 					{{searchForm.minHeigh}}&nbsp;&nbsp;-&nbsp;
-					{{searchForm.maxHeigh}}厘米
+					{{searchForm.maxHeigh}}&nbsp;&nbsp;厘米
 				</div>
 			</div>
 		{%endif%}
@@ -202,7 +202,7 @@ $(document).ready(function(){
 			<div class="search-condition">
 				<div class="condition" style="padding: 5px;">
 					{{searchForm.minIcome}}&nbsp;&nbsp;-&nbsp;
-					{{searchForm.maxIncome}}万/年
+					{{searchForm.maxIncome}}&nbsp;&nbsp;万/年
 				</div>
 			</div>
 		 {%endif%}

@@ -306,12 +306,12 @@
         <input id="uploadAvatarValueY1" type="text" name="y1"/>
         <input id="uploadAvatarValueX2" type="text" name="x2"/>
         <input id="uploadAvatarValueY2" type="text" name="y2"/>
-        <input id="rotate_value" type="text" name="rotate"/>
+        <input id="rotate_value" type="text" name="rotate" value="0"/>
     </form>
     
     
     
-    <div id="uploadAvatarUploadArea" style=" left: 30px; position: relative;">
+    <div id="uploadAvatarUploadArea" style="position: relative;">
         <form id="uploadAvatarForm" action="{% url 'uploadavatar_upload' %}" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
             {% csrf_token %}
             <div id="uploadAvatarBtnLayout" >

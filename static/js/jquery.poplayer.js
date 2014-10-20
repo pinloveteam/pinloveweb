@@ -173,12 +173,29 @@
 		
 		return infoframe;
 	}
-
-	function loadRadarFrame(options) {
+	//判断雷达图每个属性是否填写完整
+	function is_info_finish(r_div,user){
 		var INFO={
 				'score_full':'该用户信息没有填写完整',
 				'score_tooltip':'如果雷达图中的某项分数为0，则该用户可能没有完整填写该项信息。',
-		};score_warn='该用户信息没有填写完整';
+		};
+		var userList=[user.education,user.tag.length==0?'未填':0,user.income,user.isVote==false?'未填':0,user.height]
+		for(var key in user.data){
+			if(user.data[key]==0 && userList[key]=='未填'){
+				r_div.find('.info_warn').append('<span style="text-align: center;color: red;">'+INFO['score_full']+'</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#e7e7e7;" data-toggle="popover" data-placement="left" data-content="'+INFO['score_tooltip']+'" ></span>');
+				r_div.find('[data-toggle="popover"]').popover({
+				    trigger: 'hover',
+				    'placement': 'top',
+				    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+				});
+				break;
+			}
+		};
+		
+	}
+
+	function loadRadarFrame(options) {
+		
 		var score_warn_content=''
 		var dataArry = new Array();
 		var radarframe = $('<div class="col-xs-3" style="background-color: #100B31; padding: 25px;"></div>');
@@ -201,17 +218,7 @@
 				window.open(url);
 			});
 		}else{
-			for(var key in options.user1.data){
-				if(options.user1.data[key]==0){
-					r1.find('.info_warn').append('<span style="text-align: center;color: red;">'+INFO['score_full']+'</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#e7e7e7;" data-toggle="popover" data-placement="left" data-content="'+INFO['score_tooltip']+'" ></span>');
-					r1.find('[data-toggle="popover"]').popover({
-					    trigger: 'hover',
-					    'placement': 'top',
-					    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
-					});
-					break;
-				}
-			};
+			is_info_finish(r1,options.user1);
 		}
 		
 		radarframe.append(r1);
@@ -226,17 +233,8 @@
 			var r3 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px; padding-left: 0px; height: 60px;top: -20px;"><div><span style="color: white;">TA的得分</span></div><span id="score" class="score-big" style="color: green;"></span><span class="text">分</span></div><div class="col-xs-12 info_warn"><p style="text-align: center;color: red;"></p></div></div>');
 			r3.find('#head').attr('src', options.user2.head);
 			r3.find('#score').html(options.user2.score);
-			for(var key in options.user2.data){
-				if(options.user1.data[key]==0){
-					r3.find('.info_warn').append('<span style="text-align: center;color: red;">'+INFO['score_full']+'</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#e7e7e7;" data-toggle="popover" data-placement="left" data-content="'+INFO['score_tooltip']+'" ></span>');
-					r3.find('[data-toggle="popover"]').popover({
-					    trigger: 'hover',
-					    'placement': 'top',
-					    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
-					});
-					break;
-				}
-			};
+			
+			is_info_finish(r3,options.user2);
 			radarframe.append(r3);
 			dataArry.push(options.user2.data);
 		}
