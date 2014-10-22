@@ -10,6 +10,7 @@ from apps.user_score_app.models import UserScoreExchangeRelate, UserScore,\
 from django.db import transaction
 from django.core.cache import cache
 from apps.user_score_app.user_score_settings import DAY_INIVITE_FRIEND_COUNT
+import datetime
 '''
  邀请好友注册奖励
 '''
@@ -240,5 +241,22 @@ def reset_count():
     '''
       重置积分变量
     '''
-    cache.set('DAY_LOGIN_COUNT',{})
-    cache.set('DAY_INIVITE_FRIEND_COUNT',{})
+    hour=datetime.datetime.today().hour
+    if hour>3:
+        userIdList=[userProfile.user_id for userProfile in UserProfile.objects.filter(country=u'中国')]
+    else:
+        userIdList=[userProfile.user_id for userProfile in UserProfile.objects.exclude(country=u'中国')]
+    dayLogin=cache.get('DAY_LOGIN_COUNT',{})
+    if len(dayLogin)>0:
+        for key in  dayLogin.keys():
+            if key in userIdList:
+                del dayLogin[key]
+    cache.set('DAY_LOGIN_COUNT',dayLogin)
+    dayInviteFriend=cache.get('DAY_INIVITE_FRIEND_COUNT',{})
+    if len(dayInviteFriend)>0:
+        for key in dayInviteFriend.keys():
+            if key in userIdList:
+                del dayInviteFriend[key]
+    cache.set('DAY_INIVITE_FRIEND_COUNT',dayInviteFriend)
+                
+    
