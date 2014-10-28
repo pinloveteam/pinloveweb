@@ -2,22 +2,15 @@
 	height: 100%;
 }
 body {
-	font: 14px/1.5 "Microsoft Yahei",'FZLTHK',"Hiragino Sans GB",sans-serif;
+	font: 14px/1.5 "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
 	-webkit-font-smoothing:antialiased; 
 	-moz-osx-font-smoothing: grayscale; 
 	font-size: 16px;
 }
-label{
-	font-weight: normal;
-	font-size: 14px;
-}
-.tR{
-	text-align: right;
-}
-.error-msg{
-	color: #FF0000;
-	height: 34px;
-	padding: 6px 0;
+
+label {
+    font-size: 14px;
+    
 }
 .container, body {
 	width: 100%;
@@ -56,8 +49,10 @@ a:hover {
 
 #weibologin {
 	background-color: #EC0000;
+	position: relative;
+	top: -28.5px;
+	left: 200px;
 }
-#facebooklogin{background-color: crimson}
 .stage {
 	height: 591px;
 }
@@ -124,23 +119,22 @@ a:hover {
 }
 
 .main-left, .main-right {
-	padding: 10px 30px;
+	padding: 10px 50px;
 }
 
 .main-left {
 	border-right: solid 1px #fff;
 	text-align: center;
 }
-/*
+
 .radio-inline {
 	margin-left: 0 !important;
-}*/
+}
 
 .form-group {
 	width: 100%;
 	margin-left: 0 !important;
 	margin-right: 0 !important;
-	min-height: 35px;
 }
 
 .btn-login {
