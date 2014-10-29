@@ -532,7 +532,7 @@ window.Card = function(person){
 							 compare(userId,1,false)
 						 });
 					}
-					$("div.computerMove").closest('.row').find('#appearancevote').click(function(){
+					$("div.dragdealer").closest('.row').find('#appearancevote').click(function(){
 						vote(this);
 					});
 					

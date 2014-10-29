@@ -3,6 +3,7 @@ from django.db import models
 import urllib2
 from apps.alipay_app.helper import address_in_network, duplicate_out_trade_no
 from apps.alipay_app.alipay_setting import config, ALIPAY_NOTIFY_IP
+from apps.alipay_app.signals import alipay_dpn_flagged, alipay_dpn_successful
 class AliPayBaseModel(models.Model):
     """
 AliPay base model
@@ -124,3 +125,12 @@ AliPay DPN
     class Meta:
         db_table = 'alipay_dpn'
         verbose_name = 'AliPay DPN'
+        
+    def send_signals(self):
+        if self.notify_type != 'trade_status_sync':
+            return
+        if self.is_transaction():
+            if self.flag:
+                alipay_dpn_flagged.send(sender=self)
+            else:
+                alipay_dpn_successful.send(sender=self)

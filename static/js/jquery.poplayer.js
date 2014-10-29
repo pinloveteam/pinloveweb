@@ -33,8 +33,16 @@
 		}
 
 		$(document.body).append(masklayer).append(dialog);
-		if(options.type == 'frame'){
-			computerMove();
+		if (options.type == 'frame') {
+			var isVoteList=new Array();
+			isVoteList.push(options.user1.isVote);
+			var voteScoreList=new Array();
+			voteScoreList.push(options.user1.voteScore);
+			if(options.compar==true){
+				isVoteList.push(options.user2.isVote);
+				voteScoreList.push(options.user2.voteScore);
+			}
+			is_vote(dialog,isVoteList,voteScoreList);
 		}
 		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn,.js-popframe').click(function() {
 			masklayer.remove();
@@ -43,66 +51,33 @@
 		
 	}
 	function is_vote(infoframe,isVote,voteScore){
-		if(isVote==false){
-			infoframe.find('.btn-primary').attr('disabled',true);
-		    infoframe.find('.computerMove').remove();
-		    infoframe.find('.score').parent().html('不能打分');
-		}else{
-			infoframe.find('#vote_value').val(voteScore);
-			infoframe.find('.score').html(voteScore);
-			infoframe.find('.progress-bar').css('width',voteScore+'%');
-			infoframe.find('.computerMove').css('left',voteScore * 90 / 100 + "%")
-		};
+		var dragdealerList=$('.dragdealer');
+		dragdealerList.each(function(index){
+			if(isVote[index]==false){
+				$(this).parents('.row').find('.btn-primary').attr('disabled',true);
+				$(this).parents('.row').find('.score').html('不能打分');
+			    new Dragdealer(this.id, {
+					  animationCallback: function(x, y) {
+					  },
+					  disabled:true
+					});
+			}else{
+				$(this).parents('.row').find('.score').html(voteScore[index]);
+				var context=this.id;
+			    new Dragdealer(this.id, {
+					  animationCallback: function(x, y) {
+						  row=$('#'+context).parents('.row');
+					    row.find('.score').text(Math.round(x * 100));
+					    row.find('#vote_value').val(Math.round(x * 100))
+					  },
+					  x:voteScore[index]/100
+					});
+			};
+			
+		});
 	};
 	
-	function computerMove(){
-	                var $div = $("div.computerMove");
-	                if($div.length==0){
-	                	return;
-	                }
-					var progressWidth = $div.parents('.progress').css('width').split('p')[0];
-					/* 绑定鼠标左键按住事件 */
-					$div.bind("mousedown", function(event) {
-						var moveDiv = $(this);
 
-						var progress = moveDiv.parent();
-
-						var score = moveDiv.parents('.row').find('.score');
-						/* 获取需要拖动节点的坐标 */
-						var offset_x = moveDiv[0].offsetLeft;
-						//x坐标
-
-						/* 获取当前鼠标的坐标 */
-						var mouse_x = event.pageX;
-
-						/* 绑定拖动事件 */
-						/* 由于拖动时，可能鼠标会移出元素，所以应该使用全局（document）元素 */
-						$(document).bind("mousemove", function(ev) {
-							/* 计算鼠标移动了的位置 */
-							var _x = ev.pageX - mouse_x;
-
-							/* 设置移动后的元素坐标 */
-							var now_x = Math.round((offset_x + _x) / progressWidth * 100);
-
-							/* 改变目标元素的位置 */
-							if (now_x >= 0 && (_x < -5 || now_x <= 100)) {
-								moveDiv.css({
-									left : now_x * 90 / 100 + "%"
-								});
-								progress.css({
-									width : now_x + "%"
-								});
-								score.html(now_x);
-								$('#vote_value').val(now_x);
-								
-							}
-						});
-					});
-
-					$(document).bind("mouseup", function() {
-						$(this).unbind("mousemove");
-					});
-	}
 	function loadConfirm(options) {
 		var dialog = $('<div class="poplayer"><div class="poplayer-confirm"><div class="poplayer-confirm-head"><span class="poplayer-confirm-head-text text-white"></span><span class="poplayer-close-btn text-white">X</span></div><div class="poplayer-confirm-body"></div><div class="poplayer-confirm-bottom"><button class="btn btn-info btn-close"></button></div></div></div>');
 		dialog.find('.poplayer-confirm-head-text').html(options.head);
@@ -166,9 +141,7 @@
 		i3.find('#income').html(user.income);
 		i3.find('#constellation').html(user.constellation);
 
-		var i4 = $('<div class="row"><hr /><p class="title">为TA相貌打分</p><div class="col-xs-6" style="padding: 0;"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%"><div class="computerMove"></div></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span>分<input id="vote_value" type="hidden" value=""></div><div class="col-xs-3"><button id="appearancevote" class="btn btn-xs btn-primary">确认</button></div></div>');
-		//判断能不能投票
-		is_vote(i4,user.isVote,user.voteScore);
+		var i4 = $('<div class="row"><hr /><p class="title">为TA相貌打分</p><div class="col-xs-6" style="padding: 0;"><div class="dragdealer" id="slider-'+user.userId+'"><div class="handle red-bar" style="perspective: 1000px; backface-visibility: hidden; transform: translateX(144px);"></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span>分<input id="vote_value" type="hidden" value=""></div><div class="col-xs-3"><button id="appearancevote" class="btn btn-xs btn-primary">确认</button></div></div>');
 		infoframe.append(i1).append(i2).append(i3).append(i4);
 		
 		return infoframe;
