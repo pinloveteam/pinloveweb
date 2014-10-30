@@ -12,13 +12,13 @@ from apps.alipay_app.models import AliPayDPN
 from django.http.response import HttpResponse
 from django.utils import simplejson
 logger=logging.getLogger(__name__)
-# @require_POST
+@require_POST
 @csrf_exempt
 def dpn(request, item_check_callable=None):
    try:
     flag=None
     obj=None
-    post_data=request.GET.copy()
+    post_data=request.POST.copy()
     logger.error(simplejson.dumps(post_data))
     data={}
     for i,v in post_data.items():

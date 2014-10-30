@@ -1,6 +1,8 @@
+
 html, body {
-	background-color:#E0EEEE;
-	/*font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";*/
+	background-size: 100%;
+	height: 100%;
+	background-color: #EAE8E9;
 	font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
 }
 
@@ -39,7 +41,13 @@ li {
 	width: 100%;
 	position: fixed;
 	z-index: 955;
-	border-bottom: solid 1px #aaa;
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header a{
+	color: #333;
 }
 
 .header-inner {
@@ -52,10 +60,11 @@ li {
 .header-logo {
 	position: absolute;
 	left: 0;
+	top: 10px;
 }
 
 .header-navi {
-	left: 282px;
+	left: 292px;
 	position: absolute;
 	top: 0;
 }
@@ -66,7 +75,6 @@ li {
 }
 
 .header-navi li a {
-	color: #333;
 	display: inline-block;
 	font-size: 15px;
 	height: 50px;
@@ -76,9 +84,9 @@ li {
 	vertical-align: top;
 }
 
-.header-navi li :hover,.header-navi li.active a{
-	background-color: #FFA255;
+.header-navi li :hover,.header-navi li.active a  {
 	color: #fff;
+	background-color: #56CC99;
 }
 
 .header-info {
@@ -87,33 +95,16 @@ li {
 	top: 8px;
 }
 
-.header-info a{
-	color: #333;
-}
-
-.notice{
-	display: inline-block;
-	background-color: #F82C2C;
-	color: #fff;
-	width: 15px;
-	text-align: center;
-	font-size: 10px;
-	border-radius: 50%;
-	position: absolute;
-	left: 18px;
-}
-
 .header-info-mess, .header-info-user {
+	color: #6EC19E;
 	float: left;
 	height: 34px;
 	position: relative;
+	top: 5px;
 	width: 64px;
 	z-index: 5;
 	cursor: pointer;
-	background:no-repeat url(../img/小图标-06.png);
-}
-.header-info-mess{
-	background:no-repeat url(../img/小图标-07.png);
+	font-size: 20px;
 }
 .header-info-user div {
 	display: none;
@@ -124,7 +115,7 @@ li {
 }
 
 .header-info-list {
-	background: none repeat scroll 0 0 #fff;
+	background-color: #fff;
 	left: 0;
 	padding: 8px 0;
 	position: absolute;
@@ -136,6 +127,8 @@ li {
 	margin: 12px 0;
 	width: 70px;
 	margin-left: -20px;
+	font-size: 14px;
+	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
 }
 /* footer */
 .wrap {
@@ -258,4 +251,20 @@ li {
 
 .indexFooter p{
 	margin: 0;
+}
+.notice {
+	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
+    background-color: #f82c2c;
+    border-radius: 50%;
+    color: #fff;
+    display: inline-block;
+    font-size: 10px;
+    left: 15px;
+    top: -4px;
+    position: absolute;
+    text-align: center;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-weight:normal;
 }
