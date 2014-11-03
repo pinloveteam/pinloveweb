@@ -56,8 +56,8 @@ def buildRequestMysign(kwargs):
             continue
         data.append('%s=%s'%(k,v))
     data.sort()
-    text='&'.join(data)
-    return sign(text,config.ALIPAY_KEY,config.ALIPAY_SIGN_TYPE)
+    text=u'&'.join(data)
+    return unicode(sign(text,config.ALIPAY_KEY,config.ALIPAY_SIGN_TYPE))
     
 def paraFilter(kwargs):
     result={}

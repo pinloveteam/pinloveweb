@@ -4,6 +4,7 @@ import urllib2
 from apps.alipay_app.helper import address_in_network, duplicate_out_trade_no
 from apps.alipay_app.alipay_setting import config, ALIPAY_NOTIFY_IP
 from apps.alipay_app.signals import alipay_dpn_flagged, alipay_dpn_successful
+from util.connection_db import connection_to_db
 class AliPayBaseModel(models.Model):
     """
 AliPay base model
@@ -11,17 +12,18 @@ AliPay base model
         # base parameter
     notify_time = models.DateTimeField(blank=True, null=True)
     notify_type = models.CharField(blank=True, null=True, max_length=32)
-    notify_id = models.CharField(blank=True, null=True, max_length=128)
+    #支付宝通知校验ID，商户可以用这个流水号询问支付宝该条通知的合法性。
+    notify_id = models.CharField(blank=True, null=True, max_length=128,verbose_name=u'通知校验ID')
     sign_type = models.CharField(blank=True, null=True, max_length=3)
     sign = models.CharField(blank=True, null=True, max_length=64)
         # business parameter
         # partner trade no
-    out_trade_no = models.CharField(blank=True, null=True, max_length=64)
+    out_trade_no = models.CharField(blank=True, null=True, max_length=64,verbose_name=u'商户订单号')
     subject = models.CharField(blank=True, null=True, max_length=256)
     payment_type = models.CharField(blank=True, null=True, max_length=4)
         # alipay trade no
-    trade_no = models.CharField(blank=True, null=True, max_length=64)
-    trade_status = models.CharField(blank=True, null=True, max_length=32)
+    trade_no = models.CharField(blank=True, null=True, max_length=64,verbose_name=u'支付宝交易号')
+    trade_status = models.CharField(blank=True, null=True, max_length=32,verbose_name=u'交易状态')
     gmt_create = models.DateTimeField(blank=True, null=True)
     gmt_payment = models.DateTimeField(blank=True, null=True)
     refund_status = models.CharField(blank=True, null=True, max_length=32)
@@ -40,12 +42,12 @@ AliPay base model
     
     # Non-AliPay Variables
     ipaddress = models.IPAddressField(blank=True)
-    flag = models.BooleanField(default=False, blank=True)
+    flag = models.BooleanField(default=False, blank=True,verbose_name=u'是否支付成功')
     flag_code = models.CharField(max_length=16, blank=True)
-    flag_info = models.TextField(blank=True)
+    flag_info = models.TextField(blank=True,verbose_name=u'错误信息')
     query = models.TextField(blank=True) # What we sent to PayPal.
     response = models.TextField(blank=True) # What we got back.
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True,verbose_name=u'创建时间')
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -108,7 +110,21 @@ verify alipay notify
         if self.response != "true":
             self.set_flag("Invalid postback: %s" % self.response)
             
-            
+      
+class AliPayDPNManager(models.Manager):
+    '''
+    统计金额
+    @param startTime(option):起始时间
+    @param endTime(option):  结束时间
+    '''
+    def statistic_price(self,**kwargs):
+        sqlTime=''
+        if kwargs.get("startTime",'')!='':
+            sqlTime=' where gmt_payment >= %s and gmt_payment <= '%(kwargs.get("startTime",''),kwargs.get("endTime",''))
+        sql="""
+           select sum(u.total_fee) from alipay_dpn u where u.trade_status='TRADE_SUCCESS'
+           """+sqlTime
+        return connection_to_db(sql,param=[],type=True)
 '''
 即时支付
 '''           

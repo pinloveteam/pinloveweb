@@ -100,7 +100,6 @@ def pay_icon_order(request):
            elif type=='alipay':
                from apps.alipay_app.alipay import build_aplipay_order
                args=build_aplipay_order(userId=request.user.id,amount=chargeExchangeRelate.get_amount(),price=chargeExchangeRelate.currencyPrice,currency=chargeExchangeRelate.currencyType,data=u'购买拼爱币')
-               logger.error('args====')
            return render(request,'redirect_to_pay.html',args)
        else:
             return HttpResponseRedirect('/pay/member/')

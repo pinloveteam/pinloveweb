@@ -20,7 +20,7 @@ logger=logging.getLogger(__name__)
 def build_aplipay_order(userId,amount=1,price=0.00,currency='RMB',data=''):
   try:
     # What you want the button to do.
-    order=Order(user_id=userId,currency=currency,amount=amount,price=price,status='initiated',type='2',channel='2',pattern='1')
+    order=Order(user_id=userId,currency=currency,amount=amount,price=price,status='initiated',type='2',channel='1',pattern='1')
     order.data=order.get_pattern_display()
     order.get_order_id(userId)
     from pinloveweb.settings import PAYPAL_RECEIVER_EMAIL,DOMAIN

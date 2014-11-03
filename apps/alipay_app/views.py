@@ -18,8 +18,8 @@ def dpn(request, item_check_callable=None):
    try:
     flag=None
     obj=None
-    post_data=request.POST.copy()
-    logger.error(simplejson.dumps(post_data))
+    post_data=request.REQUEST.copy()
+#     logger.error(simplejson.dumps(post_data))
     data={}
     for i,v in post_data.items():
         data[i]=v

@@ -17,7 +17,7 @@ def GetLocation(request):
         import urllib2
         url='%s%s'%('http://freegeoip.net/json/',GetIp(request))
         req = urllib2.Request(url)
-        response = urllib2.urlopen(req)
+        response = urllib2.urlopen(req,timeout = 1)
         locationInfo= simplejson.loads(response.read())
         return locationInfo.get('city','')
     except Exception, e:
