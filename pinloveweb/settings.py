@@ -2,8 +2,9 @@
 # Django settings for pinlove project.
 import os
 import sys
+from django.conf import global_settings
 PATH=os.path.dirname(os.path.dirname(__file__))
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -158,6 +159,10 @@ INSTALLED_APPS = (
 'paypal.standard.ipn',
 'apps.alipay_app',
 )
+#上传插件
+FILE_UPLOAD_HANDLERS = ('pinloveweb.forms.UploadProgressCachedHandler', ) + \
+    global_settings.FILE_UPLOAD_HANDLERS
+ 
 PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
 PAYPAL_TEST=False
 #test account
