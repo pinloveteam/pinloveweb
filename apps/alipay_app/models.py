@@ -101,7 +101,10 @@ verify alipay notify
         """Store the data we'll need to make the postback from the request object."""
         self.query = getattr(request, request.method).urlencode()
         self.notify_id = getattr(request, request.method).get('notify_id')
-        self.ipaddress = request.META.get('REMOTE_ADDR', '')
+        if 'HTTP_X_FORWARDED_FOR' in request.META:
+            self.ipaddress = request.META['HTTP_X_FORWARDED_FOR']
+        else:
+            self.ipaddress = request.META['REMOTE_ADDR']
 
     def _postback(self):
         return urllib2.urlopen(config.ALIPAY_GATEWAY,'service=notify_verify&partner=%s&notify_id=%s'% (config.ALIPAY_PARTNER, self.notify_id)).read()
