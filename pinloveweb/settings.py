@@ -2,7 +2,6 @@
 # Django settings for pinlove project.
 import os
 import sys
-from django.conf import global_settings
 PATH=os.path.dirname(os.path.dirname(__file__))
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -393,9 +392,9 @@ DATABASES = {
  }
 #upload 上传地址
 MEDIA_URL = '/media/'
-MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/update'
+MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/update/'
 #静态文件地址
-STATIC_ROOT = '/home/pinloveteam/webapps/pinlove_static'
+STATIC_ROOT = '/home/pinloveteam/webapps/pinlove/static/'
 STATIC_URL = '/static/'
 #头像上传地址
 UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/update/user_img'
