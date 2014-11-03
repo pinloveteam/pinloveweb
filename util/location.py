@@ -27,11 +27,8 @@ def get_location(request):
     response = urllib2.urlopen(req,timeout = 5)
     return simplejson.loads(response.read())
    except Exception, e:  
-       if e.message.find('timed')>=0:
         logger.error('访问freegeoip超时')
         return {}  
-       else:  
-        raise
 
 
 '''
