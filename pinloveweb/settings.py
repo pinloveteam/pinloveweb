@@ -159,9 +159,6 @@ INSTALLED_APPS = (
 'paypal.standard.ipn',
 'apps.alipay_app',
 )
-#上传插件
-FILE_UPLOAD_HANDLERS = ('pinloveweb.forms.UploadProgressCachedHandler', ) + \
-    global_settings.FILE_UPLOAD_HANDLERS
  
 PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
 PAYPAL_TEST=False
