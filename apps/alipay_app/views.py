@@ -40,6 +40,7 @@ def dpn(request, item_check_callable=None):
         #We save errors in the flag field
         obj.set_flag(flag)
     else:
+        logger.error('ip=====':obj.ipaddress)
         obj.verify(item_check_callable)
     obj.save()
 
