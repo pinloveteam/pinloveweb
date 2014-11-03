@@ -35,12 +35,11 @@ def dpn(request, item_check_callable=None):
         obj = AliPayDPN()
         #Set query params and sender's IP address
     obj.initialize(request)
-        
+    logger.error('%s%s'%('ip=====',obj.ipaddress))    
     if flag is not None:
         #We save errors in the flag field
         obj.set_flag(flag)
     else:
-        logger.error('ip=====',obj.ipaddress)
         obj.verify(item_check_callable)
     obj.save()
 
