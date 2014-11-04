@@ -102,7 +102,7 @@ verify alipay notify
         self.query = getattr(request, request.method).urlencode()
         self.notify_id = getattr(request, request.method).get('notify_id')
         if 'HTTP_X_FORWARDED_FOR' in request.META:
-            self.ipaddress = request.META['HTTP_X_FORWARDED_FOR']
+            self.ipaddress = request.META['HTTP_X_FORWARDED_FOR'].split(",")[0]
         else:
             self.ipaddress = request.META['REMOTE_ADDR']
 

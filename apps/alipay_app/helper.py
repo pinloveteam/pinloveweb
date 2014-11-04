@@ -14,10 +14,10 @@ Is an address in a network
 ip: 192.168.2.2
 net:("192.168.2.0/24",)
 """
-    ipaddr = struct.unpack('L',socket.inet_aton(ip))[0]
+    ipaddr = struct.unpack('!L',socket.inet_aton(ip))[0]
     for cur_net in net:
         netaddr,bits = cur_net.split('/')
-        netmask = struct.unpack('L',socket.inet_aton(netaddr))[0] & ((2L<<int(bits)-1) - 1)
+        netmask = struct.unpack('!L',socket.inet_aton(netaddr))[0] & ((2L<<int(bits)-1) - 1)
         if ipaddr & netmask == netmask:
             return True
     return False

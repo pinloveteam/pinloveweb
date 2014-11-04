@@ -10,7 +10,7 @@ from django.conf import settings
 '''
 SERVICE=['create_direct_pay_by_user',]
 #ip白名单
-ALIPAY_NOTIFY_IP = getattr(settings, 'ALIPAY_NOTIFY_IP',('121.0.26.0/23', '110.75.128.0/19'))
+ALIPAY_NOTIFY_IP = getattr(settings, 'ALIPAY_NOTIFY_IP',('121.0.26.0/23', '110.75.128.0/19','115.124.16.0/24'))
 #支付类型
 PAYMENT_TYPE = (
         '1', #商品购买
