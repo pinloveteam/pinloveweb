@@ -3,8 +3,6 @@
 import os
 import sys
 PATH=os.path.dirname(os.path.dirname(__file__))
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -374,9 +372,12 @@ CACHES = {
 # UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 # UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
 # DOMAIN='pinlove.xicp.net'
-
+# DEBUG = False
+# TEMPLATE_DEBUG = DEBUG
 
 #---服务器环境-----
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
 DATABASES = {
                                       
      'default': {
