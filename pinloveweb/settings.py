@@ -3,7 +3,7 @@
 import os
 import sys
 PATH=os.path.dirname(os.path.dirname(__file__))
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -353,7 +353,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                                 
+#                                  
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -378,7 +378,7 @@ CACHES = {
 
 #---服务器环境-----
 DATABASES = {
-                                     
+                                      
      'default': {
          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
          'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -392,13 +392,13 @@ DATABASES = {
  }
 #upload 上传地址
 MEDIA_URL = '/media/'
-MEDIA_ROOT ='/home/pinloveteam/webapps/pinlove/update/'
+MEDIA_ROOT =os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
 #静态文件地址
-STATIC_ROOT = '/home/pinloveteam/webapps/pinlove/static/'
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
 STATIC_URL = '/static/'
 #头像上传地址
-UPLOAD_AVATAR_UPLOAD_ROOT='/home/pinloveteam/webapps/pinlove/update/user_img'
-UPLOAD_AVATAR_AVATAR_ROOT='/home/pinloveteam/webapps/pinlove/update/user_img'
+UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+UPLOAD_AVATAR_AVATAR_ROOT=os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
 UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
 #grappelli
 UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
@@ -448,3 +448,5 @@ FACEBOOK_DEBUG_SIGNEDREQ ='6sZoh3-0-nHQejXO-gAIrtMel76FWQR7OupEkqAS0TU.eyJhbGdvc
 # FACEBOOK_DEBUG_SIGNEDREQ ='RoHqy693wl3t917auOIyLYavI8ZDUP5L3RKj4T_01IU.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTUzNzQ0MDAsImlzc3VlZF9hdCI6MTM5NTM2OTQ2MCwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFOcEZ0QWdMVzJqWkFwejliNG93S3BYYUVOd2F0aWlGWkFRZzlpU1FzbGxUMmZrb21oQkYzVzhTdkpnWkMwa2tZdllMNVU4Q1JDNG5INDg4ek9WenJ6NEdXeThaQnNnVjhZWkNoUTU4SGNzMnZMNnc4S2FXd0RFZFpBdFpCa3ZvbVpCQnptR0g1WkJWMndMUXZHMlc2ZUVxV1RIbnhTVWRuZXRPR1ZZZW5tekxLOUI3cUM5cEtQakNWRFpCNkFVeWdRVmdaRFpEIiwidXNlciI6eyJjb3VudHJ5IjoianAiLCJsb2NhbGUiOiJlbl9VUyIsImFnZSI6eyJtaW4iOjEzLCJtYXgiOjE3fX0sInVzZXJfaWQiOiIxMDAwMDcyNDc0NzAyODkifQ'
 #admin id
 ADMIN_ID=1
+if __name__=='__main__':
+    print os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
