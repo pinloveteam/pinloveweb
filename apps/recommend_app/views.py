@@ -265,11 +265,11 @@ def buy_score_for_other(request):
 '''
   用户投票
 '''    
-@csrf_exempt
 def user_vote(request):
     args={}
     try:
         score = float(request.REQUEST.get('score').strip())
+        otherId=int(request.REQUEST.get('otherId')) if len(request.REQUEST.get('otherId'))!=0 else None
         userId=int(request.REQUEST.get('userId'))
 #         if AppearanceVoteRecord.objects.filter(user_id=request.user.id,other_id=userId).exists():
 #             args={'result':'error','error_message':u'你已打过分'}
@@ -282,9 +282,15 @@ def user_vote(request):
             from apps.recommend_app.recommend_util import cal_user_vote
             score=cal_user_vote(request.user.id,userId,score,geadeInstance.appearancescore,geadeInstance.appearancesvote,1)
             Grade.objects.filter(user_id=userId).update(appearancescore=score['score'],appearancesvote=geadeInstance.appearancesvote if score['flag'] else geadeInstance.appearancesvote+1)
+            #获取雷达图分数
             socreForOther=get_socre_for_other(request.user.id,userId)
-            data=[socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
+            diagData=[socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
             score=int(socreForOther['matchResult']['scoreOther'])
+            data={userId:diagData}
+            if not otherId is None:
+                compareSocreForOther=get_socre_for_other(request.user.id,otherId)
+                compareDiagData=[compareSocreForOther['matchResult']['edcationScore'],compareSocreForOther['matchResult']['characterScore'],compareSocreForOther['matchResult']['incomeScore'],compareSocreForOther['matchResult']['appearanceScore'],compareSocreForOther['matchResult']['heighScore'],]
+                data[otherId]=compareDiagData
             args={'result':'success','data' :data,'score' : score}
         json = simplejson.dumps(args)
         return HttpResponse(json)
