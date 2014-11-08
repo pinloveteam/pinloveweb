@@ -2,7 +2,7 @@
 # Django settings for pinlove project.
 import os
 import sys
-PATH=os.path.dirname(os.path.dirname(__file__))
+PATH=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -450,4 +450,5 @@ FACEBOOK_DEBUG_SIGNEDREQ ='6sZoh3-0-nHQejXO-gAIrtMel76FWQR7OupEkqAS0TU.eyJhbGdvc
 #admin id
 ADMIN_ID=1
 if __name__=='__main__':
-    print os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
+    print STATIC_ROOT
+    print MEDIA_ROOT
