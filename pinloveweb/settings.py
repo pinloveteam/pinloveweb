@@ -376,9 +376,9 @@ CACHES = {
 # TEMPLATE_DEBUG = DEBUG
 
 #---服务器环境-----
- DEBUG = False
- TEMPLATE_DEBUG = DEBUG
- DATABASES = {
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+DATABASES = {
                                        
       'default': {
           'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -391,20 +391,20 @@ CACHES = {
           'OPTIONS':{'init_command':'SET storage_engine=INNODB,character_set_connection=utf8,collation_connection=utf8_unicode_ci',},
       }
   }
-upload 上传地址
- MEDIA_URL = '/media/'
- MEDIA_ROOT =os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
- #静态文件地址
- STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
- STATIC_URL = '/static/'
- #头像上传地址
- UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
- UPLOAD_AVATAR_AVATAR_ROOT=os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
- UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
- #grappelli
- UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
- ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
- DOMAIN='pinlove.com'
+#upload 上传地址
+MEDIA_URL = '/media/'
+MEDIA_ROOT =os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
+#静态文件地址
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+STATIC_URL = '/static/'
+#头像上传地址
+UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+UPLOAD_AVATAR_AVATAR_ROOT=os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+#grappelli
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
+DOMAIN='pinlove.com'
 
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
