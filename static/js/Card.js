@@ -7,7 +7,7 @@ detail_info=true;
 var compare_flag=false;
 //选择用户
 var check_id=null;
-var diaogList=[];
+var diaogList={user1:[null,null,null,],user2:null};
 var mgr = hopscotch.getCalloutManager(),
 state = hopscotch.getState();
 //判断是不是有card页面
@@ -432,16 +432,6 @@ window.Card = function(person){
 		 }
 	}
 	
-	//对比用户中的取消对比
-	function cancel_compare(userId){
-		$('.compare-btn_1').closest('.col-xs-4').remove();
-		$('.compare-btn').html('对比');
-		$('.score_other').remove();
-		$('.js-popframe').createRadarDialog(diaogList);
-		$('.poplayer').css('left','25%').css('width','780px');
-		 $('.compare-btn').click(function(){compare(userId,1)})
-		 compare_flag=false;
-	}
 	//投票
 	function vote(content){
 		user_info=$(content).closest("#user_info")
@@ -456,17 +446,33 @@ window.Card = function(person){
        	    $.poplayer({body:body});
 			return;
 		}
+		otherId=null;
+		userList=[]
+		if(compare_flag){
+			$('.js-popframe').find('input[name="userId"]').each(function(){
+				userList.push(parseInt(this.value));
+				if(this.value!=userId){
+					otherId=this.value
+				}
+			});
+		};
 		$.ajax({
 			type:'POST',
 			url:'/recommend/user_vote/',
 			dataType:"json",
-			data:{score:score,userId:userId},
+			data:{score:score,userId:userId,otherId:otherId,csrfmiddlewaretoken:getCookie('csrftoken')},
 			success:function(data, textStatus){
 				if(textStatus=='success'){
 					if(data['result']=='success'){
-						$('.js-popframe').createRadarDialog([data['data']])
+						var returnData=data['data'];
+						if(compare_flag){
+							diagData=[returnData[userList[0]],returnData[userList[1]]];
+						}else{
+							diagData=[returnData[parseInt(userId)]];
+						}
+						$('.js-popframe').createRadarDialog(diagData)
 						$('.js-popframe').find('#score').html(data['score'])
-						var body = $("<p>投票成功!</p>")
+						var body = $("<p>打分成功!</p>")
 					}else if(data['result']=='error'){
 						var body = $("<p>"+data['error_message']+"<p>")
 					}
