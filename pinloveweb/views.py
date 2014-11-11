@@ -215,11 +215,11 @@ def register_user(request) :
     if request.method == 'POST' : 
         userForm = RegistrationForm(request.POST) 
         if userForm.is_valid():
-            #判断有没邀请码
-            if request.REQUEST.get('inviteCode','')!='pinlove_fate':
-                 args['user_form']=userForm
-                 args['inviteCodeError']='输入正确的邀请码'
-                 return render(request, 'login.html', args)
+#             #判断有没邀请码
+#             if request.REQUEST.get('inviteCode','')!='pinlove_fate':
+#                  args['user_form']=userForm
+#                  args['inviteCodeError']='输入正确的邀请码'
+#                  return render(request, 'login.html', args)
             userForm.save()
             username = userForm.cleaned_data['username']
             user = User.objects.get(username=username)
@@ -368,7 +368,8 @@ def test(request):
 #     from apps.recommend_app.recommend_util import cal_income
 #     cal_income(userProfile.income,userProfile.gender)
    user=getattr(request,'user',None)
-   return render(request,'error.html',{'error_message':'支付失败!','link':'/','link_title':'返回首页','username':user.username if user else '没有'})
+   from apps.third_party_login_app.forms import ConfirmInfo
+   return render(request,'login_confirm_register.html',{'confirmInfo':ConfirmInfo()})
 #    try:
 #       import hashlib
 #       chanel=hashlib.md5(simplejson.dumps({'id':request.user.id,'username':request.user.username})).hexdigest()
