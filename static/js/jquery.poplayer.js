@@ -24,11 +24,12 @@
 		};
 		var options = $.extend(defaults, options);
 
-		var masklayer = $('<div class="masklayer"></div>');
+		var masklayer = $('<div class="masklayer"></div><div class="msk-close">X</div>');
 
 		if (options.type == 'confirm') {
 			var dialog = loadConfirm(options);
 		} else if (options.type == 'frame') {
+			masklayer.remove();
 			var dialog = loadFrame(options);
 		}
 
@@ -44,7 +45,7 @@
 			}
 			is_vote(dialog,isVoteList,voteScoreList);
 		}
-		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn,.js-popframe').click(function() {
+		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn,.js-popframe,.msk-close').click(function() {
 			masklayer.remove();
 			dialog.remove();
 		});

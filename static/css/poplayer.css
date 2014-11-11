@@ -17,7 +17,22 @@
 	height: 100%;
 	z-index: 999;
 }
-
+.msk-close{
+	background: url("../img/close.png") no-repeat scroll 10px center;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    height: 40px;
+    overflow: hidden;
+    padding: 10px 20px 10px 0;
+    position: fixed;
+    right: 0;
+    text-indent: -100px;
+    top: -1px;
+    width: 46px;
+    z-index: 1101;
+	
+}
 .poplayer {
 	position: fixed;
 	z-index: 1000;
