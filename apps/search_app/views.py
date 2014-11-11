@@ -11,6 +11,7 @@ from util.page import page
 from apps.pojo.search import SearchRsult
 from django.http.response import HttpResponse
 from django.utils import simplejson
+from pinloveweb import STAFF_MEMBERS
 ################################
 ##1.0
 def search(request):
@@ -41,11 +42,11 @@ def search(request):
                     if education=='0':
                         searchSql['education']=education
                     userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender).exclude(user=request.user).filter(avatar_name_status='3')
+                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender).exclude(user=request.user).filter(avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)
                     searchList=get_recommend_list(request,userProfile,userProfileList)
         
         else:
-            userProfileList=UserProfile.objects.filter().exclude(user=request.user).exclude(gender=userProfile.gender).filter(avatar_name_status='3')
+            userProfileList=UserProfile.objects.filter().exclude(user=request.user).exclude(gender=userProfile.gender).filter(avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)
             searchList=get_recommend_list(request,userProfile,userProfileList)
             from apps.pojo.card import MyEncoder
             searchList.object_list=simplejson.dumps(searchList.object_list,cls=MyEncoder)
