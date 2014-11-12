@@ -4,6 +4,8 @@ from apps.user_app.models import UserProfile, Follow
 import httplib
 from xml.dom import minidom
 from django.utils import simplejson
+import logging
+logger = logging.getLogger(__name__)
 def GetIp(request):
     if 'HTTP_X_FORWARDED_FOR' in request.META:
         return request.META['HTTP_X_FORWARDED_FOR']
@@ -17,8 +19,9 @@ def GetLocation(request):
         import urllib2
         url='%s%s'%('http://freegeoip.net/json/',GetIp(request))
         req = urllib2.Request(url)
-        response = urllib2.urlopen(req,timeout = 1)
-        locationInfo= simplejson.loads(response.read())
+        response = urllib2.urlopen(req,timeout = 6)
+        a=response.read()
+        locationInfo= simplejson.loads(a)
         return locationInfo.get('city','')
     except Exception, e:
         print e
