@@ -220,7 +220,7 @@ def send_reset_password(user,user_code):
     from pinloveweb.settings import DEFAULT_FROM_EMAIL,DOMAIN
     domain_name = '%s%s'%(DOMAIN,u'/user/reset_password/')
     email_verification_link = domain_name + '?username=' + user.username + '&' + 'user_code=' + user_code
-    email_message = u"请您点击下面这个链接重置密码："
+    email_message = '%s%s%s'%(u"尊敬的",user.username,u"拼爱用户，请您点击下面这个链接重置密码：")
     email_message += email_verification_link
     try :
        from django.core.mail import send_mail
