@@ -73,7 +73,7 @@ urlpatterns = patterns('',
     (r'^pay/paypal/', include('paypal.standard.ipn.urls')),
     
     
-    (r'^weixin', include('apps.weixin_app.urls')),
+    (r'^weixin/', include('apps.weixin_app.urls')),
     (r'^alipay', include('apps.alipay_app.urls')),
 )
 
