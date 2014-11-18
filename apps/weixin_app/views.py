@@ -10,5 +10,3 @@ def vaild(request):
     echostr=request.GET.get('echostr')
     return HttpResponse(echostr)
 
-def auth_login(request):
-    return HttpResponse('success')

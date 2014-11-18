@@ -24,6 +24,10 @@ urlpatterns = patterns('apps.third_party_login_app.views',
     url(r'^update_gender/$','update_gender'),
     
      url(r'^register_by_three_party/$','register_by_three_party'),
+     
+     url(r'^weixin_login_url/', 'get_weixin_login_url'),
+    url(r'^weixin_login/', 'weixin_login'),
+     
     
     
     

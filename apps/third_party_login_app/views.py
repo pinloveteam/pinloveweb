@@ -23,6 +23,9 @@ from .setting import (
      TwitterConsumerKey,
      TwitterConsumerSecret,
      TWITTER_CALLBACK_URL,
+     WEIXIN_CALLBACK_URL,
+      WeiXinAppID, 
+      WeiXinAppSecret
      )
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
@@ -91,7 +94,58 @@ def qq_login(request):
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
         login(request,user.username,DEFAULT_PASSWORD)
     return HttpResponseRedirect('/account/loggedin/')
-       
+     
+'''
+微信登录链接
+'''     
+def get_weixin_login_url(request):
+    from apps.third_party_login_app.weinxin_api import WeiXinClient
+    client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL,scope='snsapi_login,snsapi_base,snsapi_userinfo')
+    #获取qq授权登录地址
+    return HttpResponseRedirect(client.get_auth_url())  
+
+'''
+微信登录
+'''
+def weixin_login(request):
+    args={}
+    try:
+        from apps.third_party_login_app.weinxin_api import WeiXinClient
+        client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+        access=client.request_access_token(request.GET.get('code'))
+        log.error('code:%s'%(request.GET.get('code')))
+        request.session['access_token']=access.get('access_token')
+        request.session['expires_in']==access.get('expires_in')
+        from apps.third_party_login_app.models import ThirdPsartyLogin
+        if not ThirdPsartyLogin.objects.filter(provider='3',uid=client.openid).exists():
+            user_info=client.request_get_info()
+            log.error(simplejson.dumps(user_info))
+            #判断是否获取错误
+            request.session['three_registe']={'provider':'3','uid':client.openid,'access_token':client.access_token}
+            genderList=[1,u"男",'male']
+            if user_info['gender'] in genderList:
+                gender='M'
+            else:
+                gender='F'
+            initial={'username':user_info['nickname'].strip(),'gender':gender}
+            confirmInfo=ConfirmInfo(initial)
+            if not confirmInfo.is_valid():
+                args['error']=True
+                if confirmInfo.errors:
+                    for item in confirmInfo.errors.items():
+                        key='%s%s'%(item[0],'_error')
+                        args[key]=item[1][0]
+            args['confirmInfo']=confirmInfo
+            return render(request,'login_confirm_register.html',args)
+        else:
+           #根据QQopenId获取用户信息
+           user=ThirdPsartyLogin.objects.get(provider='3',uid=client.openid).user
+           login(request,user.username,DEFAULT_PASSWORD)
+        
+    except Exception as e:
+        log.exception('微信登录出错:%s'%(e.message))
+    
+     
 '''
 获取sina授权登录地址,跳转到回调地址（redirect_uri）
 '''
@@ -155,6 +209,8 @@ def sina_login(request):
     user_info=client.users.show.get(uid=uid)
     return HttpResponse(user_info['screen_name'])
 
+
+
 '''
 获取facebook授权登录地址,跳转到回调地址（redirect_uri）
 '''
@@ -200,6 +256,7 @@ def facebook_login(request):
         user=ThirdPsartyLogin.objects.get(provider='2',uid=user_info['id']).user
         login(request,user.username,DEFAULT_PASSWORD)
     return HttpResponseRedirect('/account/loggedin/')
+
 
 
 '''

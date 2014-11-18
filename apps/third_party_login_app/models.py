@@ -9,7 +9,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import simplejson
 
-PROVIDER_CHOICE=(('0','QQ'),('1','新浪'),('2','facebook'),)
+PROVIDER_CHOICE=(('0','QQ'),('1','新浪'),('2','facebook'),('3','微信'))
 class ThirdPsartyLogin(models.Model):
     user=models.ForeignKey(User,related_name="user",verbose_name=u'用户')
     provider=models.CharField(verbose_name=u'供应方',max_length=2,choices=PROVIDER_CHOICE,null=True,blank=True,)

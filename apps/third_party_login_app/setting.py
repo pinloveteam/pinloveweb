@@ -51,3 +51,8 @@ QQ_CALLBACK_URL=WEB_ROOT+'/third_party_login/qq_login/'
 SinaAppKey='3477271030'
 SinaAppSercet='415b5aef35b05962842be73b904ac4e6'
 SINA_CALLBACK_URL =WEB_ROOT+'/third_party_login/sina_login/' # callback url
+
+#sign in with weixin 
+WeiXinAppID=u'wxc3133ce01a166239'
+WeiXinAppSecret='9cd6f602e0c5803b0a439a45b28243b2'
+WEIXIN_CALLBACK_URL =WEB_ROOT+'/weixin/test/'
