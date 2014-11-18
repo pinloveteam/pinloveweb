@@ -101,6 +101,7 @@ def qq_login(request):
 def get_weixin_login_url(request):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL,scope='snsapi_login,snsapi_base,snsapi_userinfo')
+    log.error('get_weixin_login_url success')
     #获取qq授权登录地址
     return HttpResponseRedirect(client.get_auth_url())  
 
@@ -110,13 +111,14 @@ def get_weixin_login_url(request):
 def weixin_login(request):
     args={}
     try:
+        log.error('get_weixin_login start')
         from apps.third_party_login_app.weinxin_api import WeiXinClient
         client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
-        access=client.request_access_token(request.GET.get('code'))
         log.error('code:%s'%(request.GET.get('code')))
+        access=client.request_access_token(request.GET.get('code'))
+        log.error('access:%s'%str(access))
         request.session['access_token']=access.get('access_token')
         request.session['expires_in']==access.get('expires_in')
-        from apps.third_party_login_app.models import ThirdPsartyLogin
         if not ThirdPsartyLogin.objects.filter(provider='3',uid=client.openid).exists():
             user_info=client.request_get_info()
             log.error(simplejson.dumps(user_info))
@@ -144,6 +146,7 @@ def weixin_login(request):
         
     except Exception as e:
         log.exception('微信登录出错:%s'%(e.message))
+        return HttpResponse('微信登录出错:%s'%(e.message))
     
      
 '''
