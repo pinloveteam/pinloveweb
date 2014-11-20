@@ -27,6 +27,8 @@ urlpatterns = patterns('apps.third_party_login_app.views',
      
      url(r'^weixin_login_url/', 'get_weixin_login_url'),
     url(r'^weixin_login/', 'weixin_login'),
+    url(r'^weixin_authorization_url/', 'public_weixin_authorization'),
+    
      
     
     

@@ -12,7 +12,7 @@ from apps.upload_avatar.models import UploadAvatarMixIn
 from apps.upload_avatar.signals import avatar_crop_done
 import os
 # import MySQLdb
-from apps.recommend_app.models import  MatchResult
+from apps.recommend_app.models import  MatchResult, Grade
 # from apps.recommend_app.recommend_util import cal_recommend
 from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT, ADMIN_ID
 # from util.singal import cal_recommend_user
@@ -284,11 +284,10 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         else:
             return self.avatar_name
         
-    @transaction.commit_on_success
-    def save(self, *args, **kwargs):
-       oldUserProfile=kwargs.pop('oldUserProfile',None)
-       if oldUserProfile:
-        from apps.recommend_app.models import Grade
+    '''
+    计算收入
+    '''
+    def _cal_income(self,oldUserProfile):
         if self.income!=None and self.income!=oldUserProfile.income:
             from apps.recommend_app.recommend_util import cal_income
             incomes=cal_income(self.income,self.gender)
@@ -296,6 +295,11 @@ class UserProfile(models.Model, UploadAvatarMixIn):
                 Grade.objects.filter(user=self.user).update(incomescore=incomes)
             else:
                 Grade(user=self.user,incomescore=incomes).save()
+
+    '''
+    计算学历
+    '''        
+    def _cal_education(self,oldUserProfile):
         if self.education!=-1 and (not self.educationSchool in [None,u'']) and (self.education != oldUserProfile.education or  self.educationSchool!=oldUserProfile.educationSchool or self.educationSchool_2!=oldUserProfile.educationSchool_2):
             from apps.recommend_app.recommend_util import cal_education
             if self.educationSchool_2==None:
@@ -314,10 +318,18 @@ class UserProfile(models.Model, UploadAvatarMixIn):
                 Grade.objects.filter(user=self.user).update(educationscore=educationscore)
             else:
                 Grade(user=self.user,educationscore=educationscore).save()
-        if not oldUserProfile.check_birth():
-            self.cal_age()
-            self.cal_sunSign()
+                
+    @transaction.commit_on_success
+    def save(self, *args, **kwargs):
+       oldUserProfile=kwargs.pop('oldUserProfile',None)
+       if oldUserProfile:
+           self._cal_income(oldUserProfile)
+           self._cal_education(oldUserProfile)
+           if not oldUserProfile.check_birth():
+               self.cal_age()
+               self.cal_sunSign()
        super(UserProfile, self).save(*args, **kwargs)
+       
     class Meta:
         verbose_name=u'用户基本信息'
         verbose_name_plural = u'用户基本信息'

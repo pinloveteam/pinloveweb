@@ -124,13 +124,13 @@ def socre_my(request):
             member=UserProfile.objects.get(user_id=request.user.id).member
             flag=BrowseOherScoreHistory.objects.filter(my_id=request.user.id,other_id=otherId).exists();
             if member>0 or flag:
-                matchResult=get_matchresult(request,otherId)
+                matchResult=get_matchresult(request.user.id,otherId)
                 args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
             else:
                 from apps.user_score_app.method import use_score_by_other_score
                 result=use_score_by_other_score(request.user.id,otherId)
                 if result=='success':
-                    matchResult=get_matchresult(request,otherId)
+                    matchResult=get_matchresult(request.user.id,otherId)
                     #保存浏览记录
                     BrowseOherScoreHistory(my_id=request.user.id,other_id=otherId).save()
                     args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}
@@ -138,7 +138,7 @@ def socre_my(request):
                     from apps.pay_app.method import use_charge_by_other_score
                     chargeResult=use_charge_by_other_score(request.user.id,otherId)
                     if chargeResult=='success':
-                        matchResult=get_matchresult(request,otherId)
+                        matchResult=get_matchresult(request.user.id,otherId)
                         #保存浏览记录
                         BrowseOherScoreHistory(my_id=request.user.id,other_id=otherId).save()
                         args={'result':'success','scoreMyself':int(matchResult.scoreMyself)}

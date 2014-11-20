@@ -93,6 +93,9 @@ def auth_view(request) :
             return response
         #获取ip 地址
         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
+        logger.error('%s%s'%('0000000000000',GetLocation(request)))
+        from apps.the_people_nearby.views import GetIp
+        logger.error('%s%s'%('0000003333000',GetIp(request)))
         #将个人相关信息插入缓存
         from util.cache import init_info_in_login
         init_info_in_login(user.id)

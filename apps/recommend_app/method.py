@@ -44,14 +44,14 @@ def match_score(userId,otherUserId):
 #============================
 #获得匹配结果
 #attribute：
-#     request
+#     userId
 #     otherId  ：被匹配的人
 #============================
-def get_matchresult(request,otherId):
+def get_matchresult(userId,otherId):
     try:
-            matchResult=get_match_score_other(request.user.id,otherId)
+            matchResult=get_match_score_other(userId,otherId)
             if matchResult is None:
-                matchResult=match_score(request.user.id,otherId)
+                matchResult=match_score(userId,otherId)
             else:
                 from apps.pojo.recommend import MarchResult_to_RecommendResult
                 matchResult=MarchResult_to_RecommendResult(matchResult)

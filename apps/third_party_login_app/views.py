@@ -25,7 +25,9 @@ from .setting import (
      TWITTER_CALLBACK_URL,
      WEIXIN_CALLBACK_URL,
       WeiXinAppID, 
-      WeiXinAppSecret
+      WeiXinAppSecret,
+      PublicWeiXinAppID,
+      PublicWeiXinAppSecret
      )
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 from django.shortcuts import render
@@ -100,53 +102,71 @@ def qq_login(request):
 '''     
 def get_weixin_login_url(request):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
-    client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL,scope='snsapi_login,snsapi_base,snsapi_userinfo')
+    client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL,scope='snsapi_login',state="login")
     log.error('get_weixin_login_url success')
     #获取qq授权登录地址
     return HttpResponseRedirect(client.get_auth_url())  
 
+'''
+公众号授权微信
+'''
+def public_weixin_authorization(request):
+    from apps.third_party_login_app.weinxin_api import WeiXinClient
+    client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL,scope='snsapi_userinfo',state="51044YHoqI")
+    log.error('public_weixin_authorization success')
+    return HttpResponseRedirect(client.public_authorization_url())  
 '''
 微信登录
 '''
 def weixin_login(request):
     args={}
     try:
+        #获取状态码
+        state=request.GET.get(u'state','')
+        log.error('state ==='+state)
+        if state.find('login')==-1:
+            redirectTo=u'weixin_game'
+        else:
+            redirectTo=u'loggin'
+            
         log.error('get_weixin_login start')
         from apps.third_party_login_app.weinxin_api import WeiXinClient
-        client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+        if redirectTo==u'loggin':
+            client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+        else:
+            client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
         log.error('code:%s'%(request.GET.get('code')))
         access=client.request_access_token(request.GET.get('code'))
         log.error('access:%s'%str(access))
         request.session['access_token']=access.get('access_token')
-        request.session['expires_in']==access.get('expires_in')
+        request.session['expires_in']=access.get('expires_in')
         if not ThirdPsartyLogin.objects.filter(provider='3',uid=client.openid).exists():
             user_info=client.request_get_info()
-            log.error(simplejson.dumps(user_info))
+            log.error(str(user_info))
             #判断是否获取错误
             request.session['three_registe']={'provider':'3','uid':client.openid,'access_token':client.access_token}
             genderList=[1,u"男",'male']
-            if user_info['gender'] in genderList:
+            if user_info['sex'] in genderList:
                 gender='M'
             else:
                 gender='F'
-            initial={'username':user_info['nickname'].strip(),'gender':gender}
-            confirmInfo=ConfirmInfo(initial)
-            if not confirmInfo.is_valid():
-                args['error']=True
-                if confirmInfo.errors:
-                    for item in confirmInfo.errors.items():
-                        key='%s%s'%(item[0],'_error')
-                        args[key]=item[1][0]
-            args['confirmInfo']=confirmInfo
-            return render(request,'login_confirm_register.html',args)
+            
+            #创建第三方登录表信息
+            user=create_user(user_info['nickname'].strip(),DEFAULT_PASSWORD)
+            ThirdPsartyLogin(user=user,provider='3',uid=client.openid,access_token=client.access_token).save()
+            create_user_profile(request,user,DEFAULT_PASSWORD,gender)
+            login(request,user.username,DEFAULT_PASSWORD)
         else:
            #根据QQopenId获取用户信息
            user=ThirdPsartyLogin.objects.get(provider='3',uid=client.openid).user
            login(request,user.username,DEFAULT_PASSWORD)
-        
+        if redirectTo==u'loggin':
+            return HttpResponseRedirect('/account/loggedin/?previous_page=register')
+        elif redirectTo==u'weixin_game':
+            return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
     except Exception as e:
-        log.exception('微信登录出错:%s'%(e.message))
-        return HttpResponse('微信登录出错:%s'%(e.message))
+        log.exception('微信登录出错:%s'%(e))
+        return HttpResponse('微信登录出错:%s'%(e))
     
      
 '''

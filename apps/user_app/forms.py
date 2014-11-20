@@ -119,6 +119,8 @@ class UserBasicProfileForm (ModelForm) :
                    'liveWithParent','likeChild','lastLoginAddress',
                    ) 
 
+
+
 #个人联系方式  
 class UserContactForm(ModelForm):
     IDRegex=r'^\d{18}$'
@@ -254,18 +256,6 @@ class UserFamilyInformationForm(ModelForm):
                    'jobIndustry','jobTitle','companyType','workStatus','companyName','educationCountry','isStudyAbroad',
                    'belief','isSmoke','isDrink','beddingTime','pet','character',
                    'liveWithParent','likeChild','lastLoginAddress',)
-#对未来期望        
-# class UserFamilyLifeForm(ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super(UserFamilyLifeForm, self).__init__(*args, **kwargs)
-#         for key in self.fields:
-#             self.fields[key].required = False
-#     class Meta:
-#         model=UserProfile
-#         field=('liveWithParent','liveWithParent',)
-#         exclude=('user')
-#         
-
 
 class PhotoCheck(ModelForm):
       def __init__(self, *args, **kwargs):

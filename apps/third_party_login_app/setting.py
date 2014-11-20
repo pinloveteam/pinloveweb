@@ -28,7 +28,14 @@ Created on Dec 7, 2013
 # TwitterConsumerKey='nypTu4l4D1sQVef8LgWjQ'
 # TwitterConsumerSecret='OFAdY6pCfAHpmCjoOUdvpCLYao3rxG1QB1DpEtiblE'
 # TWITTER_CALLBACK_URL= WEB_ROOT+'/third_party_login/twitter_login/'
-
+# #sign in with weixin 平台
+# WeiXinAppID=u'wxc3133ce01a166239'
+# WeiXinAppSecret='9cd6f602e0c5803b0a439a45b28243b2'
+# WEIXIN_CALLBACK_URL =WEB_ROOT+'/third_party_login/weixin_login/'
+# 
+# #sign in with weixin 公众号
+# PublicWeiXinAppID=u'wxdbf6f94c9d5f7cd1'
+# PublicWeiXinAppSecret='142757a23a30830e8f602fe82e5e4874'
 
 WEB_ROOT='http://pinlove.com'
 DEFAULT_PASSWORD='PIN_LOVE_10086'
@@ -52,7 +59,11 @@ SinaAppKey='3477271030'
 SinaAppSercet='415b5aef35b05962842be73b904ac4e6'
 SINA_CALLBACK_URL =WEB_ROOT+'/third_party_login/sina_login/' # callback url
 
-#sign in with weixin 
+#sign in with weixin 平台
 WeiXinAppID=u'wxc3133ce01a166239'
 WeiXinAppSecret='9cd6f602e0c5803b0a439a45b28243b2'
 WEIXIN_CALLBACK_URL =WEB_ROOT+'/third_party_login/weixin_login/'
+
+#sign in with weixin 公众号
+PublicWeiXinAppID=u'wxdbf6f94c9d5f7cd1'
+PublicWeiXinAppSecret='142757a23a30830e8f602fe82e5e4874'

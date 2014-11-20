@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 import logging
+from django.utils import simplejson
 __author__ = 'jin'
 __version__ = '0.1.0'
 
@@ -28,9 +29,11 @@ def _encode_params(params):
         将dict转换为url请求的参数形式:a=b&c=d
     """
     args = []
-    for (k, v) in params.iteritems():
-        qv = v.encode('utf-8') if isinstance(v, unicode) else str(v)
-        args.append('%s=%s' % (k, urllib.quote(qv)))
+    keys=params.keys()
+    keys.sort()
+    for key in keys:
+        qv = params[key].encode('utf-8') if isinstance(params[key], unicode) else str(params[key])
+        args.append('%s=%s' % (key, urllib.quote(qv)))
     return '&'.join(args)
 
 _HTTP_GET = 0
@@ -56,11 +59,8 @@ def _http_request(url, method, params, authorization):
     #body = body[9:-3]
     print body
     v_json = json.loads(body, object_hook=_obj_hook)
-    if hasattr(v_json, 'error'):
+    if hasattr(v_json, 'errcode'):
         raise WeiXinError(v_json.error, v_json.error_description)
-
-    if int(v_json['ret']) > 0:
-        raise WeiXinError(v_json['ret'], v_json['msg'])
 
     return v_json
 
@@ -90,6 +90,7 @@ class WeiXinClient(object):
         self.openid = None
         self.refresh_token=None
         self.expires = 0.0
+        self.state=state
         self.base_url = 'https://%s/' % domain
 
 
@@ -117,7 +118,23 @@ class WeiXinClient(object):
                   'redirect_uri': redirect,
                   'scope': self.scope}
         params.update(kwargs)
-        return '%s%s?%s' % ('https://open.weixin.qq.com/', 'connect/qrconnect', _encode_params(params))
+        return '%s%s?%s%s' % ('https://open.weixin.qq.com/', 'connect/qrconnect', urllib.urlencode(params),'#wechat_redirect' )
+    
+    '''
+    公众号授权
+    '''
+    def public_authorization_url(self, redirect_uri=None,state=None):
+        """
+            获取登录的url,
+        """
+        redirect = redirect_uri if redirect_uri else self.redirect_uri
+        state = state if state else self.state
+        params = {'appid':self.client_id,
+                  'response_type': self.response_type,
+                  'redirect_uri': redirect,
+                  'scope': self.scope,
+                  'state':state}
+        return '%s%s?%s%s' % ('https://open.weixin.qq.com/', 'connect/oauth2/authorize', _encode_params(params),'#wechat_redirect')
 
     def request_access_token(self, code, redirect_uri=None,**kwargs):
         """
@@ -132,35 +149,57 @@ class WeiXinClient(object):
                   'code': code,
                   'redirect_uri': redirect}
         params.update(kwargs)
-        url = '%s%s/%s?%s' % (self.base_url,'sns/oauth2/access_token', _encode_params(params))
+        url = '%s%s?%s' % (self.base_url,'sns/oauth2/access_token', _encode_params(params))
+        log.error("url--------"+url)
         resp = urllib2.urlopen(url)
-        result = urlparse.parse_qs(resp.read(), True)
-        access_token = str(result['access_token'][0])
-        expires_in = float(int(result['expires_in'][0]) + int(time.time()))
-        openid=str(result['openid'][0])
-        refresh_token=result['openid'][0]
+        result=simplejson.loads(resp.read())
+        if u'errcode' in result.keys():
+            raise WeiXinError(result['errcode'],result['errmsg'])
+        else:
+            access_token = str(result['access_token'])
+            expires_in = float(int(result['expires_in']) + int(time.time()))
+            openid=str(result['openid'])
+            refresh_token=result['openid']
         
-        self.set_access_token(access_token,expires_in)
-        self.set_openid(openid)
-        self.set_refresh_token(refresh_token)
-
-        return {'access_token':access_token, 'expires_in': expires_in,'openid':openid,\
+            self.set_access_token(access_token,expires_in)
+            self.set_openid(openid)
+            self.set_refresh_token(refresh_token)
+            return {'access_token':access_token, 'expires_in': expires_in,'openid':openid,\
                 'refresh_token':refresh_token}
 
 
     def is_expires(self):
         return not self.access_token or time.time() > self.expires
 
-    def request_get_info(self, api='/sns/userinfo', method=_HTTP_GET, params={}):
+    def request_get_info(self, api='sns/userinfo', method=_HTTP_GET, params={}):
         """
             普通api请求,需要传入api的调用名,如'/sns/userinfo'
         """
 
         #以下为默认的必传的公共参数
         params.update({'access_token': self.access_token,
-                       'openid': self.openid})
-        if self.is_expires():
-            raise WeiXinError('21327', 'expired_token')
+                       'openid': self.openid,
+                       'lang':u'zh_CN'})
+#         if self.is_expires():
+#             raise WeiXinError('21327', 'expired_token')
         return _http_request('%s%s' % (self.base_url, api), method, params, self.access_token)
 
 
+if __name__ =='__main__':
+    WeiXinAppID='wxdbf6f94c9d5f7cd1'
+    WeiXinAppSecret='142757a23a30830e8f602fe82e5e4874'
+    code=u''
+    WEIXIN_CALLBACK_URL='http://pinlove.com/third_party_login/weixin_login/'
+    access_token=u'OezXcEiiBSKSxW0eoylIeC-fBRcogV4Mueu3bqSaqJqYj0gO3aVk_R2PVN-qMam9tX0NjMcG8Hu_cR3x_PJxEfihm8by-OGqKo4zuVul00h_R7AR_zaitU2ft_8yM4y9B5_NRMNoF8XmSPmeoNZ1qQ'
+    openid=u'oXDIAs63MJP-OqNOtfCEthkTOGo4'
+    refresh_token=u'oXDIAs63MJP-OqNOtfCEthkTOGo4'
+    expires_in=1416380655.0
+    client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+    if len(code)==0:
+        client.set_access_token(access_token,expires_in)
+        client.set_openid(openid)
+        client.set_refresh_token(refresh_token)
+        client.request_get_info()
+    else:
+        access=client.request_access_token(code)
+        client.request_get_info()
