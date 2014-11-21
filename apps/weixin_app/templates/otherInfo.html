@@ -34,7 +34,7 @@
 		                },
 		                success: function(data, textStatus){
 		                    if(textStatus== 'success'){
-		                    	$('#share-tip').children().html('填写完成,点击右上角图标将它分享到朋友圈')
+		                    	$('#share_content').html('填写完成,点击右上角图标将它分享到朋友圈')
 		                    	$('#share-tip').show();
 		                    	$('button').attr('disabled','disabled');
 		                    	 $('html, body').animate({scrollTop:0}, 'slow');
@@ -96,7 +96,7 @@
 
 	<body>
 	    <center id="share-tip" class="alert alert-danger" role="alert" style="display: none;">
-			<span></span>
+			<span id='share_content'></span>
 			<span class="glyphicon glyphicon-share-alt"></span>
 		</center>
 		<div class="container">
