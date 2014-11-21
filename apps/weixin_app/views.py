@@ -12,12 +12,13 @@ from apps.user_app.models import UserProfile, UserTag
 from django.utils import simplejson
 from apps.recommend_app.models import UserExpect, Grade
 from apps.weixin_app.models import ScoreRank
+from apps.third_party_login_app.setting import PublicWeiXinAppID
 logger=logging.getLogger(__name__)
 '''
 完善个人信息
 '''
 def self_info(request):
-    args={}
+    args={'PublicWeiXinAppID':PublicWeiXinAppID}
     try:
         link=request.REQUEST.get('userKey')
         args['userKey']=link
@@ -85,7 +86,7 @@ def score(userId,otherId):
 完善我对别人打分信息
 '''
 def other_info(request):
-    args={}
+    args={'PublicWeiXinAppID':PublicWeiXinAppID}
     try:
         userProfile=UserProfile.objects.get(user=request.user)
         if request.method=="POST":
