@@ -12,8 +12,6 @@ class TagBean(object):
         self.isChoice=isChoice
         
 def tag_to_tagbean(tagUserList):
-    if len(tagUserList)==0:
-        return []
     tagLists=get_tag()
     tagBeanLists=[]
     tagBeanList=[]
