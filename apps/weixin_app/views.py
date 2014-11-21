@@ -13,19 +13,26 @@ from django.utils import simplejson
 from apps.recommend_app.models import UserExpect, Grade
 from apps.weixin_app.models import ScoreRank
 from apps.third_party_login_app.setting import PublicWeiXinAppID,\
-    WEIXIN_CALLBACK_URL
+    WEIXIN_CHECK_AUTHORIZATION_URL
 logger=logging.getLogger(__name__)
 '''
 完善个人信息
 '''
 def self_info(request):
-    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':WEIXIN_CALLBACK_URL}
+    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/')}
     try:
-        link=request.REQUEST.get('userKey')
-        args['userKey']=link
-        otherId=UserProfile.objects.get(link=link).user_id
+        userKey=request.REQUEST.get('userKey')
+        args['userKey']=userKey
+        if userKey==None:
+            raise Exception('没有用户标识')
+        otherId=UserProfile.objects.get(link=userKey).user_id
+        if otherId==request.user.id:
+            scoreRankList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
+            args['scoreRankList']=scoreRankList
+            return render(request,'Rank.html',args)
+        userProfile=UserProfile.objects.get(user=request.user)
+        args['link']=userProfile.link
         if request.method=="POST":
-            userProfile=UserProfile.objects.get(user=request.user)
             import copy
             oldUserProfile=copy.deepcopy(userProfile)
             POSTdata=request.POST.copy()
@@ -87,9 +94,10 @@ def score(userId,otherId):
 完善我对别人打分信息
 '''
 def other_info(request):
-    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':WEIXIN_CALLBACK_URL}
+    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/')}
     try:
         userProfile=UserProfile.objects.get(user=request.user)
+        args['link']=userProfile.link
         if request.method=="POST":
             expectHeight=int(request.REQUEST.get('expectHeight'))
             heightweight=int(request.REQUEST.get('heightweight'))
@@ -132,6 +140,3 @@ def other_info(request):
         json=simplejson.dumps({'出错:'%(e.message)})
         return HttpResponse(json, mimetype='application/json')
         
-def vaild(request):
-    echostr=request.GET.get('echostr')
-    return HttpResponse(echostr)

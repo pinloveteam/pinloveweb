@@ -2,7 +2,7 @@ var imgUrl = '../img/pinlove_con-108_108.png';
 var lineLink = '';
 var descContent = "测试异性在你心中的排名！";
 var shareTitle = '测试异性在你心中的排名,点击试试吧';
-var appid = 'wxdbf6f94c9d5f7cd1';
+var appid = '';
 
 function shareFriend() {
     WeixinJSBridge.invoke('sendAppMessage',{
