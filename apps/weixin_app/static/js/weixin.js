@@ -1,4 +1,4 @@
-var imgUrl = '../img/pinlove_con-108_108.png';
+var imgUrl = 'http://pinlove.com/static/img/pinlove_con-108_108.png';
 var lineLink = '';
 var descContent = "测试异性在你心中的排名！";
 var shareTitle = '测试异性在你心中的排名,点击试试吧';
