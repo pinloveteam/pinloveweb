@@ -40,6 +40,7 @@ from django.utils import simplejson
 from apps.third_party_login_app.forms import ConfirmInfo
 from django.db import transaction
 from django.views.decorators.http import require_POST
+from util.util import random_str
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
@@ -169,7 +170,8 @@ def weixin_login(request):
             
             #创建第三方登录表信息
             user=create_user(user_info['nickname'].strip(),DEFAULT_PASSWORD)
-            ThirdPsartyLogin(user=user,provider='3',uid=client.openid,access_token=client.access_token).save()
+            data=simplejson.dumps({'nickname':user_info['nickname'].strip(),'refresh_token':client.refresh_token})
+            ThirdPsartyLogin(user=user,provider='3',uid=client.openid,access_token=client.access_token,data=data).save()
             create_user_profile(request,user,DEFAULT_PASSWORD,gender)
             login(request,user.username,DEFAULT_PASSWORD)
         else:
@@ -410,6 +412,11 @@ return
    user
 '''
 def create_user(username,password,**kwarg):
+    while True:
+        if User.objects.filter(username=username).exists():
+            username='%s%s%s'%(username,'_',random_str(randomlength=3))
+        else:
+            break
     from django.contrib.auth.hashers import make_password
     user=User()
     user.username=username

@@ -12,6 +12,7 @@
 		<script src="/static/js/weixin.js" type="text/javascript" charset="utf-8"></script>
 		{% include "weixin_js_base.html" %}
 		<script type="text/javascript">
+		$(document).ready(function() {
 			//初始化身高
 			init_height();
 			//提交信息
@@ -33,7 +34,10 @@
 		                },
 		                success: function(data, textStatus){
 		                    if(textStatus== 'success'){
-		                    	alert('成功!')
+		                    	$('#share-tip').children().html('填写完成,点击右上角图标将它分享到朋友圈')
+		                    	$('#share-tip').show();
+		                    	$('button').attr('disabled','disabled');
+		                    	 $('html, body').animate({scrollTop:0}, 'slow');
 		                    }
 		                },
 		                complete: function(XMLHttpRequest, textStatus){
@@ -91,6 +95,10 @@
 	</head>
 
 	<body>
+	    <center id="share-tip" class="alert alert-danger" role="alert" style="display: none;">
+			<span></span>
+			<span class="glyphicon glyphicon-share-alt"></span>
+		</center>
 		<div class="container">
 			<div class="page-header">
 				<h2 id="forms-horizontal">对TA的打分标准</h2>

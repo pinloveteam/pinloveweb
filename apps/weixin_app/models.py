@@ -11,6 +11,7 @@ class ScoreRank(models.Model):
     my=models.ForeignKey(User,related_name='rank_my',verbose_name=u'自己')
     other=models.ForeignKey(User,related_name='rank_other',verbose_name=u'别人')
     score=models.FloatField(verbose_name=u"分数")
+    nickname=models.CharField(verbose_name=u"昵称",max_length=128)
     time=models.DateTimeField(verbose_name='时间')
     def save(self, *args, **kwargs):
         self.time=datetime.datetime.now()

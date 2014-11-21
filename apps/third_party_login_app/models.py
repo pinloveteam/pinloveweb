@@ -15,6 +15,7 @@ class ThirdPsartyLogin(models.Model):
     provider=models.CharField(verbose_name=u'供应方',max_length=2,choices=PROVIDER_CHOICE,null=True,blank=True,)
     uid=models.CharField(verbose_name="用户id",max_length=125,null=True)
     access_token=models.CharField(verbose_name='密令',max_length=255,null=True)
+    data=models.CharField(verbose_name='其他数据',max_length=255,null=True,blank=True,)
     class Meta:
         verbose_name = u'第三方登录表' 
         verbose_name_plural = u'第三方登录表'
