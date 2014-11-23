@@ -69,6 +69,16 @@ def self_info(request):
             args['score']=otherId=ScoreRank.objects.get(my_id=otherId,other_id=request.user.id).score
             args['rank']=ScoreRank.objects.filter(score__gte=args['score']).count()
             return render(request,'Sorce.html',args,)
+        elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() \
+             and UserTag.objects.filter(user_id=request.user.id,type=0).exists():
+             args['result']='success'
+             args['score']=int(score(request.user.id,otherId))
+             if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
+                data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
+                nickname=data['nickname']
+                ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname).save()
+             args['rank']=ScoreRank.objects.filter(score__gte=args['score']).count()
+             return render(request,'Sorce.html',args,)
         else:
             #获取自己个人标签
             tags=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=0)

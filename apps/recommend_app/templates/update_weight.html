@@ -6,29 +6,41 @@ $(function() {
  	var slider = ['slidera','sliderb','sliderc','sliderd','slidere','sliderf'];
  	var flag = [true,true,true,true,true,true];
  	data = [{{heightweight}}/100,{{educationweight}}/100,{{incomeweight}}/100,{{appearanceweight}}/100,{{characterweight}}/100];
+ 	var dds = [];
+ 	var surplus = 100;
  	var width = $('.dragdealer').width()-$('.handle').width();
  	slider.forEach(function(v,k){
- 		new Dragdealer(v, {
+ 		var dd = new Dragdealer(v, {
 	    animationCallback: function(x, y) {
-	      var b = 0;
-	      surplus = parseInt($('#surplus').text());
-	      s = surplus + parseInt($('#'+v+' .value').text()?$('#'+v+' .value').text():0);
+//	      console.warn( "nothing selected, can't validate, returning nothing" );
+//			      s = surplus + parseInt($('#'+v+' .value').text()?$('#'+v+' .value').text():0);
+		  s = surplus + (flag[k]?0:data[k]*100);
+	      this.bounds.availWidth = width * s / 100;
+	      surplus = s-Math.round(x * (flag[k]?100:s));
 	      if(flag[k]){
 	      	s=100;
 	      	flag[k] = false;
 	      }
+	      
+	      data[k] = Math.round(x * s)/100;
 	      $('#'+v+' .value').text(Math.round(x * s));
 	      $('#'+v+' .value').closest('.row').find('input').val(Math.round(x * s))
-	      slider.forEach(function(a){
-	      	 b = b + parseInt($('#'+a+' .value').text()?$('#'+a+' .value').text():0);
-	      });
-	      $('#surplus').text(100-b);
-	      this.bounds.availWidth = width * s / 100;
+	      $('#surplus').text(Math.round(surplus));
 	    },
-	    x:data[k]
+	    x:data[k],
+	    slide:false
 	  });
+	  
+	  dds[k] = dd;
+ 	});
+ 	
+ 	$('.handle').mousedown(function(){
+ 		dds.forEach(function(v){
+ 			v.bounds.availWidth = 10000;
+ 		});
  	});
 	});
+	
 $(document).ready(function(){
 	 //提交权重
 
