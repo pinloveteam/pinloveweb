@@ -143,7 +143,7 @@ def other_info(request):
             Grade.objects.create_update_grade(request.user.id,**kwargs)
             args['has_share']=True
             args['result']='success'
-            return render(request,'share.html',json)
+            return render(request,'share.html',args)
         elif has_share_in_game(request.user.id):
             args.update({'result':'success','has_share':True})
             return render(request,'share.html',args)
