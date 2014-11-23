@@ -68,7 +68,8 @@ def self_info(request):
         elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
             args['score']=otherId=ScoreRank.objects.get(my_id=otherId,other_id=request.user.id).score
             args['rank']=ScoreRank.objects.filter(score__gte=args['score']).count()
-            args['has_share']=True
+            from apps.weixin_app.method import has_share_in_game
+            args['has_share']=has_share_in_game(request.user.id)
             return render(request,'Sorce.html',args,)
         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() \
              and UserTag.objects.filter(user_id=request.user.id,type=0).exists():

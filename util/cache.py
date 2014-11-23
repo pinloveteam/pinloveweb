@@ -131,14 +131,20 @@ def has_recommend(user_id,field):
         from apps.recommend_app.models import UserExpect
         if UserExpect.objects.filter(user_id=user_id).exists() and (not (UserExpect.objects.filter(user_id=user_id ,heighty1=0.00,heighty2=0.00,heighty3=0.00,heighty4=0.00,heighty5=0.00,heighty6=0.00,heighty7=0.00,heighty8=0.00).exists())):
             user['userExpect']=True
+        else:
+            user['userExpect']=False
     elif field =='grade':
         from apps.recommend_app.models import Grade
         if Grade.objects.filter(user_id=user_id,heightweight__isnull=False,incomescore__isnull=False,incomeweight__isnull=False,educationscore__isnull=False,educationweight__isnull=False,appearancescore__isnull=False,appearanceweight__isnull=False).exists():
             user['grade']=True
+        else:
+            user['grade']=False
     elif field=='tag':
         from apps.user_app.models import UserTag
         if UserTag.objects.filter(user_id=user_id,type=1).exists() and UserTag.objects.filter(user_id=user_id,type=0).exists():
             user['tag']=True
+        else:
+            user['tag']=False
     recommend[user_id]=user
     cache.set('HAS_RECOMMEND',recommend)
 '''

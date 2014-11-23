@@ -1,4 +1,4 @@
-var imgUrl = 'http://pinlove.com/static/img/pinlove_icon-108_108.png';
+var imgUrl = window.location.host+'/static/img/pinlove_icon-400_400.png';
 var lineLink = '';
 var descContent = "测试异性在你心中的排名！";
 var shareTitle = '测试异性在你心中的排名,点击试试吧';
@@ -9,8 +9,8 @@ function shareFriend() {
     WeixinJSBridge.invoke('sendAppMessage',{
                             "appid": appid,
                             "img_url": imgUrl,
-                            "img_width": "108",
-                            "img_height": "108",
+                            "img_width": "400",
+                            "img_height": "400",
                             "link": lineLink,
                             "desc": descContent,
                             "title": shareTitle
