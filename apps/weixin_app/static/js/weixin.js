@@ -1,8 +1,9 @@
-var imgUrl = 'http://pinlove.com/static/img/pinlove_con-108_108.png';
+var imgUrl = 'http://pinlove.com/static/img/pinlove_icon-108_108.png';
 var lineLink = '';
 var descContent = "测试异性在你心中的排名！";
 var shareTitle = '测试异性在你心中的排名,点击试试吧';
 var appid = '';
+var hasShare=true;
 
 function shareFriend() {
     WeixinJSBridge.invoke('sendAppMessage',{
@@ -39,6 +40,14 @@ function shareWeibo() {
 }
 // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
 document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+	
+	     //页面显示
+	     if(hasShare){
+	    	 WeixinJSBridge.call('showOptionMenu');
+	     }else{
+	    	 WeixinJSBridge.call('hideOptionMenu');
+	     }
+	     
 
         // 发送给好友
         WeixinJSBridge.on('menu:share:appmessage', function(argv){

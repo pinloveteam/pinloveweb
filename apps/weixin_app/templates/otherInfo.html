@@ -25,28 +25,6 @@
 				};
 				cal_weight();
 				cal_tag();
-				data=$(this).serialize()
-				 $.ajax({
-		                type: $(this).attr('method'),
-		                url: '/weixin/other_info/',
-		                data:data,
-		                beforeSend: function(XMLHttpRequest){
-		                },
-		                success: function(data, textStatus){
-		                    if(textStatus== 'success'){
-		                    	$('#share_content').html('填写完成,点击右上角图标将它分享到朋友圈')
-		                    	$('#share-tip').show();
-		                    	$('button').attr('disabled','disabled');
-		                    	 $('html, body').animate({scrollTop:0}, 'slow');
-		                    }
-		                },
-		                complete: function(XMLHttpRequest, textStatus){
-		                },
-		                error: function(response){
-		                    $('#answer-list').html(response);
-		                }
-		            });
-				return false;
 			});
 		  });
 		function check_weight(){
@@ -95,10 +73,6 @@
 	</head>
 
 	<body>
-	    <center id="share-tip" class="alert alert-danger" role="alert" style="display: none;">
-			<span id='share_content'></span>
-			<span class="glyphicon glyphicon-share-alt"></span>
-		</center>
 		<div class="container">
 			<div class="page-header">
 				<h2 id="forms-horizontal">对TA的打分标准</h2>

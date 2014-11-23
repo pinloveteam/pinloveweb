@@ -2,6 +2,9 @@
 $(document).ready(function() {
 	lineLink='{{WEIXIN_CALLBACK_URL}}?userKey={{link}}';
 	appid="{{PublicWeiXinAppID}}";
+	if('{{has_share}}'=='False'){
+		hasShare=false;
+	}
 });
 
 </script>

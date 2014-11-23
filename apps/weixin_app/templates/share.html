@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1" name="viewport">
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/main.css"/>
+		<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+		<script src="/static/js/weixin.js" type="text/javascript" charset="utf-8"></script>
+		{% include "weixin_js_base.html" %}
+		<title></title>
+		<style>
+			.score{
+				margin-bottom: -170px;
+				color: #fff;
+				font-size: 16px;
+				padding-left: 15px;
+				position: relative;
+				z-index: 1;
+			}
+			.btn{
+				position: relative;
+				z-index: 2;
+			}
+			.glyphicon-heart{
+				font-size: 250px;
+				color: #E74C3C;
+			}
+			.text-24{
+				font-size: 24px;
+			}
+			.page-header{
+				margin: 60px 0;
+			}
+		</style>
+	</head>
+	<body>
+	<center id="share-tip" class="alert alert-danger" role="alert" >
+			<span id='share_content'>点击右上角图标将它分享到朋友圈</span>
+			<span class="glyphicon glyphicon-share-alt"></span>
+		</center>
+		<center class="container">
+			<div class="page-header">
+				 <h2 id="forms-horizontal">分享给好友</h2>
+			</div>
+			<div class="score">
+				<p>恭喜您已经填写资料</p> 
+				<p >点击右上角图标</p>
+				<p>分享给朋友</p>
+			</div>
+			<div>
+				<i class="glyphicon glyphicon-heart"></i>
+			</div>
+		</center>
+	</body>
+</html>

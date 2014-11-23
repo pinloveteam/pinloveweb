@@ -43,3 +43,15 @@ def cal_eduction_in_game(eduction,schoolType):
             return scroe
     else:
         return eductionList[eduction]
+
+'''
+判断能不能分享
+'''
+def has_share_in_game(userId):
+    from util.cache import has_recommend,get_has_recommend
+    for field in ['grade','userExpect','tag']:
+        has_recommend(userId,field)
+    if get_has_recommend(userId): 
+        return True
+    else:
+        return False

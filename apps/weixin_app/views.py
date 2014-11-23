@@ -20,7 +20,7 @@ logger=logging.getLogger(__name__)
 完善个人信息
 '''
 def self_info(request):
-    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/')}
+    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
     try:
         userKey=request.REQUEST.get('userKey')
         args['userKey']=userKey
@@ -68,6 +68,7 @@ def self_info(request):
         elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
             args['score']=otherId=ScoreRank.objects.get(my_id=otherId,other_id=request.user.id).score
             args['rank']=ScoreRank.objects.filter(score__gte=args['score']).count()
+            args['has_share']=True
             return render(request,'Sorce.html',args,)
         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() \
              and UserTag.objects.filter(user_id=request.user.id,type=0).exists():
@@ -78,6 +79,8 @@ def self_info(request):
                 nickname=data['nickname']
                 ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname).save()
              args['rank']=ScoreRank.objects.filter(score__gte=args['score']).count()
+             from apps.weixin_app.method import has_share_in_game
+             args['has_share']=has_share_in_game(request.user.id)
              return render(request,'Sorce.html',args,)
         else:
             #获取自己个人标签
@@ -107,10 +110,11 @@ def score(userId,otherId):
 完善我对别人打分信息
 '''
 def other_info(request):
-    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/')}
+    args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
     try:
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
+        from apps.weixin_app.method import has_share_in_game
         if request.method=="POST":
             expectHeight=int(request.REQUEST.get('expectHeight'))
             heightweight=int(request.REQUEST.get('heightweight'))
@@ -134,11 +138,14 @@ def other_info(request):
                 get_score_by_weight(request.user.id)
             from apps.weixin_app.method import cal_weight_in_game
             kwargs=cal_weight_in_game({'heightweight':heightweight,\
-                                          'incomeweight':incomeweight,'educationweight':educationweight,'characterweight':characterweight})
+                                          'incomeweight':incomeweight,'educationweight':educationweight,'characterweight':characterweight,'appearanceweight':0})
             Grade.objects.create_update_grade(request.user.id,**kwargs)
-            args={'result':'success'}
+            args.update({'result':'success','has_share':True})
             json=simplejson.dumps(args)
-            return HttpResponse(json)
+            return render(request,'share.html',args)
+        elif has_share_in_game(request.user.id):
+            args.update({'result':'success','has_share':True})
+            return render(request,'share.html',args)
         else:
             #获取对另一半期望标签
             tagsForOther=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=1)
@@ -150,6 +157,6 @@ def other_info(request):
         
     except Exception as e:
         logger.exception('完善我对别人打分信息：%s'%(e.message))
-        json=simplejson.dumps({'出错:'%(e.message)})
+        json=simplejson.dumps({'result':'error','error_message':'出错%s:'%(e.message)})
         return HttpResponse(json, mimetype='application/json')
         
