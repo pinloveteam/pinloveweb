@@ -1,4 +1,4 @@
-var imgUrl = window.location.host+'/static/img/pinlove_icon-400_400.png';
+var imgUrl = '';
 var lineLink = '';
 var descContent = "测试异性在你心中的排名！";
 var shareTitle = '测试异性在你心中的排名,点击试试吧';

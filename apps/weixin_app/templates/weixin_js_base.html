@@ -2,6 +2,7 @@
 $(document).ready(function() {
 	lineLink='{{WEIXIN_CALLBACK_URL}}?userKey={{link}}';
 	appid="{{PublicWeiXinAppID}}";
+	imgUrl=window.location.host+'/static/img/pinlove_icon-400_400.png'
 	if('{{has_share}}'=='False'){
 		hasShare=false;
 	}
