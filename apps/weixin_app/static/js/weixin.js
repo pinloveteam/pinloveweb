@@ -8,7 +8,7 @@ var hasShare=true;
 function shareFriend() {
     WeixinJSBridge.invoke('sendAppMessage',{
                             "appid": appid,
-                            "img_url": imgUrl,
+                            "img_url": "http://pinlove.com/static/img/pinlove_icon-400_400.png",
                             "img_width": "400",
                             "img_height": "400",
                             "link": lineLink,
@@ -20,9 +20,9 @@ function shareFriend() {
 }
 function shareTimeline() {
     WeixinJSBridge.invoke('shareTimeline',{
-                            "img_url": imgUrl,
-                            "img_width": "108",
-                            "img_height": "108",
+                            "img_url": "http://pinlove.com/static/img/pinlove_icon-400_400.png",
+                            "img_width": "400",
+                            "img_height": "400",
                             "link": lineLink,
                             "desc": descContent,
                             "title": shareTitle

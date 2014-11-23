@@ -141,7 +141,8 @@ def other_info(request):
             kwargs=cal_weight_in_game({'heightweight':heightweight,\
                                           'incomeweight':incomeweight,'educationweight':educationweight,'characterweight':characterweight,'appearanceweight':0})
             Grade.objects.create_update_grade(request.user.id,**kwargs)
-            args.update({'result':'success','has_share':True})
+            args['has_share']=True
+            args['result']='success'
             json=simplejson.dumps(args)
             return render(request,'share.html',args)
         elif has_share_in_game(request.user.id):
