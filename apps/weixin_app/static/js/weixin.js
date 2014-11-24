@@ -42,11 +42,7 @@ function shareWeibo() {
 document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
 	
 	     //页面显示
-	     if(hasShare){
-	    	 WeixinJSBridge.call('showOptionMenu');
-	     }else{
-	    	 WeixinJSBridge.call('hideOptionMenu');
-	     }
+	      WeixinJSBridge.call('showOptionMenu');
 	     
 
         // 发送给好友
