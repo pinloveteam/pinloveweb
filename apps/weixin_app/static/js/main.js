@@ -13,4 +13,5 @@ $(document).ready(function() {
 		$(this).addClass('star-red').prevAll().addClass('star-red');
 	});
 	
+	
 });

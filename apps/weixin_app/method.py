@@ -32,18 +32,38 @@ def cal_weight_in_game(kwargs):
 '''
 计算学历
 '''
-def cal_eduction_in_game(eduction,schoolType):
-    eductionList=[40,50,60,70,80,90]
-    if eduction>=2:
-        if schoolType<0:
-            return eductionList[eduction]
+def cal_eduction_in_game(eduction,schoolType,country):
+        eductionList=[40,50,60,70,80,90]
+        if eduction>=2:
+          if country==0:
+            if schoolType<0:
+                return eductionList[eduction]
+            elif schoolType<=4:
+                scroe=eductionList[eduction]+schoolType*5
+                scroe=100 if scroe>=100 else scroe
+                return scroe
+            else:
+                raise Exception('学校类型填写错误')
+          elif country==1:
+                scroe=eductionList[eduction]
+                if schoolType<=20:
+                    scroe=scroe+(30-schoolType)
+                elif schoolType>20 and  schoolType<=100:
+                    score=scroe+10
+                elif schoolType>100 and schoolType<=200:
+                    score=scroe+5
+                elif schoolType>200 and schoolType<=300: 
+                    score=scroe+2
+                scroe=100 if scroe>=100 else scroe
+                return scroe
+          else:
+                raise Exception('国家填写错误')
         else:
-            scroe=eductionList[eduction]+schoolType*5
-            scroe=100 if scroe>=100 else scroe
-            return scroe
-    else:
-        return eductionList[eduction]
+            return eductionList[eduction]
+        
 
+    
+    
 '''
 判断能不能分享
 '''

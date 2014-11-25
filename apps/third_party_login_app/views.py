@@ -41,6 +41,13 @@ from apps.third_party_login_app.forms import ConfirmInfo
 from django.db import transaction
 from django.views.decorators.http import require_POST
 from util.util import random_str
+import cStringIO
+import urllib
+import Image
+import os
+import hashlib
+import time
+from django.utils.crypto import get_random_string
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
@@ -167,12 +174,30 @@ def weixin_login(request):
                 gender='M'
             else:
                 gender='F'
-            
+            kwargs={}
+            if user_info.get('country','')=='中国':
+                kwargs['country']=u'中国'
+            elif len(user_info.get('country',''))>0:
+                kwargs['country']=u'美国'
+            if len(user_info.get('headimgurl'))>0:
+                from apps.upload_avatar.app_settings import UPLOAD_AVATAR_SAVE_FORMAT,UPLOAD_AVATAR_AVATAR_ROOT
+                avatar_name = hashlib.md5(
+        '%s%f' % (get_random_string(), time.time())
+    ).hexdigest()
+                kwargs['avatar_name']='%s%s'%('user_img/',avatar_name)
+                kwargs['avatar_name_status']='2'
+                file = cStringIO.StringIO(urllib.urlopen(user_info.get('headimgurl')).read())
+                img = Image.open(file)
+                for size in [(250,250),(100,100)]:
+                    img.thumbnail(size)
+                    res_name = '%s-%d.%s' % (avatar_name, size[0], UPLOAD_AVATAR_SAVE_FORMAT)
+                    res_path = os.path.join(UPLOAD_AVATAR_AVATAR_ROOT, res_name)
+                    img.save(res_path)
             #创建第三方登录表信息
             user=create_user(user_info['nickname'].strip(),DEFAULT_PASSWORD)
             data=simplejson.dumps({'nickname':user_info['nickname'].strip(),'refresh_token':client.refresh_token})
             ThirdPsartyLogin(user=user,provider='3',uid=client.openid,access_token=client.access_token,data=data).save()
-            create_user_profile(request,user,DEFAULT_PASSWORD,gender)
+            create_user_profile(request,user,DEFAULT_PASSWORD,gender,**kwargs)
             login(request,user.username,DEFAULT_PASSWORD)
         else:
            #根据QQopenId获取用户信息
@@ -435,12 +460,14 @@ def create_user(username,password,**kwarg):
 为第三方用户创建用户信息信息
 '''
 def create_user_profile(request,user,password,gender,**kwarg):
-    args={}
     if kwarg.get('country')!=None:
-        if kwarg.get('country')=='zh_CN':
-            args['country']='中国'
+        if kwarg.get('country') in['zh_CN',u'中国']:
+            kwarg['country']='中国'
+        elif kwarg.get('country',) in [u'美国']:
+            kwarg['country']=u'美国'
+    
     from pinloveweb.method import create_register_extra_user
-    create_register_extra_user(request,user.id,user.username,password,gender,None,**args)
+    create_register_extra_user(request,user.id,user.username,password,gender,None,**kwarg)
     
 ##########other action######
 

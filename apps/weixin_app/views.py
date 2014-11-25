@@ -42,6 +42,7 @@ def self_info(request):
                 userProfile = infoFrom.save(commit=False)
                 tagMyList=request.REQUEST.get('tagMyList','').split(',')
                 schoolType=request.REQUEST.get('schoolType')
+                country=request.REQUEST.get('country')
                 if not UserTag.objects.filter(user_id=request.user.id).exists():
                     from apps.user_score_app.method import get_score_by_character_tag
                     get_score_by_character_tag(request.user.id)
@@ -50,7 +51,7 @@ def self_info(request):
                 userProfile.save(oldUserProfile=oldUserProfile)
                 #计算学历
                 from apps.weixin_app.method import cal_eduction_in_game
-                eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['education']),int(schoolType))
+                eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['education']),int(schoolType),int(country))
                 Grade.objects.filter(user_id=request.user.id).update(educationscore=eductionScore)
                 args['result']='success'
                 args['score']=int(score(request.user.id,otherId))
@@ -90,6 +91,7 @@ def self_info(request):
             tagbeanList=tag_to_tagbean(tags)
             args['tagbeanList']=tagbeanList
             args['infoForm']=InfoForm(initial={'height':175,'income':20,'education':2})
+            args['country']= 1 if userProfile.country ==None else userProfile.country
         return render(request,'selfInfo.html',args)
     except Exception as e:
         logger.exception('完善信息出错：%s'%(e))
