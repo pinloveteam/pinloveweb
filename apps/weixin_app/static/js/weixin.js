@@ -38,6 +38,7 @@ function shareWeibo() {
                             _report('weibo', res.err_msg);
                             });
 }
+$(function(){
 // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
 document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
 	
@@ -59,4 +60,6 @@ document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
         WeixinJSBridge.on('menu:share:weibo', function(argv){
             shareWeibo();
             });
+        alert('true')
         }, false);
+});
