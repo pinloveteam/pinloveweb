@@ -180,7 +180,7 @@ def weixin_login(request):
             elif len(user_info.get('country',''))>0:
                 kwargs['country']=u'美国'
             if len(user_info.get('headimgurl'))>0:
-                from apps.upload_avatar.app_settings import UPLOAD_AVATAR_SAVE_FORMAT,UPLOAD_AVATAR_AVATAR_ROOT
+                from apps.upload_avatar.app_settings import UPLOAD_AVATAR_SAVE_FORMAT,UPLOAD_AVATAR_AVATAR_ROOT,UPLOAD_AVATAR_SAVE_QUALITY
                 avatar_name = hashlib.md5(
         '%s%f' % (get_random_string(), time.time())
     ).hexdigest()
@@ -192,7 +192,7 @@ def weixin_login(request):
                     img.thumbnail(size)
                     res_name = '%s-%d.%s' % (avatar_name, size[0], UPLOAD_AVATAR_SAVE_FORMAT)
                     res_path = os.path.join(UPLOAD_AVATAR_AVATAR_ROOT, res_name)
-                    img.save(res_path)
+                    img.save(res_path, UPLOAD_AVATAR_SAVE_FORMAT, quality=UPLOAD_AVATAR_SAVE_QUALITY)
             #创建第三方登录表信息
             user=create_user(user_info['nickname'].strip(),DEFAULT_PASSWORD)
             data=simplejson.dumps({'nickname':user_info['nickname'].strip(),'refresh_token':client.refresh_token})
