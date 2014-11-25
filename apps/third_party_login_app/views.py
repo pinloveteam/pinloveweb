@@ -43,7 +43,7 @@ from django.views.decorators.http import require_POST
 from util.util import random_str
 import cStringIO
 import urllib
-import Image
+from PIL import Image
 import os
 import hashlib
 import time
@@ -189,7 +189,7 @@ def weixin_login(request):
                 file = cStringIO.StringIO(urllib.urlopen(user_info.get('headimgurl')).read())
                 img = Image.open(file)
                 for size in [(250,250),(100,100)]:
-                    img.thumbnail(size)
+                    img.thumbnail(size, Image.ANTIALIAS)
                     res_name = '%s-%d.%s' % (avatar_name, size[0], UPLOAD_AVATAR_SAVE_FORMAT)
                     res_path = os.path.join(UPLOAD_AVATAR_AVATAR_ROOT, res_name)
                     img.save(res_path, UPLOAD_AVATAR_SAVE_FORMAT, quality=UPLOAD_AVATAR_SAVE_QUALITY)
