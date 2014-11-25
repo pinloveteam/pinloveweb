@@ -13,7 +13,7 @@
 		{% include "weixin_js_base.html" %}
 		<script type="text/javascript">
 		$(document).ready(function() {
-		if({{country}}== '中国'){
+		if('{{country}}'== '中国'){
 			$("#country").val('0');
 		}else{
 			$("#country").val('1');
