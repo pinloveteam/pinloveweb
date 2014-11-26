@@ -1,5 +1,5 @@
 <script type="text/javascript">
-imgUrl=window.location.host+'/static/img/pinlove_icon-400_400.png'
+imgUrl="http://pinlove.com/static/img/pinlove_icon-400_400.png"
 lineLink='{{WEIXIN_CALLBACK_URL}}?userKey={{link}}';
 var descContent = "测试异性在你心中的排名！";
 var shareTitle = '测试异性在你心中的排名,点击试试吧';
@@ -42,7 +42,7 @@ function shareWeibo() {
 $(function(){
 	if (typeof WeixinJSBridge == "undefined"){
 		if( document.addEventListener ){
-			alert('document.addEventListener')
+			//alert('document.addEventListener')
 // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
 document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
 	     //页面显示
@@ -66,13 +66,13 @@ document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
         }, false);
 
 		 }else if (document.attachEvent){
-			 alert('document.attachEvent')
+			// alert('document.attachEvent')
 		        document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
 		        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
 		    }
 
 }else{
-	alert('WeixinJSBridge undefined')
+	//alert('WeixinJSBridge undefined')
 }
 		
 	});
