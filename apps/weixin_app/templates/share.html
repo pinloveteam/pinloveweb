@@ -8,6 +8,13 @@
 		<script type="text/javascript" src="/static/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 		{% include "weixin_js_base.html" %}
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$('button').click(function(){
+				window.location.href="www.pinlove.com";
+			});
+		});
+		</script>
 		<title></title>
 		<style>
 			.score{
@@ -51,6 +58,7 @@
 			<div>
 				<i class="glyphicon glyphicon-heart"></i>
 			</div>
+			<button type="submit" class="btn btn-danger btn-lg">更多详细信息青岛拼爱网(www.pinlove.com)</button>
 		</center>
 	</body>
 </html>

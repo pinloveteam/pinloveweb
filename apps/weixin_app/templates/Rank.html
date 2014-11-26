@@ -12,6 +12,12 @@
 	</head>
 
 	<body>
+	 {%ifequal count 0%}
+		<center id="share-tip" class="alert alert-danger" role="alert" >
+			<span id='share_content'>还没有好友来玩哦,点击右上角图标邀请你的好友来玩吧!</span>
+			<span class="glyphicon glyphicon-share-alt"></span>
+		</center>
+	    {%endifequal%}
 		<div class="container">
 			<div class="page-header">
 				<h2 id="forms-horizontal">得分排名</h2>

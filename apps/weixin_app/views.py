@@ -32,6 +32,7 @@ def self_info(request):
         if otherId==request.user.id:
             scoreRankList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
             args['scoreRankList']=scoreRankList
+            args['count']=len(scoreRankList)
             return render(request,'Rank.html',args)
         if request.method=="POST":
             import copy
@@ -67,7 +68,7 @@ def self_info(request):
             json=simplejson.dumps(args)
             return HttpResponse(json, mimetype='application/json')
         elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
-            args['score']=otherId=ScoreRank.objects.get(my_id=otherId,other_id=request.user.id).score
+            args['score']=int(ScoreRank.objects.get(my_id=otherId,other_id=request.user.id).score)
             args['rank']=ScoreRank.objects.filter(score__gte=args['score']).count()
             from apps.weixin_app.method import has_share_in_game
             args['has_share']=has_share_in_game(request.user.id)
