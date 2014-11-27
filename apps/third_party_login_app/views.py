@@ -120,6 +120,7 @@ def public_weixin_check_authorization_url(request):
    
 def public_weixin_check_authorization(request):
     state=request.GET.get(u'state','')
+    log.error('state:%s'%str(state))
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     if state==u'login':
         log.error('loing:')
