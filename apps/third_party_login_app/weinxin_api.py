@@ -116,7 +116,8 @@ class WeiXinClient(object):
         params = {'appid':self.client_id,
                   'response_type': self.response_type,
                   'redirect_uri': redirect,
-                  'scope': self.scope}
+                  'scope': self.scope,
+                  'state':self.state}
         params.update(kwargs)
         return '%s%s?%s%s' % ('https://open.weixin.qq.com/', 'connect/qrconnect', urllib.urlencode(params),'#wechat_redirect' )
     
