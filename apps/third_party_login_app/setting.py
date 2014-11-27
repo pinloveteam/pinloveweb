@@ -38,6 +38,8 @@ if settings.DEBUG:
     #sign in with weixin 公众号
     PublicWeiXinAppID=u'wxdbf6f94c9d5f7cd1'
     PublicWeiXinAppSecret='142757a23a30830e8f602fe82e5e4874'
+#     PublicWeiXinAppID=u'wx89b973cc86752aa7'
+#     PublicWeiXinAppSecret='024deb12832ef83c19f9442b2eedc3db'
     WEIXIN_CHECK_AUTHORIZATION_URL =WEB_ROOT+'/third_party_login/weixin_check_authorization/'
 
 else:
@@ -64,7 +66,7 @@ else:
     SinaAppSercet='415b5aef35b05962842be73b904ac4e6'
     SINA_CALLBACK_URL =WEB_ROOT+'/third_party_login/sina_login/' # callback url
 
-    #sign in with weixin 平台
+    #sign in with weixin 开发平台
     WeiXinAppID=u'wxc3133ce01a166239'
     WeiXinAppSecret='9cd6f602e0c5803b0a439a45b28243b2'
     WEIXIN_CALLBACK_URL =WEB_ROOT+'/third_party_login/weixin_login/'

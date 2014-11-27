@@ -111,22 +111,28 @@ def qq_login(request):
 '''     
 def get_weixin_login_url(request):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
-    client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL,scope='snsapi_login',state="login")
-    log.error('get_weixin_login_url success')
-    #获取qq授权登录地址
+    client = WeiXinClient(client_id=WeiXinAppID,client_secret=PublicWeiXinAppSecret,\
+                          redirect_uri=WEIXIN_CHECK_AUTHORIZATION_URL,scope=u'snsapi_base',state=u'login')
     return HttpResponseRedirect(client.get_auth_url())  
 
 def public_weixin_check_authorization_url(request):
     return public_weixin_authorization(u'snsapi_base',redirect_uri=WEIXIN_CHECK_AUTHORIZATION_URL,state=request.REQUEST.get('userKey'),)
    
 def public_weixin_check_authorization(request):
+    state=request.GET.get(u'state','')
     from apps.third_party_login_app.weinxin_api import WeiXinClient
-    client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+    if state==u'login':
+        client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+    else:
+        client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
     client.request_access_token(request.GET.get('code'))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
         login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
-        return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
+        if state==u'login':
+            return HttpResponseRedirect('/account/loggedin/')
+        else:
+            return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
     else:
         return public_weixin_authorization('snsapi_userinfo',redirect_uri=WEIXIN_CALLBACK_URL,state=request.GET.get(u'state',''))
     
@@ -137,7 +143,7 @@ def public_weixin_check_authorization(request):
 def public_weixin_authorization(scop,redirect_uri=None,state=None):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=redirect_uri,scope=scop,state=state)
-    log.error('public_weixin_authorization success')
+#     log.error('public_weixin_authorization success')
     return HttpResponseRedirect(client.public_authorization_url())  
 '''
 微信登录
