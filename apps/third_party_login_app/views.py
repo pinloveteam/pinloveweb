@@ -111,7 +111,7 @@ def qq_login(request):
 '''     
 def get_weixin_login_url(request):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
-    client = WeiXinClient(client_id=WeiXinAppID,client_secret=PublicWeiXinAppSecret,\
+    client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,\
                           redirect_uri=WEIXIN_CHECK_AUTHORIZATION_URL,scope=u'snsapi_login',state=u'login')
     return HttpResponseRedirect(client.get_auth_url())  
 
@@ -122,10 +122,12 @@ def public_weixin_check_authorization(request):
     state=request.GET.get(u'state','')
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     if state==u'login':
+        log.error('loing:')
         client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
     else:
         client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
-    client.request_access_token(request.GET.get('code'))
+    access=client.request_access_token(request.GET.get('code'))
+    log.error('access:%s'%str(access))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
         login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
