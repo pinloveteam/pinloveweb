@@ -112,7 +112,7 @@ def qq_login(request):
 def get_weixin_login_url(request):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     client = WeiXinClient(client_id=WeiXinAppID,client_secret=PublicWeiXinAppSecret,\
-                          redirect_uri=WEIXIN_CHECK_AUTHORIZATION_URL,scope=u'snsapi_base',state=u'login')
+                          redirect_uri=WEIXIN_CHECK_AUTHORIZATION_URL,scope=u'snsapi_login',state=u'login')
     return HttpResponseRedirect(client.get_auth_url())  
 
 def public_weixin_check_authorization_url(request):
