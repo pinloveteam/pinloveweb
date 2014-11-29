@@ -170,8 +170,8 @@ def weixin_login(request):
             user_info=client.request_get_info()
             log.error(str(user_info))
             #判断unionid是否存在
-            if ThirdPsartyLogin.objects.filter(data__startswith='"%s"'%(user_info['unionid']),data__endswith='"%s"'%(user_info['unionid'])).exists():
-                thirdPsartyLogin=ThirdPsartyLogin.objects.select_related("user").get(data__startswith='"%s"'%(user_info['unionid']),data__endswith='"%s"'%(user_info['unionid']))
+            if len(list(ThirdPsartyLogin.objects.raw("SELECT * FROM third_party_login WHERE data LIKE BINARY %s%s%s",['%"',user_info['unionid'],'"%'])))>0:
+                thirdPsartyLogin=ThirdPsartyLogin.objects.raw("SELECT * FROM third_party_login WHERE data LIKE BINARY %s%s%s",['%"',user_info['unionid'],'"%'])[0]
                 login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
                 if redirectTo==u'loggin':
                     return HttpResponseRedirect('/account/loggedin/?previous_page=register')
