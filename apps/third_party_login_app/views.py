@@ -169,17 +169,17 @@ def weixin_login(request):
             user_info=client.request_get_info()
             log.error(str(user_info))
 #             #判断unionid是否存在
-#             ThirdPsartyLoginSelect=ThirdPsartyLogin.objects.raw("SELECT * FROM third_party_login WHERE data LIKE BINARY %s",['%"'+user_info['unionid']+'"%'])
-#             if len(list(ThirdPsartyLoginSelect))>0:
-#                 thirdPsartyLogin=ThirdPsartyLoginSelect[0]
-#                 login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
-#                 if redirectTo==u'loggin':
-#                     return HttpResponseRedirect('/account/loggedin/')
-#                 elif redirectTo==u'weixin_game':
-#                     #修改openid为工众号的
-#                     thirdPsartyLogin.uid=client.openid
-#                     thirdPsartyLogin.save()
-#                     return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
+            ThirdPsartyLoginSelect=ThirdPsartyLogin.objects.raw("SELECT * FROM third_party_login WHERE data LIKE BINARY %s",['%"'+user_info['unionid']+'"%'])
+            if len(list(ThirdPsartyLoginSelect))>0:
+                thirdPsartyLogin=ThirdPsartyLoginSelect[0]
+                login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
+                if redirectTo==u'loggin':
+                    return HttpResponseRedirect('/account/loggedin/')
+                elif redirectTo==u'weixin_game':
+                    #修改openid为工众号的
+                    thirdPsartyLogin.uid=client.openid
+                    thirdPsartyLogin.save()
+                    return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
                 
             request.session['three_registe']={'provider':'3','uid':client.openid,'access_token':client.access_token}
             genderList=[1,u"男",'male']
