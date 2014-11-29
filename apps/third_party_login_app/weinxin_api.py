@@ -77,7 +77,7 @@ class WeiXinError(StandardError):
 class WeiXinClient(object):
 
     def __init__(self, client_id, client_secret, redirect_uri=None, response_type='code', scope='snsapi_login',state=None,
-                 domain='api.weixin.qq.com', version='oauth2.0', display='default'):
+                 domain='api.weixin.qq.com', version='oauth2.0', display='default',type=2):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
@@ -92,6 +92,8 @@ class WeiXinClient(object):
         self.expires = 0.0
         self.state=state
         self.base_url = 'https://%s/' % domain
+        #判断微信类型：开发者账号登录:1,公共账号：2
+        self.type=type
 
 
     def set_access_token(self, access_token, expires_in):
@@ -180,7 +182,9 @@ class WeiXinClient(object):
         #以下为默认的必传的公共参数
         params.update({'access_token': self.access_token,
                        'openid': self.openid,
-                       'lang':u'zh_CN'})
+                       })
+        if self.type==2:
+           params['lang']=u'zh_CN'
 #         if self.is_expires():
 #             raise WeiXinError('21327', 'expired_token')
         return _http_request('%s%s' % (self.base_url, api), method, params, self.access_token)

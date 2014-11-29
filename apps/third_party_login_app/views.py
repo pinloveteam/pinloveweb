@@ -122,20 +122,13 @@ def public_weixin_check_authorization(request):
     state=request.GET.get(u'state','')
     log.error('state:%s'%str(state))
     from apps.third_party_login_app.weinxin_api import WeiXinClient
-    if state==u'login':
-        log.error('loing:')
-        client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
-    else:
-        client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+    client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
     access=client.request_access_token(request.GET.get('code'))
     log.error('access:%s'%str(access))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
         login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
-        if state==u'login':
-            return HttpResponseRedirect('/account/loggedin/')
-        else:
-            return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
+        return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
     else:
         return public_weixin_authorization('snsapi_userinfo',redirect_uri=WEIXIN_CALLBACK_URL,state=request.GET.get(u'state',''))
     
@@ -165,7 +158,7 @@ def weixin_login(request):
         log.error('get_weixin_login start')
         from apps.third_party_login_app.weinxin_api import WeiXinClient
         if redirectTo==u'loggin':
-            client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
+            client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL,type=1)
         else:
             client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
         log.error('code:%s'%(request.GET.get('code')))
@@ -176,7 +169,18 @@ def weixin_login(request):
         if not ThirdPsartyLogin.objects.filter(provider='3',uid=client.openid).exists():
             user_info=client.request_get_info()
             log.error(str(user_info))
-            #判断是否获取错误
+            #判断unionid是否存在
+            if ThirdPsartyLogin.objects.filter(data__startswith='"%s"'%(user_info['unionid']),data__endswith='"%s"'%(user_info['unionid'])).exists():
+                thirdPsartyLogin=ThirdPsartyLogin.objects.select_related("user").get(data__startswith='"%s"'%(user_info['unionid']),data__endswith='"%s"'%(user_info['unionid']))
+                login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
+                if redirectTo==u'loggin':
+                    return HttpResponseRedirect('/account/loggedin/?previous_page=register')
+                elif redirectTo==u'weixin_game':
+                    #修改openid为工众号的
+                    thirdPsartyLogin.uid=client.openid
+                    thirdPsartyLogin.save()
+                    return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
+                
             request.session['three_registe']={'provider':'3','uid':client.openid,'access_token':client.access_token}
             genderList=[1,u"男",'male']
             if user_info['sex'] in genderList:
@@ -204,12 +208,11 @@ def weixin_login(request):
                     img.save(res_path, UPLOAD_AVATAR_SAVE_FORMAT, quality=UPLOAD_AVATAR_SAVE_QUALITY)
             #创建第三方登录表信息
             user=create_user(user_info['nickname'].strip(),DEFAULT_PASSWORD)
-            data=simplejson.dumps({'nickname':user_info['nickname'].strip(),'refresh_token':client.refresh_token})
+            data=simplejson.dumps({'nickname':user_info['nickname'].strip(),'refresh_token':client.refresh_token,'unionid':user_info['unionid']})
             ThirdPsartyLogin(user=user,provider='3',uid=client.openid,access_token=client.access_token,data=data).save()
             create_user_profile(request,user,DEFAULT_PASSWORD,gender,**kwargs)
             login(request,user.username,DEFAULT_PASSWORD)
         else:
-           #根据QQopenId获取用户信息
            user=ThirdPsartyLogin.objects.get(provider='3',uid=client.openid).user
            login(request,user.username,DEFAULT_PASSWORD)
         if redirectTo==u'loggin':
