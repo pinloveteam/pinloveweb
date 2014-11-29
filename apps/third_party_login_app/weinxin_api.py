@@ -153,7 +153,7 @@ class WeiXinClient(object):
                   'redirect_uri': redirect}
         params.update(kwargs)
         url = '%s%s?%s' % (self.base_url,'sns/oauth2/access_token', _encode_params(params))
-        log.error("url--------"+url)
+#         log.error("url--------"+url)
         resp = urllib2.urlopen(url)
         result=simplejson.loads(resp.read())
         if u'errcode' in result.keys():

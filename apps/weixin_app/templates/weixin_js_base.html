@@ -5,7 +5,9 @@ var descContent = "测试异性在你心中的排名！";
 var shareTitle = '测试异性在你心中的排名,点击试试吧';
 appid="{{PublicWeiXinAppID}}";
 var hasShare=true;
-
+if ('{{has_share}}' =='False'){
+	hasShare=false;
+}
 function shareFriend() {
     WeixinJSBridge.invoke('sendAppMessage',{
                             "appid": appid,
@@ -46,7 +48,12 @@ $(function(){
 // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
 document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
 	     //页面显示
-	      WeixinJSBridge.call('showOptionMenu');
+	     if(hasShare){
+	    	 WeixinJSBridge.call('showOptionMenu');
+	     }else{
+	    	 WeixinJSBridge.call('hideOptionMenu');
+	     }
+	      
 	     
 
         // 发送给好友

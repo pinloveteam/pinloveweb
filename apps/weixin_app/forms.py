@@ -18,12 +18,15 @@ class InfoForm (ModelForm) :
             self.fields[key].required = False
             self.fields[key].widget.attrs['class']='form-control'
             if key in [u'income','height']:
+                incomeChoicesList=[]
                 if key==u'income':
                     unit='元'
+                    incomeChoices=self.fields[key].choices[1:]
+                    incomeChoicesList.append((incomeChoices[0][0],'5万元以下'))
                 else:
+                    incomeChoices=self.fields[key].choices
                     unit='厘米'
-                incomeChoices=self.fields[key].choices
-                incomeChoicesList=[]
+                
                 for income in incomeChoices:
                     incomeChoicesList.append((income[0],(income[1]+unit)))
                 self.fields[key].choices=incomeChoicesList
