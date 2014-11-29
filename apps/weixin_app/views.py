@@ -31,8 +31,7 @@ def self_info(request):
         args['link']=userProfile.link
         if otherId==request.user.id:
             scoreRankList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
-            args['scoreRankList']=scoreRankList
-            args['count']=len(scoreRankList)
+            args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
             return render(request,'Rank.html',args)
         if request.method=="POST":
             import copy
