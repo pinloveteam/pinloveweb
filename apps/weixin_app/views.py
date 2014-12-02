@@ -25,11 +25,18 @@ def self_info(request):
         userKey=request.REQUEST.get('userKey')
         args['userKey']=userKey
         if userKey==None:
-            raise Exception('没有用户标识')
-        otherId=UserProfile.objects.get(link=userKey).user_id
+            return render(request,'error.html',{'result':'error','error_message':'没有用户标识，请联系客服!'})
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
-        if otherId==request.user.id:
+        #查看排名
+        if userKey!=u'rank':
+            try:
+                otherId=UserProfile.objects.get(link=userKey).user_id
+            except UserProfile.DoesNotExist as e:
+                return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
+            except UserProfile.MultipleObjectsReturned as e:
+                 return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
+        if userKey==u'rank' or otherId==request.user.id  :
             scoreRankList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
             args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
             return render(request,'Rank.html',args)

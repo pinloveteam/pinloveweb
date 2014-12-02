@@ -120,15 +120,17 @@ def public_weixin_check_authorization_url(request):
    
 def public_weixin_check_authorization(request):
     state=request.GET.get(u'state','')
-    log.error('state:%s'%str(state))
+#     log.error('state:%s'%str(state))
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
     access=client.request_access_token(request.GET.get('code'))
-    log.error('access:%s'%str(access))
+#     log.error('access:%s'%str(access))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
         login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
         return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
+    elif state==u'rank':
+        return render(request,'error.html',{'result':'error','error_message':'亲爱的用户，你还没玩过游戏，玩过游戏，然后查看排名!'})
     else:
         return public_weixin_authorization('snsapi_userinfo',redirect_uri=WEIXIN_CALLBACK_URL,state=request.GET.get(u'state',''))
     
