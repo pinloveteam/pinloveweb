@@ -119,6 +119,7 @@ def public_weixin_check_authorization_url(request):
     return public_weixin_authorization(u'snsapi_base',redirect_uri=WEIXIN_CHECK_AUTHORIZATION_URL,state=request.REQUEST.get('userKey'),)
    
 def public_weixin_check_authorization(request):
+   try:
     state=request.GET.get(u'state','')
 #     log.error('state:%s'%str(state))
     from apps.third_party_login_app.weinxin_api import WeiXinClient
@@ -133,6 +134,11 @@ def public_weixin_check_authorization(request):
         return render(request,'error.html',{'result':'error','error_message':'亲爱的用户，你还没玩过游戏，玩过游戏，然后查看排名!'})
     else:
         return public_weixin_authorization('snsapi_userinfo',redirect_uri=WEIXIN_CALLBACK_URL,state=request.GET.get(u'state',''))
+   except Exception as e:
+       if getattr(e,'error','')==40029:
+           return render(request,'error.html',{'result':'error','error_message':'亲爱的用户，请授权游戏!'})
+       else:
+           return render(request,'error.html',{'result':'error','error_message':'微信授权出错,出错原因:%s'%(e.message)})
     
 
 '''
