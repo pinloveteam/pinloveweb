@@ -229,7 +229,10 @@ def weixin_login(request):
             return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
     except Exception as e:
         log.exception('微信登录出错:%s'%(e))
-        return HttpResponse('微信登录出错:%s'%(e))
+        if getattr(e,'error','')==40029:
+           return render(request,'error.html',{'result':'error','error_message':'亲爱的用户，请授权游戏!'})
+        else:
+           return render(request,'error.html',{'result':'error','error_message':'微信授权出错,出错原因:%s'%(e.message)})
     
      
 '''
