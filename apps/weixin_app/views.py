@@ -37,7 +37,11 @@ def self_info(request):
             except UserProfile.MultipleObjectsReturned as e:
                  return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
         if userKey==u'rank' or otherId==request.user.id  :
-            scoreRankList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
+            scoreRankBeanbList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
+            scoreRankList=[]
+            for scoreRankBean in scoreRankBeanbList:
+               scoreRankBean.score=int(scoreRankBean.score)
+               scoreRankList.append(scoreRankBean)
             args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
             return render(request,'Rank.html',args)
         if request.method=="POST":
@@ -66,7 +70,7 @@ def self_info(request):
                     data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
                     nickname=data['nickname']
                     ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname).save()
-                args['rank']=ScoreRank.objects.filter(my_id=otherId,score__gte=args['score']).count()
+                args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gte=args['score']).count()+1)
                 return render(request,'Sorce.html',args,)
             else:
                 errors=infoFrom.errors.items()
@@ -75,7 +79,7 @@ def self_info(request):
             return HttpResponse(json, mimetype='application/json')
         elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
             args['score']=int(ScoreRank.objects.get(my_id=otherId,other_id=request.user.id).score)
-            args['rank']=ScoreRank.objects.filter(my_id=otherId,score__gte=args['score']).count()
+            args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gte=args['score']).count()+1)
             from apps.weixin_app.method import has_share_in_game
             args['has_share']=has_share_in_game(request.user.id)
             return render(request,'Sorce.html',args,)
@@ -87,7 +91,7 @@ def self_info(request):
                 data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
                 nickname=data['nickname']
                 ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname).save()
-             args['rank']=ScoreRank.objects.filter(my_id=otherId,score__gte=args['score']).count()
+             args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gte=args['score']).count()+1)
              from apps.weixin_app.method import has_share_in_game
              args['has_share']=has_share_in_game(request.user.id)
              return render(request,'Sorce.html',args,)
