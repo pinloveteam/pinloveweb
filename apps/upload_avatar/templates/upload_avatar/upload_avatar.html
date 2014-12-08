@@ -158,6 +158,7 @@
                 $('#uploadAvatarValueX2').val('');
                 $('#uploadAvatarValueY2').val('');
                 rotate_value=0;	
+                $('#rotate_value').val(rotate_value)
                 $(this).removeAttr('disabled');
                 return false;
             });
@@ -208,7 +209,6 @@
         
         var imgSelect;
         function upload_avatar_success(image_url) {
-        	rotate_value=0;
             $('#uploadAvatarSelectArea').empty();
             $('#uploadAvatarPreviewArea div').empty();
             $('#uploadAvatarPreviewArea div').append('<img />');
