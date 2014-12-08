@@ -1,12 +1,10 @@
 <div id="uploadAvatar">
-    <link rel="stylesheet" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css" type="text/css" />
-    <script type="text/javascript" src="{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jQueryRotate.js"></script>
-    
     <style type="text/css">
         #uploadAvatarBtnLayout {
             position: relative;
         }
+        
         
         #uploadAvatarBtnLayout {
             overflow: hidden;
@@ -42,8 +40,10 @@
            /*设置水平居中*/
            text-align:center;
            /* 针对IE的Hack */
-         
-
+           
+           box-sizing:content-box;
+           -moz-box-sizing:content-box; /* Firefox */
+           -webkit-box-sizing:content-box; /* Safari */
 
         }
         
@@ -73,6 +73,10 @@
            position: relative;
            cursor: pointer;
         }
+        
+        #uploadAvatar div, #uploadAvatar div:before, #uploadAvatar div:after {
+    box-sizing: content-box;
+}
          /*#uploadAvatarCropSubmit{
 			 left: 140px;
     position: absolute;
@@ -94,6 +98,15 @@
     
     <script type="text/javascript">
         $(function(){
+        	//判断是否是电脑
+        	if(is_PC()){
+        		$('#uploadAvatar').append("<script type='text/javascript' src='{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.js'/>");
+        		$('#uploadAvatar').append("<link rel='stylesheet' href='{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css' type='text/css' />");
+        	}else{
+        	     $('#uploadAvatar').append("<script type='text/javascript' src='{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.mobile.js'>");
+        		$('#uploadAvatar').append("<link rel='stylesheet' href='{{ STATIC_URL }}imgareaselect/css/imgareaselect-default_mobile.css' type='text/css' />");
+        	    $('.rotate_revolve').remove();
+        	}
             $('#uploadAvatarBtnLayout button').click(function(){
                 return false;
             });
@@ -240,7 +253,7 @@
                     y2: sel.y2,
                     show:true,
                     instance:true,
-                    parent:'html',
+                    parent:'#uploadAvatarSelectArea',
                     onSelectChange: updateCoors
                 });
                 
@@ -327,7 +340,7 @@
     <br>
     <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
     
-    <div id="uploadAvatarSelectArea"></div>
+    <div id="uploadAvatarSelectArea"  style="position:relative;"></div>
     <div class="rotate_revolve">
       <img class="rotate_left" src="{{STATIC_URL}}img/rotate_left.png"/>
       <img class="rotate_right" src="{{STATIC_URL}}img/rotate_right.png"/>
