@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url, static
-import settings
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.views.generic.base import TemplateView
+from pinloveweb import settings
 admin.autodiscover()
 
 #user
@@ -32,7 +32,6 @@ urlpatterns = patterns('',
     url(r'^account/loggedin/', 'pinloveweb.views.loggedin'),
     url(r'^account/invalid/', 'pinloveweb.views.invalid_login'),
     url(r'^account/logout/', 'pinloveweb.views.logout'), 
-    url(r'^account/loggedout/', 'pinloveweb.views.loggedout'),
     url(r'^account/forget_password/', 'pinloveweb.views.forget_password'),
     # Registration 
     url(r'^account/register/$', 'pinloveweb.views.register_user'), 
@@ -68,13 +67,14 @@ urlpatterns = patterns('',
     (r'^third_party_login/', include('apps.third_party_login_app.urls')),
     (r'^pay/', include('apps.pay_app.urls')),
 
-     url(r'^test/$', 'pinloveweb.views.test'),
      #paypal
     (r'^pay/paypal/', include('paypal.standard.ipn.urls')),
     
     
     (r'^weixin/', include('apps.weixin_app.urls')),
     (r'^alipay', include('apps.alipay_app.urls')),
+    (r'^mobile/', include('apps.mobile_app.urls')),
+    
 )
 
 #禁止搜索引擎收录
@@ -95,6 +95,7 @@ if settings.DEBUG:
                           url(r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_ROOT },name="static"),
                            url(r'^site_media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT },name="site_media"),
                           url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT },name="media"),
+                          url(r'^test/$', 'pinloveweb.test.tests'),
 )
-   
+    
    

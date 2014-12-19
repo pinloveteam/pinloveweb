@@ -1,0 +1,96 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --主页{% endblock %}
+{% block content %}
+
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					推荐
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-search"></i>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row frame self">
+				<div class="col-xs-3">
+					<img width="60px" class="img-circle" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span class="name">王二狗</span>
+					</div>
+					<div class="row">
+						拼爱币：<span id="" class="text-danger">10</span>
+					</div>
+					<div class="row">
+						<small>关注：54</small>
+						<small>粉丝：54</small>
+						<small>相互关注：54</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+					<a href="">
+					<i class="glyphicon glyphicon-chevron-right"></i>
+					</a>
+				</div>
+			</div>
+			<div class="row frame">
+				<div class="col-xs-3">
+					<img width="60px" class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-9">
+					<div class="row">
+						<span class="name">张三</span>
+					</div>
+					<div class="row">
+						<small>30岁</small>
+					</div>
+					<div class="row">
+						<small>交友条件</small>
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav>
+			<div class="col-xs-1">
+
+			</div>
+			<div class="col-xs-2">
+				<p></p>
+				<i class="glyphicon glyphicon-star-empty"></i>
+				<p>推荐</p>
+			</div>
+			<div class="col-xs-2 active">
+				<p></p>
+				<i class="glyphicon glyphicon-refresh"></i>
+				<p>动态</p>
+			</div>
+			<div class="col-xs-2">
+				<p></p>
+				<i class="glyphicon glyphicon-map-marker"></i>
+				<p>附近</p>
+			</div>
+			<div class="col-xs-2">
+				<p></p>
+				<i class="glyphicon glyphicon-heart-empty"></i>
+				<p>拼图</p>
+			</div>
+			<div class="col-xs-2">
+				<p></p>
+				<i class="glyphicon glyphicon-envelope"></i>
+				<p>私信</p>
+			</div>
+			<div class="col-xs-1">
+
+			</div>
+		</nav>
+	</body>
+
+{% endblock%}

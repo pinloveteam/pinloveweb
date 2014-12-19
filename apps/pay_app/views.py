@@ -52,7 +52,7 @@ def pay_detail(request):
 会员购买页面
 '''
 @csrf_exempt
-def member(request):
+def member(request,template_name='buy.html'):
     try:
         args={}
         userProfile=UserProfile.objects.get(user=request.user)
@@ -77,7 +77,7 @@ def member(request):
         args.update(init_person_info_for_card_page(userProfile))
         from pinloveweb.method import get_no_read_web_count
         args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
-        return render(request,'buy.html',args)
+        return render(request,template_name,args)
     except Exception as e:
         error_message=('%s%s%s' %('会员购买页面出错!','出错原因:',e.message))
         logger.exception(error_message)

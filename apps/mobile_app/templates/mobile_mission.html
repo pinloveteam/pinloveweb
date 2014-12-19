@@ -1,0 +1,159 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --个人中心{% endblock %}
+{% block staticfiles %} 
+<link rel="stylesheet" type="text/css" href="css/app.css" />
+{% endblock %}
+{% block content %}
+
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					免费领取拼爱币
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4">
+					<center class="mission">
+						<div class="mission-content">
+							<h4>完善资料</h4>
+							<h5 class="mission-text"><small>每完成一项信息奖励1拼爱币</small></h5>
+						</div>
+						{%if userProfileFinish %}
+						<a href="/user/user_profile/#self_info_">
+						 <div class="mission-bottom">
+							去完成
+						  </div>
+						 </a>
+						{%else%}
+						<div class="mission-bottom-completed">
+							已完成
+						 </div>
+						{%endif%}
+						
+					</center>
+				</div>
+				<div class="col-sm-4">
+					<center class="mission">
+						<div class="mission-content">
+							<h4>每日签到</h4>
+							<h5 class="mission-text"><small>每次签到奖励2拼爱币，每日最多5次</small></h5>
+						</div>
+						<div class="{%ifequal dayLoginCount DAY_LOGIN_COUNT%}mission-bottom-completed{%else%}mission-bottom{%endifequal%}">
+						  {%ifequal dayLoginCount 0%}去完成{%else%}已领取{{dayLoginCount}}次{%endifequal%}
+						</div>
+					</center>
+				</div>
+				<div class="col-sm-4">
+					<center class="mission">
+						<div class="mission-content">
+							<h4>头像认证</h4>
+							<h5 class="mission-text"><small>奖励10拼爱币</small></h5>
+						</div>
+						{%ifequal avatar_name_status '3'%}
+							<div class="mission-bottom-completed">
+							    已完成
+						    </div>
+						{%else%}
+						  {%ifequal avatar_name_status '2'%}
+						        <div class="mission-bottom-completed">
+						                              正在审核
+						         </div>
+							{%else%}
+								<a href="/user/user_profile/#upload_head_">
+								   <div class="mission-bottom">
+						                                            去完成
+						            </div>
+								</a>
+							{%endifequal%}
+						{%endifequal%}
+						
+					</center>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<center class="mission">
+						<div class="mission-content">
+							<h4>邀请注册</h4>
+							<h5 class="mission-text"><small>奖励10拼爱币</small></h5>
+						</div>
+						<div class="mission-bottom">
+							去完成
+						</div>
+					</center>
+				</div>
+				<div class="col-sm-4">
+					<center class="mission">
+						<div class="mission-content">
+							<h4>邀请登录</h4>
+							<h5 class="mission-text"><small>奖励2拼爱币</small></h5>
+						</div>
+						<div class="mission-bottom-completed">
+							已完成
+						</div>
+					</center>
+				</div>
+				<div class="col-sm-4">
+					<center class="mission">
+						<div class="mission-content">
+							<h4>收入认证</h4>
+							<h5 class="mission-text"><small>奖励10拼爱币</small></h5>
+						</div>
+						{%ifequal incomeValid '3'%}
+							<div class="mission-bottom-completed">
+							  已完成
+							</div>
+						{%else%}
+						{%ifequal incomeValid '2'%}
+							<div class="mission-bottom-completed">
+							     已完成
+						    </div>
+						 {%else%}
+						    <a href="/user/user_profile/#certification_">
+						     <div class="mission-bottom">
+						                    去完成
+						      </div>
+						     </a>
+						 {%endifequal%}
+						{%endifequal%}
+					</center>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<center class="mission">
+						<div class="mission-content">
+							<h4>学历认证</h4>
+							<h5 class="mission-text"><small>奖励10拼爱币</small></h5>
+						</div>
+						{%ifequal educationValid '3'%}
+						 <div class="mission-bottom-completed">已完成</div>
+						{%else%}
+						  {%ifequal educationValid '2'%}
+						   <div class="mission-bottom-completed">正在审核</div>
+						  {%else%}
+							<a href="/user/user_profile/#certification_">
+							 <div class="mission-bottom">去完成</div>
+							</a>
+						  {%endifequal%}
+						{%endifequal%}
+					</center>
+				</div>
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+				</div>
+			</div>
+		</div>
+	</body>
+	
+{% endblock %}

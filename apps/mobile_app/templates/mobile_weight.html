@@ -1,0 +1,157 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --权重{% endblock %}
+{% block staticfiles %}
+  <link rel="stylesheet" type="text/css" href="css/dragdealer.css" />
+  <script src="js/dragdealer.min.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+			$(function() {
+			 	var slider = ['slidera','sliderb','sliderc','sliderd','slidere','sliderf'];
+			 	var flag = [true,true,true,true,true,true];
+			 	var data = [0.1,0.1,0.1,0.1,0.1,0.1];
+			 	var dds = [];
+			 	var surplus = 100;
+			 	var width = $('.dragdealer').width()-$('.handle').width();
+			 	slider.forEach(function(v,k){
+			 		var dd = new Dragdealer(v, {
+				    animationCallback: function(x, y) {
+//				      console.warn( "nothing selected, can't validate, returning nothing" );
+	//			      s = surplus + parseInt($('#'+v+' .value').text()?$('#'+v+' .value').text():0);
+					  s = surplus + (flag[k]?0:data[k]*100);
+				      this.bounds.availWidth = width * s / 100;
+				      surplus = s-Math.round(x * (flag[k]?100:s));
+				      if(flag[k]){
+				      	s=100;
+				      	flag[k] = false;
+				      }
+				      
+				      data[k] = Math.round(x * s)/100;
+				      $('#'+v+' .value').text(Math.round(x * s));
+				      
+				      $('#surplus').text(Math.round(surplus));
+				    },
+				    x:data[k],
+				    slide:false
+				  });
+				  
+				  dds[k] = dd;
+			 	});
+			 	
+			 	$('.handle').mousedown(function(){
+			 		dds.forEach(function(v){
+			 			v.bounds.availWidth = 10000;
+			 		});
+			 	});
+				});
+		</script>
+{% endblock %}
+		
+		<title></title>
+	</head>
+
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					权重
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<p class="frame">你最看重TA的哪些方面？是身高还是学历？请标出TA的各个方面在你心中的重要程度，以帮助系统更好的向你推荐。TA的总分由您定义的权重和TA在各个方面得分累计计算得出：</p>
+			</div>
+			<div class="row">
+				<p class="frame text-danger" style="padding-top: 5px;">总分=身高权重*身高得分+外貌权重*外貌得分+学历权重*学历得分+收入权重*收入得分+性格权重*性格得分</p>
+			</div>
+
+			<div class="row frame weight">
+				<div class="row">
+					<div class="col-xs-3">
+						身高
+					</div>
+					<div class="col-xs-9">
+						<div id="slidera" class="dragdealer">
+							<div class="handle red-bar">
+								<span class="value"></span>%
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-3">
+						学历
+					</div>
+					<div class="col-xs-9">
+						<div id="sliderb" class="dragdealer">
+							<div class="handle red-bar">
+								<span class="value"></span>%
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-3">
+						收入
+					</div>
+					<div class="col-xs-9">
+						<div id="sliderc" class="dragdealer">
+							<div class="handle red-bar">
+								<span class="value"></span>%
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-3">
+						外貌
+					</div>
+					<div class="col-xs-9">
+						<div id="sliderd" class="dragdealer">
+							<div class="handle red-bar">
+								<span class="value"></span>%
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-3">
+						性格
+					</div>
+					<div class="col-xs-9">
+						<div id="slidere" class="dragdealer">
+							<div class="handle red-bar">
+								<span class="value"></span>%
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row" style="margin-bottom: 0;">
+					<div class="col-xs-3">
+						剩余
+					</div>
+					<div class="col-xs-9">
+						<span id="surplus"></span>%
+					</div>
+				</div>
+			</div>
+			<center class="button">
+				<button class="btn btn-success btn-lg">
+					保存
+				</button>
+			</center>
+		</div>
+		
+	</body>
+
+{% endblock %}

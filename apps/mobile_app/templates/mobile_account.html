@@ -1,0 +1,118 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --个人中心{% endblock %}
+{% block content %}
+
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					账户
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/修改头像.png" />&nbsp;&nbsp;
+					<span>修改头像</span>
+				</div>
+				<div class="col-xs-2">
+					<img width="30px" class="img-circle" src="/media/{{avatar_name}}-100.jpeg" />
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/修改资料.png" />&nbsp;&nbsp;
+					<span>修改资料</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/性格标签.png" />&nbsp;&nbsp;
+					<span>性格标签</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/修改密码.png" />&nbsp;&nbsp;
+					<span>修改密码</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/用户姓名.png" />&nbsp;&nbsp;
+					<span>用户姓名</span>
+				</div>
+				<div class="col-xs-2">
+					<span class="text-gray">{{user.username}}</span>
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/拼爱币.png" />&nbsp;&nbsp;
+					<span>拼爱币个数</span>
+				</div>
+				<div class="col-xs-2">
+					<span class="text-danger">{{pinLoveIcon}}</span>
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/充值链接.png" />&nbsp;&nbsp;
+					<span>充值</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
+					<a href="/mobile/member/">
+					  <i class="glyphicon glyphicon-chevron-right text-gray"></i>
+					</a>
+				</div>
+			</div>
+			<div class="account row" href="#">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/免费链接.png" />&nbsp;&nbsp;
+					<span>免费获得拼爱币</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
+					<a href="/mobile/get_free_pinloveicon/">
+					   <i class="glyphicon glyphicon-chevron-right text-gray"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+{% endblock %}

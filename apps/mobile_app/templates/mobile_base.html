@@ -1,0 +1,44 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <link rel="shortcut icon" href="{{STATIC_URL}}img/icon.png" >
+	<title> {% block title %} 拼爱网 - 手机端 {% endblock %} </title>
+	{% load staticfiles %}
+	<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="/static/css/mobile_bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/mobile_style.css" />
+		<script src="/static/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/js/mobile_bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script>
+// 从Cookie获得信息
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+        {% block staticfiles %}
+        {% endblock %}
+        {% block css %}
+        {% endblock %}
+        {% block js %}
+        {% endblock %}
+</head> 
+{% block content %}
+<body>
+</body> 
+{% endblock %}
+</html> 

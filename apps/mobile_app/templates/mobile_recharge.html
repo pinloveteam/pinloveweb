@@ -1,0 +1,213 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --充值{% endblock %}
+{% block js %}
+<script>
+$(document).ready(function() {
+	//切换比导航栏
+	change_navi();
+	//充值
+	$('#exchange').click(function(){
+		checked=$('input:radio[name="PLprice"]:checked')
+		var PLprice=checked.val()
+		content=checked.closest('.form-row')
+		var id=content.find('input[name="charge_id"]').val();
+		price=content.find('span[name="price"]').html().trim();
+		var type=$('input:radio[name="type"]:checked').val()
+		inputs="<input id='id_"+id+"' type='hidden' value='"+id+"' name='id'><input id='id_"+type+"' type='hidden' value='"+type+"' name='type'>"
+		var hehe = function(){$('#buyCion').submit()}
+		var body = $("<form id='buyCion' method='POST' action='/pay/pay_icon_order/' target='_blank' >{% csrf_token%}"+inputs+"<p>购买服务：<span>拼爱币</span></p><p>服务价格：<b class='text-red'>"+price+"</b></p><p>购买拼爱币：<b class='text-red'>"+PLprice+"</b></p><p>支付方式：<b class='text-red'>"+type+"</b></p></from>");
+		$.poplayer({body:body,btnFunc:hehe});
+	});
+	
+	//赎回
+	$('#redeem_button').click(function(){
+		validAmount=$('#redeem_amount').val().trim()
+		var type=$('input:radio[name="redeem_type"]:checked').val()
+		if ( type==undefined||type.length<=0 ){
+			var body = $("<p>请选择赎回类型</p>")
+			$.poplayer({body:body});
+			return;
+		}
+		else if(validAmount==undefined||validAmount.length<=0){
+			var body = $("<p>请输入赎回金额</p>")
+			$.poplayer({body:body});
+			return;
+		}
+		else if(type == 'alipay'){
+			var body = $("<p>支付宝暂未开通</p>")
+			$.poplayer({body:body});
+			return;
+		}else{
+			inputs="<input id='id_"+validAmount+"' type='hidden' value='"+validAmount+"' name='validAmount'><input id='id_"+type+"' type='hidden' value='"+type+"' name='type'>"
+			var hehe = function(){
+				btn=this
+				data=$('#redeem_form').serialize()
+				$.ajax({
+			         type: "POST",
+			         url: "/pay/redeem_price/",
+			         data:data,
+			         beforeSend: function(XMLHttpRequest){
+			        	 $(btn).closest('.poplayer').find('.poplayer-close-btn').click();
+			         },
+			         success: function(data, textStatus){
+			            if(textStatus == 'success'){
+			            	data=$.parseJSON(data)
+			            	if( data.result=='success'){
+			            		var body = $("<p>"+data.message+"</p>")
+			            	}else if( data.result=='error') {
+			            		var body = $("<p>"+data.error_message+"</p>")
+			            	}
+			            	 $.poplayer({body:body});
+			            }
+			         },
+			         complete: function(XMLHttpRequest, textStatus){
+			         },
+			         error: function(response){
+			        	 var body = $("<p>网络异常!</p>")
+			        	 $.poplayer({body:body});
+			         }
+			     });
+				}
+			var body = $("<form id='redeem_form' method='POST' action='/pay/redeem_price/'>{% csrf_token%}"+inputs+"<p>赎回服务：<span>拼爱币赎回</span></p><p>赎回数量：<b class='text-red'>"+validAmount+"</b></p><p>赎回方式：<b class='text-red'>"+type+"</b></p></from>");
+			$.poplayer({body:body,btnFunc:hehe});
+		}
+		
+	});
+	
+	
+	$('#buy').click(function(){
+		var hehe = function(){alert(window.devicePixelRatio);}
+		var body = $('<p>购买服务：<span>会员</span></p><p>服务价格：<b class="text-red">488</b>元</p><p>我的余额：<b class="text-red">0</b>元</p><p>还需支付：<b class="text-red">488</b>元</p>');
+		$.poplayer({body:body,btnFunc:hehe});
+	}); 
+	
+	$('.buy-nav').find('li').click(function() {
+		href = $(this).attr('href');
+		if(href=="#record"){
+			get_record();
+		}
+		$('.buy-nav').find('li').removeClass('active');
+		$(this).addClass('active');
+		$('.vip-panel').hide();
+		$(href).show();
+	});
+	
+	//提示
+	$('[data-toggle="popover"]').popover({
+	    trigger: 'hover',
+	    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+	});
+	
+});
+function get_record(){
+	$.ajax({
+        type: "GET",
+        url: "/pay/charge_record/",
+        beforeSend: function(XMLHttpRequest){
+        },
+        success: function(data, textStatus){
+           if(textStatus == 'success'){
+           	data=$.parseJSON(data)
+           	if( data.result=='success'){
+           		tbody=$('#record').find('tbody')
+           		tbody.children().remove()
+           		for( var i=0 ; i<data.orderList.length;i++)
+           		{
+           			tbody.append('<tr><td>'+data.orderList[i]["time"]+'</td><td>'+data.orderList[i]["data"]+'</td><td>'+data.orderList[i]["amount"]+'</td><td>'+data.orderList[i]["channel"]+'</td><td>'+data.orderList[i]["status"]+'</th></tr>')
+           		}
+           		
+           	}else if( data.result=='error') {
+           		var body = $("<p>"+data.error_message+"</p>")
+           		$.poplayer({body:body});
+           	}
+           	 
+           }
+        },
+        complete: function(XMLHttpRequest, textStatus){
+        },
+        error: function(response){
+       	 var body = $("<p>网络异常!</p>")
+       	 $.poplayer({body:body});
+        }
+    });
+}
+</script>
+{% endblock %}
+
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					充值
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row frame">
+				<h4>什么是拼爱币</h4>
+				<p>拼爱币可以购买增值服务，兑换越多越实惠。参加活动会获得免费拼爱币，另外，只要你的魅力够高，别人查看TA在你这里的分数，你就能获得拼爱币。</p>
+				<p>免费拼爱币：10</p>
+				<p>拼爱币：10</p>
+			</div>
+			<div class="row frame">
+				<div class="col-xs-1"></div>
+				<div class="col-xs-10 recharge">
+					<center class="recharge-top row">
+						<h4>兑换拼爱币</h4>
+						<p>购买会员增值服务，享受更多特权。</p>
+					</center>
+					<br /><br />
+					
+					{% for chargeExchangeRelate in chargeExchangeRelateList%}
+					<div class="row">
+						<div class="col-xs-2"></div>
+						<div class="col-xs-4">
+							<input type="radio" name="PLprice" value={{chargeExchangeRelate.PLPrice|add:chargeExchangeRelate.PLPresentation}}>
+								<label>
+									<input type="radio" name="buy">{{chargeExchangeRelate.PLPrice}}+<span class="text-danger">{{chargeExchangeRelate.PLPresentation}}</span>
+								</label>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<div class="radio">
+								<label>
+									{%ifequal chargeExchangeRelate.currencyType 1%}${%else%}￥{%endifequal%}{{chargeExchangeRelate.currencyPrice}}
+								</label>
+							</div>
+						</div>
+					</div>
+					<br /><br />
+				%endfor%}
+					<br />
+				</div>
+				<div class="col-xs-1"></div>
+			</div>
+			<div class="row frame">
+				<p>请选择付款方式</p>
+				<div class="col-xs-6">
+					<div class="radio">
+						<label>
+							<input type="radio" name="type" value="alipay">支付宝
+						</label>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="radio">
+						<label>
+							<input type="radio" name="type" value="paypal">paypal
+						</label>
+					</div>
+				</div>
+			</div>
+			<center class="button">
+				<button id="id='exchange'" class="btn btn-success btn-lg">立即购买</button>
+			</center>
+		</div>
+	</body>
+
+{% endblock %}

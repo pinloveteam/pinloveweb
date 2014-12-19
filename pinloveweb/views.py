@@ -24,6 +24,7 @@ from django.db import transaction
 from django.utils import simplejson
 from pinloveweb.method import create_invite_code
 from django.views.decorators.http import require_POST
+import urllib
 logger = logging.getLogger(__name__)
 ####################
 ######1.0
@@ -61,7 +62,7 @@ def login(request) :
         return render(request, 'login.html', args,) 
     
 @csrf_protect
-def auth_view(request) : 
+def auth_view(request,template_name='login.html',next_template_name='index.html') : 
     
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
@@ -93,9 +94,9 @@ def auth_view(request) :
             return response
         #获取ip 地址
         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
-        logger.error('%s%s'%('0000000000000',GetLocation(request)))
+#         logger.error('%s%s'%('0000000000000',GetLocation(request)))
         from apps.the_people_nearby.views import GetIp
-        logger.error('%s%s'%('0000003333000',GetIp(request)))
+#         logger.error('%s%s'%('0000003333000',GetIp(request)))
         #将个人相关信息插入缓存
         from util.cache import init_info_in_login
         init_info_in_login(user.id)
@@ -103,14 +104,14 @@ def auth_view(request) :
         from util.urls import next_url
         redirectURL = next_url(request)
         if redirectURL is None:
-            return HttpResponseRedirect('/account/loggedin/')
+            return HttpResponseRedirect('%s%s'%('/account/loggedin/?',urllib.urlencode({'template_name':next_template_name})))
         else:
             return HttpResponseRedirect(redirectURL)
     else : 
         # Show an error page 
         link = request.REQUEST.get('link','')
         next = request.REQUEST.get('next','')
-        return render(request,'login.html',{'error':'True','error_message':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
+        return render(request,template_name,{'error':'True','error_message':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
 
 
 def loggedin(request,**kwargs) :
@@ -138,7 +139,8 @@ def loggedin(request,**kwargs) :
         arg['first']=True
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
-    return render(request, 'index.html',arg )
+    template_name=request.GET.get('template_name') if request.GET.get('template_name',False) else 'index.html'
+    return render(request, template_name,arg )
 
 '''
 获得推荐列表
@@ -185,9 +187,6 @@ def logout(request) :
 #             return  response
     return HttpResponseRedirect("/account/loggedout/")
     
-def loggedout(request) : 
-    
-    return render(request, 'loggedout.html')
 
 #上传进度
 def upload_progress(request):
@@ -209,7 +208,7 @@ def upload_progress(request):
     
 
 @transaction.commit_on_success      
-def register_user(request) : 
+def register_user(request,template_name='login.html',next_template_name='index.html') : 
     args = {}
     args.update(csrf(request))
     link=request.REQUEST.get('link',False)
@@ -234,7 +233,7 @@ def register_user(request) :
             #登录奖励
             from apps.user_score_app.method import get_score_by_invite_friend_login,get_score_by_user_login
             get_score_by_user_login(request.user.id)
-            return HttpResponseRedirect('/account/loggedin/?previous_page=register')
+            return HttpResponseRedirect('%s%s'%('/account/loggedin/?',urllib.urlencode({'previous_page':'register','template_name':next_template_name})))
         else : 
             args['user_form'] = userForm
             args['error']=True
@@ -244,7 +243,7 @@ def register_user(request) :
                     args[key]=item[1][0]
     else : 
         args['user_form']= RegistrationForm() 
-    return render(request, 'login.html', args)
+    return render(request, template_name, args)
     
 def register_success(request) : 
     return render(request, 'register_success.html')
@@ -398,6 +397,4 @@ def pusher_authentication(request):
         auth = p[channel_name].authenticate(socket_id)
         json=simplejson.dumps(auth)
         return HttpResponse(json)
-    
-    
     

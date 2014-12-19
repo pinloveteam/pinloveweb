@@ -1,0 +1,309 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --注册{% endblock %}
+ {% block js %}
+        
+		<script>
+		var focus_error_id=null;
+		
+	    $(document).ready(function() {
+	    
+	    	if('{{error}}'=='True'){
+	    		$('#errorInfo').parents('.alert').slideDown('slow');
+	    	}
+	    	//如果没有填性别默认值
+	    	if(!$('input[id^="id_gender_"]').is(':checked')){
+	    		$('input[id^="id_gender_0"]').attr('checked','checked')
+	    	}
+	    	
+	    $('form').submit(function(){
+	    	username_data=check_username($('#id_username'))
+	    	email_data=check_email($('#id_email'))
+	    	password1_data=check_password($('#id_password1'))
+	    	password2_data=check_password($('#id_password2'))
+	    	if(!(username_data.result && email_data.result && password1_data.result && password2_data.result)){
+	    		message=email_data.message+' '+username_data.message+' '
+	    		+password1_data.message+' '+password2_data.message
+	    		inputJudge('error',message,$('#'+focus_error_id))
+	    		return false;
+	    	}
+	    	
+	    });
+		
+		//检查用户名
+		$('#id_username').blur(function(){
+			check_username($(this));
+	      });
+		
+		$('#id_email').blur(function(){
+			check_email($(this));
+	      });
+		
+	    $('input[name^="password"]').blur(function(){
+	    	check_password($(this))
+	    });
+		$('#id_password2').keyup(function(event){
+	    	if(event.keyCode ==13){
+	    	    $(this).closest('form').submit();
+	    	  }
+	    });
+		
+		
+	});
+	    function check_username(content){
+	    	flag=true;
+	    	error_message=''
+	    	var username=content.val().trim();
+	    	if (username.length==0){
+	    		error_message='用户名不能为空!';
+	    		flag=false;
+	    	}else{
+	    		re=/[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}/;
+	    		if(!re.test(username)){
+	    			error_message='用户名格式不正确!';
+	        		flag=false;
+	    		};
+	    	}
+	    	 if(content.attr('id')=='id_username'&&flag ){
+	    	  $.ajax({
+	    		type:'get',
+	    		data:{username:username,type:'check_username'},
+	    		url:'/account/check_register/',
+	    		beforeSend: function(XMLHttpRequest){
+	             },
+	             success: function(data, textStatus){
+	    	            if(textStatus == 'success'){
+	    	            	 data=$.parseJSON(data)
+	    	            	if(data.result=='error'){
+	    	            		error_message=data.error_message;
+	    	            		flag=false;
+	    	            		if(flag){
+	    	            			inputJudge('success','',content)
+	    	            		}else{
+	    	            			inputJudge('error',error_message,content)
+	    	            		}
+	    	            		return {'result':flag,'message':error_message};
+	    	             } 
+	    	            	}
+	    	    },
+	    	     complete: function(XMLHttpRequest, textStatus){
+	    	     },
+	    	     error: function(response){
+	    	    	 var body = $('<p>网络异常!</p>');
+	    	    	 $.poplayer({body:body});
+	    	     }
+	    	});
+	    	}
+	    	  if(flag){
+	    		  inputJudge('success','',content)
+	      	}else{
+	      		inputJudge('error',error_message,content)
+	      	}
+	    	 return {'result':flag,'message':error_message};
+	    	
+	    };
+	    //检查邮箱
+	    function check_email(content){
+	    	flag=true;
+	    	error_message=''
+	    	error=$('#email_error')
+	    	var email=content.val().trim();
+	    	if (email.length==0){
+	    		error_message='邮箱不能为空!';
+	    		flag=false;
+	    	}else{
+	    		re=/^([a-zA-Z0-9]|[._])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+	    		if(!re.test(email)){
+	    			error_message='邮箱格式错误!';
+	        		flag=false;
+	    		}
+	    	}if(flag){
+	    	  $.ajax({
+	    		type:'get',
+	    		data:{email:email,type:'check_email'},
+	    		url:'/account/check_register/',
+	    		beforeSend: function(XMLHttpRequest){
+	             },
+	             success: function(data, textStatus){
+	    	            if(textStatus == 'success'){
+	    	            	 data=$.parseJSON(data)
+	    	            	if(data.result=='error'){
+	    	            		error_message=data.error_message;
+	    	            		flag=false;
+	    	            		if(flag){
+	    	            			inputJudge('success','',content)
+	    	            		}else{
+	    	            			inputJudge('error',error_message,content)
+	    	            		}
+	    	            		return flag;
+	    	             } 
+	    	            	}
+	    	    },
+	    	     complete: function(XMLHttpRequest, textStatus){
+	    	     },
+	    	     error: function(response){
+	    	    	 var body = $('<p>网络异常!</p>');
+	    	    	 $.poplayer({body:body});
+	    	     }
+	    	});
+	    	}
+	    	if(flag){
+    			inputJudge('success','',content)
+    		}else{
+    			inputJudge('error',error_message,content)
+    		}
+	    	return {'result':flag,'message':error_message};
+	      	}
+	    	
+	  //检查密码
+	    function check_password(content){
+	    	flag=true;
+	    	error_message=''
+	    		var password=content.val();
+	    	if(content.attr('id')=='id_password1'){
+	    		if (password==undefined ||password.length==0){
+		    		error_message+='密码不能为空!';
+		    		flag=false;
+		    	}else{
+		    		re=/^[0-9a-zA-Z\xff_]{6,20}$/
+		    		if(!re.test(password)){
+		    			error_message+='密码格式错误!';
+		        		flag=false;
+		    	  }
+		    	}
+	    		
+	    	}else{
+	    		if (password==undefined ||password.length==0){
+		    		error_message+='验证密码不能为空!';
+		    		flag=false;
+	    		}else if(content.attr('id')=='id_password2'){
+		    		  password1=$('#id_password1').val();
+		    		  if(password1!=password){
+		    			  error_message='两次输入不一致，请重新输入!';
+		    	    	  flag=false;
+		    		  }
+		    	  }
+	    		
+	    	}
+	    	
+	    	if(flag){
+    			inputJudge('success','',content)
+    		}else{
+    			inputJudge('error',error_message,content)
+    		}
+	    	return {'result':flag,'message':error_message};
+	    }
+	    
+	    
+	    
+	    </script>
+	    <script type="text/javascript">
+		function inputJudge(type,message,element){
+			var feedback
+			if(element.next().length>0){
+				if(type == 'success'){
+					element.next().removeClass('text-danger glyphicon-remove').addClass('text-success glyphicon-ok');
+					if(element.attr('id')==focus_error_id){
+					   $('#errorInfo').html('').closest('.alert-danger').slideUp('slow');
+					}
+				}
+				if(type == 'error'){
+					element.next().removeClass('text-success glyphicon-ok').addClass('text-danger glyphicon-remove');
+					focus_error_id=element.attr('id')
+					$('#errorInfo').html(message);
+					$('#errorInfo').parents('.alert').slideDown('slow');
+					
+				}
+				
+			}else{
+				if(type == 'success'){
+					feedback = $('<span class="glyphicon glyphicon-ok form-control-feedback text-success"></span>');	
+					if(element.attr('id')==focus_error_id){
+						$('#errorInfo').html('').closest('.alert-danger').slideUp('slow');
+						}
+				}
+				if(type == 'error'){
+					feedback = $('<span class="glyphicon glyphicon-remove form-control-feedback text-danger"></span>');
+					focus_error_id=element.attr('id')
+					$('#errorInfo').html(message);
+					$('#errorInfo').parents('.alert').slideDown('slow');
+				}
+				element.after(feedback);
+			}
+			
+		}
+
+	</script>
+	  
+	    
+{% endblock %}
+{% block content %}
+	<body>
+		<div class="login-header">
+		</div>
+		<center role="alert" class="alert alert-danger alert-dismissible">
+			<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
+			</button>
+			<span id="errorInfo">{{username_error}} {{username_error}} {{password1_error}} {{gender_error}}</span>
+		</center>
+		<div class="container">
+			<form action="/mobile/register/" method="post"  class="form-horizontal" role="form">{% csrf_token %}
+				<div class="row">
+					<div class="col-xs-2">
+						<span class="glyphicon glyphicon-user"></span>
+					</div>
+					{% for choice in user_form.gender.field.choices %}
+					 <div class="col-xs-3">
+						<div class="radio">
+							<label>
+							 <input type="radio" id="id_{{ user_form.gender.html_name }}_{{ forloop.counter0 }}" value="{{ choice.0 }}" name="gender" {%ifequal user_form.gender.value choice.0 %}checked="checked"{%endifequal%}/> 
+							                    {{ choice.1 }}
+							  
+							</label>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+				<div class="row">
+					<div class="col-xs-2">
+						<span class="glyphicon glyphicon-info-sign"></span>
+					</div>
+					<div class="col-xs-10">
+					    {{user_form.username}}
+					    {%if username_error%}<span class="glyphicon glyphicon-remove form-control-feedback text-danger"></span>{%endif%}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-2">
+						<span class="glyphicon glyphicon-envelope"></span>
+					</div>
+					<div class="col-xs-10">
+						{{user_form.email}}
+						{%if email_error %}<span class="glyphicon glyphicon-remove form-control-feedback text-danger"></span>{%endif%}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-2">
+						<span class="glyphicon glyphicon-lock"></span>
+					</div>
+					<div class="col-xs-10">
+						{{user_form.password1}}
+						{%if password1_error%}<span class="glyphicon glyphicon-remove form-control-feedback text-danger"></span>{%endif%}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-2">
+						<span class="glyphicon glyphicon-lock"></span>
+					</div>
+					<div class="col-xs-10">
+						{{user_form.password2}}
+					</div>
+				</div>
+				<center class="button">
+					<button class="btn btn-success btn-lg">注册</button>
+				</center>
+			</form>
+		</div>
+		
+	</body>
+{% endblock %}
