@@ -46,3 +46,18 @@ class SearchForm(forms.Form):
     jobIndustry=forms.ChoiceField(label="行业",choices=JOB_INDUSRY_CHOICE,initial=None)
     
     
+class SearchMobileForm(forms.Form):
+    def __init__(self,*args,**kwargs):
+        super(SearchMobileForm,self).__init__(*args,**kwargs)
+        for key in self.fields:
+            self.fields[key].required = False
+            self.fields[key].widget.attrs['class']='form-control'
+            
+    minAge=forms.ChoiceField(label="最小年龄",choices=MIN_AGE)
+    maxAge=forms.ChoiceField(label="最大年龄",choices=MAX_AGE)
+    education = forms.ChoiceField(label="学历",choices=EDUCATION_DEGREE_CHOICES)
+    minIcome=forms.ChoiceField(label="最少年收入",choices=INCOME_CHOICES)
+    maxIncome=forms.ChoiceField(label="最大年收入",choices=INCOME_CHOICES)
+    minHeigh=forms.ChoiceField(label="最小身高",choices=HEIGHT_CHOICES)
+    maxHeigh=forms.ChoiceField(label="最大身高",choices=HEIGHT_CHOICES)
+    jobIndustry=forms.ChoiceField(label="行业",choices=JOB_INDUSRY_CHOICE,initial=None)

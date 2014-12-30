@@ -1,0 +1,105 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --消息{% endblock %}
+{% block js%}
+<script type="text/javascript">
+			$(document).click(function(e) {
+				if ($(e.target).hasClass('glyphicon-th-large')) {
+					$('.msg-type').toggle();
+				} else {
+					$('.msg-type').hide();
+				}
+			});
+</script>
+		
+{% endblock %}
+{% block content%}
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					消息
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-th-large"></i>
+				</div>
+			</div>
+		</div>
+		<ul class="msg-type">
+			<li>全部消息</li>
+			<li>站内私信</li>
+			<li>动态评论</li>
+			<li>给我的“赞”</li>
+			<li>新的粉丝</li>
+		</ul>
+		<div class="frame">
+			<div class="row">
+				<div class="col-xs-3">
+					<img width="50px" class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span class="name">张三11111评论了你的动态</span>
+					</div>
+					<div class="row">
+						<small class="text-gray">哎呦，不错哦</small>
+					</div>
+					<div class="row">
+						<small class="text-gray">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+					<button class="btn btn-success btn-sm">回复</button>
+				</div>
+			</div>
+		</div>
+		<div class="frame">
+			<div class="row">
+				<div class="col-xs-3">
+					<img width="50px" class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span class="name">张三11111关注了你</span>
+					</div>
+					<div class="row">
+						<small class="text-gray">你好</small>
+					</div>
+					<div class="row">
+						<small class="text-gray">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+					<button class="btn btn-info btn-sm">关注</button>
+				</div>
+			</div>
+		</div>
+		<div class="frame">
+			<div class="row">
+				<div class="col-xs-3">
+					<img width="50px" class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span class="name">张三11111关注了你</span>
+					</div>
+					<div class="row">
+						<small class="text-gray">你好</small>
+					</div>
+					<div class="row">
+						<small class="text-gray">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+					<button class="btn btn-info btn-xs disabled">已关注</button>
+				</div>
+			</div>
+		</div>
+	</body>
+
+{% endblock %}

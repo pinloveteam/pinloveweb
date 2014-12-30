@@ -74,6 +74,7 @@ urlpatterns = patterns('',
     (r'^weixin/', include('apps.weixin_app.urls')),
     (r'^alipay', include('apps.alipay_app.urls')),
     (r'^mobile/', include('apps.mobile_app.urls')),
+    (r'^common/', include('apps.common_app.urls')),
     
 )
 

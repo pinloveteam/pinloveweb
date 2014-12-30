@@ -1,0 +1,187 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --搜索{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(function() {
+	$('.js-labels').label({
+		isMultiple:true
+	});
+});
+
+$(document).ready(function(){
+	$('#sunSign').val('')
+	 $('#id_minAge,#id_maxAge').change(function(){
+		 minAge=parseInt($('#id_minAge').val());
+		 maxAge=parseInt($('#id_maxAge').val());
+		 if (maxAge<=minAge){
+			 alert('请选择正确的年龄区间!')
+			 $('#id_maxAge').val(minAge+1)
+		 }
+	 });
+	 
+	 $('#id_minHeigh,#id_maxHeigh').change(function(){
+		 minHeigh=parseInt($('#id_minHeigh').val());
+		 maxHeigh=parseInt($('#id_maxHeigh').val());
+		 if (maxHeigh<=minHeigh){
+			 alert('请选择正确的身高区间!')
+			 $('#id_maxHeigh').val(minHeigh+1)
+		 }
+	 });
+	 
+	 $('#id_minIcome,#id_maxIncome').change(function(){
+		 minIcome=parseInt($('#id_minIcome').val());
+		 maxIncome=parseInt($('#id_maxIncome').val());
+		 if(maxIncome==-1){
+			 return;
+		 }
+		 if (maxIncome<=minIcome){
+			 alert('请选择正确的收入区间!')
+			 $('#id_maxIncome').val(minIcome+1)
+		 }
+	 });
+	 //提交复杂搜索请求
+	 $("#search_form").submit(function(){
+		 var  data= $(this).serialize();
+		 sunSign=$('#sunSignList').find('.label-success')
+		 if(sunSign.length>0){
+			 sunSignObject=new Array()
+			 sunSign.each(function(){
+				 sunSignObject.push($(this).attr('id'))
+			 })
+			 $('#sunSign').val(sunSignObject.toString())
+		 }
+		 
+	 });
+	 
+	 function searchajax(context,data){
+		 $.ajax({
+	         type: context.attr('method'),
+	         url: "/mobile/search/",
+	         data:data,
+	         beforeSend: function(XMLHttpRequest){
+	         },
+	         success: function(data, textStatus){
+	            if(textStatus == 'success'){
+	            	data=$.parseJSON(data)
+	            	$('.card_row').children().hide('slow');
+	            	if (data['has_next']){
+						 next_page=data['next_page_number'];
+					 }else{
+						 next_page=-1;
+						 $('.next').hide();
+					 }
+	            	 $('.card_row').children().remove()
+	            	 var cards=data['cards'];
+	            	 init_card(cards);
+	            	 venobox();
+	            	pane = $('.chat');
+	            	pane.jScrollPane();
+	             } 
+	         },
+	         complete: function(XMLHttpRequest, textStatus){
+	         },
+	         error: function(response){
+	             alert('网络异常!')
+	         }
+	     });
+	 }
+	
+
+});
+</script>
+{% endblock %}
+{% block content%}
+
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					用户搜索
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+		<form id="search_form" action="" method="POST" >{% csrf_token %}
+			<div class="row frame">
+				<img width="28px" src="/static/img/age.png" /> 请选择年龄范围
+			</div>
+			<div class="row frame">
+				<div class="col-xs-3">
+					{{searchForm.minAge}}
+				</div>
+				<div class="col-xs-1">-</div>
+				<div class="col-xs-3">
+					{{searchForm.maxAge}}
+				</div>
+				<div class="col-xs-1">
+					岁
+				</div>
+			</div>
+			<div class="row frame">
+				<img width="28px" src="/static/img/heigth.png" /> 请选择身高范围
+			</div>
+			<div class="row frame">
+				<div class="col-xs-3">
+					{{searchForm.minHeigh}}
+				</div>
+				<div class="col-xs-1">-</div>
+				<div class="col-xs-3">
+					{{searchForm.maxHeigh}}
+				</div>
+				<div class="col-xs-3">
+					厘米
+				</div>
+			</div>
+			<div class="row frame">
+				<img width="28px" src="/static/img/education.png" /> 请选学历
+			</div>
+			<div class="row frame">
+				<div class="col-xs-4">
+					{{searchForm.education}}
+				</div>
+			</div>
+			<div class="row frame">
+				<img width="28px" src="/static/img/income.png" /> 请选择收入范围
+			</div>
+			<div class="row frame">
+				<div class="col-xs-3">
+					{{searchForm.minIcome}}
+				</div>
+				<div class="col-xs-1">-</div>
+				<div class="col-xs-3">
+					{{searchForm.maxIncome}}
+				</div>
+				<div class="col-xs-3">
+					万/年
+				</div>
+			</div>
+			<div class="row frame">
+				<img width="28px" src="/static/img/trade.png" /> 请选择行业
+			</div>
+			<div class="row frame">
+				<div class="col-xs-4">
+					{{searchForm.jobIndustry}}
+				</div>
+			</div>
+
+			<div id="sunSignList" class="row frame">
+				<center class="row js-labels">
+				{% for sunSignBean in sunSign%}
+				   <div class="label label-default" id="{{sunSignBean.0}}">{{sunSignBean.1}}</div>
+				{% endfor%}
+				</center>
+				<input type="hidden" name="sunSign" id="sunSign">
+			</div>
+			<center class="button">
+				<button class="btn btn-success btn-lg">搜索</button>
+			</center>
+			</form>
+		</div>	
+	</body>
+{% endblock%}

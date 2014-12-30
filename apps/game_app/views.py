@@ -8,6 +8,7 @@ from apps.pay_app.models import  ChargeExchangeRelate
 from apps.user_score_app.models import  UserScoreExchangeRelate
 import logging
 from apps.user_app.models import UserProfile
+from django.views.decorators.http import require_POST
 
 
 @csrf_exempt
@@ -36,7 +37,7 @@ def pintu(request):
     args.update(get_no_read_web_count(request.user.id))
     return render(request, 'pintu.html',args)
 
-@csrf_exempt
+@require_POST
 def jigsaw_web(request):
     match_result = YuanfenjigsawWeb(request.user,filter=request.REQUEST.get('filter'),type=request.REQUEST.get('type')).get_match_result()
     json=simplejson.dumps(match_result)

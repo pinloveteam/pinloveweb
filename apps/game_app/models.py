@@ -21,8 +21,8 @@ class Yuanfenjigsaw:
     def __init__(self,request):
         if cache.get('TODAY') != datetime.date.today():
             reset_game()
-            get_count(request)
-        self.uid = request.GET.get('uid')
+            get_count(request.user.id)
+        self.uid = request.REQUEST.get('uid')
         facebookUser=FacebookUser.objects.get(uid=self.uid)
         
 #         self.pieces = set([int(i) for i in self.selected_pieces_str.split("-") if i])#用户提交的集合
@@ -33,7 +33,7 @@ class Yuanfenjigsaw:
         self.location=facebookUser.location
         self.noRecommendList=simplejson.loads(facebookUser.noRecommendList)
         self.recommendList=simplejson.loads(facebookUser.recommendList)
-        self.filter=request.GET.get('filter')
+        self.filter=request.REQUEST.get('filter')
         #根据学校，学历，地点，匹配结果
         self.filter_match=None
         

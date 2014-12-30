@@ -37,7 +37,7 @@ def web(request,template_name):
     return render(request,template_name,args)
 ####################
 
-def login(request) :
+def login(request,template_name='login.html',nextUrl='/account/loggedin') :
     
     unicode_s = u'欢迎来到拼爱网'
 #     if "userId" in request.COOKIES:
@@ -47,7 +47,7 @@ def login(request) :
 #     else:
 #         login_in=False
     if request.user.is_authenticated() :
-        return HttpResponseRedirect('/account/loggedin/')
+        return HttpResponseRedirect(nextUrl)
 #     if login_in:
 #         response=render(request, 'loggedin.html', {'full_name': request.user.username,'set':settings.STATIC_ROOT})
 #         response.set_cookie("userId",userId, max_age=60 * 60 * 24 * 7 * 2 ,expires=60 * 60 * 24 * 7 * 2 )
@@ -59,10 +59,9 @@ def login(request) :
             args['redirectURL']=redirectURL
         args['user_form']= RegistrationForm() 
         args.update(csrf(request))
-        return render(request, 'login.html', args,) 
+        return render(request, template_name, args,) 
     
-@csrf_protect
-def auth_view(request,template_name='login.html',next_template_name='index.html') : 
+def auth_view(request,template_name='login.html') : 
     
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
@@ -104,7 +103,9 @@ def auth_view(request,template_name='login.html',next_template_name='index.html'
         from util.urls import next_url
         redirectURL = next_url(request)
         if redirectURL is None:
-            return HttpResponseRedirect('%s%s'%('/account/loggedin/?',urllib.urlencode({'template_name':next_template_name})))
+            url=request.path
+            url='%s%s'%(url[0:(url.find('/',1))],'/loggedin/')
+            return HttpResponseRedirect(url)
         else:
             return HttpResponseRedirect(redirectURL)
     else : 
@@ -114,7 +115,7 @@ def auth_view(request,template_name='login.html',next_template_name='index.html'
         return render(request,template_name,{'error':'True','error_message':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
 
 
-def loggedin(request,**kwargs) :
+def loggedin(request,template_name='index.html',**kwargs) :
     arg={} 
     #判断推荐分数是否生成
     flag=MatchResult.objects.is_exist_by_userid(request.user.id)
@@ -139,7 +140,6 @@ def loggedin(request,**kwargs) :
         arg['first']=True
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
-    template_name=request.GET.get('template_name') if request.GET.get('template_name',False) else 'index.html'
     return render(request, template_name,arg )
 
 '''
@@ -208,7 +208,7 @@ def upload_progress(request):
     
 
 @transaction.commit_on_success      
-def register_user(request,template_name='login.html',next_template_name='index.html') : 
+def register_user(request,template_name='login.html') : 
     args = {}
     args.update(csrf(request))
     link=request.REQUEST.get('link',False)
@@ -233,7 +233,9 @@ def register_user(request,template_name='login.html',next_template_name='index.h
             #登录奖励
             from apps.user_score_app.method import get_score_by_invite_friend_login,get_score_by_user_login
             get_score_by_user_login(request.user.id)
-            return HttpResponseRedirect('%s%s'%('/account/loggedin/?',urllib.urlencode({'previous_page':'register','template_name':next_template_name})))
+            url=request.path
+            url='%s%s'%(url[0:(url.find('/',1))],'/loggedin/previous_page=register')
+            return HttpResponseRedirect(url)
         else : 
             args['user_form'] = userForm
             args['error']=True

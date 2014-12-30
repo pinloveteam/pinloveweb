@@ -104,7 +104,7 @@ def is_focus_each_other(userId,cardList):
 '''
 通过ajax加载页面card
 '''
-def load_cards_by_ajax(request,cardList):
+def load_cards_by_ajax(request,cardList,chanel='web'):
          data={}
          data['has_next']=cardList.has_next()
          if cardList.has_next():
@@ -125,8 +125,12 @@ def load_cards_by_ajax(request,cardList):
 #                      cardList.object_list.remove(matchResult) 
 #                      data['removeCard']=True
          data['cards']=cardList.object_list
-         from apps.pojo.card import MyEncoder
-         json=simplejson.dumps(data,cls=MyEncoder)
+         if chanel =='mobile':
+             from apps.pojo.card import CardMobileEncoder
+             json=simplejson.dumps(data,cls=CardMobileEncoder)
+         else:
+             from apps.pojo.card import MyEncoder
+             json=simplejson.dumps(data,cls=MyEncoder)
          return HttpResponse(json)
      
 '''

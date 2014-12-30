@@ -1,0 +1,360 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --拼爱拼图{% endblock %}
+{% block staticfiles %}
+<script src="/static/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/js/kinetic-v5.0.1.min.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+{% block js%}
+<script>
+$(document).ready(function(){
+	//转盘点击事件
+	$('#push').click(function(){
+		check_score_PLrice()
+	});
+});	 
+function check_score_PLrice(){
+	$.ajax({
+         type: "get",
+         url: "/game/check_for_pintu/",
+         beforeSend: function(XMLHttpRequest){
+         },
+         success: function(data, textStatus){
+            if(textStatus == 'success'){
+             	data=$.parseJSON(data)
+            	if( data.type=='score'){
+            		var body = $("<p>如果匹配成功,消耗拼爱币:"+data.amount+"</p>")
+            		var hehe = function(){
+            			StartGame(data.type);
+            			}
+            		$.poplayer({body:body,btnFunc:hehe});
+            	}else if( data.type=='charge') {
+            		var body = $("<p>如果匹配成功,消耗拼爱币:"+data.amount+"</p>")
+            		var hehe = function(){
+            			StartGame(data.type);
+            			}
+            		$.poplayer({body:body,btnFunc:hehe});
+            	}else if(data.type=='less'){
+            		var body = $("<p>拼爱币不足以支付，请充值!</p>")
+            		 $.poplayer({body:body});
+            	} 
+            }
+         },
+         complete: function(XMLHttpRequest, textStatus){
+         },
+         error: function(response){
+        	 var body = $("<p>网络异常!</p>")
+        	 $.poplayer({body:body});
+         }
+     });
+}
+</script>
+{% endblock %}
+		
+{% block content %}
+
+	<body class="logined" onload="loadStage()">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					缘分拼图
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+		{% include "mobile_person_info.html"%}
+		<div class="frame">
+			<center class="row" style="border: none;">
+				<div id="container"></div>
+				<center>
+					<img id="push" src="/static/img/push-57.png" />
+				</center>
+				<div id="search_condition" style="margin-top: -120px;">
+				   <div class="col-xs-3">
+						<div class="radio">
+							<label>
+								<input type="radio" name="radiobutton" value="all">随机匹配
+							</label>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class="radio">
+							<label>
+								<input type="radio" name="radiobutton" value="school">同校
+							</label>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class="radio">
+							<label>
+								<input type="radio" name="radiobutton" value="location">同城
+							</label>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class="radio">
+							<label>
+								<input type="radio" name="radiobutton" value="work">同行
+							</label>
+						</div>
+					</div>
+				</div>
+			</center>
+		</div>
+		{% include "mobile_navigation.html"%}
+		<script type="text/javascript">
+		var  game_count=null;
+		var  type=-1;
+		var card_uid=null;
+			var pieces = 8,
+				size = 300,
+				add = 4,
+				piecesArray = new Array();
+
+			var color = new Array("#ffd62c", "#9164ff");
+			var position = new Array({
+				X: add,
+				Y: size / 2 + add
+			}, {
+				X: size / 2 - size / 4 * Math.sqrt(2) + add,
+				Y: size / 2 - size / 4 * Math.sqrt(2) + add
+			}, {
+				X: size / 2 + add,
+				Y: add
+			}, {
+				X: size / 2 + size / 4 * Math.sqrt(2) + add,
+				Y: size / 2 - size / 4 * Math.sqrt(2) + add
+			}, {
+				X: size + add,
+				Y: size / 2 + add
+			}, {
+				X: size / 2 + size / 4 * Math.sqrt(2) + add,
+				Y: size / 2 + size / 4 * Math.sqrt(2) + add
+			}, {
+				X: size / 2 + add,
+				Y: size + add
+			}, {
+				X: size / 2 - size / 4 * Math.sqrt(2) + add,
+				Y: size / 2 + size / 4 * Math.sqrt(2) + add
+			}, {
+				X: add,
+				Y: size / 2 + add
+			});
+
+			function loadStage() {
+				var stage = new Kinetic.Stage({
+					container: "container",
+					width: 308,
+					height: 308
+				});
+				layer = new Kinetic.Layer();
+				for (i = 0; i < pieces; i++) {
+					piecesArray[i] = new Object();
+					piecesArray[i].shape = new Kinetic.Shape({
+						drawFunc: function(i) {
+							return function(context) {
+								context.beginPath();
+								context.moveTo(position[i].X, position[i].Y);
+								context.arc(size / 2 + 4, size / 2 + 4, size / 2, Math.PI + Math.PI / 4 * i, Math.PI + Math.PI / 4 * (i + 1));
+								context.lineTo(size / 2 + 4, size / 2 + 4);
+								context.lineTo(position[i].X, position[i].Y);
+								context.fillStrokeShape(this);
+							}
+						}(i),
+						fill: color[i % 2],
+						id: i,
+						opacity: 0.5,
+						stroke: "#ffffff",
+						strokeWidth: 4,
+						draggable: false
+					});
+					//		piecesArray[i].shape.disableStroke();
+					//					piecesArray[i].shape.on("mousedown", function() {
+					//						this.setOpacity(0.5 / this.getOpacity());
+					//						//		this.setStrokeEnabled(!this.getStrokeEnabled());
+					//						layer.batchDraw();
+					//					});
+					layer.add(piecesArray[i].shape);
+
+				}
+				stage.add(layer);
+
+			}
+
+			var index = 0, //当前亮区位置
+				prevIndex = 0, //前一位置
+				Speed = 200, //初始速度
+				Time, //定义对象
+				EndIndex = 0, //决定在哪一格变慢
+				cycle = 0, //转动圈数
+				StartCycle = 0,
+				EndCycle = 0, //计算圈数
+				flag = false, //结束转动标志
+				selectedPieces = new Array(),
+				quick = 0;
+			 //加速
+
+			function StartGame(dataType) {
+				try{
+				clearInterval(Time);
+				cycle = 0;
+				flag = false;
+				StartCycle = 1;
+				selectedPieces = new Array();
+				for (var i = 0; i < pieces; i++) {
+					piecesArray[i].shape.opacity(0.5)
+				}
+				Time = setInterval(Star, Speed);
+				var filter=$('#search_condition').find('input:radio:checked').val();
+		         $.ajax({type:"POST",
+		        		 url:"/game/jigsaw_web/",
+		        		 dataType:'json',
+		        		 data:{type:dataType,uid:{{user.id}},filter:filter,csrfmiddlewaretoken:getCookie('csrftoken')},
+		        		 error:function(msg){
+		        			console.log(msg)
+		           		  $('.push').click(function(){
+		           			check_score_PLrice()
+		           		  });
+		           		  clearInterval(Time);
+		                     flag=true;       //触发结束			 
+		                     Time=setInterval(Star,Speed);
+		                     $.poplayer({body:'网络异常!'});
+		                	   return;
+		        		 },
+		        		 success:function(data) {
+		        	 if(data['login']=='invalid'){window.location =data['redirectURL'];}
+		        	 if(data[0]=='0'){
+		        		  if(data[2].filter=='all' || data[2].filter==null){
+		        			  
+		        		  }else{
+		        			 // $.poplayer({body:'没有相同的'+data[2].filter+',请再试一次!'});
+		        		  }
+		        		  type=0;
+		        	 }
+		        	 if(data[0]=='1'){
+		        		  type=1;
+		        		 }
+		        	 if(data[0]=='2'){
+		        	card_uid=data[2].card.userId
+		            game_count=data[2].game_count
+		            type=2
+		        	  }
+		        	 clearInterval(Time);
+		        	 if(type==1){
+		        	  $('.push').click(StartGame);
+		           	  return;
+		             }else if(type==4){
+		            	 $('.push').click(StartGame);
+		            	 return;
+		             }
+		        	 piece = data[1];
+		        	 EndIndex = piece[piece.length-1];
+		        	 EndCycle=StartCycle+piece.length;
+		        	  Time = setInterval(Star,Speed); 
+		        	 
+		        	 }});
+		    	  }catch(error){
+		    		  console.log(error)
+		    		  $('.push').click(StartGame);
+		    		  clearInterval(Time);
+		              flag=true;       //触发结束			 
+		              Time=setInterval(Star,Speed);
+		              $.poplayer({body:'网络异常!'});
+		         	   return;
+		    	  }
+			}
+
+			function Star(num) {
+				//跑马灯变速
+				if (flag == false) {
+					//走五格开始加速
+					if (quick == 8) {
+						clearInterval(Time);
+						Speed = 80;
+						Time = setInterval(Star, Speed);
+					}
+					//跑N圈减速
+					if (cycle == EndCycle && index == parseInt(EndIndex)) {
+						clearInterval(Time);
+						flag = true;
+						//触发结束
+						Time = setInterval(Star, Speed);
+					}
+
+					if (cycle >= StartCycle && cycle <= EndCycle) {
+						selectedPieces.push(piece[cycle - StartCycle - 1]);
+					}
+
+					if (cycle == EndCycle) {
+						clearInterval(Time);
+						Speed = 300;
+						Time = setInterval(Star, Speed);
+					}
+
+				}
+				if (index >= piecesArray.length) {
+					index = 0;
+					cycle++;
+				}
+
+				//结束转动并选中号码
+				if (flag == true) {
+					quick = 0;
+					clearInterval(Time);
+					 $('.push').click(function(){
+						  check_score_PLrice()
+					  });
+					 if (type==2){
+			        	  set_game_count(game_count)
+			          }else if(type==0){
+			        	  var body=$('<p>没有匹配到用户,请再试一次!</p>')
+						  var hehe = function(){
+			        		  check_score_PLrice();
+			        			}
+			        	$.poplayer({body:body,btnFunc:hehe});
+			          }else if(type==1){
+			        	  $.poplayer({body:'今天次数已经用完!'});
+			          }
+					 
+				}
+				if (index > 0)
+					prevIndex = index - 1;
+				else {
+					prevIndex = piecesArray.length - 1;
+				}
+				piecesArray[index].shape.opacity(1);
+				//          piecesArray[index].shape.stroke('#aeffae');
+				if (!contains(prevIndex, selectedPieces))
+					piecesArray[prevIndex].shape.opacity(0.5);
+				//          	piecesArray[prevIndex].shape.stroke('#fff')
+				layer.batchDraw();
+				index++;
+				quick++;
+			}
+
+			function contains(obj, arry) {
+				var i = arry.length;
+				while (i--) {
+					if (arry[i] === obj) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			function hehe() {
+				//	  $.getJSON("http://www.pinpinlove.com/game/pintu_for_facebook_android/?accessToken=CAACEdEose0cBACd8jqZAVbcaV9iMu5VWnDZCjGDjZBey5xKGbYk4o9abKbHMyujZCMVpvIKWu6W37bDbeYBgTkovMkTOlUnUlRETkpoLVnuobLXy2N5GTMMzJ5UcC2n1qFd9roeXPnLS22YP2wKkKO4sS1jMb8cx2OS9YmEBJZCh8w1sI6GP3fmg2qztLA3jVcgTCVO0A7AZDZD&expiresIn=100303&uid=100007203789389&callback=?",function(json){
+				//		  alert(json.count);
+				//	  });
+
+				$.getJSON("http://pinpinlove.com/game/tset_match/?callback=?", function(json) {
+					alert(json);
+				});
+			}
+		</script>
+	</body>
+
+{% endblock %}

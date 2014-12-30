@@ -1,0 +1,232 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --个人信息{% endblock %}
+{% block staticfiles %}
+<link rel="stylesheet" type="text/css" href="/static/css/dragdealer.css" />
+<script src="/static/js/dragdealer.min.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+{% block js%}
+		<script type="text/javascript">
+			$(function(){
+				is_vote('{{isVote}}',{{voteScore}});
+				$('#appearancevote').click(function(){
+					vote()
+				});
+				
+				$('#follow').click(function(){
+					update_follow();
+				});
+				
+				$('#dislike').click(function(){
+					dislike();
+				});
+				
+				{%if is_chat%}
+				$('#message').click(function(){
+					userId=$('#userId').val();
+					window.location.href='/mobile/editer/?receiver_id='+userId+'&type=message'
+				});
+				{%endif%}
+				
+				
+			});
+			//判断是否能投票
+			function is_vote(isVote,voteScore){
+					if(isVote=='False'){
+						$('#appearancevote').attr('disabled',true);
+						$('.score').html('不能打分');
+					    new Dragdealer('slider-186', {
+							  animationCallback: function(x, y) {
+							  },
+							  disabled:true,
+							});
+					    $('#slider-186').attr('title','对方相貌没有上传或审核通过')
+					}else{
+						voteScore=voteScore;
+						$('.score').html(voteScore);
+					    new Dragdealer('slider-186', {
+							  animationCallback: function(x, y) {
+							    $('.score').text(Math.round(x * 100));
+							    $('#vote_value').val(Math.round(x * 100))
+							  },
+							  x:voteScore/100
+							});
+					    $('#slider-186').attr('title','拖动打分')
+					};
+			};
+			
+			//投票
+			function vote(){
+				userId=$('#userId').val()
+				score=parseInt($('#vote_value').val().trim());
+				if(isNaN(score)){
+					var body = $("<p>请填写正确的格式!</p>")
+		       	    $.poplayer({body:body});
+					return;
+				}else if(score<0 || score>100){
+					var body = $("<p>分数必须在1~100范围内!</p>")
+		       	    $.poplayer({body:body});
+					return;
+				}
+				$.ajax({
+					type:'POST',
+					url:'/mobile/vote/',
+					dataType:"json",
+					data:{score:score,userId:userId,csrfmiddlewaretoken:getCookie('csrftoken')},
+					success:function(data, textStatus){
+						if(textStatus=='success'){
+							if(data['result']=='success'){
+								var body = $("<p>打分成功!</p>")
+							}else if(data['result']=='error'){
+								var body = $("<p>"+data['error_message']+"<p>")
+							}
+							$.poplayer({body:body});
+						}
+						
+					},
+					error:function(response){
+						var body = $("<p>网络异常!</p>")
+			       	    $.poplayer({body:body});
+					},
+			});
+			};
+			
+			function update_follow(){
+				userId=$('#userId').val();
+				$.getJSON("/user/update_follow/",{userId:userId},function(data) {
+					  if(data.type=='error'){
+						  var body = $("<p>"+data.error_message+"</p>")
+				       	   $.poplayer({body:body});
+						   return false;
+					  }
+					  if(data.type==1){
+							$('#follow').html('已经关注');
+					  }else if(data.type==2){
+						  $('#follow').html('相互关注');
+						  
+						  }else{
+							  $('#follow').html('关注');
+						     
+						  };
+				       
+				       
+				    });
+			};
+			
+			
+			function dislike(){
+				var userId=$('#userId').val();
+			    $.getJSON("/user/dislike/",{userId:userId,page:-1},function(data) {
+					  $.poplayer({body:'下次不再推荐!'});
+			 });
+			};
+		</script>
+{% endblock%}
+{% block content%}
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					卡片
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row frame">
+				<div class="col-xs-4">
+					<img width="50px" height="50px" class="img-rounded" src="{{head}}" />
+					<input type="hidden" id='userId' value="{{userId}}">
+				</div>
+				<div class="col-xs-8">
+					<span>姓名：{{name}}</span>
+					<br />
+					<span>年龄：{{age}}</span>
+					<br />
+					<span>城市：{{age}}</span>
+					<br />
+				</div>
+			</div>
+			<div class="row frame">
+				<p>性格标签</p>
+				{%for tag in tags%}
+				<span class="label label-default">{{tag}}</span>
+				{% endfor %}
+			</div>
+			<div class="row frame">
+				<p>详细信息</p>
+				<div class="row">
+					<div class="col-xs-6">
+						<p>身高：<span>{{height}}</span>
+						</p>
+					</div>
+					<div class="col-xs-6">
+						<p>收入：<span>{{income}}</span>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<p>学历：<span>{{education}}</span>
+						</p>
+					</div>
+					<div class="col-xs-6">
+						<p>星座：<span>{{constellation}}</span>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<p>行业：<span>{{trade}}</span>
+						</p>
+					</div>
+					<div class="col-xs-6">
+						<p>血型：<span></span>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="row frame">
+				<p>照片</p>
+				<ul class="list-inline pic-list">
+				{%  for pic in picList %}
+					<li>
+						<img class="img-rounded" width="60px"  height="60px" src="/media/{{pic.smailPic}}" />
+					</li>
+				{% endfor %}
+				</ul>
+			</div>
+			<div class="row frame">
+				<p>为TA相貌打分</p>
+				<div class="col-xs-8">
+					<div id="slider-186" class="dragdealer" title="拖动打分">
+						<div style="perspective: 1000px; backface-visibility: hidden; transform: translateX(0px);" class="handle red-bar"></div>
+					    <input type="hidden" id="vote_value" name="vote_value" value="0"/>
+					</div>
+				</div>
+				<div class="col-xs-2"><span class="score">100</span>
+					<input type="hidden" value="0" id="vote_value">
+				</div> 
+				<div class="col-xs-2">
+					<button class="btn btn-xs btn-success" id="appearancevote">确认</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4 button">
+					<button class="btn btn-success" id="follow">关注</button>
+				</div>
+				<div class="col-xs-4 button">
+					<button class="btn btn-success" id="dislike">不喜欢</button>
+				</div>
+				<div class="col-xs-4 button">
+					<button class="btn btn-success" id="message"{%if is_chat%}{%else%}disabled="disabled"{%endif%}>私信</button>
+				</div>
+			</div>
+		</div>
+		
+	</body>
+
+{% endblock%}

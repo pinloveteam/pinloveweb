@@ -13,30 +13,54 @@ Created on Dec 23, 2013
 '''
 #用户信息未填时返回的值
 missing_value=[-1,'N',None,]
-def user_info_card(userProfile,userTagBeanList):
-    avatar_name=userProfile.get_avatar_image()
-    data={
-            'avatar_name':avatar_name,
-            'username':userProfile.user.username,
-            'height':userProfile.height,
-            'age':userProfile.age,
-            'education':userProfile.get_education_display(),
-            'income':userProfile.income,
-            'jobIndustry':userProfile.get_jobIndustry_display(),
-            'city':userProfile.city,
-            'sunSign':userProfile.get_sunSign_display(),
-            'gender':userProfile.gender,
-            'avatar_name_status':userProfile.avatar_name_status
-            }
+def user_info_mobile(userId,myId):
+    userProfile=UserProfile.objects.select_related('user').get(user_id=userId)
     #获取标签信息
-    tagTupe=()
-    for userTag in userTagBeanList:
-        tagTupe+=(userTag.tag.content,)
-    data['tagTupe']=tagTupe
+    tagList=UserTag.objects.select_related('tag').filter(user_id=userId,type=0)
+    tags=[]
+    for tag in tagList:
+        if tag.tag.id<24:
+            tags.append(tag.tag.content)
+    from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
+    data={
+                        'head' : '%s%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME,'-100.jpeg'),
+                        'tag' : tags,
+                        'name' : userProfile.user.username,
+                        'userId':userProfile.user_id,
+                        'age' : ('%s%s' % (userProfile.age ,'岁')) if userProfile.age!=None  else userProfile.age,
+                        'city' :  userProfile.limit_city_length(),
+                        'height' :('%s%s' % (userProfile.height,'cm')) if userProfile.height!=-1 else userProfile.height,
+                        'education' : userProfile.get_education_display(),
+                        'income' : userProfile.get_income_display(),
+                        'trade' : userProfile.get_jobIndustry_display(),
+                        'constellation' : userProfile.get_sunSign_display(),
+                        'isVote':False,
+                        'voteScore':-1,
+                    }
     #判断信息是否未填
     for  key in data.keys():
         if data[key] in missing_value:
             data[key]='未填'
+    from apps.recommend_app.views import get_socre_for_other
+    socreForOther=get_socre_for_other(myId,userId)
+    data['voteScore']=-1
+    if socreForOther['result']=='success':
+        if userProfile.avatar_name_status=='3':
+            data['isVote']=True
+            if AppearanceVoteRecord.objects.filter(user_id=myId,other_id=userId).exists():
+                data['voteScore']=int(AppearanceVoteRecord.objects.get(user_id=myId,other_id=userId).score)
+            else:
+                data['voteScore']=0
+        
+            
+    if is_follow_each(myId,userId):
+        data['followStatus']=2
+    elif is_follow(myId,userId):
+        data['followStatus']=1
+    else:
+        data['followStatus']=0
+        
+    data['is_chat']=True if len(get_chat_permission_by_user_ids(myId,[userId]))>0 else False
     return data
 
 '''
@@ -82,7 +106,7 @@ historyIdList 相互购买对方对我的打分用户id列表，如果为空则�
 '''
 def get_chat_permission_by_user_ids(myId,oherIdList=None,followIdList=None,historyIdList=None):
     if followIdList is None:
-        followIdList=[follow.my_id for follow in Follow.objects.follow_each(myId,oherIdList=oherIdList)]
+        followIdList=[follow.my_id for follow in Follow.objects.follow_each(myId,userIdList=oherIdList)]
     if historyIdList is None:
         historyIdList=[history.other_id for history in BrowseOherScoreHistory.objects.browse_score_each_other(myId,oherIdList=oherIdList)]
     for id in historyIdList:

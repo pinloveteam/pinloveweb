@@ -1,0 +1,108 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --个人信息{{type}}{% endblock %}
+{% block staticfiles %}
+<link rel="stylesheet" type="text/css" href="/static/css/idangerous.swiper.css" />
+<script src="/static/js/idangerous.swiper.min.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+{% block js%}
+<script>
+$(function(){
+ $('#send').click(function(){
+   var type=$('#type').val();
+   var content=$('#content').val();
+   if(content.length==0){
+	   $.poplayer({body:'内容不能为空!'});
+	   return false;
+   }
+   if(type=='message'){
+     var receiver_id=$('#receiver_id').val();
+     $.ajax({
+					type:'POST',
+					url:'/message/send/',
+					dataType:"json",
+					data:{receiver_id:receiver_id,reply_content:content,csrfmiddlewaretoken:getCookie('csrftoken')},
+					success:function(data, textStatus){
+						if(textStatus=='success'){
+							if(data['result']=='success'){
+								var body = $("<p>发送成功!</p>");
+								$.poplayer({body:body});
+								window.history.go(-1);
+							}else if(data['result']=='error'){
+								var body = $("<p>"+data['error_message']+"<p>");
+								$.poplayer({body:body});
+							}
+						}
+						
+					},
+					error:function(response){
+						var body = $("<p>网络异常!</p>")
+			       	    $.poplayer({body:body});
+					},
+			});
+   }
+ });
+});
+</script>
+{% endblock %}
+{% block content%}	
+
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-7">
+					edit
+				</div>
+				<div class="col-xs-3">
+				<a id='send' href="javascript:void(0);">发送</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row frame">
+				<textarea rows="6" class="form-control" id="content" name="content"></textarea>
+				<div class="editer-btns">
+				<input type="hidden" name='type' id="type" value="{{type}}">
+				{%ifequal type 'message'%}
+			    <input type="hidden" name='receiver_id' id="receiver_id" value="{{receiver_id}}">
+			    <span class="emotion"></span>
+			    {%endifequal%}
+				</div>
+			</div>
+			<!--<center class="button">
+				<button class="btn btn-success btn-lg">发送</button>
+			</center>-->
+		</div>
+		<script type="text/javascript">
+			$('.photo').click(function() {
+				$('#uploadphoto').click();
+			});
+			$(function() {
+				$('.emotion').qqFace({
+					id: 'facebox',
+					assign: 'content',
+					path: '/static/img/arclist/' //表情存放的路径
+				});
+				//				$(".sub_btn").click(function(){
+				//					var str = $("#saytext").val();
+				//					$("#show").html(replace_em(str));
+				//				});
+			});
+			 //			//查看结果
+			 //			function replace_em(str){
+			 //				str = str.replace(/\</g,'&lt;');
+			 //				str = str.replace(/\>/g,'&gt;');
+			 //				str = str.replace(/\n/g,'<br/>');
+			 //				str = str.replace(/\[em_([0-9]*)\]/g,'<img src="arclist/$1.gif" border="0" />');
+			 //				return str;
+			 //			}
+			 //			$(".header").on("swipeleft",function(){
+			 //			  alert("You swiped left!");
+			 //			});
+		</script>
+	</body>
+
+{% endblock%}

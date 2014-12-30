@@ -432,10 +432,10 @@ function loadStage() {
         Time = setInterval(Star,Speed);
         type[10]
          var filter=$('#search_condition').find('input:radio:checked').val()
-         $.ajax({type:"GET",
+         $.ajax({type:"POST",
         		 url:"/game/jigsaw_web/",
         		 dataType:'json',
-        		 data:{type:dataType,uid:{{user.id}},filter:filter},
+        		 data:{type:dataType,uid:{{user.id}},filter:filter,csrfmiddlewaretoken:getCookie('csrftoken')},
         		 error:function(msg){
         			console.log(msg)
            		  $('.push').click(function(){
