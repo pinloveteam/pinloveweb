@@ -305,7 +305,7 @@
          							$('.follow').attr('disabled',false)
          						},
          						success:function(data, textStatus){
-         							if (data['type']=='success'){
+         							if (data['result']=='success'){
          								 var body=$('<p>评论成功!</p>')
          								  publishTextArea.val('')
          								 publishTextArea.closest('#message-reply').hide('slow').prev().find('.reply-btn').show();

@@ -1,10 +1,259 @@
 {% extends "mobile_base.html" %} 
-{% block title %} 拼爱网 --权重{% endblock %}
+{% block title %} 拼爱网 --动态{% endblock %}
 {% block staticfiles %}
-  <link rel="stylesheet" href="css/idangerous.swiper.css" />
-  <script type="text/javascript" src="js/idangerous.swiper.min.js" ></script>
+  <link rel="stylesheet" href="/static/css/idangerous.swiper.css" />
+  <script type="text/javascript" src="/static/js/idangerous.swiper.min.js" ></script>
+  <script type="text/javascript" src="/static/js/jquery.scroll.js" ></script>
+   <script type="text/javascript" src="/static/js/jquery.loading.js" ></script>
 {% endblock %}
 {% block js %}
+<script type="text/javascript">
+			$(function() {
+				$('.js-pic-box').openPic();
+			});
+</script>
+<script type="text/javascript">
+var page={{next_page_number}};
+$(document).ready(function(){
+	dynamicList={{friendDynamicList|safe}}
+	init_dynamic(dynamicList);
+	//动态评论
+	$('.comment').click(function(){
+		dynamicId=$(this).closest('.trend').find('#dynamicId').val();
+		window.location.href='/mobile/editer/?receiver_id=&type=dynamic_comment&dynamicId='+dynamicId;
+	})
+});
+
+//初始化动态
+var agree_status=true;
+function init_dynamic(dynamicList){
+	$(dynamicList).each(function(){
+		dynamic=$('#dynamic_clone').find('.trend').clone();
+		dynamicObj=this;
+		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-100.jpeg');
+		dynamic.find('#username').html(this.publishUserName);
+		dynamic.find('#time').html(this.publishTime+'发布');
+		dynamic.find('#content').html(this.content);
+		dynamic.find('#agreeNum').html(this.argeeNum);
+		dynamic.find('#dynamicId').val(dynamicObj.id);
+		/*if(userId==this.publishUserId){
+			dynamic.find('.trend').prepend('<span class="delete">删除 </span>')
+		}*/
+		if(this.type==2){
+			dataList=Array();
+			imgList=this.data
+			for(i in imgList){
+				img=imgList[i]
+				dataList.push({id:i,img:'/media/images/'+img+'-140.jpg',middleimg:'/media/images/'+img+'.jpg'});
+			}
+		}
+		if(!this.isAgree){
+			dynamic.find('.glyphicon-heart-empty').removeClass('text-pink')
+		}
+		dynamic.find('.glyphicon-heart-empty').click(function(){
+			var conext=$(this);
+			var dynamicId=conext.closest('.trend').find('#dynamicId').val();
+			$.ajax({
+				dataType:"json",
+				 type: "POST",
+				url:'/dynamic/agree/',
+				data:{dynamicId:dynamicId,csrfmiddlewaretoken:getCookie('csrftoken')},
+				beforeSend:function(XMLHttpRequest){
+					agree_status=false;
+				},
+				complete:function(XMLHttpRequest, textStatus){
+					agree_status=true;
+				},
+				success:function(data, textStatus){
+					agreeNum=conext.next()
+					if(data.result=='addSuccess'){
+					  conext.css('color','#ff7979');
+					  Num=agreeNum.html().trim()
+					  agreeNum.html((parseInt(Num.substring(1,Num.length-1))+1))
+					  init_agree(conext.closest('.row'),$.parseJSON(data.obj),1)
+					}else if(data.result=='delSuccess'){
+						  conext.css('color','#80827F')
+						  Num=agreeNum.html().trim()
+						  agreeNum.html((parseInt(Num.substring(1,Num.length-1))-1))
+					  }else if(data.result=='error'){
+			        	 var body = $('<p>'+data.error_message+'</p>');
+			        	 $.poplayer({body:body});
+			        }
+				},
+	            error: function(response){
+	            	var body=$('<p>网络异常!</p>')
+					 $.poplayer({body:body});
+	            },
+				
+			});
+		});
+		
+		if(this.commentList.length>0){
+			init_comment(dynamic,$.parseJSON(this.commentList),this.publishUserId);
+		}
+		$('#dynamic').append(dynamic);
+		if(this.type==2){
+		pic=dynamic.find('.pic-list');
+		for(i=0;i<dataList.length;i++){
+		pic.append('<li><img class="img-rounded js-pic-box" width="60px" src="'+dataList[i].img+'" href="'+dataList[i].middleimg+'" name="2"/></li>')
+		}
+		
+		}
+		
+		//删除动态
+		/* dynamic.find('.delete').click(function(){
+			del_dynamic(this);
+		}); */
+		$('#dynamic_list').append(dynamic);
+	});
+};
+function init_agree(dynamic_div,agreeList,type){
+	$(agreeList).each(function(){
+		agree=$('#dynamic_clone').find('#agree').clone();
+		agree.find('img').attr('src','/media/'+this.avatarName+'-100.jpeg');
+		agree.find('#username').html(this.username);
+		agree.find('input[name="userId"]').val(this.userId)
+		if(type==0){
+			dynamic_div.find('.trend').append(agree);
+		}else{
+			dynamic_div.find('.comment-btn').first().after(agree)
+		}
+		
+	});
+}
+//初始化评论
+function init_comment(dynamic_div,commentList,publishUserId){
+	$(commentList).each(function(){
+		var comment=$('#dynamic_clone').find('#comment').clone();
+		comment.find('.reply-name').html(this.reviewerName)
+		comment.find('.reply-content').html(this.content);
+		comment.find('#commentId').val(this.id);
+		comment.find('#reviewerId').val(this.reviewerId);
+		/*if(publishUserId==userId||this.reviewerId==userId){
+			comment.find('.comment-btn').append('<button class="btn btn-xs btn-primary del-btn">删除</button>');
+		}
+		if(this.reviewerId==userId){
+			comment.find('.reply-btn').remove();
+		}*/
+		$(dynamic_div).append(comment);
+	})
+	//删除评论
+	/*dynamic_div.find('.del-btn').click(function(){
+		del_comment(this);
+	});*/
+};
+
+//删除评论
+function del_comment(e){
+	comment=$(e).closest('#comment');
+	commentId=comment.find('#commentId').val();
+	var body = $('<p>确认删除</p>');
+	btn=function(){
+		$.ajax({
+			dataType:"json",
+			 type: "POST",
+			url:'/dynamic/del_comment/',
+			data:{commentId:commentId,csrfmiddlewaretoken:getCookie('csrftoken')},
+			beforeSend:function(XMLHttpRequest){
+				$('.poplayer').find('button').attr('disabled',true);
+			},
+			complete:function(XMLHttpRequest, textStatus){
+				$('.poplayer').find('button').attr('disabled',false)
+			},
+			success:function(data, textStatus){
+				if(data.result=='success'){
+		        	comment.remove();
+		           var body = $('<p>删除成功</p>');
+		        }else if(data.result=='error'){
+		        	 var body = $('<p>'+data.error_message+'</p>');
+		        }
+		        $.poplayer({body:body});
+			},
+            error: function(response){
+            	var body=$('<p>网络异常!</p>')
+				 $.poplayer({body:body});
+            },
+			
+		});
+	};
+	$.poplayer({body:body,btnFunc:btn});
+	
+};
+//删除动态
+function del_dynamic(e){
+	var conext=$(e);
+	var dynamicId=conext.closest('.trend').find('#dynamicId').val();
+	var body = $('<p>确认删除</p>');
+	btn=function(){
+	$.ajax({
+		dataType:"json",
+		 type: "POST",
+		url:'/dynamic/delDynamic/',
+		data:{dynamicId:dynamicId,csrfmiddlewaretoken:getCookie('csrftoken')},
+		beforeSend:function(XMLHttpRequest){
+			conext.unbind();
+		},
+		complete:function(XMLHttpRequest, textStatus){
+		},
+		success:function(data, textStatus){
+			if(data.result=='success'){
+			var row=conext.closest('.row');
+			row.next().remove();
+			row.remove();
+			var body = $('<p>删除成功</p>');
+			}else if(data.result=='error'){
+	        	 var body = $('<p>'+data.error_message+'</p>');
+	        }
+			$.poplayer({body:body});
+		},
+        error: function(response){
+        	var body=$('<p>网络异常!</p>')
+			 $.poplayer({body:body});
+        },
+		
+	});
+  };
+  $.poplayer({body:body,btnFunc:btn});
+	
+}
+</script>
+<script type="text/javascript">
+	   //滚动加载
+	   var next_page={{next_page_number|safe}}
+	   no_load=function(){
+		   $('#dynamic_list').append('<div class="trend" style="text-align:center;height:30px;" >没有更多动态<div>')
+			stop_load_next_page();
+			return;
+	   };
+	   loading=function(flag){
+		   if(flag){
+			   $('#dynamic_list').popLoading();
+		   }else{
+			   $('#dynamic_list').removeLoading();
+		   }
+		   
+	   };
+	   success=function(data){
+		   if( typeof(data)!="object"){
+   	    	data=$.parseJSON(data);
+   	    }
+   	    next_page=data['next_page_number']
+       	if(typeof(data.messageList)!="object"){
+       		data.messageList=$.parseJSON(data.friendDynamicList);
+       	}
+	    init_dynamic(data.messageList);
+	   };
+		$(window).scroll( function() { 
+				if(get_load_next_page()){
+			/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+				console.log("页面的文档高度 ："+$(document).height());
+				console.log('浏览器的高度：'+$(window).height()); */
+				loadData(no_load,success,loading);
+				}
+			}); 
+
+</script>
+
 {% endblock %}
 {% block content %}
 
@@ -22,34 +271,32 @@
 				</div>
 			</div>
 		</div>
-		<div class="trend">
+		<div id="dynamic_list">
+		</div>
+		{% include "mobile_navigation.html" %}
+		
+	<div id="dynamic_clone" style="display: none;">
+	 <div class="trend">
+	    <input type="hidden" id="dynamicId">
 		<div class="frame">
 			<div class="row">
 				<div class="col-xs-3">
-					<img width="50px" class="img-circle" src="img/image1.jpeg" />
+					<img id="avatar" width="50px" height="50px" class="img-circle" src="img/image1.jpeg" />
 				</div>
 				<div class="col-xs-9">
 					<div class="row">
 						<div class="col-xs-4">
-							<p class="name">张全蛋</p>
+							<p id="username" class="name">张全蛋</p>
 						</div>
 						<div class="col-xs-4">
 						</div>
 						<div class="col-xs-4">
-							<p class="trend-time">1小时前</p>
+							<p id="time" class="trend-time">1小时前</p>
 						</div>
 					</div>
-					<p class="trend-text text-gray">shen me gui</p>
+					<p id="content" class="trend-text text-gray">shen me gui</p>
 					<ul class="list-inline pic-list">
-						<li>
-							<img class="img-rounded js-pic-box" width="60px" src="img/img2.jpg" href="img/img2.jpg" name="0"/>
-						</li>
-						<li>
-							<img class="img-rounded js-pic-box" width="60px" src="img/img2.jpg" href="img/img2.jpg" name="1"/>
-						</li>
-						<li>
-							<img class="img-rounded js-pic-box" width="60px" src="img/img2.jpg" href="img/img2.jpg" name="2"/>
-						</li>
+						
 					</ul>
 				</div>
 			</div>
@@ -59,168 +306,26 @@
 				</div>
 				<div class="col-xs-6">
 					<i class="glyphicon glyphicon-heart-empty text-pink"></i>
-					<span class="trend-like text-gray">1</span>
+					<span id="agreeNum"  class="trend-like text-gray">1</span>
 				</div>
 				<div class="col-xs-3">
-					<i class="glyphicon glyphicon-comment text-blue"></i>
+					<i class="glyphicon glyphicon-comment text-blue comment"></i>
 				</div>
 			</div>
 		</div>
-		<div class="frame trend-reply">
+		</div>
+		
+		<div id="comment" class="frame trend-reply">
 			<div class="row">
 				<div class="col-xs-12">
-					<span class="reply-name">张三:</span>
+				    <input type="hidden" class="reviewerId" value="">
+				    <input type="hidden" class="commentId" value="">
+					<span class="reply-name">张三</span><span>:</span>
 					<span class="reply-content text-gray">hahahah</span>
 				</div>
 			</div>
 		</div>
-		<div class="frame trend-reply">
-			<div class="row">
-				<div class="col-xs-12">
-					<span class="reply-name">张三:</span>
-					<span class="reply-content text-gray">hahahah</span>
-				</div>
-			</div>
-		</div>
-		</div>
-		<div class="trend">
-		<div class="frame">
-			<div class="row">
-				<div class="col-xs-3">
-					<img width="50px" class="img-circle" src="img/image1.jpeg" />
-				</div>
-				<div class="col-xs-9">
-					<div class="row">
-						<div class="col-xs-4">
-							<p class="name">张全蛋</p>
-						</div>
-						<div class="col-xs-4">
-						</div>
-						<div class="col-xs-4">
-							<p class="trend-time">1小时前</p>
-						</div>
-					</div>
-					<p class="trend-text text-gray">shen me gui</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-3">
-
-				</div>
-				<div class="col-xs-6">
-					<i class="glyphicon glyphicon-heart-empty text-pink"></i>
-					<span class="trend-like text-gray">1</span>
-				</div>
-				<div class="col-xs-3">
-					<i class="glyphicon glyphicon-comment text-blue"></i>
-				</div>
-			</div>
-		</div>
-		<div class="frame trend-reply">
-			<div class="row">
-				<div class="col-xs-12">
-					<span class="reply-name">张三:</span>
-					<span class="reply-content text-gray">hahahah</span>
-				</div>
-			</div>
-		</div>
-		<div class="frame trend-reply">
-			<div class="row">
-				<div class="col-xs-12">
-					<span class="reply-name">张三:</span>
-					<span class="reply-content text-gray">hahahah</span>
-				</div>
-			</div>
-		</div>
-		</div>
-			<div class="trend">
-		<div class="frame">
-			<div class="row">
-				<div class="col-xs-3">
-					<img width="50px" class="img-circle" src="img/image1.jpeg" />
-				</div>
-				<div class="col-xs-9">
-					<div class="row">
-						<div class="col-xs-4">
-							<p class="name">张全蛋</p>
-						</div>
-						<div class="col-xs-4">
-						</div>
-						<div class="col-xs-4">
-							<p class="trend-time">1小时前</p>
-						</div>
-					</div>
-					<p class="trend-text text-gray">shen me gui</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-3">
-
-				</div>
-				<div class="col-xs-6">
-					<i class="glyphicon glyphicon-heart-empty text-pink"></i>
-					<span class="trend-like text-gray">1</span>
-				</div>
-				<div class="col-xs-3">
-					<i class="glyphicon glyphicon-comment text-blue"></i>
-				</div>
-			</div>
-		</div>
-		<div class="frame trend-reply">
-			<div class="row">
-				<div class="col-xs-12">
-					<span class="reply-name">张三:</span>
-					<span class="reply-content text-gray">hahahah</span>
-				</div>
-			</div>
-		</div>
-		<div class="frame trend-reply">
-			<div class="row">
-				<div class="col-xs-12">
-					<span class="reply-name">张三:</span>
-					<span class="reply-content text-gray">hahahah</span>
-				</div>
-			</div>
-		</div>
-		</div>
-		<nav class="nav-bar">
-			<div class="col-xs-1">
-
-			</div>
-			<div class="col-xs-2">
-				<p></p>
-				<i class="glyphicon glyphicon-star-empty"></i>
-				<p>推荐</p>
-			</div>
-			<div class="col-xs-2 active">
-				<p></p>
-				<i class="glyphicon glyphicon-refresh"></i>
-				<p>动态</p>
-			</div>
-			<div class="col-xs-2">
-				<p></p>
-				<i class="glyphicon glyphicon-map-marker"></i>
-				<p>附近</p>
-			</div>
-			<div class="col-xs-2">
-				<p></p>
-				<i class="glyphicon glyphicon-heart-empty"></i>
-				<p>拼图</p>
-			</div>
-			<div class="col-xs-2">
-				<p></p>
-				<i class="glyphicon glyphicon-envelope"></i>
-				<p>私信</p>
-			</div>
-			<div class="col-xs-1">
-
-			</div>
-		</nav>
-		<script type="text/javascript">
-			$(function() {
-				$('.js-pic-box').openPic();
-			});
-		</script>
+	</div>
 	</body>
 
 {% endblock %}

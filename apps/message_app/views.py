@@ -306,8 +306,8 @@ def message_send(request):
             message=add_message_121(user.id,receiver_id,reply_content,1)
             args={'result':'success','messageTime':message.sendTime.strftime("%m-%d %H:%M")}  
     except Exception ,e:    
-        logger.error('私信   发送,出粗')
-        args={'result':'error','error_message':'发送私信出错!'}   
+        logger.error('私信   发送,出错')
+        args={'result':'error','error_message':'发送私信出错!'+e.message}   
     json = simplejson.dumps(args)
     return HttpResponse(json)
 

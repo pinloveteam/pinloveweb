@@ -6,6 +6,21 @@
 {% endblock %}
 {% block js%}
 <script>
+$.fn.serializeObject = function() {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [ o[this.name] ];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+}
 $(function(){
  $('#send').click(function(){
    var type=$('#type').val();
@@ -14,13 +29,12 @@ $(function(){
 	   $.poplayer({body:'内容不能为空!'});
 	   return false;
    }
-   if(type=='message'){
-     var receiver_id=$('#receiver_id').val();
+     var json=$('form').serializeObject();
      $.ajax({
 					type:'POST',
-					url:'/message/send/',
+					url:'{{url}}',
 					dataType:"json",
-					data:{receiver_id:receiver_id,reply_content:content,csrfmiddlewaretoken:getCookie('csrftoken')},
+					data:json,
 					success:function(data, textStatus){
 						if(textStatus=='success'){
 							if(data['result']=='success'){
@@ -39,14 +53,15 @@ $(function(){
 			       	    $.poplayer({body:body});
 					},
 			});
-   }
  });
 });
+
 </script>
 {% endblock %}
 {% block content%}	
 
 	<body class="logined">
+	<form>{%csrf_token%}
 		<div class="header">
 			<div class="row">
 				<div class="col-xs-2">
@@ -63,13 +78,10 @@ $(function(){
 
 		<div class="container">
 			<div class="row frame">
-				<textarea rows="6" class="form-control" id="content" name="content"></textarea>
+				{{textarea|safe}}
 				<div class="editer-btns">
-				<input type="hidden" name='type' id="type" value="{{type}}">
-				{%ifequal type 'message'%}
-			    <input type="hidden" name='receiver_id' id="receiver_id" value="{{receiver_id}}">
 			    <span class="emotion"></span>
-			    {%endifequal%}
+				{{inputHtml|safe}}
 				</div>
 			</div>
 			<!--<center class="button">
@@ -103,6 +115,7 @@ $(function(){
 			 //			  alert("You swiped left!");
 			 //			});
 		</script>
+	   </form>
 	</body>
 
 {% endblock%}

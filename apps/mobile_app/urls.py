@@ -22,13 +22,21 @@ urlpatterns=patterns('apps.mobile_app.views',
      #编辑面板
      url(r'^editer/$','editer'),
      #搜索
-     url(r'^search/$','search')
+     url(r'^search/$','search'),
+     #搜索
+     url(r'^dynamic/$','dynamic')
      
      
      
 )
 
 urlpatterns+=patterns('',
+    #消息页面                    
+    url(r'^message/$', 'apps.message_app.views.message',{'template_name':'mobile_message.html'}),
+    url(r'^message_list/$','apps.message_app.views.message_list',{'template_name': 'mobile_message.html'}),
+    url(r'^follow_list/$','apps.message_app.views.get_follow_message',{'template_name': 'mobile_message.html'}),
+    url(r'^comment_list/$', 'apps.friend_dynamic_app.views.comment_list',{'template_name':'mobile_message.html'}), 
+     url(r'^agree_list/$', 'apps.friend_dynamic_app.views.agree_list',{'template_name': 'mobile_message.html'}),
      #更新权重                     
     url(r'^update_weight/$', 'recommend_app.views.update_weight'),
     #手机充值

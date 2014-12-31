@@ -205,10 +205,18 @@ def editer(request,template_name='mobile_editer.html'):
     args={}
     try:
         type=request.REQUEST.get('type')
+        input='<input type="hidden" name="%s" value="%s">'
+        textarea=' <textarea rows="6" class="form-control" id="content" name="%s"></textarea>'
         if type==u'message':
-            args['receiver_id']=request.REQUEST.get('receiver_id')
+            args['url']='/message/send/'
+            args['inputHtml']=input%('receiver_id',request.REQUEST.get('receiver_id'))
+            args['textarea']=textarea%('reply_content')
+        elif  type==u'dynamic_comment':
+            args['url']='/dynamic/comment/'
+            args['textarea']=textarea%('content')
+            args['inputHtml']=input%('receiverId',request.REQUEST.get('receiver_id'))+' '+input%('dynamicId',request.REQUEST.get('dynamicId'))
         else:
-            args['receiver_id']=request.REQUEST.get('receiver_id')
+            raise Exception()
         args['type']=type
         return render(request,template_name,args)
     except Exception,e:
@@ -277,7 +285,29 @@ def search(request,template_name='mobile_search.html'):
         logger.exception('搜索,出错!')
         args={'result':'error.html','error_message':e.message}
         return render(request,'error.html',args)
+  
+  
+def dynamic(request,template_name='mobile_trend.html'):
+    '''
+    动态页面
+    '''
+    args={}
+    try:
+        dynamicId=request.REQUEST.get('dynamicId',None)
+        args['user']=request.user
+        from apps.friend_dynamic_app.views import init_dynamic
+        arg=init_dynamic(request,request.user.id,args,0,dynamicId=dynamicId)
+        if request.is_ajax():
+            from apps.pojo.dynamic import MyEncoder
+            json=simplejson.dumps( {'friendDynamicList':args['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
+            return HttpResponse(json, mimetype='application/json')
+        return render(request,template_name,args)
+    except Exception,e:
+        logger.exception('动态页面出错!')
+        args={'result':'error.html','error_message':'动态页面出错'+e.message}
+        return render(request,'error.html',args)
     
+      
 def recommend(request,template_name='mobile_recommend.html',**kwargs):
     '''
     推荐功能

@@ -1,5 +1,8 @@
 {% extends "mobile_base.html" %} 
 {% block title %} 拼爱网 --消息{% endblock %}
+{% block staticfiles %}
+<script src="/static/js/jquery.scroll.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
 {% block js%}
 <script type="text/javascript">
 			$(document).click(function(e) {
@@ -10,6 +13,317 @@
 				}
 			});
 </script>
+
+<script>
+	$(document).ready(function(){
+                messageList={{messageList|safe }};
+                init_message(messageList);
+                init_menu();
+                
+                $('.reply-btn').click(reply);
+                
+                if(next_page==-1){
+                	no_load();
+                }
+                
+              //菜单切换
+                $('.nav').children().click(function(){
+                	var context=$(this);
+                	title=context.find('li').html().trim();
+                	$('#theme').html(title);
+                	url=context.attr('href')
+                	$.ajax({
+        					dataType:"json",
+        					type: "GET",
+        					url:url,
+        					data:{},
+        					beforeSend:function(XMLHttpRequest){
+        						
+        					},
+        					complete:function(XMLHttpRequest, textStatus){
+        					},
+        					success:function(data, textStatus){
+        						$('#message_list').html('');
+        						if(typeof(data.messageList)!='object'){
+        							data.messageList=$.parseJSON(data.messageList);
+        						}
+        						init_message(data.messageList);
+        						$('.reply-btn').click(reply);
+        						if(next_page==-1){
+        		                	no_load();
+        		                }
+        						//set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
+        						},
+        	                    error: function(response){
+        	                    	 var body=$('<p>网络异常!</p>')
+        							 $.poplayer({body:body}); 
+        	                    },
+        						
+        			});
+                	var state = {
+                		    title: title,
+                		    url: url,
+                		};
+                	window.history.pushState(state, title, url)
+                	
+                });
+                
+	});
+	
+	//回复
+	function reply(){
+		contect=$(this).closest('.frame');
+		type=contect.attr('id');
+		userId=contect.find('#senderId').val();
+		if(type=='message'){
+			window.location.href='/mobile/editer/?receiver_id='+userId+'&type='+type
+		}else if(type=='dynamic_comment'){
+			dynamicId=contect.find('#dynamicId').val();
+			window.location.href='/mobile/editer/?receiver_id='+userId+'&type='+type+'&dynamicId='+dynamicId;
+		}else{
+			 $.poplayer({body:'回复参数出错!'});
+		}
+	}
+               
+            //关注
+            function follow(){
+                	var context=$(this);
+                	senderId=$(this).closest('#follow').find('#senderId').val();
+                	$.ajax({
+						dataType:"json",
+						url:'/user/update_follow',
+						data:{userId:senderId,type:1},
+						beforeSend:function(XMLHttpRequest){
+							context.attr('disabled',true);
+						},
+						complete:function(XMLHttpRequest, textStatus){
+							$('.follow').attr('disabled',false)
+						},
+						success:function(data, textStatus){
+							if(data['type']=='error'){
+								var body=$('<p>'+data['error_message']+'</p>')
+								 $.poplayer({body:body});
+								return false;
+							}
+							 var message='';
+							 if(data['result']=='follow'){
+								  var body=$('<p>已经关注!</p>')
+								  $.poplayer({body:body});
+								  return;
+							  }
+							  if(data['type']==1){
+									myFollow=myFollow+1
+									$('#myFollow').html(myFollow)
+									var body=$('<p>关注成功!</p>')
+									 $.poplayer({body:body});
+									 message='已经关注';
+							  }else if(data['type']==2){
+								    message='相互关注';
+									var body=$('<p>关注成功!</p>')
+									 $.poplayer({body:body});
+								  };
+								  context.html(message)
+								  
+						},
+	                    error: function(response){
+	                    	var body=$('<p>网络异常!</p>')
+							 $.poplayer({body:body});
+	                    },
+						
+					});
+                };
+                
+          
+            function init_message(messageList){
+                for(var i in messageList){
+                    message=messageList[i]
+                    if(message.type==0 ||message.type==1){
+                        var message_clone=$('#message_clone').find('#message').clone();
+                        message_clone.find('#senderId').val(message.sender_id);
+                        message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
+                        message_clone.find('#username').html(message.sender_name);
+                        message_clone.find('#content').html(message.content).parent().attr('href','/message/detail/?senderId='+message.sender_id);
+                        message_clone.find('#time').html(message.sendTime);
+                        if(message.isBlackList){
+                          	 message_clone.find('.message-report').html('取消黑名单');
+                          };
+                        if(message.isRead==0){
+                        	message_clone.addClass('unread')
+                        }
+                        $('#message_list').append(message_clone);
+                       
+                    }else if(message.type==2) {
+                        var follow_clone=$('#message_clone').find('#follow').clone();
+                        follow_clone.find('#senderId').val(message.sender_id);
+                        follow_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
+                        follow_clone.find('#username').html(message.sender_name);
+                        follow_clone.find('#time').html(message.sendTime);
+                        if(message.isRead==0){
+                        	follow_clone.addClass('unread')
+                        }
+                        if(message.isBlackList){
+                        	follow_clone.find('.message-report').html('取消黑名单');
+                         };
+                        if(message.fllow_type==1){
+                        	follow_btn=follow_clone.find('.follow')
+                        	follow_btn.html('已经关注');
+                        	follow_btn.attr('disabled',true);
+                        }else if(message.fllow_type==1){
+                        	follow_btn=follow_clone.find('.follow');
+                        	follow_btn.html('已经关注');
+                        	follow_btn.attr('disabled',true);
+                        }
+                        $('#message_list').append(follow_clone);
+
+                    }else if(message.type==3){
+                    	var dynamic_agree_clone=$('#message_clone').find('#dynamic_agree').clone();
+                    	dynamic_agree_clone.find('#senderId').val(message.sender_id);
+                    	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
+                    	dynamic_agree_clone.find('#username').html(message.sender_name);
+                    	dynamic_agree_clone.find('#time').html(message.sendTime);
+                    	dynamic_agree_clone.find('#dynamic_content').html(message.friendDynamic_content);
+                    	if(message.isRead==0){
+                    		dynamic_agree_clone.addClass('unread')
+                        }
+                    	/* if(message.isBlackList){
+                    		dynamic_agree_clone.find('.message-report').html('取消黑名单');
+                         };
+                        if(message.data.length>0){
+                       	 message.data=$.parseJSON(message.data);
+                       	dynamic_agree_clone.find('#dynamic_img_count').html('(共'+message.data.length+"张)");
+                       	dynamic_agree_clone.find('#dynamic_img').attr('src','/media/images/'+message.data[0]+'-140.jpg').parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
+                        }else{
+                        	dynamic_agree_clone.find('.message-img').last().children(':lt(2)').remove();
+                        } */
+                    	$('#message_list').append(dynamic_agree_clone);
+                    }else if(message.type==5) {
+                         var dynamic_comment_clone=$('#message_clone').find('#dynamic_comment').clone();
+                         dynamic_comment_clone.find('#senderId').val(message.sender_id);
+                         dynamic_comment_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
+                         dynamic_comment_clone.find('#username').html(message.sender_name);
+                         dynamic_comment_clone.find('#content').html(message.content);
+                         dynamic_comment_clone.find('#time').html(message.sendTime);
+                         dynamic_comment_clone.find('#dynamicId').val(message.friendDynamic_id);
+                         /* if(message.isRead==0){
+                        	 dynamic_comment_clone.addClass('unread')
+                         }
+                         if(message.isBlackList){
+                        	 dynamic_comment_clone.find('.message-report').html('取消黑名单');
+                          };
+                         if(message.data.length>0){
+                        	 message.data=$.parseJSON(message.data);
+                             dynamic_comment_clone.find('#dynamic_img_count').html('(共'+message.data.length+"张)");
+                             dynamic_comment_clone.find('#dynamic_img').attr('src','/media/images/'+message.data[0]+'-140.jpg').parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
+                         }else{
+                        	 dynamic_comment_clone.find('.message-img').last().children(':lt(2)').remove();
+                         }
+                         dynamic_comment_clone.find('#dynamic_content').html(message.friendDynamic_content).parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);; */
+                         $('#message_list').append(dynamic_comment_clone);
+                       
+                    };
+                 };
+                 $('.follow').unbind();
+                 $('.follow').click(follow);
+                 //黑名单
+              /*    $('.message-report').unbind();
+                 $('.message-report').click(function(){
+                	var message=$(this).closest('.message');
+                	var senderId=message.find('#senderId').val();
+                	var senderName=message.find('#username').html().trim();
+                	data={userId:senderId,csrfmiddlewaretoken:getCookie('csrftoken')}
+                	content=$(this)
+                	hehe=function(){
+                		$.ajax({
+    						dataType:"json",
+    						 type: "POST",
+    						url:'/user/black_list/',
+    						data:data,
+    						beforeSend:function(XMLHttpRequest){
+    						},
+    						complete:function(XMLHttpRequest, textStatus){
+    						},
+    						success:function(data, textStatus){
+    							if (data.result=='success'){
+    								if(data.type==1){
+    									var body=$('<p>添加成功!</p>');
+    									content.html('取消黑名单');
+    								}else if(data.type==-1){
+    									var body=$('<p>取消成功!</p>')
+    									content.html('拉入黑名单');
+    								}
+    							}else{
+    								var body=$('<p>'+data.error_message+'</p>')
+    							}
+    							 $.poplayer({body:body});
+    						},
+    	                    error: function(response){
+    	                    	var body=$('<p>网络异常!</p>')
+    							 $.poplayer({body:body});
+    	                    },
+    						
+    					});
+                	}
+                	 var body=$('<p>确认将'+senderName+content.html()+'</p>')
+						 $.poplayer({body:body,btnFunc:hehe});
+                 }) */
+
+            };
+            
+          
+          
+           // 菜单初始化
+            function init_menu(){
+            	pathname=window.location.pathname;
+            	var context=null;
+            	$($('.nav').find('a')).each(function(){
+            		if(pathname==this.pathname){
+            			context=$(this).find('li').html();
+            			return false; 
+            		}
+            	});
+            	$('#theme').html(context);
+            }
+        </script>
+        
+        <script type="text/javascript">
+	   //滚动加载
+	   var next_page={{next_page_number|safe}}
+	   no_load=function(){
+	    	var no_dynamic=$('#no_dynamic')
+			$('.col-xs-9').append('<div class="row" style="margin-top: 20px;text-align: center;">没有消息了</div>')
+			stop_load_next_page();
+			return;
+	   };
+	   loading=function(flag){
+		   if(flag){
+			   $('.col-xs-9').popLoading();
+		   }else{
+			   $('.col-xs-9').removeLoading();
+		   }
+		   
+	   };
+	   success=function(data){
+		   if( typeof(data)!="object"){
+   	    	data=$.parseJSON(data);
+   	    }
+   	    next_page=data['next_page_number']
+       	if(typeof(data.messageList)!="object"){
+       		data.messageList=$.parseJSON(data.messageList);
+       	}
+   	   set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
+       	init_message(data.messageList);
+	   };
+		$(window).scroll( function() { 
+				if(get_load_next_page()){
+			/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+				console.log("页面的文档高度 ："+$(document).height());
+				console.log('浏览器的高度：'+$(window).height()); */
+				loadData(no_load,success,loading);
+				}
+			}); 
+		
+</script>
+       
 		
 {% endblock %}
 {% block content%}
@@ -19,7 +333,7 @@
 				<div class="col-xs-2">
 					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
 				</div>
-				<div class="col-xs-8">
+				<div id="theme" class="col-xs-8">
 					消息
 				</div>
 				<div class="col-xs-2">
@@ -27,79 +341,113 @@
 				</div>
 			</div>
 		</div>
-		<ul class="msg-type">
-			<li>全部消息</li>
-			<li>站内私信</li>
-			<li>动态评论</li>
-			<li>给我的“赞”</li>
-			<li>新的粉丝</li>
+		<ul class="msg-type nav">
+			<a onclick="return false;" href="/mobile/message/" style="color:white;"><li>全部消息</li></a>
+			<a id="message" onclick="return false;" style="color:white;" href="/mobile/message_list/"><li>站内私信</li></a>
+			<a id="dynamic" onclick="return false;" style="color:white;" href="/mobile/comment_list/"><li>动态评论</li></a>
+			<a id="agree" onclick="return false;" style="color:white;" href="/mobile/agree_list/"><li>给我的“赞”</li></li></a>
+			<a id="follow" onclick="return false;" style="color:white;" href="/mobile/follow_list/"><li>新的粉丝</li></a>
 		</ul>
-		<div class="frame">
-			<div class="row">
-				<div class="col-xs-3">
-					<img width="50px" class="img-rounded" src="img/image1.jpeg" />
-				</div>
-				<div class="col-xs-7">
-					<div class="row">
-						<span class="name">张三11111评论了你的动态</span>
-					</div>
-					<div class="row">
-						<small class="text-gray">哎呦，不错哦</small>
-					</div>
-					<div class="row">
-						<small class="text-gray">2014-12-12  13:00</small>
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<br />
-					<button class="btn btn-success btn-sm">回复</button>
-				</div>
-			</div>
+		<div id="message_list">
+		
 		</div>
-		<div class="frame">
-			<div class="row">
-				<div class="col-xs-3">
-					<img width="50px" class="img-rounded" src="img/image1.jpeg" />
-				</div>
-				<div class="col-xs-7">
-					<div class="row">
-						<span class="name">张三11111关注了你</span>
-					</div>
-					<div class="row">
-						<small class="text-gray">你好</small>
-					</div>
-					<div class="row">
-						<small class="text-gray">2014-12-12  13:00</small>
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<br />
-					<button class="btn btn-info btn-sm">关注</button>
-				</div>
-			</div>
-		</div>
-		<div class="frame">
-			<div class="row">
-				<div class="col-xs-3">
-					<img width="50px" class="img-rounded" src="img/image1.jpeg" />
-				</div>
-				<div class="col-xs-7">
-					<div class="row">
-						<span class="name">张三11111关注了你</span>
-					</div>
-					<div class="row">
-						<small class="text-gray">你好</small>
-					</div>
-					<div class="row">
-						<small class="text-gray">2014-12-12  13:00</small>
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<br />
-					<button class="btn btn-info btn-xs disabled">已关注</button>
-				</div>
-			</div>
-		</div>
+		
 	</body>
 
+    <div id="message_clone" style="display: none;">
+      <div id="message"  class="frame">
+			<div class="row">
+			    <input type="hidden" id="senderId" value="">
+				<div class="col-xs-3">
+					<img id="avatar" width="50px"  class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span id="username" class="name">张三</span><span> 给你的私信</span>
+					</div>
+					<div class="row">
+						<small id="content" class="text-gray"></small>
+					</div>
+					<div class="row">
+						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+					<button class="btn btn-success btn-sm reply-btn">回复</button>
+				</div>
+			</div>
+		</div>
+		<div id="dynamic_comment" class="frame">
+			<div  class="row">
+			    <input type="hidden" id="senderId" value="">
+			    <input type="hidden" id="dynamicId" value="">
+				<div class="col-xs-3">
+					<img id="avatar" width="50px"  class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span id="username" class="name">张三</span><span> 评论了你的动态</span>
+					</div>
+					<div class="row">
+						<small id="content" class="text-gray"></small>
+					</div>
+					<div class="row">
+						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+					<button class="btn btn-success btn-sm reply-btn">回复</button>
+				</div>
+			</div>
+		</div>
+		<div id="follow" class="frame">
+			<div class="row">
+			<input type="hidden" id="senderId" value="">
+				<div class="col-xs-3">
+					<img id="avatar" width="50px" class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span id="username" class="name">张三11111</span><span>关注了你</span>
+					</div>
+					<div class="row">
+						<small id="content"  class="text-gray">你好</small>
+					</div>
+					<div class="row">
+						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+					<button class="btn btn-info btn-sm follow">关注</button>
+				</div>
+			</div>
+		</div>
+		
+		<div id="dynamic_agree" class="frame">
+			<div class="row">
+			<input type="hidden" id="senderId" value="">
+				<div class="col-xs-3">
+					<img id="avatar" width="50px" class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span id="username" class="name">张三11111</span><span>赞了你的动态</span>
+					</div>
+					<div class="row">
+						<small id="content"  class="text-gray">你好</small>
+					</div>
+					<div class="row">
+						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<br />
+				</div>
+			</div>
+		</div>
+	
+    </div>
 {% endblock %}
