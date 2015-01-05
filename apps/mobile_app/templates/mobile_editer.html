@@ -3,6 +3,18 @@
 {% block staticfiles %}
 <link rel="stylesheet" type="text/css" href="/static/css/idangerous.swiper.css" />
 <script src="/static/js/idangerous.swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<style>
+.upload-close{
+	display: none;
+	position: absolute;
+	color: red;
+	cursor: pointer;
+	background-color: #fff;
+}
+.upload-pic li:hover .upload-close{
+	display: block;	
+}
+</style>
 {% endblock %}
 {% block js%}
 <script>
@@ -22,6 +34,10 @@ $.fn.serializeObject = function() {
     return o;
 }
 $(function(){
+ $('.photo').click(function(){
+	 $('#uploadFile').click();
+ });
+ 
  $('#send').click(function(){
    var type=$('#type').val();
    var content=$('#content').val();
@@ -29,7 +45,11 @@ $(function(){
 	   $.poplayer({body:'内容不能为空!'});
 	   return false;
    }
-     var json=$('form').serializeObject();
+   if('{{type}}'=='dynamic'){
+	   $('#editerForm').submit();
+   }else{
+  
+     var json=$('#editerForm').serializeObject();
      $.ajax({
 					type:'POST',
 					url:'{{url}}',
@@ -53,15 +73,75 @@ $(function(){
 			       	    $.poplayer({body:body});
 					},
 			});
+   }
  });
 });
 
 </script>
+{% if upload %}
+<script>
+$(function(){
+	//上传图片
+	$('#publishInputPhoto').click(function(){
+		$('#update_file').click();
+	});
+	
+	$('#update_file').on('change',function(){
+		$('#updateFileForm').submit();
+	});
+});
+
+//上传图片出错
+function upload_photo_error(error_message){
+	var body=$('<p>'+error_message+'</p>')
+	$.poplayer({body:body});
+};
+
+
+function upload_photo_success(picNameList){
+	$($.parseJSON(picNameList)).each(function(){
+		var pic_div=$('<li><img width="50px" src="/media/images/'+this+'-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>');
+		picName=this; 
+		pic_div.find('.glyphicon-remove').click(function(){
+			data={pictureName:picName,csrfmiddlewaretoken:getCookie('csrftoken')}
+			var context =$(this);
+			$.ajax({
+				dataType:"json",
+				 type: "POST",
+				url:'/dynamic/deletePhoto/',
+				data:data,
+				beforeSend:function(XMLHttpRequest){
+					context.attr('disabled',true);
+				},
+				complete:function(XMLHttpRequest, textStatus){
+					context.attr('disabled',false)
+				},
+				success:function(data, textStatus){
+					if (data.result=='success'){
+						context.parent().remove();
+				        }else{
+				        	var body=$('<p>'+data.error_message+'</p>')
+							 $.poplayer({body:body});
+				        }
+				},
+	            error: function(response){
+	            	var body=$('<p>网络异常!</p>')
+					 $.poplayer({body:body});
+	            },
+				
+			});
+		});
+		$('.upload-pic').find('ul').append(pic_div);
+		
+	})
+	
+}
+</script>
+{% endif %}
 {% endblock %}
 {% block content%}	
 
 	<body class="logined">
-	<form>{%csrf_token%}
 		<div class="header">
 			<div class="row">
 				<div class="col-xs-2">
@@ -75,14 +155,32 @@ $(function(){
 				</div>
 			</div>
 		</div>
-
+       
 		<div class="container">
 			<div class="row frame">
+			  <form id="editerForm" method="POST" action="{{url}}">{%csrf_token%}
 				{{textarea|safe}}
 				<div class="editer-btns">
 			    <span class="emotion"></span>
 				{{inputHtml|safe}}
+				{% if upload %}
+				  <span id="publishInputPhoto" class="photo"></span>
+				{% endif %}
 				</div>
+			 </form>
+			 {% if upload %}
+			   <form id="updateFileForm" enctype="multipart/form-data" method="POST" action="/dynamic/updatePhoto/" target='frameFile' > {% csrf_token %}
+					 <input id="update_file" type="file" multiple name="file" style="opacity: 0; width: 50px; height: 0px;"/>
+				</form>
+				<iframe id='frameFile' name='frameFile' style='display: none;'></iframe>
+				<div class="upload-pic">
+				  <ul class="list-inline">
+				   {% for pic  in picList %}
+					 <li><img width="70px" src="/media/images/{{pic}}-140.jpg" /> <i class="upload-close glyphicon glyphicon-remove"></i></li>
+					{%endfor%}
+				  </ul>
+				</div>
+			{% endif %}
 			</div>
 			<!--<center class="button">
 				<button class="btn btn-success btn-lg">发送</button>
@@ -115,7 +213,6 @@ $(function(){
 			 //			  alert("You swiped left!");
 			 //			});
 		</script>
-	   </form>
 	</body>
 
 {% endblock%}

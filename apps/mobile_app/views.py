@@ -8,9 +8,11 @@ from util.page import page
 from pinloveweb import settings, STAFF_MEMBERS
 from django.db import transaction
 from apps.mobile_app.forms import UserProfileMbolieForm
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from apps.pojo.card import CardMobileEncoder
+from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
+from apps.friend_dynamic_app.models import Picture, FriendDynamic
 logger=logging.getLogger(__name__)
 
 def account(request):
@@ -205,6 +207,7 @@ def editer(request,template_name='mobile_editer.html'):
     args={}
     try:
         type=request.REQUEST.get('type')
+        args['type']=type
         input='<input type="hidden" name="%s" value="%s">'
         textarea=' <textarea rows="6" class="form-control" id="content" name="%s"></textarea>'
         if type==u'message':
@@ -215,6 +218,10 @@ def editer(request,template_name='mobile_editer.html'):
             args['url']='/dynamic/comment/'
             args['textarea']=textarea%('content')
             args['inputHtml']=input%('receiverId',request.REQUEST.get('receiver_id'))+' '+input%('dynamicId',request.REQUEST.get('dynamicId'))
+        elif type==u'dynamic':
+            args['url']='/mobile/dynamic/'
+            args['upload']=True
+            args['textarea']=textarea%('content')
         else:
             raise Exception()
         args['type']=type
@@ -294,6 +301,38 @@ def dynamic(request,template_name='mobile_trend.html'):
     args={}
     try:
         dynamicId=request.REQUEST.get('dynamicId',None)
+        if request.method=="POST":
+            content=request.POST.get('content').strip()
+            import re
+            p = re.compile('[.(\n|\r)]*')
+            content=p.sub('',content)
+            if content.rstrip()=='':
+                args={'result':'error.html','error_message':'发布内容不能为空！'}
+                args['url']='/dynamic/'
+                textarea=' <textarea rows="6" class="form-control" id="content" name="%s"></textarea>'
+                args['textarea']=textarea%('content')
+                return render(request,'mobile_editer.html',args)
+            friendDynamic=FriendDynamic()
+            friendDynamic.publishUser=request.user
+            friendDynamic.content=content
+            if 'images_path' in request.session.keys():
+                friendDynamic.data=simplejson.dumps(request.session['images_path'])
+                friendDynamic.type=2
+            else:
+                friendDynamic.type=1
+            friendDynamic.save()
+            if 'images_path' in request.session.keys():
+                photoList=request.session['images_path']
+                for photo in photoList:
+                    picture=Picture()
+                    picture.user=request.user
+                    picture.friendDynamic=friendDynamic
+                    picture.description=content
+                    from util import util_settings
+                    picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
+                    picture.save()
+                del request.session['images_path']
+            return HttpResponseRedirect('/mobile/dynamic/')
         args['user']=request.user
         from apps.friend_dynamic_app.views import init_dynamic
         arg=init_dynamic(request,request.user.id,args,0,dynamicId=dynamicId)
@@ -306,8 +345,76 @@ def dynamic(request,template_name='mobile_trend.html'):
         logger.exception('动态页面出错!')
         args={'result':'error.html','error_message':'动态页面出错'+e.message}
         return render(request,'error.html',args)
+  
+def update_radar_compare(request,template_name='mobile_recommend.html'):
+    '''
+    雷达图对比
+    '''
+    args={}
+    try:
+        type=request.REQUEST.get('type',False)
+        if not type :
+            raise Exception('传入参数错误!')
+        if type=='add':
+            request.session['radar_compare_id']=int(request.REQUEST['userId'])
+            request.session['radar_compare']=True
+        elif type=='del':
+            del request.session['radar_compare']
+        else:
+            raise Exception('传入参数错误!')
+        return HttpResponseRedirect('/mobile/')
+    except Exception as e:
+        logger.exception(e.message)
+        args={'result':'error.html','error_message':e.message}
+        return render(request,'error.html',args)
     
-      
+    
+def update_avtar(request,template_name='mobile_upload_avatar.html'):
+    '''
+    雷达图对比
+    '''
+    args={}
+    try:
+        from apps.upload_avatar import get_uploadavatar_context
+        args=get_uploadavatar_context()
+        return render(request,template_name,args)
+    except Exception as e:
+        logger.exception(e.message)
+        args={'result':'error.html','error_message':e.message}
+        return render(request,'error.html',args)
+    
+def radar(request,userId,template_name='mobile_radar.html'):
+    '''
+    雷达图
+    '''
+    args={}
+    try:
+        radarList=[]
+        userIdList=[]
+        radarCompare=request.session.get('radar_compare',False)
+        from apps.recommend_app.views import get_socre_for_other
+        if radarCompare:
+            compareId=request.session.get('radar_compare_id')
+            userIdList.append(compareId)
+        userIdList.append(userId)
+        for userId in userIdList:
+            socreForOther=get_socre_for_other(request.user.id,userId)
+            userProfile=UserProfile.objects.get(user_id=userId)
+            radarList.append({
+                         'head' : '%s%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME,'-100.jpeg'),
+                    'userId':userProfile.user_id,
+                     'score' :int(socreForOther['matchResult']['scoreOther']),
+                        'scoreMy':int(socreForOther['matchResult'].get('scoreMyself',-3)),
+                        'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
+                     })
+            
+        args['radarList']=simplejson.dumps(radarList)
+        return render(request, template_name,args )
+    except Exception as e:
+        logger.exception(e.message)
+        args={'result':'error.html','error_message':e.message}
+        return render(request,'error.html',args)
+          
 def recommend(request,template_name='mobile_recommend.html',**kwargs):
     '''
     推荐功能

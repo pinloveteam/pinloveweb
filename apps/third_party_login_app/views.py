@@ -36,7 +36,6 @@ from django.views.decorators.csrf import csrf_exempt
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto,\
     FacebookUserInfo, ThirdPsartyLogin
 import urllib2
-from django.utils import simplejson
 from apps.third_party_login_app.forms import ConfirmInfo
 from django.db import transaction
 from django.views.decorators.http import require_POST
@@ -48,13 +47,14 @@ import os
 import hashlib
 import time
 from django.utils.crypto import get_random_string
+import re
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
 '''
 获取qq授权登录地址,跳转到回调地址（redirect_uri）
 '''   
-def get_qq_login_url(request):     
+def get_qq_login_url(request,CALLBACK_URL=QQ_CALLBACK_URL):     
     from apps.third_party_login_app.openqqpy import OpenQQClient
     client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL)
     #获取qq授权登录地址
@@ -63,7 +63,7 @@ def get_qq_login_url(request):
 '''
 获取qq信息并登录个人主页
 '''
-def qq_login(request):
+def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL):
     args={}
     from apps.third_party_login_app.openqqpy import OpenQQClient
     client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL,scope='')
@@ -75,8 +75,10 @@ def qq_login(request):
     request.session['expires_in']=expires_in
     client.set_access_token( access_token,expires_in )
     openid=client.request_openid() #返回openid
+    #判断登录路径
+    if  re.match('^/mobile',request.path)  is not None:
+        args['channel']='mobile'
     #判断是否有第三方登录过
-    from apps.third_party_login_app.models import ThirdPsartyLogin
     if not ThirdPsartyLogin.objects.filter(provider='0',uid=openid).exists():
         client.set_openid(openid)
         user_info=client.request_api('user/get_user_info')
@@ -104,12 +106,15 @@ def qq_login(request):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    return HttpResponseRedirect('/account/loggedin/')
+    if args.get('channel',None)=='mobile':
+        return HttpResponseRedirect('/mobile/loggedin/')
+    else:
+        return HttpResponseRedirect('/account/loggedin/')
      
 '''
 微信登录链接
 '''     
-def get_weixin_login_url(request):
+def get_weixin_login_url(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     client = WeiXinClient(client_id=WeiXinAppID,client_secret=WeiXinAppSecret,\
                           redirect_uri=WEIXIN_CALLBACK_URL,scope=u'snsapi_login',state=u'login')
@@ -152,7 +157,7 @@ def public_weixin_authorization(scop,redirect_uri=None,state=None):
 '''
 微信登录
 '''
-def weixin_login(request):
+def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
     args={}
     try:
         #获取状态码
@@ -160,6 +165,8 @@ def weixin_login(request):
         log.error('state ==='+state)
         if state.find('login')==-1:
             redirectTo=u'weixin_game'
+        elif re.match('^/mobile',request.path)  is not None:
+            redirectTo=u'mobile'
         else:
             redirectTo=u'loggin'
             
@@ -227,6 +234,8 @@ def weixin_login(request):
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         elif redirectTo==u'weixin_game':
             return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
+        elif redirectTo==u'mobile':
+            return HttpResponseRedirect('/mobile/loggedin/')
     except Exception as e:
         log.exception('微信登录出错:%s'%(e))
         if getattr(e,'error','')==40029:
@@ -238,7 +247,7 @@ def weixin_login(request):
 '''
 获取sina授权登录地址,跳转到回调地址（redirect_uri）
 '''
-def sina_login_url(request):
+def sina_login_url(request,CALLBACK_URL=SINA_CALLBACK_URL):
     from apps.third_party_login_app.weibo import APIClient
     client = APIClient(app_key=SinaAppKey, app_secret=SinaAppSercet, redirect_uri=SINA_CALLBACK_URL)
     url = client.get_authorize_url()
@@ -248,7 +257,7 @@ def sina_login_url(request):
 '''
 获取sina信息并登录个人主页
 '''
-def sina_login(request):
+def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
     args={}
     try:
         code=request.REQUEST.get('code','')
@@ -269,7 +278,9 @@ def sina_login(request):
 #     log.error('access_token===='+access_token)
 #     log.error('expires_in====='+str(expires_in))
 #     log.error('uid====='+str(uid))
-    from apps.third_party_login_app.models import ThirdPsartyLogin
+    #判断登录路径
+    if  re.match('^/mobile',request.path)  is not None:
+        args['channel']='mobile'
     if not ThirdPsartyLogin.objects.filter(provider='1',uid=uid).exists():
             #获取用户信息
             user_info=client.users.show.get(uid=uid)
@@ -293,7 +304,10 @@ def sina_login(request):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    return HttpResponseRedirect('/account/loggedin/')
+    if args.get('channel',None)=='mobile':
+        return HttpResponseRedirect('/mobile/loggedin/')
+    else:
+        return HttpResponseRedirect('/account/loggedin/')
 
     user_info=client.users.show.get(uid=uid)
     return HttpResponse(user_info['screen_name'])
@@ -304,13 +318,13 @@ def sina_login(request):
 获取facebook授权登录地址,跳转到回调地址（redirect_uri）
 '''
 @csrf_exempt
-def facebook_login_url(request):
+def facebook_login_url(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
     from apps.third_party_login_app.facebook import auth_url
     url=auth_url(FaceBookAppID,FACEBOOK_CALLBACK_URL)
 #     log.error('%s%s' %('url====',url))
     return HttpResponseRedirect(url)
 
-def facebook_login(request):
+def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
     args={}
     from apps.third_party_login_app.facebook import get_access_token_from_code
     access=get_access_token_from_code(request.GET['code'],FACEBOOK_CALLBACK_URL, FaceBookAppID, FaceBookAppSecret)
@@ -321,7 +335,9 @@ def facebook_login(request):
     from apps.third_party_login_app import facebook
     graph = facebook.GraphAPI(access_token)
     user_info = graph.get_object('me')
-    from apps.third_party_login_app.models import ThirdPsartyLogin
+    #判断登录路径
+    if  re.match('^/mobile',request.path)  is not None:
+        args['channel']='mobile'
     if not ThirdPsartyLogin.objects.filter(provider='2',uid=user_info['id']).exists():
             request.session['three_registe']={'provider':'2','uid':user_info['id'],'access_token':access_token,'country':user_info['locale']}
             genderList=['m',u"男",'male']
@@ -344,7 +360,11 @@ def facebook_login(request):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='2',uid=user_info['id']).user
         login(request,user.username,DEFAULT_PASSWORD)
-    return HttpResponseRedirect('/account/loggedin/')
+        
+    if args.get('channel',None)=='mobile':
+        return HttpResponseRedirect('/mobile/loggedin/')
+    else:
+        return HttpResponseRedirect('/account/loggedin/')
 
 
 
@@ -439,6 +459,8 @@ def register_by_three_party(request):
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
         create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'],**kwarg)
         login(request,user.username,DEFAULT_PASSWORD)
+        if request.get('channel')==u'mobile':
+            return HttpResponseRedirect('/mobile/loggedin/')
         return HttpResponseRedirect('/account/loggedin/?previous_page=register')
     else:
         args['confirmInfo']=confirmInfo

@@ -24,7 +24,7 @@ logger=logging.getLogger(__name__)
 卡片界面动态
 发动态
 '''
-def dynamic(request):
+def dynamic(request,template_name):
     arg={}
     dynamicId=request.REQUEST.get('dynamicId',None)
     #发布动态
@@ -74,7 +74,7 @@ def dynamic(request):
         return HttpResponse(json, mimetype='application/json')
     if  'images_path' in request.session:
         del request.session['images_path']
-    return render(request, 'dynamic.html',arg )
+    return render(request, template_name,arg )
 
 '''
 用户个人动态中心
@@ -466,23 +466,23 @@ def comment(request):
             receiverId=request.REQUEST.get('receiverId','')
             content=request.REQUEST.get('content')
         except:
-            arg['type']='error' 
+            arg['result']='error' 
             json=simplejson.dumps(arg)
             return HttpResponse(json)
         comment=FriendDynamicComment()
         if len(content)==0:
-              arg={'type':'error','msg':'评论不能为空'}
+              arg={'result':'error','msg':'评论不能为空'}
         if len(receiverId)<=0:
             friendDynamic=FriendDynamic.objects.select_related('publishUser').get(id=dynamicId)
             if friendDynamic.publishUser.id!=request.user.id:
                 comment.receiver_id=friendDynamic.publishUser.id
             from util.cache import is_black_list
             if comment.receiver_id is not None and is_black_list(int(comment.receiver_id),int(request.user.id)):
-                arg={'type':'error','error_message':'该用户已经将你拉入黑名单，你不能评论!'} 
+                arg={'result':'error','error_message':'该用户已经将你拉入黑名单，你不能评论!'} 
                 json=simplejson.dumps(arg)
                 return HttpResponse(json)
         elif int(receiverId)==request.user.id:
-            arg={'type':'error','msg':'能自己对自己评论'}
+            arg={'result':'error','msg':'能自己对自己评论'}
             json=simplejson.dumps(arg)
             return HttpResponse(json)
         else:
@@ -511,7 +511,7 @@ def comment(request):
         FriendDynamic.objects.filter(id=dynamicId).update(commentNum=commentNum+1)
         from apps.pojo.dynamic import FriendDynamicCommentList_to_DynamicCommentList
         dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList(request.user.id,[comment,])
-        arg['type']='success'
+        arg['result']='success'
         arg['dynamicCommentList']=dynamicCommentList
         from apps.pojo.dynamic import DynamicCommentEncoder
         json=simplejson.dumps(arg,cls=DynamicCommentEncoder)

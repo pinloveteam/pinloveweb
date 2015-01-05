@@ -26,6 +26,7 @@ $(document).ready(function() {
 						<div class="col-xs-4"></div>
 						<div class="col-xs-8">
 							<form action="/third_party_login/register_by_three_party/" method="post" role="form" class="form-horizontal">{% csrf_token %}
+								<input type="hidden" name="channel" value="{{channel}}">
 								<div class="form-group">
 									<div class="col-xs-12">
 										<h4>确认信息</h4>

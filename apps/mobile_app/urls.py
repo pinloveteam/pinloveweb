@@ -1,5 +1,8 @@
 #-*- coding: UTF-8 -*- 
 from django.conf.urls import patterns, url
+from apps.third_party_login_app.setting import QQ_MOBILE_CALLBACK_URL,\
+    SINA_MOBILE_CALLBACK_URL, FACEBOOK_MOBILE_CALLBACK_URL,\
+    WEIXIN_MOBILE_CALLBACK_URL
 urlpatterns=patterns('apps.mobile_app.views',
      #账户
      url(r'^account/', 'account'),
@@ -24,13 +27,29 @@ urlpatterns=patterns('apps.mobile_app.views',
      #搜索
      url(r'^search/$','search'),
      #搜索
-     url(r'^dynamic/$','dynamic')
-     
-     
+     url(r'^dynamic/$','dynamic'),
+     #雷达图
+     url(r'^radar/(\d)/$','radar'),
+     url(r'^radar_compare/$','update_radar_compare'),
+     #上传头像
+      url(r'^update_avtar/$','update_avtar'),
      
 )
 
 urlpatterns+=patterns('',
+    #手机qq登陆
+     url(r'^qq_login_url/$', 'apps.third_party_login_app.views.get_qq_login_url',{'CALLBACK_URL':QQ_MOBILE_CALLBACK_URL}),
+     url(r'^qq_login/$', 'apps.third_party_login_app.views.qq_login',{'CALLBACK_URL':QQ_MOBILE_CALLBACK_URL}),
+    #手机微博登陆
+     url(r'^sina_login_url/$', 'apps.third_party_login_app.views.get_qq_login_url',{'CALLBACK_URL':SINA_MOBILE_CALLBACK_URL}),
+     url(r'^sina_login/$', 'apps.third_party_login_app.views.qq_login',{'CALLBACK_URL':SINA_MOBILE_CALLBACK_URL}),
+     #手机facebook登陆
+      url(r'^facebook_login_url/$', 'apps.third_party_login_app.views.get_qq_login_url',{'CALLBACK_URL':FACEBOOK_MOBILE_CALLBACK_URL}),
+     url(r'^facebook_login/$', 'apps.third_party_login_app.views.qq_login',{'CALLBACK_URL':FACEBOOK_MOBILE_CALLBACK_URL}),
+     #手机微信登录
+      url(r'^weixin_login_url/$', 'apps.third_party_login_app.views.get_qq_login_url',{'CALLBACK_URL':WEIXIN_MOBILE_CALLBACK_URL}),
+     url(r'^weixin_login/$', 'apps.third_party_login_app.views.qq_login',{'CALLBACK_URL':WEIXIN_MOBILE_CALLBACK_URL}),
+    
     #消息页面                    
     url(r'^message/$', 'apps.message_app.views.message',{'template_name':'mobile_message.html'}),
     url(r'^message_list/$','apps.message_app.views.message_list',{'template_name': 'mobile_message.html'}),
@@ -38,7 +57,7 @@ urlpatterns+=patterns('',
     url(r'^comment_list/$', 'apps.friend_dynamic_app.views.comment_list',{'template_name':'mobile_message.html'}), 
      url(r'^agree_list/$', 'apps.friend_dynamic_app.views.agree_list',{'template_name': 'mobile_message.html'}),
      #更新权重                     
-    url(r'^update_weight/$', 'recommend_app.views.update_weight'),
+    url(r'^update_weight/$', 'apps.recommend_app.views.update_weight'),
     #手机充值
     url(r'^member/$', 'apps.pay_app.views.member',{'template_name':'mobile_recharge.html'}),  
     #获取免费获取拼爱币信息

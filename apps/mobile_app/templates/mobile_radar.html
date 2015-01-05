@@ -1,0 +1,112 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --动态{% endblock %}
+{% block staticfiles %}
+		<script src="/static/js/Chart.min.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+            $(function(){
+            	var userList=jQuery.parseJSON('{{radarList|safe}}');
+            	init_users(userList);
+            	//对比
+            	$('.compare').click(function(){
+            		var type='add';
+            		if(userList.length==2){
+            			$(this).html('取消对比');
+            			type='del'
+            		}
+            		window.location.href='/mobile/radar_compare/?type='+type+'&userId='+userList[0].userId
+            	});
+            });
+			
+			
+			function init_users(userList){
+				var radar_list=[]
+				$('.img-rounded').attr('src',userList[0].head);
+				radar_list.push(userList[0].data);
+				$('.score').html(userList[0].score);
+				
+				if(userList.length==2){
+					var user_clone=$('.user').clone();
+					user_clone.find('img').attr('src',userList[1].head)
+					user_clone.find('.score').html(userList[0].score);
+					user_clone.find('.compare').remove();
+					$('body').append(user_clone);
+					radar_list.push(userList[1].data);
+				}
+				init_radar(radar_list);
+			}
+			function init_radar(radar_list){
+				var ctx = $("canvas").get(0).getContext("2d");
+				dataArry=new Array()
+				var strokeColorList=["rgb(0,151,36)","rgb(241,23,25)"];
+				var pointColorList=["rgb(0,151,36)","rgb(241,23,25)"];
+				for(var i=0 ;i<radar_list.length;i++){
+				var datasets = {
+						fillColor : "rgba(0,0,0,0)",
+						strokeColor : strokeColorList[i],
+						pointColor : pointColorList[i],
+						data : radar_list[i]
+					};
+				dataArry.push(datasets);
+				};
+				var datasets = {
+						fillColor: "rgba(0,0,0,0)",
+						strokeColor: "rgb(0,151,36)",
+						pointColor: "rgb(0,151,36)"
+					}
+					//var ctx = $("canvas").get(0).getContext("2d");
+				var data = {
+					labels: ["教育程度", "性格", "收入情况", "相貌", "身高"],
+					datasets: dataArry
+				};
+				var myNewChart = new Chart(ctx).Radar(data, {
+					scaleOverride: true,
+					scaleSteps: 4,
+					scaleStepWidth: 25,
+					scaleStartValue: 0,
+					scaleLineColor: "rgba(0,0,0,.5)",
+					//				scaleShowLabels : true,
+					pointLabelFontColor: '#333',
+					angleLineColor: "rgba(0,0,0,.5)"
+				});
+			};
+		</script>
+{% endblock %}
+{% block content %}
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					雷达图
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+		<div class="frame">
+			<div class="row user">
+				<div class="col-xs-3">
+					<img width="50px" height="50px" class="img-rounded" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-5">
+					<h4>TA的得分</h4>
+					<span style="font-size: 26px;" class="text-danger score">100</span>分
+				</div>
+				<div class="col-xs-4">
+					<br />
+					<button class="btn btn-success btn-sm compare">对比</button>
+				</div>
+			</div>
+		</div>
+		<div class="frame">
+			<center class="row ">
+				<canvas class="radar" height="290px" width="290px"></canvas>
+			</center>
+		</div>
+	</body>
+
+{% endblock %}
