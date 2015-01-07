@@ -175,7 +175,7 @@ def invalid_login(request) :
     
     return render(request, 'invalid_login.html')
     
-def logout(request) : 
+def logout(request,redirect='/') : 
     from util.cache import del_cache_in_logout
     del_cache_in_logout(request.user.id)
     auth.logout(request)
@@ -185,7 +185,7 @@ def logout(request) :
 #             response= render(request, 'loggedout.html')
 #             response.delete_cookie("userId")
 #             return  response
-    return HttpResponseRedirect("/account/loggedout/")
+    return HttpResponseRedirect(redirect)
     
 
 #上传进度
@@ -266,7 +266,7 @@ def register_verify(request) :
 '''
 忘记密码
 '''
-def forget_password(request):
+def forget_password(request,template_name='forget_password.html'):
     args={}
     #是否出错
     flag=True
@@ -306,7 +306,7 @@ def forget_password(request):
             args['email']=user.email
             postResult=True
     args['postResult']=postResult
-    return render(request, 'forget_password.html',args)   
+    return render(request, template_name,args)   
  
 '''
 注册检查

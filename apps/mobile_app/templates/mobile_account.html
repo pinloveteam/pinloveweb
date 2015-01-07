@@ -1,5 +1,17 @@
 {% extends "mobile_base.html" %} 
 {% block title %} 拼爱网 --个人中心{% endblock %}
+{%block js%}
+<script>
+$(function(){
+	$('.account').click(function(){
+		var href=$(this).attr('href');
+		if(href!="#" && href!=undefined){
+			window.location.href=href;
+		}
+	})
+});
+</script>
+{% endblock %}
 {% block content %}
 
 	<body class="logined">
@@ -43,7 +55,7 @@
 				  </a>
 				</div>
 			</div>
-			<div class="account row">
+			<div class="account row" href="/mobile/character_tag/">
 				<div class="col-xs-8">
 					<img width="28px" src="/static/img/性格标签.png" />&nbsp;&nbsp;
 					<span>性格标签</span>
@@ -51,12 +63,32 @@
 				<div class="col-xs-2">
 				</div>
 				<div class="col-xs-2">
-				   <a href="/mobile/character_tag/">
 					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
-				   </a>
 				</div>
 			</div>
-			<div class="account row" href="#">
+			<div class="account row" href="/mobile/get_weight/">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/权重.png" />&nbsp;&nbsp;
+					<span>权重打分</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="/mobile/grade_height/">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/打分.png" />&nbsp;&nbsp;
+					<span>TA的身高打分</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+				</div>
+			</div>
+			<div class="account row" href="/mobile/change_password/">
 				<div class="col-xs-8">
 					<img width="28px" src="/static/img/修改密码.png" />&nbsp;&nbsp;
 					<span>修改密码</span>
@@ -76,7 +108,7 @@
 					<span class="text-gray">{{user.username}}</span>
 				</div>
 				<div class="col-xs-2">
-					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+					<!--  <i class="glyphicon glyphicon-chevron-right text-gray"></i> -->
 				</div>
 			</div>
 			<div class="account row" href="#">
@@ -88,10 +120,10 @@
 					<span class="text-danger">{{pinLoveIcon}}</span>
 				</div>
 				<div class="col-xs-2">
-					<i class="glyphicon glyphicon-chevron-right text-gray"></i>
+					<!--  <i class="glyphicon glyphicon-chevron-right text-gray"></i> -->
 				</div>
 			</div>
-			<div class="account row" href="#">
+			<div class="account row" href="/mobile/member/">
 				<div class="col-xs-8">
 					<img width="28px" src="/static/img/充值链接.png" />&nbsp;&nbsp;
 					<span>充值</span>
@@ -99,12 +131,10 @@
 				<div class="col-xs-2">
 				</div>
 				<div class="col-xs-2">
-					<a href="/mobile/member/">
 					  <i class="glyphicon glyphicon-chevron-right text-gray"></i>
-					</a>
 				</div>
 			</div>
-			<div class="account row" href="#">
+			<div class="account row" href="/mobile/get_free_pinloveicon/">
 				<div class="col-xs-8">
 					<img width="28px" src="/static/img/免费链接.png" />&nbsp;&nbsp;
 					<span>免费获得拼爱币</span>
@@ -112,9 +142,18 @@
 				<div class="col-xs-2">
 				</div>
 				<div class="col-xs-2">
-					<a href="/mobile/get_free_pinloveicon/">
 					   <i class="glyphicon glyphicon-chevron-right text-gray"></i>
-					</a>
+				</div>
+			</div>
+			
+			<div class="account row" href="/mobile/logout/">
+				<div class="col-xs-8">
+					<img width="28px" src="/static/img/退出.png" />&nbsp;&nbsp;
+					<span>退出登录</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-2">
 				</div>
 			</div>
 		</div>

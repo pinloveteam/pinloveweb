@@ -1,0 +1,178 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --Ta的身高打分{% endblock %}
+{% block staticfiles %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/draggable/highcharts.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/draggable-points.js"></script>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+{% ifequal gender 'F' %}
+categories=['160厘米', '165厘米', '170厘米', '175厘米', '180厘米', '185厘米', '190厘米', '195厘米'];
+ {%  else %}
+ categories=['150厘米', '155厘米','160厘米', '165厘米', '170厘米', '175厘米', '180厘米', '185厘米'];
+{% endifequal %}
+{%ifequal grade_for_other False %}
+{% else %}
+series_data=[{{grade_for_other.heighty1}},{{grade_for_other.heighty2}},{{grade_for_other.heighty3}},{{grade_for_other.heighty4}},{{grade_for_other.heighty5}},{{grade_for_other.heighty6}},{{grade_for_other.heighty7}},{{grade_for_other.heighty8}}]
+{% endifequal %}
+$(document).ready(function () {
+	var chart = new Highcharts.Chart({
+	    		
+	    	    chart: {
+	    	        renderTo: 'container',
+	    	        animation: false
+	    	    },
+	    	    colors: ['#50B432'],
+	    		credits:'',
+	    	    xAxis: {
+	    	    	title: {
+	    	    		'text':'Ta的身高'
+	    	    	},
+	    	        categories: categories
+	    	    },
+	    	    yAxis: {
+	    	    	title: {
+	    	    		'text':'身高得分'
+	    	    	},
+	    	    	min: 0,
+	    	    	max: 100,
+	    	    	tickInterval: 20,
+	    	    	stops: [0,100]
+	    	    },
+	    		title: {
+	    			text: ''
+	    		},
+	    		legend: {
+	    			enabled: false
+	    		},
+	    	    plotOptions: {
+	    	        series: {
+	    	            cursor: 'ns-resize',
+	    	            point: {
+	    	                events: {
+	    						//回调函数
+	    	                    drag: function (e) { 
+	    	                        if (e.newY > 100) {
+	    	                            this.y = 100;
+	    	                            return false;
+	    	                        }
+	    	                        if (e.newY < 0) {
+	    	                            this.y = 0;
+	    	                            return false;
+	    	                        }
+	    	                    },
+	    						drop: function (e) {
+	    							if (this.y > 100) {
+	    	                            this.y = 100;
+	    	                            return false;
+	    	                        }
+	    	                        if (this.y < 0) {
+	    	                            this.y = 0;
+	    	                            return false;
+	    	                        }
+	    						   $('#dj_'+this.x).val(Highcharts.numberFormat(this.y, 0))
+	    						}
+	    	                }
+	    	            },
+	    	            stickyTracking: false
+	    	        },
+	    	        column: {
+	    	            stacking: 'normal'
+	    	        }
+	    	    },
+	    	
+	    	    tooltip: {
+	    	    	enabled: true,
+	    			pointFormat: "得分: {point.y:.0f} 分"
+	    	    },
+	    	
+	    	    series: [{
+	    	        data: series_data,
+	    	        draggableY: true,
+	    	        draggableX: false,
+	    	        name: '分数'
+	    	    }]
+	    	
+	    	});
+
+	    	
+	        /* 提交事件 */
+	        $("#grade_for_other").submit(function(){
+	        	                 result=''
+	        	                $('input[id^="dj_"]').each(function(){
+	        	                	result+=this.value+','
+	        	                })
+	                            result=result.substring(0,(result.length-1));
+	        	                csrfmiddlewaretoken=$('input[name="csrfmiddlewaretoken"]').val();
+	        	                data={csrfmiddlewaretoken:csrfmiddlewaretoken,result:result}
+	                            $.ajax({
+	                                type: $(this).attr('method'),
+	                                url: "/recommend/grade_for_other/",
+	                                data:data,
+	                                beforeSend: function(XMLHttpRequest){
+	                                },
+	                                success: function(data, textStatus){
+	                                	data=$.parseJSON(data)
+	                                    if(data.result== 'success'){
+	                                    	var body = $("<p>修改成功!</p>")
+	            							$.poplayer({body:body});
+	                                    }else if(data.result == 'error'){
+	                                    	 alert(data.msg)
+	                                    }
+	                                },
+	                                complete: function(XMLHttpRequest, textStatus){
+	                                },
+	                                error: function(response){
+	                                	var body = $("<p>网络异常!</p>")
+	        							$.poplayer({body:body});
+	                                }
+	                            });
+	                            return false;
+	                        });
+	    
+	    });
+	    
+	</script>
+{% endblock %}
+{% block content %}
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					身高打分
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+ <form id="grade_for_other" action="" method="POST">{% csrf_token %}
+		<div class="container">
+			<div class="row">
+				<p class="frame">给出你眼中最中意TA的身高得分，拖出TA的身高曲线图，我为你匹配最合适的TA</p>
+			</div>
+            <input type="hidden" id="result" name="result" value="">
+            <input type='hidden' id="dj_0" value="{%if grade_for_other.heighty1%}{{grade_for_other.heighty1}}{%else%}0{%endif%}">
+            <input type='hidden' id="dj_1" value="{%if grade_for_other.heighty2%}{{grade_for_other.heighty2}}{%else%}0{%endif%}">
+            <input type='hidden' id="dj_2" value="{%if grade_for_other.heighty3%}{{grade_for_other.heighty3}}{%else%}0{%endif%}">
+            <input type='hidden' id="dj_3" value="{%if grade_for_other.heighty4%}{{grade_for_other.heighty4}}{%else%}0{%endif%}">
+            <input type='hidden' id="dj_4" value="{%if grade_for_other.heighty5%}{{grade_for_other.heighty5}}{%else%}0{%endif%}">
+            <input type='hidden' id="dj_5" value="{%if grade_for_other.heighty6%}{{grade_for_other.heighty6}}{%else%}0{%endif%}">
+            <input type='hidden' id="dj_6" value="{%if grade_for_other.heighty7%}{{grade_for_other.heighty7}}{%else%}0{%endif%}">
+            <input type='hidden' id="dj_7" value="{%if grade_for_other.heighty8%}{{grade_for_other.heighty8}}{%else%}0{%endif%}">
+			<div class="row frame">
+				<div id="container" style="height: 300px;width: 100%;"></div>
+			</div>
+		</div>
+
+		<center class="button">
+			<button class="btn btn-success btn-lg">
+				保存
+			</button>
+		</center>
+	</form>
+	</body>
+
+{% endblock %} 

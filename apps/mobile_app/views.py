@@ -2,7 +2,7 @@
 from apps.user_app.models import UserProfile, UserTag
 import logging
 from django.shortcuts import render
-from apps.recommend_app.models import Grade, MatchResult
+from apps.recommend_app.models import Grade, MatchResult, UserExpect
 from django.utils import simplejson
 from util.page import page
 from pinloveweb import settings, STAFF_MEMBERS
@@ -368,6 +368,23 @@ def update_radar_compare(request,template_name='mobile_recommend.html'):
         args={'result':'error.html','error_message':e.message}
         return render(request,'error.html',args)
     
+def grade_height(request,template_name='mobile_height.html'):
+    '''
+    身高打分
+    '''
+    args={}
+    try:
+        #获得另一半身高期望   
+        userExpect=UserExpect.objects.get_user_expect_by_uid(request.user.id)
+        if userExpect==None:
+            args['grade_for_other']=False
+        else:
+            args['grade_for_other']=userExpect
+        return render(request,template_name,args)
+    except Exception as e:
+        logger.exception(e.message)
+        args={'result':'error.html','error_message':e.message}
+        return render(request,'error.html',args)
     
 def update_avtar(request,template_name='mobile_upload_avatar.html'):
     '''

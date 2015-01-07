@@ -19,24 +19,33 @@ urlpatterns=patterns('apps.mobile_app.views',
      #推荐页面
      url(r'^nearby/', 'nearby',),
      #个人信息
-     url(r'^info_detail/(\d)/$','info_detail'),
+     url(r'^info_detail/(\d+)/$','info_detail'),
      #用户外貌打分
      url(r'^vote/$','user_vote'),
      #编辑面板
      url(r'^editer/$','editer'),
      #搜索
      url(r'^search/$','search'),
-     #搜索
+     #动态
      url(r'^dynamic/$','dynamic'),
      #雷达图
-     url(r'^radar/(\d)/$','radar'),
+     url(r'^radar/(\d+)/$','radar'),
      url(r'^radar_compare/$','update_radar_compare'),
      #上传头像
       url(r'^update_avtar/$','update_avtar'),
+       #身高打分
+      url(r'^grade_height/$','grade_height'),
      
 )
 
 urlpatterns+=patterns('',
+   #修改密码
+    url(r'^change_password/$', 'apps.user_app.views.change_password',{'tempate_name':'mobile_change_password.html'}),
+     #退出
+     url(r'^logout/$', 'pinloveweb.views.logout',{'redirect':'/mobile/'}),
+    #忘记密码
+    url(r'^forget_password/$', 'pinloveweb.views.forget_password',{'template_name':'mobile_forget_password.html'}),
+    
     #手机qq登陆
      url(r'^qq_login_url/$', 'apps.third_party_login_app.views.get_qq_login_url',{'CALLBACK_URL':QQ_MOBILE_CALLBACK_URL}),
      url(r'^qq_login/$', 'apps.third_party_login_app.views.qq_login',{'CALLBACK_URL':QQ_MOBILE_CALLBACK_URL}),
