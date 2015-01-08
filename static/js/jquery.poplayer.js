@@ -24,11 +24,10 @@
 		};
 		var options = $.extend(defaults, options);
 
-		var masklayer = $('<div class="masklayer"></div><div class="msk-close">X</div>');
-
 		if (options.type == 'confirm') {
 			var dialog = loadConfirm(options);
 		} else if (options.type == 'frame') {
+			var masklayer = $('<div class="masklayer"></div><div class="msk-close">X</div>');
 			masklayer.remove();
 			var dialog = loadFrame(options);
 		}
@@ -82,19 +81,14 @@
 	
 
 	function loadConfirm(options) {
-		var dialog = $('<div class="poplayer"><div class="poplayer-confirm"><div class="poplayer-confirm-head"><span class="poplayer-confirm-head-text text-white"></span><span class="poplayer-close-btn text-white">X</span></div><div class="poplayer-confirm-body"></div><div class="poplayer-confirm-bottom"><button class="btn btn-info btn-close"></button></div></div></div>');
-		dialog.find('.poplayer-confirm-head-text').html(options.head);
-		dialog.find('.poplayer-confirm-body').html(options.body);
-		dialog.find('button').first().html(options.btnText).bind('click', options.btnFunc);
-		
-		if(!options.singleBtn){
-			var btn = $('<button class="btn btn-info btn-close">重新成付款</button>');
-			btn.click(function(){
-				alert('d');
-			});
-			dialog.find('.poplayer-confirm-bottom').append(btn);
+		var comfirm = $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">确认框</h4></div><div class="modal-body"><p>修改成功</p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">取消</button><button type="button" class="btn btn-primary" data-dismiss="modal">确认</button></div></div></div></div>');
+		comfirm.find('.modal-title').html(options.head);
+		comfirm.find('.modal-body').children().html(options.body);
+		comfirm.modal('show');
+		if(options.btnFunc!=undefined){
+			comfirm.on('hidden.bs.modal',options.btnFunc)
 		}
-		return dialog;
+		return comfirm;
 	}
 
 	function loadFrame(options) {
