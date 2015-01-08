@@ -35,6 +35,8 @@ urlpatterns=patterns('apps.mobile_app.views',
       url(r'^update_avtar/$','update_avtar'),
        #身高打分
       url(r'^grade_height/$','grade_height'),
+      #关注，粉丝
+      url(r'^follow/(\d+)/$','follow'),
      
 )
 

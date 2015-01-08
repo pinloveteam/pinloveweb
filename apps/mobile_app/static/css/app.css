@@ -73,7 +73,7 @@ textarea {
 .button .btn {
 	width: 80%;
 }
-.pic-box {
+.pic-box !important{
 	width: 100%;
 	height: 100%;
 	position: fixed;
@@ -102,6 +102,11 @@ textarea {
 }
 .scl li{ 
 	cursor: pointer;
+}
+
+.badge{
+	background-color: #c0392b !important;
+	padding: 3px 5px;
 }
 /*public*/
 /*login&register*/
@@ -161,6 +166,13 @@ textarea {
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+.trend-text {
+	word-wrap: break-word;
+}
+.glyphicon-remove {
+	font-size: 14px;
+	color: #c0392b;
+}
 /*trend*/
 /*personality*/
 
@@ -199,7 +211,7 @@ textarea {
 /*recommend*/
 
 .self {
-	background-color: #2980B9;
+	background-color: #34495e;
 	color: #fff;
 }
 /*recommend*/
@@ -297,5 +309,11 @@ textarea {
 	background-color: rgba(0,0,0,0.7);
 	padding: 5px 20px;
 	text-align: center;
+}
+.unread{
+	border: solid 1px #e74c3c;
+}
+.newmsg{
+	color: #c0392b !important; 
 }
 /*message*/

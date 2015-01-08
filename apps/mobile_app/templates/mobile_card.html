@@ -1,0 +1,109 @@
+<script type="text/javascript">
+
+//下一页
+{% if pages.has_next %}
+var next_page={{pages.next_page_number}}
+{%else%}
+var next_page=-1
+{% endif %}
+
+
+//关注
+var myFollow={% if myFollow %}{{myFollow}}{%else%}0{% endif %}
+var follow={% if follow %}{{follow}}{%else%}0{% endif %}
+var fans={% if fans %}{{fans}}{%else%}0{% endif %}
+
+$(document).ready(function(){
+	
+	//获取卡片集合
+	var cards =jQuery.parseJSON('{{pages.object_list|safe }}');
+	init_card(cards);
+
+	
+});
+function init_card(cards){
+	for(x=0;x<cards.length;x++){
+		template=$('#card_clone').clone();
+		template.find('.avatar_name').attr('src','/media/'+cards[x].avatar_name+'-100.jpeg');
+		template.find('.name').html(cards[x].username);
+		template.find('.age').html(cards[x].age);
+		template.find('.income').html(cards[x].income);
+		template.find('.height').html(cards[x].height);
+		template.find('.education').html(cards[x].education);
+		template.find('a').attr('href',"/mobile/info_detail/"+cards[x].user_id+'/');
+		template.find('.userId').val(cards[x].user_id);
+		//绑上雷达图
+		template.find('.radar').click(function(){
+			userId=$(this).closest('.row').find('.userId').val();
+			window.location.href='/mobile/radar/'+userId+'/'
+		});
+		$('.container').append(template.children())
+	}
+};
+//下一页
+no_load=function(){
+	    	return;
+	    	};
+loading=function(flag){
+	 		   if(flag){
+	 			  $('.container').popLoading();
+	 		   }else{
+	 			  $('.container').removeLoading();
+	 		   }
+	 		   
+	 	   };
+success=function(data){
+	if(typeof(data)!="object"){
+   	    	data=$.parseJSON(data);
+   	    	}
+	 if(data.result=='success'){
+		 next_page=data['next_page_number']
+		    if(typeof(data.cards)!="object"){
+		    	data.cards=$.parseJSON(data.cards);
+		     }
+		      //set_count(data.noReadCount)
+		      init_card(data.cards)
+	 }else{
+		 var body=$('<p>加载失败!</p>')
+	 }
+	
+};
+$(window).scroll( function() { 
+	if(get_load_next_page()){
+			/* console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+		console.log("页面的文档高度 ："+$(document).height());
+		console.log('浏览器的高度：'+$(window).height());  */
+		loadData(no_load,success,loading);
+		}
+}); 
+
+</script>
+<div id="card_clone" style="display: none;">
+     <div class="row frame">
+                 <input type="hidden" class="userId"/>
+                 <a href="#">
+				<div class="col-xs-3">
+					<img width="60px" height="60px" class="img-rounded avatar_name" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-7">
+					<div class="row">
+						<span class="name">张三</span>
+					</div>
+					<div class="row">
+						<small class="age"></small>&nbsp;&nbsp;
+						<small class="height"></small>&nbsp;&nbsp;
+						<small class="education"></small>&nbsp;&nbsp;
+						<small class="income"></small>&nbsp;&nbsp;
+					</div>
+					<div class="row">
+						<small></small>
+					</div>
+				</div>
+				</a>
+				<div class="col-xs-2">
+					<br>
+					<button class="btn btn-success btn-xs radar">雷达图</button>
+				</div>
+			
+			</div>
+   </div>

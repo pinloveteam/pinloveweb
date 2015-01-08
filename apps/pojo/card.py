@@ -321,7 +321,7 @@ def fllowList_to_CardMobileList(myId,fllowList,type):
             avatar_name=userProfile.avatar_name
             isVote=False
         city=userProfile.city
-        recommendResult=Card(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,userProfile.avatar_name_status)
+        recommendResult=CardMobile(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
         recommendResult.limit_fileds()
         recommendResultList.append(recommendResult)
     return recommendResultList 

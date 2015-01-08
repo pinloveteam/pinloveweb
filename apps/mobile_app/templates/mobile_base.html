@@ -7,12 +7,15 @@
 	<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="/static/css/mobile_bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 		<script src="/static/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/static/js/mobile_bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		{% block staticfiles %}
+        {% endblock %}
 		<link href="{{STATIC_URL}}css/poplayer.css" rel="stylesheet">
         <script type="text/javascript" src="{{STATIC_URL}}js/jquery.poplayer.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}js/jquery.loading.js"></script>
         <script type="text/javascript" src="{{STATIC_URL}}js/app.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 		
 		<script>
 // 从Cookie获得信息
@@ -33,8 +36,6 @@ function getCookie(name) {
 }
 </script>
 
-        {% block staticfiles %}
-        {% endblock %}
         {% block css %}
         {% endblock %}
         {% block js %}

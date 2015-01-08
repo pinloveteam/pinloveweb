@@ -1,5 +1,5 @@
 #-*- coding: UTF-8 -*- 
-from apps.user_app.models import UserProfile, UserTag
+from apps.user_app.models import UserProfile, UserTag, Follow
 import logging
 from django.shortcuts import render
 from apps.recommend_app.models import Grade, MatchResult, UserExpect
@@ -8,7 +8,7 @@ from util.page import page
 from pinloveweb import settings, STAFF_MEMBERS
 from django.db import transaction
 from apps.mobile_app.forms import UserProfileMbolieForm
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect, Http404
 from django.views.decorators.http import require_POST
 from apps.pojo.card import CardMobileEncoder
 from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
@@ -129,7 +129,71 @@ def pintu(request,template_name="mobile_pintu.html"):
         args={'result':'error.html','error_message':e.message}
         return render(request,'error.html',args)
  
- 
+'''
+查看关注信息
+attribute：
+    type(int) 关注类型 :
+        1  我的关注   
+        2  我的粉丝
+        3  相互关注
+return：
+   page 
+'''       
+def follow(request,type,ajax='false',template_name="mobile_follow.html"):
+    args={}
+    try:
+        try:
+            type=int(type)
+        except ValueError:
+            raise Http404()
+        if type==1:
+            #获得我的关注列表
+            fllowList=Follow.objects.filter(my=request.user)
+            theme='关注'
+        elif type==2:
+            #获得我的粉丝列表
+            fllowList=Follow.objects.filter(follow=request.user)   
+            theme='粉丝'
+        elif  type==3:
+            #获得相互关注列表
+            fllowList=Follow.objects.follow_each(request.user.id)
+            theme='相互关注'
+          
+        userProfile=UserProfile.objects.get(user_id=request.user.id)
+        #分页
+        args=page(request,fllowList)
+        cardList=args.get('pages')
+        #将关注列表转换成Card列表
+        if len(cardList.object_list)>0:
+            from apps.pojo.card import fllowList_to_CardMobileList
+            cardList.object_list=fllowList_to_CardMobileList(request.user.id,cardList.object_list,type)
+        else:
+            cardList.object_list=[]
+        if cardList.has_next():
+            args['next_page_number']=cardList.next_page_number()
+        else:
+            args['next_page_number']=-1
+        if request.is_ajax():
+            data={}
+            if cardList.has_next():
+                data['next_page_number']=args['next_page_number']
+            else:
+                data['next_page_number']=-1
+            data['result']='success'
+            data['cards']=cardList.object_list
+            json=simplejson.dumps(data,cls=CardMobileEncoder)
+            return HttpResponse(json)
+        cardList.object_list=simplejson.dumps(cardList.object_list,cls=CardMobileEncoder)
+        args['pages']=cardList
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(userProfile))
+        args['title']=theme
+        return render(request, template_name,args )
+    except Exception as e:
+        logger.exception(e.message)
+        args={'result':'error.html','error_message':e.message}
+        return render(request,'error.html',args)
+     
 def nearby(request,template_name="mobile_neardy.html"):
     '''
     附近的人

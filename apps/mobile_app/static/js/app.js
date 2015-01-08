@@ -103,7 +103,7 @@
 					for (var j = 1; j <= 21; j++) {
 						if (i * 21 + j <= 75) {
 							labFace = '{:' + tip + (i * 21 + j) + ':}';
-							strFace += '<i data="cancelBubble"><img width="28px" src="' + path + (i * 21 + j) + '.png" onclick="$(\'#' + option.assign + '\').setCaret();$(\'#' + option.assign + '\').insertAtCaret(\'' + labFace + '\');" /></i>';
+							strFace += '<i data="cancelBubble"><img width="24px" src="' + path + (i * 21 + j) + '.png" onclick="$(\'#' + option.assign + '\').setCaret();$(\'#' + option.assign + '\').insertAtCaret(\'' + labFace + '\');" /></i>';
 						}
 					}
 					strFace += '</div>';
@@ -198,3 +198,11 @@ jQuery.fn.extend({
 	}
 });
 // QQ表情插件
+
+//js-confirm
+window.Comfirm = function(title,body){
+	var comfirm = $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">确认框</h4></div><div class="modal-body"><p>修改成功</p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">取消</button><button type="button" class="btn btn-primary">确认</button></div></div></div></div>');
+	comfirm.find('.modal-title').html(title);
+	comfirm.find('.modal-body').children().html(body);
+	return comfirm;
+}

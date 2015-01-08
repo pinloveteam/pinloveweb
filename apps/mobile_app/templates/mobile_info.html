@@ -1,12 +1,17 @@
 {% extends "mobile_base.html" %} 
+ {% load util_filter %}
 {% block title %} 拼爱网 --个人信息{% endblock %}
 {% block staticfiles %}
 <link rel="stylesheet" type="text/css" href="/static/css/dragdealer.css" />
 <script src="/static/js/dragdealer.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/js/idangerous.swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/idangerous.swiper.css" />
 {% endblock %}
 {% block js%}
 		<script type="text/javascript">
 			$(function(){
+				$('.js-pic-box').openPic();
+				
 				is_vote('{{isVote}}',{{voteScore}});
 				$('#appearancevote').click(function(){
 					vote()
@@ -146,7 +151,7 @@
 					<br />
 					<span>年龄：{{age}}</span>
 					<br />
-					<span>城市：{{age}}</span>
+					<span>城市：{{city}}</span>
 					<br />
 				</div>
 			</div>
@@ -194,7 +199,7 @@
 				<ul class="list-inline pic-list">
 				{%  for pic in picList %}
 					<li>
-						<img class="img-rounded" width="60px"  height="60px" src="/media/{{pic.smailPic}}" />
+						<img class="img-rounded js-pic-box" width="60px"  height="60px" src="/media/{{pic.smailPic}}" href="/media/{{pic.smailPic}}"{% if forloop.counter0|greater_than:14 %}style="display: none;"{%endif%} name="{{forloop.counter0}}"/>
 					</li>
 				{% endfor %}
 				</ul>
@@ -216,7 +221,7 @@
 			</div>
 			<div class="row">
 				<div class="col-xs-4 button">
-					<button class="btn btn-success" id="follow">关注</button>
+					<button class="btn btn-success" id="follow">{% ifequal followStatus 0%}关注{%else%} 取消关注{%endifequal%}</button>
 				</div>
 				<div class="col-xs-4 button">
 					<button class="btn btn-success" id="dislike">不喜欢</button>
