@@ -81,12 +81,12 @@
 	
 
 	function loadConfirm(options) {
-		var comfirm = $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">确认框</h4></div><div class="modal-body"><p>修改成功</p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">取消</button><button type="button" class="btn btn-primary" data-dismiss="modal">确认</button></div></div></div></div>');
+		var comfirm = $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">确认框</h4></div><div class="modal-body"><p>修改成功</p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">取消</button><button id="confirm" type="button" class="btn btn-primary" data-dismiss="modal">确认</button></div></div></div></div>');
 		comfirm.find('.modal-title').html(options.head);
 		comfirm.find('.modal-body').children().html(options.body);
 		comfirm.modal('show');
 		if(options.btnFunc!=undefined){
-			comfirm.on('hidden.bs.modal',options.btnFunc)
+			comfirm.find('#confirm').click(options.btnFunc);
 		}
 		return comfirm;
 	}
