@@ -1,0 +1,54 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --认证{% endblock %}
+{% block content %} 
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					认证
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+		<center role="alert" class="alert alert-warning alert-dismissible">
+			<!--<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
+			</button>-->
+			完成认证之后可获得拼爱币返点！
+		</center>
+		<div class="container authentication">
+			<div class="row">
+				<div class="col-xs-2">
+					<p></p>
+					<img width="28px" src="/static/img/income.png" />
+				</div>
+				<div class="col-xs-7">
+					<p>收入认证</p>
+					<h5><small>上传收入证明或者房产证进行认证。</small></h5>
+				</div>
+				<div class="col-xs-3">
+					<p></p>
+					<button class="btn btn-success btn-xs">现在认证</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2">
+					<p></p>
+					<img width="28px" src="/static/img/education.png" />
+				</div>
+				<div class="col-xs-7">
+					<p>学历认证</p>
+					<h5><small>上传学历证件进行认证。</small></h5>
+				</div>
+				<div class="col-xs-3">
+					<p></p>
+					<button class="btn btn-success btn-xs">现在认证</button>
+				</div>
+			</div>
+		</div>
+	</body>
+
+{% endblock %}

@@ -1,99 +1,28 @@
-<div id="uploadAvatar">
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jQueryRotate.js"></script>
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --上传头像{% endblock %}
+{% block js %}
+ <script type="text/javascript" src="{{ STATIC_URL }}js/jQueryRotate.js"></script>
     <style type="text/css">
-        #uploadAvatarBtnLayout {
-            position: relative;
-        }
-        
-        
-        #uploadAvatarBtnLayout {
-            overflow: hidden;
-        }
-        
-        #uploadAvatarBtnLayout button {
-           /*  width: 100%;
-            height: 100%; */
-        }
-        
-        #uploadAvatarInputFile {
-            position: absolute;
-            top: 0;
-            left: -20px;
-            font-size: 300%;
-        }
-        
         #uploadAvatarSelectArea {
-            width: {{ crop_image_area_size }}px;
             height: {{ crop_image_area_size }}px;
-            border: 1px solid #74BADD;
-            overflow: hidden;
-            /*float: left;*/
-            margin-left: 100px;
-            background:url("{{STATIC_URL}}img/信息设置-29.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-            
-           display:inline-block;
-           text-align:center;
-           
-           /*非IE的主流浏览器识别的垂直居中的方法*/
-           display: table-cell;
-           vertical-align:middle;
-           /*设置水平居中*/
-           text-align:center;
-           /* 针对IE的Hack */
-           
-           box-sizing:content-box;
-           -moz-box-sizing:content-box; /* Firefox */
-           -webkit-box-sizing:content-box; /* Safari */
+            border:solid 1px #D3D3D3;
 
+        }      
+        #uploadAvatarBtns{
+          height: 50px;
         }
-        
-        #uploadAvatarSelectArea img{
-          vertical-align:middle;
-        }
-        #uploadAvatarPreviewArea {
-           float: right;
-            position: relative;
-            right: 50px;
-            top:-360px;
-      
-        }
-        
-        .rotate_revolve{
-           height: 20px;
-           padding-top: 15px;
-           width: 106px;
-           left: 120px;
-           position: relative;
-        }
-        .rotate_left{
-           cursor: pointer;
+        #uploadAvatarCropSubmit{
+          left: 2%;
+          cursor: pointer;
+          position: relative;
         }
         .rotate_right{
-           left: 20px;
-           position: relative;
-           cursor: pointer;
+          float: right;
+          right: 2%;
+          cursor: pointer;
+          position: relative;
         }
         
-        #uploadAvatar div, #uploadAvatar div:before, #uploadAvatar div:after {
-    box-sizing: content-box;
-}
-         /*#uploadAvatarCropSubmit{
-			 left: 140px;
-    position: absolute;
-    top: 120px;
-
-		}*/
-        {% for p in preview_areas %}
-            #uploadAvatarPreviewArea{{ p.size }} {
-                /* vertical-align:middle; */
-                width: {{  p.size }}px;
-                height: {{ p.height }}px;
-                border: 1px solid #ddd;
-                overflow: hidden;
-               /* border-radius:50%;*/
-                background:url("{{STATIC_URL}}img/信息设置-{{ p.size }}.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-            }
-        {% endfor %}
     </style>
     
     <script type="text/javascript">
@@ -305,10 +234,26 @@
         var rotate_value=0;
         
     </script>
-    <div class="tip">
-
-</div>
-    <form id="uploadAvatarCropForm" action="{% url 'uploadavatar_crop' %}" method="post" target="uploadAvatarIframe" style="display: none;">
+{% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block content %} 
+<body class="logined">
+<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					上传头像
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+<div class="container">
+     <div class="row">
+        <form id="uploadAvatarCropForm" action="{% url 'uploadavatar_crop' %}" method="post" target="uploadAvatarIframe" style="display: none;">
         {% csrf_token %}
         <input id="uploadAvatarValueX1" type="text" name="x1"/>
         <input id="uploadAvatarValueY1" type="text" name="y1"/>
@@ -317,30 +262,18 @@
         <input id="rotate_value" type="text" name="rotate" value="0"/>
     </form>
     
-    
-    
-    <div id="uploadAvatarUploadArea" style="position: relative;">
-        <form id="uploadAvatarForm" action="{% url 'uploadavatar_upload' %}" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div id="uploadAvatarBtnLayout" >
-                <h5>请上传清晰美观的个人近照，给别人留下美好的第一印象。</h5>
-                <button class="btn btn-danger">{{ CHOOSE_IMAGE }}</button>
-                <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
-                <span class="text-muted">
-                 <small>支持jpg, gif, png格式，照片文件大小需在20K – 8M 之间。</small>
-                 </span>
-            </div>
-        </form>
-    </div>
-    <br>
     <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
     
     <div id="uploadAvatarSelectArea"  style="position:relative;"></div>
 
     
-    <div id="uploadAvatarBtns">
-        <button id="uploadAvatarCropSubmit" class="btn btn-pink btn_self_info btn-save" disabled="disabled">{{ CROP_IMAGE }}</button>
-    </div>
-    
     <div id="uploadAvatarCropResult" style="display: none;"></div>
-</div>
+     </div>
+     <div class="row" >
+      <div id="uploadAvatarBtns" style="background-color: rgb(213, 213, 193)">
+        <span id="uploadAvatarCropSubmit">{{ CROP_IMAGE }}</span>
+        <span class="rotate_right" >旋转</span>
+      </div>
+     </div>
+   </div>
+{% endblock %}

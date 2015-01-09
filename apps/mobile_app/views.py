@@ -13,6 +13,8 @@ from django.views.decorators.http import require_POST
 from apps.pojo.card import CardMobileEncoder
 from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
 from apps.friend_dynamic_app.models import Picture, FriendDynamic
+from util.cache import get_has_recommend
+from apps.mobile_app.__init__ import ERROR_TEMLATE_NAMR
 logger=logging.getLogger(__name__)
 
 def account(request):
@@ -29,9 +31,9 @@ def account(request):
     except Exception as e:
         logger.exception('手机获取账户信息出错：'+e.message)
         args={'result':'error','error_message':e.message}
-        return render(request,'error.html',args)
+        return render(request,ERROR_TEMLATE_NAMR,args)
         
-        
+   
 def get_weight(request,template_name='mobile_weight.html'):
     '''
     获取用户权重
@@ -51,8 +53,8 @@ def get_weight(request,template_name='mobile_weight.html'):
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
     
 @transaction.commit_on_success   
 def profile(request,template_name='mobile_profile.html'):
@@ -93,8 +95,8 @@ def profile(request,template_name='mobile_profile.html'):
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
 
 
 def character_tag(request,template_name='mobile_personality.html'):
@@ -114,8 +116,8 @@ def character_tag(request,template_name='mobile_personality.html'):
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
         
 def pintu(request,template_name="mobile_pintu.html"):   
     args={}
@@ -126,8 +128,20 @@ def pintu(request,template_name="mobile_pintu.html"):
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
+
+def verification(request,template_name="mobile_authentication.html"):   
+    args={}
+    try:
+        #认证
+        from apps.verification_app.views import verification
+        args.update(verification(request))
+        return render(request,template_name,args)
+    except Exception as e:
+        logger.exception(e.message)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
  
 '''
 查看关注信息
@@ -173,6 +187,7 @@ def follow(request,type,ajax='false',template_name="mobile_follow.html"):
             args['next_page_number']=cardList.next_page_number()
         else:
             args['next_page_number']=-1
+        args['has_recommend']=get_has_recommend(request.user.id)
         if request.is_ajax():
             data={}
             if cardList.has_next():
@@ -191,9 +206,8 @@ def follow(request,type,ajax='false',template_name="mobile_follow.html"):
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
-     
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)  
 def nearby(request,template_name="mobile_neardy.html"):
     '''
     附近的人
@@ -211,6 +225,7 @@ def nearby(request,template_name="mobile_neardy.html"):
             userList.object_list=userProfileList_to_CardMobileList(request.user.id,userList.object_list)
         else:
             userList.object_list=[]
+        args['has_recommend']=get_has_recommend(request.user.id)
         if request.is_ajax():
             from pinloveweb.method import load_cards_by_ajax
             return load_cards_by_ajax(request,userList,chanel='mobile')
@@ -221,8 +236,8 @@ def nearby(request,template_name="mobile_neardy.html"):
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
 
 def info_detail(request,userId,template_name='mobile_info.html'):
     args={}
@@ -234,8 +249,8 @@ def info_detail(request,userId,template_name='mobile_info.html'):
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
     
 @require_POST
 def user_vote(request):
@@ -292,8 +307,8 @@ def editer(request,template_name='mobile_editer.html'):
         return render(request,template_name,args)
     except Exception,e:
         logger.exception('文本编辑页面,出错!')
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
     
 def search(request,template_name='mobile_search.html'):
     '''
@@ -354,8 +369,8 @@ def search(request,template_name='mobile_search.html'):
             return render(request, template_name,args)
     except Exception as e:
         logger.exception('搜索,出错!')
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
   
   
 def dynamic(request,template_name='mobile_trend.html'):
@@ -371,7 +386,7 @@ def dynamic(request,template_name='mobile_trend.html'):
             p = re.compile('[.(\n|\r)]*')
             content=p.sub('',content)
             if content.rstrip()=='':
-                args={'result':'error.html','error_message':'发布内容不能为空！'}
+                args={'result':'error','error_message':'发布内容不能为空！'}
                 args['url']='/dynamic/'
                 textarea=' <textarea rows="6" class="form-control" id="content" name="%s"></textarea>'
                 args['textarea']=textarea%('content')
@@ -407,8 +422,8 @@ def dynamic(request,template_name='mobile_trend.html'):
         return render(request,template_name,args)
     except Exception,e:
         logger.exception('动态页面出错!')
-        args={'result':'error.html','error_message':'动态页面出错'+e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':'动态页面出错'+e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
   
 def update_radar_compare(request,template_name='mobile_recommend.html'):
     '''
@@ -429,8 +444,8 @@ def update_radar_compare(request,template_name='mobile_recommend.html'):
         return HttpResponseRedirect('/mobile/')
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
     
 def grade_height(request,template_name='mobile_height.html'):
     '''
@@ -447,22 +462,24 @@ def grade_height(request,template_name='mobile_height.html'):
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
-    
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
+  
+
 def update_avtar(request,template_name='mobile_upload_avatar.html'):
     '''
-    雷达图对比
+    上传头像
     '''
     args={}
     try:
+        args['image']=request.GET.get('image')
         from apps.upload_avatar import get_uploadavatar_context
         args=get_uploadavatar_context()
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
     
 def radar(request,userId,template_name='mobile_radar.html'):
     '''
@@ -493,8 +510,8 @@ def radar(request,userId,template_name='mobile_radar.html'):
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
           
 def recommend(request,template_name='mobile_recommend.html',**kwargs):
     '''
@@ -512,6 +529,7 @@ def recommend(request,template_name='mobile_recommend.html',**kwargs):
         matchResultList=get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs)
         from pinloveweb.method import get_no_read_web_count
         args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
+        args['has_recommend']=get_has_recommend(request.user.id)
         if kwargs.get('card')==True:
             return matchResultList
         if request.is_ajax():
@@ -527,8 +545,8 @@ def recommend(request,template_name='mobile_recommend.html',**kwargs):
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)
-        args={'result':'error.html','error_message':e.message}
-        return render(request,'error.html',args)
+        args={'result':'error','error_message':e.message}
+        return render(request,ERROR_TEMLATE_NAMR,args)
     
     
 def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):

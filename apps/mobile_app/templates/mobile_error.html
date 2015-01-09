@@ -1,0 +1,41 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --出错了{% endblock %}
+{% block content %} 
+	<body class="logined">
+		<div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div class="col-xs-8">
+					error
+				</div>
+				<div class="col-xs-2">
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<center class="page-header">
+					<h2>出错啦！</h2>
+				</center>
+				<div class="alert alert-success" role="alert">{{error_message}}</div>
+				<center class="button">
+				{%if link %}
+					<button class="btn btn-success btn-lg" onclick="location.href='{{link}}'">
+						{{link_title}}
+					</button>
+				{% else %}
+					<button class="btn btn-success btn-lg" onclick=" history.back();">
+							返回
+				    </button>
+				{%endif%}
+				</center>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$('.alert').slideDown('slow');
+		</script>
+	</body>
+{% endblock %}

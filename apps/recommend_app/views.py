@@ -6,8 +6,7 @@ Created on Sep 3, 2013
 '''
 from apps.user_app.models import UserProfile, Follow, UserTag,\
     BrowseOherScoreHistory
-from apps.recommend_app.models import MatchResult, Grade, UserExpect,\
-    AppearanceVoteRecord
+from apps.recommend_app.models import MatchResult, Grade, UserExpect
 from util.page import page
 from django.shortcuts import render
 from apps.upload_avatar import app_settings
@@ -29,7 +28,6 @@ logger = logging.getLogger(__name__)
 '''
  更新权重
 '''
-@csrf_exempt
 def update_weight(request):
     args={}
     flag=True

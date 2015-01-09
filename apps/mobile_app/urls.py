@@ -37,10 +37,16 @@ urlpatterns=patterns('apps.mobile_app.views',
       url(r'^grade_height/$','grade_height'),
       #关注，粉丝
       url(r'^follow/(\d+)/$','follow'),
+      
+        #认证
+    url(r'^verification/$','verification'),
      
 )
 
 urlpatterns+=patterns('',
+     
+       #上传头像
+    url(r'^uploadavatar_upload/$','apps.upload_avatar.views.upload_avatar',{'tempate_name':'mobile_upload_avatar.html'}),
    #修改密码
     url(r'^change_password/$', 'apps.user_app.views.change_password',{'tempate_name':'mobile_change_password.html'}),
      #退出

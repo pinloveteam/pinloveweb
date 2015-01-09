@@ -28,15 +28,22 @@ function init_card(cards){
 		template.find('.name').html(cards[x].username);
 		template.find('.age').html(cards[x].age);
 		template.find('.income').html(cards[x].income);
-		template.find('.height').html(cards[x].height);
+		template.find('.height').html(cards[x].height+'厘米');
 		template.find('.education').html(cards[x].education);
 		template.find('a').attr('href',"/mobile/info_detail/"+cards[x].user_id+'/');
 		template.find('.userId').val(cards[x].user_id);
 		//绑上雷达图
+		{% if has_recommend %}
 		template.find('.radar').click(function(){
 			userId=$(this).closest('.row').find('.userId').val();
 			window.location.href='/mobile/radar/'+userId+'/'
 		});
+		{% else %}
+		template.find('.radar').click(function(){
+			var body = $('<p>如需查看对方的雷达图和打分，必须完善你的<span class="text-red">择偶标准</span>。<a href="/mobile/character_tag/">点此</a>完善资料<p>')
+       	    $.poplayer({body:body});
+		});
+		{% endif  %}
 		$('.container').append(template.children())
 	}
 };

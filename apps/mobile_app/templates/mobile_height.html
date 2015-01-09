@@ -6,12 +6,15 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
+var categories=[];
+var series_data=[0,0,0,0,0,0,0,0];
 {% ifequal gender 'F' %}
 categories=['160', '165', '170', '175', '180', '185', '190', '195'];
  {%  else %}
  categories=['150', '155','160', '165', '170', '175', '180', '185'];
 {% endifequal %}
 {%ifequal grade_for_other False %}
+
 {% else %}
 series_data=[{{grade_for_other.heighty1}},{{grade_for_other.heighty2}},{{grade_for_other.heighty3}},{{grade_for_other.heighty4}},{{grade_for_other.heighty5}},{{grade_for_other.heighty6}},{{grade_for_other.heighty7}},{{grade_for_other.heighty8}}]
 {% endifequal %}

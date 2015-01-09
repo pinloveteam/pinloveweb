@@ -199,7 +199,7 @@
 				<ul class="list-inline pic-list">
 				{%  for pic in picList %}
 					<li>
-						<img class="img-rounded js-pic-box" width="60px"  height="60px" src="/media/{{pic.smailPic}}" href="/media/{{pic.smailPic}}"{% if forloop.counter0|greater_than:14 %}style="display: none;"{%endif%} name="{{forloop.counter0}}"/>
+						<img class="img-rounded js-pic-box" width="60px"  height="60px" src="/media/{{pic.smailPic}}" href="/media/{{pic.pic}}"{% if forloop.counter0|greater_than:14 %}style="display: none;"{%endif%} name="{{forloop.counter0}}"/>
 					</li>
 				{% endfor %}
 				</ul>

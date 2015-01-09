@@ -9,7 +9,22 @@ $(function(){
 			window.location.href=href;
 		}
 	})
+	$('#upload_avatar').click(function(){
+		$('#uploadAvatarInputFile').click();
+	});
+	$('#uploadAvatarInputFile').change(function(){
+		$('#uploadAvatarForm').submit();
+	});
 });
+function upload_avatar_error(error_msg) {
+	var body = $('<p>'+error_msg+'</p>');
+	$.poplayer({body:body});
+};
+
+var imgSelect;
+function upload_avatar_success(image_url) {
+	window.location.href='/mobile/update_avtar/?=image'+image_url
+}
 </script>
 {% endblock %}
 {% block content %}
@@ -29,7 +44,7 @@ $(function(){
 		</div>
 		<div class="container">
 			<div class="account row" href="#">
-				<div class="col-xs-8">
+				<div id="upload_avatar" class="col-xs-8">
 					<img width="28px" src="/static/img/修改头像.png" />&nbsp;&nbsp;
 					<span>修改头像</span>
 				</div>
@@ -145,7 +160,7 @@ $(function(){
 					   <i class="glyphicon glyphicon-chevron-right text-gray"></i>
 				</div>
 			</div>
-			<div class="account row" href="/mobile/follow/1/"> 
+			<!-- <div class="account row" href="/mobile/follow/1/"> 
 				<div class="col-xs-8">
 					<img width="28px" src="/static/img/olike.png" />&nbsp;&nbsp;
 					<span>关注</span>
@@ -166,7 +181,7 @@ $(function(){
 				<div class="col-xs-2">
 					   <i class="glyphicon glyphicon-chevron-right text-gray"></i>
 				</div>
-			</div>
+			</div> -->
 		
 			
 			<div class="account row" href="/mobile/logout/">
@@ -180,6 +195,10 @@ $(function(){
 				</div>
 			</div>
 		</div>
+		<form id="uploadAvatarForm" action="/mobile/uploadavatar_upload/" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
+		{% csrf_token %}
+                <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" style="display: none;">
+        </form>
 
 	</body>
 

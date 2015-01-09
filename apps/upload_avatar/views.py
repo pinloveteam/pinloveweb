@@ -37,6 +37,7 @@ from pinloveweb.settings import MEDIA_URL
 from apps.upload_avatar.app_settings import UPLOAD_AVATAR_MIX_SIZE,\
     UPLOAD_AVATAR_FORMAT
 from django.http.response import HttpResponseServerError
+from django.shortcuts import render
 
 
 border_size = UPLOAD_AVATAR_WEB_LAYOUT['crop_image_area_size']

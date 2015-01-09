@@ -1,6 +1,6 @@
 			<script>
 			  $(function(){
-				  $('.self').click(function(){
+				  $('.glyphicon-chevron-right ,.self img').click(function(){
 					  window.location.href="/mobile/account/";
 				  });
 			  });
@@ -17,9 +17,9 @@
 						拼爱币：<span id="" class="text-danger">{{pinLoveCion}}</span>
 					</div>
 					<div class="row">
-						<small>关注：{{myFollow}}</small>
-						<small>粉丝：{{fans}}</small>
-						<small>相互关注：{{follow}}</small>
+						<a href="/mobile/follow/1/"><small style=" color: white; ">关注：{{myFollow}}</small></a>
+						<a href="/mobile/follow/2/"><small style=" color: white; ">粉丝：{{fans}}</small></a>
+						<a href="/mobile/follow/3/"><small style=" color: white; ">相互关注：{{follow}}</small></a>
 					</div>
 				</div>
 				<div class="col-xs-2">
