@@ -23,7 +23,7 @@ function upload_avatar_error(error_msg) {
 
 var imgSelect;
 function upload_avatar_success(image_url) {
-	window.location.href='/mobile/update_avtar/?=image'+image_url
+	window.location.href='/mobile/update_avtar/?image='+image_url
 }
 </script>
 {% endblock %}
@@ -43,8 +43,8 @@ function upload_avatar_success(image_url) {
 			</div>
 		</div>
 		<div class="container">
-			<div class="account row" href="#">
-				<div id="upload_avatar" class="col-xs-8">
+			<div id="upload_avatar" class="account row" href="#">
+				<div  class="col-xs-8">
 					<img width="28px" src="/static/img/修改头像.png" />&nbsp;&nbsp;
 					<span>修改头像</span>
 				</div>
@@ -199,6 +199,7 @@ function upload_avatar_success(image_url) {
 		{% csrf_token %}
                 <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" style="display: none;">
         </form>
+        <iframe id="uploadAvatarIframe" width="0px" height="0px" style="display: none;"></iframe>
 
 	</body>
 

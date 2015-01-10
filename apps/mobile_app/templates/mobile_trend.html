@@ -32,7 +32,7 @@ function init_dynamic(dynamicList){
 		dynamicObj=this;
 		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-100.jpeg');
 		dynamic.find('#username').html(this.publishUserName);
-		dynamic.find('#time').html(this.publishTime+'发布');
+		dynamic.find('#time').html(this.publishTime);
 		dynamic.find('#content').html(this.content);
 		dynamic.find('#agreeNum').html(this.argeeNum);
 		dynamic.find('#dynamicId').val(dynamicObj.id);
@@ -95,7 +95,7 @@ function init_dynamic(dynamicList){
 		if(this.type==2){
 		pic=dynamic.find('.pic-list');
 		for(i=0;i<dataList.length;i++){
-		pic.append('<li><img class="img-rounded js-pic-box" width="60px" src="'+dataList[i].img+'" href="'+dataList[i].middleimg+'" name="2"/></li>')
+		pic.append('<li><img class="img-rounded js-pic-box" width="60px" src="'+dataList[i].img+'" href="'+dataList[i].middleimg+'" name="'+i+'"/></li>')
 		}
 		
 		}
@@ -106,6 +106,7 @@ function init_dynamic(dynamicList){
 		}); */
 		$('#dynamic_list').append(dynamic);
 	});
+	$('.js-pic-box').openPic();
 };
 function init_agree(dynamic_div,agreeList,type){
 	$(agreeList).each(function(){

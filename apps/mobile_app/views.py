@@ -349,6 +349,8 @@ def search(request,template_name='mobile_search.html'):
                     searchList.object_list=userProfileList_to_CardMobileList(request.user.id,searchList.object_list)
                     searchList.object_list=simplejson.dumps(searchList.object_list,cls=CardMobileEncoder)
                     args['pages']=searchList
+                    from pinloveweb.method import init_person_info_for_card_page
+                    args.update(init_person_info_for_card_page(userProfile))
                     return render(request, 'mobile_search_result.html',args)
         
         else:
@@ -472,9 +474,9 @@ def update_avtar(request,template_name='mobile_upload_avatar.html'):
     '''
     args={}
     try:
-        args['image']=request.GET.get('image')
         from apps.upload_avatar import get_uploadavatar_context
         args=get_uploadavatar_context()
+        args['image']=request.GET.get('image')
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)

@@ -44,7 +44,7 @@ function init_card(cards){
        	    $.poplayer({body:body});
 		});
 		{% endif  %}
-		$('.container').append(template.children())
+		$('#cardList').append(template.children())
 	}
 };
 //下一页
@@ -53,9 +53,9 @@ no_load=function(){
 	    	};
 loading=function(flag){
 	 		   if(flag){
-	 			  $('.container').popLoading();
+	 			  $('#cardList').popLoading();
 	 		   }else{
-	 			  $('.container').removeLoading();
+	 			  $('#cardList').removeLoading();
 	 		   }
 	 		   
 	 	   };
@@ -86,7 +86,8 @@ $(window).scroll( function() {
 
 </script>
 <div id="card_clone" style="display: none;">
-     <div class="row frame">
+     <div class="frame">
+       <div class='row'>
                  <input type="hidden" class="userId"/>
                  <a href="#">
 				<div class="col-xs-3">
@@ -113,4 +114,5 @@ $(window).scroll( function() {
 				</div>
 			
 			</div>
+		</div>
    </div>

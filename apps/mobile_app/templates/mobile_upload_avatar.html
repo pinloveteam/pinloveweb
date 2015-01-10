@@ -1,36 +1,44 @@
 {% extends "mobile_base.html" %} 
 {% block title %} 拼爱网 --上传头像{% endblock %}
+{% block staticfiles %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jQueryRotate.js"></script>
+<script type='text/javascript' src='{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.mobile.js'></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default_mobile.css" />
+
+{% endblock %}
 {% block js %}
- <script type="text/javascript" src="{{ STATIC_URL }}js/jQueryRotate.js"></script>
-    <style type="text/css">
+<style type="text/css">
         #uploadAvatarSelectArea {
-            height: {{ crop_image_area_size }}px;
             border:solid 1px #D3D3D3;
+            
+          
 
         }      
         #uploadAvatarBtns{
           height: 50px;
         }
         #uploadAvatarCropSubmit{
-          left: 2%;
+          left: 4%;
           cursor: pointer;
           position: relative;
         }
         .rotate_right{
           float: right;
-          right: 2%;
+          right: 4%;
           cursor: pointer;
-          position: relative;
+          position: absolute;
         }
+        #uploadAvatar div, #uploadAvatar div:before, #uploadAvatar div:after {
+    box-sizing: content-box;
+}
         
     </style>
     
     <script type="text/javascript">
         $(function(){
-        
-            $('#uploadAvatarBtnLayout button').click(function(){
-                return false;
-            });
+        	
+        	upload_avatar_success('{{image}}')
+            
             
             var input_width = 0;
             var input_height = 0;
@@ -124,9 +132,6 @@
             });
         });
         
-        function upload_avatar_error(error_msg) {
-            alert(error_msg);
-        };
         
         var imgSelect;
         function upload_avatar_success(image_url) {
@@ -144,14 +149,39 @@
                 var img_width = $(this).width();
                 var img_height = $(this).height();
                 
-                
-                if(img_width > {{ crop_image_area_size }} || img_height > {{ crop_image_area_size }}) {
-                    if(img_width >= img_height) {
-                        $(this).css('width', "{{ crop_image_area_size }}px");
-                    }
-                    else {
-                        $(this).css('height', "{{ crop_image_area_size }}px");
-                    }
+                divWidth=$('#uploadAvatarSelectArea').width();
+                divHeight=$('#uploadAvatarSelectArea').css('height',divWidth).height();
+                //alert(img_width+'  '+img_height)
+                 //alert(divHeight+'  '+divWidth)
+                if(img_width > divWidth|| img_height >divHeight) {
+                	if(img_width>img_height){
+                		if(img_width > divWidth) {
+                            $(this).css('width', divWidth);
+                            $('#border_size').val(divWidth)
+                        }
+                        else {
+                             $(this).css('height', divHeight);
+                            $('#border_size').val(divHeight)
+                        }
+                		
+                	}else{
+                		if(img_width <= divWidth) {
+                            $(this).css('width', divWidth);
+                            $('#border_size').val(divWidth)
+                        }
+                        else {
+                             $(this).css('height', divHeight);
+                            $('#border_size').val(divHeight)
+                        }
+                		
+                	}else{
+                		if(img_width>img_height){
+                			$('#border_size').val(img_width)
+                		}else{
+                			$('#border_size').val(img_height)
+                		}
+                	}
+                    
                 }
                 
                 img_width = $(this).width();
@@ -193,43 +223,13 @@
           $("#uploadAvatarValueY1").val(selection.y1);
           $("#uploadAvatarValueX2").val(selection.x2);
           $("#uploadAvatarValueY2").val(selection.y2);
-          
-          {% for p in preview_areas %}
-            updatePreview{{ p.size }}(img, selection);
-          {% endfor %}
         };
         
-        {% for p in preview_areas %}
-            function updatePreview{{ p.size }}(img, selection) {
-              if(parseInt(selection.width) > 0) {
-                var ratiox = {{ p.size }} / selection.width;
-             /*   console.log('selection:('+selection.x1+','+selection.y1+'),,('+selection.x2+','+selection.y2+')')  */
-                if(rotate_value%180==0){
-                $("#uploadAvatarPreviewArea{{ p.size }} img").css({
-                  width: Math.round(ratiox * img.width) + 'px',
-                  marginLeft: '-' + Math.round(ratiox * selection.x1) + 'px',
-                  marginTop: '-' + Math.round(ratiox * selection.y1) + 'px'
-                });
-                }else{
-                	curenImg=$("#uploadAvatarPreviewArea{{ p.size }} img");
-                	var adjust=(curenImg.height()-curenImg.width())/2;
-                	ratiox = {{ p.size }} / selection.width;
-                	/* console.log(Math.round(ratiox * selection.x1)+'===='+Math.round(ratiox * selection.y1)+'========='+adjust);
-                	console.log(ratiox); */
-                	$("#uploadAvatarPreviewArea{{ p.size }} img").css({
-                		width: Math.round(ratiox * img.width) + 'px',
-                        marginLeft: 0-(Math.round(ratiox * selection.x1)-adjust) + 'px',
-                        marginTop: 0-(Math.round(ratiox * selection.y1)+adjust)+ 'px'
-                      }) ;	
-                };
-              }
-            };
-        {% endfor %}
+   
         
         function crop_avatar_success(msg,avatar_name) {
-        	var body = $('<p>'+msg+'</p>');
-        	$.poplayer({body:body});
-        	$('#avatar').attr('src',avatar_name+'-100.jpeg')
+        	window.location.href="/mobile/account/"
+        	
         };
         var rotate_value=0;
         
@@ -251,8 +251,7 @@
 				</div>
 			</div>
 		</div>
-<div class="container">
-     <div class="row">
+     <div id="uploadAvatar" class="row">
         <form id="uploadAvatarCropForm" action="{% url 'uploadavatar_crop' %}" method="post" target="uploadAvatarIframe" style="display: none;">
         {% csrf_token %}
         <input id="uploadAvatarValueX1" type="text" name="x1"/>
@@ -260,20 +259,20 @@
         <input id="uploadAvatarValueX2" type="text" name="x2"/>
         <input id="uploadAvatarValueY2" type="text" name="y2"/>
         <input id="rotate_value" type="text" name="rotate" value="0"/>
+        <input id="border_size" type="text" name="border_size" value="0"/>
     </form>
     
     <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
-    
+    <center>
     <div id="uploadAvatarSelectArea"  style="position:relative;"></div>
-
+    </center>
     
     <div id="uploadAvatarCropResult" style="display: none;"></div>
      </div>
      <div class="row" >
       <div id="uploadAvatarBtns" style="background-color: rgb(213, 213, 193)">
-        <span id="uploadAvatarCropSubmit">{{ CROP_IMAGE }}</span>
-        <span class="rotate_right" >旋转</span>
+        &nbsp;&nbsp;&nbsp;<span id="uploadAvatarCropSubmit">{{ CROP_IMAGE }}</span>
+        <!--  <span class="rotate_right" >旋转</span>-->
       </div>
-     </div>
-   </div>
+      </div>
 {% endblock %}

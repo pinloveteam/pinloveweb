@@ -46,7 +46,7 @@ urlpatterns=patterns('apps.mobile_app.views',
 urlpatterns+=patterns('',
      
        #上传头像
-    url(r'^uploadavatar_upload/$','apps.upload_avatar.views.upload_avatar',{'tempate_name':'mobile_upload_avatar.html'}),
+    url(r'^uploadavatar_upload/$','apps.upload_avatar.views.upload_avatar'),
    #修改密码
     url(r'^change_password/$', 'apps.user_app.views.change_password',{'tempate_name':'mobile_change_password.html'}),
      #退出
