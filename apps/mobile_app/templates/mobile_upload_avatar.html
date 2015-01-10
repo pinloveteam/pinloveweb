@@ -174,15 +174,14 @@
                             $('#border_size').val(divHeight)
                         }
                 		
-                	}else{
-                		if(img_width>img_height){
-                			$('#border_size').val(img_width)
-                		}else{
-                			$('#border_size').val(img_height)
-                		}
                 	}
-                    
-                }
+                }else{
+            		if(img_width>img_height){
+            			$('#border_size').val(img_width)
+            		}else{
+            			$('#border_size').val(img_height)
+            		}
+            	}
                 
                 img_width = $(this).width();
                 img_height = $(this).height();
