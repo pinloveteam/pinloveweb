@@ -62,9 +62,9 @@ def login(request,template_name='login.html',nextUrl='/account/loggedin') :
         return render(request, template_name, args,) 
     
 def auth_view(request,template_name='login.html') : 
-    
-    username = request.POST.get('username', '')
-    password = request.POST.get('password', '')
+    args={}
+    username = request.POST.get('username', '').rstrip()
+    password = request.POST.get('password', '').rstrip()
     if request.REQUEST.getlist('remember_status')==[u'on']:
             request.session.set_expiry(100000)
     user = auth.authenticate(username=username, password=password)
@@ -110,9 +110,16 @@ def auth_view(request,template_name='login.html') :
             return HttpResponseRedirect(redirectURL)
     else : 
         # Show an error page 
-        link = request.REQUEST.get('link','')
-        next = request.REQUEST.get('next','')
-        return render(request,template_name,{'error':'True','error_message':'用户名或者密码错误!','link':link,'next':next,'user_form':RegistrationForm()},)
+        args['link'] = request.REQUEST.get('link','')
+        args['next'] = request.REQUEST.get('next','')
+        args['error'] = True
+        if len(username)==0:
+           args['error_message']=u'用户名不能为空!'
+        elif len(username)==0:
+            args['error_message']=u'用户名不能为空!'
+        else:
+             args['error_message']=u'用户名或者密码错误!'
+        return render(request,template_name,args)
 
 
 def loggedin(request,template_name='index.html',**kwargs) :

@@ -246,6 +246,13 @@ def info_detail(request,userId,template_name='mobile_info.html'):
         args=user_info_mobile(int(userId),request.user.id,)
         from apps.friend_dynamic_app.method import get_pic
         args['picList']=get_pic(request.user.id)
+        #获取标签信息
+        tagList=UserTag.objects.select_related('tag').filter(user_id=userId,type=0)
+        tags=[]
+        for tag in tagList:
+           if tag.tag.id<24:
+               tags.append(tag.tag.content)
+        args['tags']=tags
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)

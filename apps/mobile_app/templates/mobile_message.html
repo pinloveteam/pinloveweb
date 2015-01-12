@@ -2,6 +2,7 @@
 {% block title %} 拼爱网 --消息{% endblock %}
 {% block staticfiles %}
 <script src="/static/js/jquery.scroll.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.loading.js"></script>
 {% endblock %}
 {% block js%}
 <script type="text/javascript">
@@ -38,9 +39,10 @@
         					url:url,
         					data:{},
         					beforeSend:function(XMLHttpRequest){
-        						
+        						$('#message_list').popLoading();
         					},
         					complete:function(XMLHttpRequest, textStatus){
+        						$('#message_list').removeLoading()
         					},
         					success:function(data, textStatus){
         						$('#message_list').html('');
@@ -310,7 +312,7 @@
        	if(typeof(data.messageList)!="object"){
        		data.messageList=$.parseJSON(data.messageList);
        	}
-   	   set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
+   	   //set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
        	init_message(data.messageList);
 	   };
 		$(window).scroll( function() { 
@@ -363,13 +365,13 @@
 				</div>
 				<div class="col-xs-7">
 					<div class="row">
-						<span id="username" class="name">张三</span><span> 给你的私信</span>
+						<span id="username" class="name"></span><span> 给你的私信</span>
 					</div>
 					<div class="row">
-						<small id="content" class="text-gray"></small>
+						<small id="content" class="text-gray">&nbsp;</small>
 					</div>
 					<div class="row">
-						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+						<small id="time"  class="text-gray"></small>
 					</div>
 				</div>
 				<div class="col-xs-2">
@@ -387,13 +389,13 @@
 				</div>
 				<div class="col-xs-7">
 					<div class="row">
-						<span id="username" class="name">张三</span><span> 评论了你的动态</span>
+						<span id="username" class="name"></span><span> 评论了你的动态</span>
 					</div>
 					<div class="row">
-						<small id="content" class="text-gray"></small>
+						<small id="content" class="text-gray">&nbsp;</small>
 					</div>
 					<div class="row">
-						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+						<small id="time"  class="text-gray"></small>
 					</div>
 				</div>
 				<div class="col-xs-2">
@@ -410,13 +412,13 @@
 				</div>
 				<div class="col-xs-7">
 					<div class="row">
-						<span id="username" class="name">张三11111</span><span>关注了你</span>
+						<span id="username" class="name"></span><span>关注了你</span>
 					</div>
 					<div class="row">
-						<small id="content"  class="text-gray">你好</small>
+						<small id="content"  class="text-gray">&nbsp;</small>
 					</div>
 					<div class="row">
-						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+						<small id="time"  class="text-gray"></small>
 					</div>
 				</div>
 				<div class="col-xs-2">
@@ -434,13 +436,13 @@
 				</div>
 				<div class="col-xs-7">
 					<div class="row">
-						<span id="username" class="name">张三11111</span><span>赞了你的动态</span>
+						<span id="username" class="name"></span><span>赞了你的动态</span>
 					</div>
 					<div class="row">
-						<small id="content"  class="text-gray">你好</small>
+						<small id="content"  class="text-gray">&nbsp;</small>
 					</div>
 					<div class="row">
-						<small id="time"  class="text-gray">2014-12-12  13:00</small>
+						<small id="time"  class="text-gray"></small>
 					</div>
 				</div>
 				<div class="col-xs-2">

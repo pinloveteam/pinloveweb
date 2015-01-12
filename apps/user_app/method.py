@@ -29,7 +29,7 @@ def user_info_mobile(userId,myId):
                         'userId':userProfile.user_id,
                         'age' : ('%s%s' % (userProfile.age ,'岁')) if userProfile.age!=None  else userProfile.age,
                         'city' :  userProfile.limit_city_length(),
-                        'height' :('%s%s' % (userProfile.height,'cm')) if userProfile.height!=-1 else userProfile.height,
+                        'height' :('%s%s' % (userProfile.height,'厘米')) if userProfile.height!=-1 else userProfile.height,
                         'education' : userProfile.get_education_display(),
                         'income' : userProfile.get_income_display(),
                         'trade' : userProfile.get_jobIndustry_display(),

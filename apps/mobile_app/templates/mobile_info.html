@@ -24,13 +24,15 @@
 				$('#dislike').click(function(){
 					dislike();
 				});
-				
-				{%if is_chat%}
 				$('#message').click(function(){
+				{%if is_chat%}
 					userId=$('#userId').val();
 					window.location.href='/mobile/editer/?receiver_id='+userId+'&type=message';
-				});
+				{%else%}
+				    var body=$('<p>必须需要相互关注才能聊天!</p>')
+				    $.poplayer({body:body});
 				{%endif%}
+				});
 				
 				
 			});
@@ -134,7 +136,7 @@
 					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
 				</div>
 				<div class="col-xs-8">
-					卡片
+					{{name}}
 				</div>
 				<div class="col-xs-2">
 				</div>
@@ -143,11 +145,11 @@
 		<div class="container">
 			<div class="row frame">
 				<div class="col-xs-4">
-					<img width="50px" height="50px" class="img-rounded" src="{{head}}" />
+					<img width="70px" height="70px" class="img-rounded" src="{{head}}" />
 					<input type="hidden" id='userId' value="{{userId}}">
 				</div>
 				<div class="col-xs-8">
-					<span>姓名：{{name}}</span>
+					<span>昵称：{{name}}</span>
 					<br />
 					<span>年龄：{{age}}</span>
 					<br />
@@ -169,7 +171,7 @@
 						</p>
 					</div>
 					<div class="col-xs-6">
-						<p>收入：<span>{{income}}</span>
+						<p>年薪：<span>{{income}}(人民币)</span>
 						</p>
 					</div>
 				</div>
@@ -227,7 +229,7 @@
 					<button class="btn btn-success" id="dislike">不喜欢</button>
 				</div>
 				<div class="col-xs-4 button">
-					<button class="btn btn-success" id="message"{%if is_chat%}{%else%}disabled="disabled"{%endif%}>私信</button>
+					<button class="btn btn-success" id="message">私信</button>
 				</div>
 			</div>
 		</div>

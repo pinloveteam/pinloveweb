@@ -27,7 +27,7 @@ function init_card(cards){
 		template.find('.avatar_name').attr('src','/media/'+cards[x].avatar_name+'-100.jpeg');
 		template.find('.name').html(cards[x].username);
 		template.find('.age').html(cards[x].age);
-		template.find('.income').html(cards[x].income);
+		template.find('.city').html(cards[x].city);
 		template.find('.height').html(cards[x].height+'厘米');
 		template.find('.education').html(cards[x].education);
 		template.find('a').attr('href',"/mobile/info_detail/"+cards[x].user_id+'/');
@@ -101,7 +101,7 @@ $(window).scroll( function() {
 						<small class="age"></small>&nbsp;&nbsp;
 						<small class="height"></small>&nbsp;&nbsp;
 						<small class="education"></small>&nbsp;&nbsp;
-						<small class="income"></small>&nbsp;&nbsp;
+						<small class="city"></small>&nbsp;&nbsp;
 					</div>
 					<div class="row">
 						<small></small>

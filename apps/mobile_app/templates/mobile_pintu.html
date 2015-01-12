@@ -76,7 +76,7 @@ function check_score_PLrice(){
 				   <div class="col-xs-3">
 						<div class="radio">
 							<label>
-								<input type="radio" name="radiobutton" value="all">随机匹配
+								<input type="radio" name="radiobutton" value="all">随机
 							</label>
 						</div>
 					</div>
@@ -307,6 +307,7 @@ function check_score_PLrice(){
 						  check_score_PLrice()
 					  });
 					 if (type==2){
+						  window.location.href='/mobile/info_detail/'+card_uid+'/'
 			        	  set_game_count(game_count)
 			          }else if(type==0){
 			        	  var body=$('<p>没有匹配到用户,请再试一次!</p>')

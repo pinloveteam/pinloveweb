@@ -6,7 +6,7 @@ body {
 
 .logined {
 	padding-top: 40px;
-	padding-bottom: 61px;
+	padding-bottom: 70px;
 }
 .header {
 	padding: 10px;
@@ -26,6 +26,7 @@ nav {
 	bottom: 0;
 	position: fixed;
 	width: 100%;
+	z-index: 10;
 }
 nav .col-xs-2 {
 	text-align: center;
@@ -73,7 +74,7 @@ textarea {
 .button .btn {
 	width: 80%;
 }
-.pic-box !important{
+.pic-box {
 	width: 100%;
 	height: 100%;
 	position: fixed;
@@ -108,6 +109,9 @@ textarea {
 	background-color: #c0392b !important;
 	padding: 3px 5px;
 }
+.modal-dialog {
+	margin: 100px auto;
+}
 /*public*/
 /*login&register*/
 
@@ -123,7 +127,7 @@ textarea {
 }
 .form-horizontal .glyphicon {
 	height: 40px;
-	padding: 8px 0;
+	padding: 4px 0;
 	margin-left: 25px;
 	line-height: 1.42857;
 	color: #B4B4B4;
@@ -166,7 +170,7 @@ textarea {
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
-.trend-text {
+.trend-text,.reply-text {
 	word-wrap: break-word;
 }
 .glyphicon-remove {
@@ -209,10 +213,24 @@ textarea {
 /*search*/
 /*search*/
 /*recommend*/
-
-.self {
-	background-color: #34495e;
-	color: #fff;
+.sns{
+	text-align: center;
+	border-top: solid 1px #eee;
+	margin-top: 10px;
+	padding-top: 5px;
+}
+.sns a{
+	color: #333;
+	text-decoration:none;
+}
+.sns-text{
+	display: block;
+	font-size: 12px;
+	color: #808080;
+}
+.name{
+	font-size: 16px;
+	font-weight: bold;
 }
 /*recommend*/
 /*mission*/
