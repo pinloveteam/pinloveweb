@@ -92,8 +92,8 @@
 			}
 
 			.emoji-list li > img {
-				width: 26px;
-				height: 26px;
+				width: 24px;
+				height: 24px;
 			}
 
 			li {
@@ -645,8 +645,8 @@ function publishInputExpression(event){
 	var top = offset.top + 30;
 	var target = obj.attr('target');
 	if (($('.emoji-list').html()) == '') {
-		for ( i = 0; i <= 95; i++) {
-			$('.emoji-list').append('<li onclick="sendExpression(this);" action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/48x48/' + i + '.gif"/></li>');
+		for ( i = 1; i <= 75; i++) {
+			$('.emoji-list').append('<li onclick="sendExpression(this);" action-text="{:pinlove_'+i+':}"><img src="{{STATIC_URL}}img/arclist/' + i + '.png"/></li>');
 		}
 	}
 	$('#emoji-layer').css({
