@@ -71,7 +71,7 @@ def regex_expression(content):
 def dashrepl(matchobj):
     s=matchobj.group(0)
     num=s[10:-2]
-    return '%s%s%s' % ('<img src="/static/img/48x48/',num,'.gif" style="width: 25px; height: 25px;">')
+    return '%s%s%s' % ('<img src="/static/img/arclist/',num,'.png" style="width: 24px; height: 24px;">')
  
 '''
 判断是否引导过

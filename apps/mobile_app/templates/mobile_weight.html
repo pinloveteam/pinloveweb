@@ -119,7 +119,7 @@ $(document).ready(function(){
 				<p class="frame text-danger" style="padding-top: 5px;">总分=身高权重*身高得分+外貌权重*外貌得分+学历权重*学历得分+收入权重*收入得分+性格权重*性格得分</p>
 			</div>
              
-            <form id="update_weight" action="" method="post">
+            <form id="update_weight" action="" method="post">{%csrf_token%}
 			<div class="row frame weight">
 				<div class="row">
 					<div class="col-xs-3">

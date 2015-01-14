@@ -63,10 +63,15 @@ textarea {
 .frame .radio {
 	margin: 0;
 }
-.frame .form-control,
-.frame .col-xs-2 {
+.frame .form-control
+{
 	height: auto;
 	padding: 0;
+}
+.frame .col-xs-3,.frame .col-xs-4,.frame .col-xs-8,
+.frame .col-xs-6{
+	padding-left: 5px;
+	padding-right: 5px;
 }
 .button {
 	margin-top: 40px;

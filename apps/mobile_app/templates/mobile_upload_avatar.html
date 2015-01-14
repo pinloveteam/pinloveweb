@@ -16,6 +16,8 @@
         }      
         #uploadAvatarBtns{
           height: 50px;
+          opacity: 0.5;
+          background-color: rgb(213, 213, 193);
         }
         #uploadAvatarCropSubmit{
           left: 4%;
@@ -92,7 +94,7 @@
                 return false;
             });
             
-            $('.rotate_left,.rotate_right').click(function(){
+           /*  $('.rotate_left,.rotate_right').click(function(){
             	if($('#uploadAvatarSelectArea img').length=0){
             		return false;
             	}
@@ -131,7 +133,7 @@
             	
             });
         });
-        
+         */
         
         var imgSelect;
         function upload_avatar_success(image_url) {
@@ -269,9 +271,14 @@
     <div id="uploadAvatarCropResult" style="display: none;"></div>
      </div>
      <div class="row" >
-      <div id="uploadAvatarBtns" style="background-color: rgb(213, 213, 193)">
-        &nbsp;&nbsp;&nbsp;<span id="uploadAvatarCropSubmit">{{ CROP_IMAGE }}</span>
+      <div id="uploadAvatarBtns" >
+         <div class="col-xs-2">
+           <center>
+            <span id="uploadAvatarCropSubmit">{{ CROP_IMAGE }}</span>
         <!--  <span class="rotate_right" >旋转</span>-->
+           </center>
+         </div>
+       
       </div>
       </div>
 {% endblock %}

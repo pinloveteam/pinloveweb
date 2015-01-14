@@ -1,5 +1,55 @@
 {% extends "mobile_base.html" %} 
 {% block title %} 拼爱网 --个人中心{% endblock %}
+{% block js %}
+<html xmlns:wb=“http://open.weibo.com/wb”>
+<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+<!-- QQ分享  -->
+(function(){
+var p = {
+url:'http://pinlove.com/mobile/?link={{link}}', /*获取URL，可加上来自分享到QQ标识，方便统计*/
+desc:'我在用拼爱 pinlove，快来看看哈！', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
+title:'', /*分享标题(可选)*/
+summary:'', /*分享摘要(可选)*/
+pics:'', /*分享图片(可选)*/
+flash: '', /*视频地址(可选)*/
+site:'', /*分享来源(可选) 如：QQ分享*/
+style:'203',
+width:16,
+height:16
+};
+var s = [];
+for(var i in p){
+s.push(i + '=' + encodeURIComponent(p[i]||''));
+}
+
+$('.qcShareQQDiv').attr('href',('http://connect.qq.com/widget/shareqq/index.html?',s.join('&')));
+})();
+</script>
+
+<script type="text/javascript">
+var appId=400350543428768;
+$(document).ready(function() {
+	  $.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+	    FB.init({
+	      appId:appId,
+	    });     
+	  });
+	});
+function feeds(){
+	FB.ui({
+		  method: 'feed',
+		  link: 'https://developers.facebook.com/docs/dialogs/',
+		  app_id:appId,
+		  caption: '我在用拼爱网pinlove，快来看看哈！ ',
+		  description:'',
+		  name:'pinlove web'
+		}, function(response){});
+}
+</script>
+</script>
+{% endblock %}
 {% block staticfiles %} 
 <link rel="stylesheet" type="text/css" href="css/app.css" />
 {% endblock %}
@@ -85,6 +135,28 @@
 						<div class="mission-content">
 							<h4>邀请注册</h4>
 							<h5 class="mission-text"><small>奖励10拼爱币</small></h5>
+							<ul class="list-inline">
+								<li class="qq_share">
+									<a target="_blank" class="qcShareQQDiv">
+										<img width="40px" src="/static/img/mobile_qq.png">
+									</a>
+								</li>
+								<li>
+									<a target="_blank" href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com/mobile/?link={{link}}&title=我在用拼爱网pinlove，快来看看哈！http://pinlove.com/mobile/?link={{link}}">
+										<img width="40px" src="/static/img/mobile_weibo.png">
+									</a>
+								</li>
+								<li>
+									<a target="_blank" onclick="feeds();" href="javascript:void(0)">
+										<img width="40px" src="/static/img/mobile_facebook.png">
+									</a>
+								</li>
+								<!-- <li>
+									<a target="_blank" onclick="feeds();" href="javascript:void(0)">
+										<img width="40px" src="/static/img/mobile_wechat.png">
+									</a>
+								</li> -->
+							</ul>
 						</div>
 						<div class="mission-bottom">
 							去完成
@@ -96,9 +168,31 @@
 						<div class="mission-content">
 							<h4>邀请登录</h4>
 							<h5 class="mission-text"><small>奖励2拼爱币</small></h5>
+							<ul class="list-inline">
+								<li class="qq_share">
+									<a target="_blank" class="qcShareQQDiv">
+										<img width="40px" src="/static/img/mobile_qq.png">
+									</a>
+								</li>
+								<li>
+									<a target="_blank" href="http://www.jiathis.com/send/?webid=tsina&url=http://pinlove.com/mobile/?link={{link}}&title=我在用拼爱网pinlove，快来看看哈！http://pinlove.com/mobile/?link={{link}}">
+										<img width="40px" src="/static/img/mobile_weibo.png">
+									</a>
+								</li>
+								<li>
+									<a target="_blank" onclick="feeds();" href="javascript:void(0)">
+										<img width="40px" src="/static/img/mobile_facebook.png">
+									</a>
+								</li>
+								<!-- <li>
+									<a target="_blank" onclick="feeds();" href="javascript:void(0)">
+										<img width="40px" src="/static/img/mobile_wechat.png">
+									</a>
+								</li> -->
+							</ul>
 						</div>
 						<div class="mission-bottom-completed">
-							已完成
+							去完成
 						</div>
 					</center>
 				</div>

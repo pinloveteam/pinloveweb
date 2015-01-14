@@ -139,6 +139,8 @@ def crop_avatar(request):
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['NO_IMAGE'])
     
     orig_w, orig_h = orig.size
+    if request.POST.get('border_size',False):
+        border_size=int(request.POST.get('border_size',False))
     if orig_w <= border_size and orig_h <= border_size:
         ratio = 1
     else:

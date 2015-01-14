@@ -20,6 +20,12 @@ class UserProfileMbolieForm(ModelForm):
                 self.fields[key].choices=self.fields[key].choices[1:]
             self.fields[key].required = False
             self.fields[key].widget.attrs['class']='form-control'
+            if key==u'day_of_birth':
+                self.fields[key].choices=[(choices[0],'%s%s'%(choices[1],'日'))  for choices in self.fields[key].choices]
+            elif key==u'month_of_birth':
+                self.fields[key].choices=[(choices[0],'%s%s'%(choices[1],'月'))  for choices in self.fields[key].choices]
+            elif key==u'year_of_birth':
+                self.fields[key].choices=[(choices[0],'%s%s'%(choices[1],'年'))  for choices in self.fields[key].choices]
         
     #判断出生年月日是否正确
     def clean_day_of_birth(self):
