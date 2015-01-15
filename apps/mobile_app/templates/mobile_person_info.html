@@ -1,12 +1,12 @@
 			<script>
 			  $(function(){
-				  $('.glyphicon-chevron-right ,.self img').click(function(){
+				  $('.info').click(function(){
 					  window.location.href="/mobile/account/";
 				  });
 			  });
 			</script>
 			<div class="frame self">
-			  <div class="row">
+			  <div class="row info">
 				<div class="col-xs-3">
 					<img width="60px" height="60px" class="img-circle" src="{{MEDIA_URL}}{{avatar_name}}-100.jpeg" />
 				</div>
@@ -25,16 +25,16 @@
 			   </div>
 				<div class="row sns">
 					   <a href="/mobile/follow/1/" class="col-xs-4">
-					     <strong>11</strong>
+					     <strong>{{myFollow}}</strong>
 					     <span class="sns-text">关注</span>
 				       </a>
 				       <a href="/mobile/follow/2/" class="col-xs-4">
-					     <strong>11</strong>
-					     <span class="sns-text">关注</span>
+					     <strong>{{fans}}</strong>
+					     <span class="sns-text">粉丝</span>
 				       </a>
 				       <a href="/mobile/follow/3/" class="col-xs-4">
-					     <strong>11</strong>
-					     <span class="sns-text">关注</span>
+					     <strong>{{follow}}</strong>
+					     <span class="sns-text">相互关注</span>
 				       </a>
 			     </div>
 			 

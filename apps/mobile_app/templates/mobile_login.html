@@ -2,6 +2,120 @@
 {% block title %} 拼爱网 --登录页面{% endblock %}
 {% block navigation %}
 {% endblock %}
+{% block js %}
+<script>
+$(function(){
+	//检查用户名
+	$('#id_username').blur(function(){
+		check_username($(this));
+      });
+	 $('input[name^="password"]').blur(function(){
+	    	check_password($(this))
+	    });
+	 
+	 $('form').submit(function(){
+	    	username_data=check_username($('#id_username'))
+	    	password_data=check_password($('#id_password'))
+	    	if(!(username_data.result && password_data.result )){
+	    		message=username_data.message+' '
+	    		+password_data.message
+	    		inputJudge('error',message,$('#'+focus_error_id))
+	    		return false;
+	    	}
+	    	
+	    });
+	
+	$('#id_password').keyup(function(event){
+		if(event.keyCode ==13){
+		    $(this).closest('form').submit();
+		  }
+	});
+});
+function check_username(content){
+	flag=true;
+	error_message=''
+	var username=content.val().trim();
+	if (username.length==0){
+		error_message='用户名不能为空!';
+		flag=false;
+	}else{
+		re=/[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_]{1,19}/;
+		if(!re.test(username)){
+			error_message='用户名格式不正确!';
+    		flag=false;
+		};
+	}
+	  if(flag){
+		  inputJudge('success','',content)
+  	}else{
+  		inputJudge('error',error_message,content)
+  	}
+	 return {'result':flag,'message':error_message};
+	
+};
+
+//检查密码
+function check_password(content){
+	flag=true;
+	error_message=''
+		var password=content.val();
+		if (password==undefined ||password.length==0){
+    		error_message+='密码不能为空!';
+    		flag=false;
+    	}else{
+    		re=/^[0-9a-zA-Z\xff_]{6,20}$/
+    		if(!re.test(password)){
+    			error_message+='密码格式错误!';
+        		flag=false;
+    	  }
+    	}
+	if(flag){
+		inputJudge('success','',content)
+	}else{
+		inputJudge('error',error_message,content)
+	}
+	return {'result':flag,'message':error_message};
+}
+
+</script>
+<script type="text/javascript">
+		function inputJudge(type,message,element){
+			var feedback
+			if(element.next().length>0){
+				if(type == 'success'){
+					element.next().removeClass('text-danger glyphicon-remove').addClass('text-success glyphicon-ok');
+					if(element.attr('id')==focus_error_id){
+					   $('#errorInfo').html('').closest('.alert-danger').slideUp('slow');
+					}
+				}
+				if(type == 'error'){
+					element.next().removeClass('text-success glyphicon-ok').addClass('text-danger glyphicon-remove');
+					focus_error_id=element.attr('id')
+					$('#errorInfo').html(message);
+					$('#errorInfo').parents('.alert').slideDown('slow');
+					
+				}
+				
+			}else{
+				if(type == 'success'){
+					feedback = $('<span class="glyphicon glyphicon-ok form-control-feedback text-success"></span>');	
+					if(element.attr('id')==focus_error_id){
+						$('#errorInfo').html('').closest('.alert-danger').slideUp('slow');
+						}
+				}
+				if(type == 'error'){
+					feedback = $('<span class="glyphicon glyphicon-remove form-control-feedback text-danger"></span>');
+					focus_error_id=element.attr('id')
+					$('#errorInfo').html(message);
+					$('#errorInfo').parents('.alert').slideDown('slow');
+				}
+				element.after(feedback);
+			}
+			
+		}
+
+	</script>
+{% endblock %}
 {% block content %}
 
 	<body>
@@ -11,7 +125,7 @@
 		<center role="alert" class="alert alert-danger alert-dismissible" {% if error_message %}style="display: block;"{%endif%}>
 			<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
 			</button>
-			{{error_message}}
+			<span id="errorInfo">{{error_message}}</span>
 		</center>
 		<div class="container">
 			<form class="form-horizontal" role="form" action="/mobile/auth/" method="post" >{% csrf_token %}
@@ -20,7 +134,7 @@
 						<span class="glyphicon glyphicon-user"> 账号</span>
 					</div>
 					<div class="col-xs-8">
-					 <input class="form-control" type="text" id="inputemail" value="" name="username" id="username" placeholder="请输入用户名"/>
+					 <input class="form-control" type="text" id="id_username" value="" name="username" id="username" placeholder="请输入用户名"/>
 					</div>
 				</div>
 				<div class="row">
