@@ -179,8 +179,10 @@
                 	}
                 }else{
             		if(img_width>img_height){
+            			$(this).css('width', img_width);
             			$('#border_size').val(img_width)
             		}else{
+            			$(this).css('height', img_height);
             			$('#border_size').val(img_height)
             		}
             	}
@@ -259,7 +261,6 @@
         <input id="uploadAvatarValueY1" type="text" name="y1"/>
         <input id="uploadAvatarValueX2" type="text" name="x2"/>
         <input id="uploadAvatarValueY2" type="text" name="y2"/>
-        <input id="rotate_value" type="text" name="rotate" value="0"/>
         <input id="border_size" type="text" name="border_size" value="0"/>
     </form>
     

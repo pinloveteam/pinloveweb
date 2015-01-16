@@ -31,7 +31,7 @@
 			$(bgObj).css('top',this.offset().top+'px');
 			$(bgObj).css('left',this.offset().left+'px');
 			$(bgObj).css('height',this.height()+ "px");
-			$(bgObj).css('width',this.width()+ "px")
+			//$(bgObj).css('width',this.width()+ "px")
 		 }
 		document.body.appendChild(bgObj); //添加遮罩 
 		var loadingObj = $('<div id="loadingDiv323242423"></div>');

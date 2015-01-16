@@ -40,6 +40,7 @@ from django.http.response import HttpResponseServerError
 from django.shortcuts import render
 
 
+
 border_size = UPLOAD_AVATAR_WEB_LAYOUT['crop_image_area_size']
 
 
@@ -150,9 +151,10 @@ def crop_avatar(request):
             ratio = float(orig_h) / border_size
             
     box = [int(x * ratio) for x in [x1, y1, x2, y2]]
-    rotate=0-int(float(request.POST['rotate']))
-    if rotate!=0:
-        orig=orig.rotate(rotate)
+    if request.POST.get('rotate',False):
+        rotate=0-int(float(request.POST['rotate']))
+        if rotate!=0:
+            orig=orig.rotate(rotate)
     avatar = orig.crop(box)
     avatar_name, _ = os.path.splitext(upim.image)
     count = UserProfile.objects.filter(user_id=get_uid(request)).count()
