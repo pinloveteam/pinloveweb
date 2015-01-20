@@ -13,8 +13,12 @@ $(function(){
 		$('#uploadAvatarInputFile').click();
 	});
 	$('#uploadAvatarInputFile').change(function(){
+	try{  
 		$('.container').addShade();
 		$('#uploadAvatarForm').submit();
+	}catch(e){  
+		alert(e.message)
+	}
 	});
 });
 function upload_avatar_error(error_msg) {
