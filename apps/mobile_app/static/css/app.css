@@ -48,7 +48,7 @@ textarea {
 }
 .title,
 .frame {
-	padding: 15px;
+	padding: 10px 15px;
 	border-bottom: solid 1px #D3D3D3;
 }
 .text-gray {
@@ -177,6 +177,7 @@ textarea {
 }
 .trend-text,.reply-text {
 	word-wrap: break-word;
+	line-height: 1;
 }
 .glyphicon-remove {
 	font-size: 14px;
@@ -231,7 +232,7 @@ textarea {
 .sns-text{
 	display: block;
 	font-size: 12px;
-	color: #808080;
+	/*color: #808080;*/
 }
 .name{
 	font-size: 16px;

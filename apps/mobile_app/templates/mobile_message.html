@@ -108,7 +108,7 @@
 							}
 							 var message='';
 							 if(data['result']=='follow'){
-								  var body=$('<p>已经关注!</p>')
+								  var body=$('<p>已关注!</p>')
 								  $.poplayer({body:body});
 								  return;
 							  }
@@ -117,7 +117,7 @@
 									$('#myFollow').html(myFollow)
 									var body=$('<p>关注成功!</p>')
 									 $.poplayer({body:body});
-									 message='已经关注';
+									 message='已关注';
 							  }else if(data['type']==2){
 								    message='相互关注';
 									var body=$('<p>关注成功!</p>')
@@ -167,11 +167,11 @@
                          };
                         if(message.fllow_type==1){
                         	follow_btn=follow_clone.find('.follow')
-                        	follow_btn.html('已经关注');
+                        	follow_btn.html('已关注');
                         	follow_btn.attr('disabled',true);
                         }else if(message.fllow_type==1){
                         	follow_btn=follow_clone.find('.follow');
-                        	follow_btn.html('已经关注');
+                        	follow_btn.html('已关注');
                         	follow_btn.attr('disabled',true);
                         }
                         $('#message_list').append(follow_clone);

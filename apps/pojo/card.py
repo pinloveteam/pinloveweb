@@ -220,10 +220,12 @@ class CardMobileEncoder(simplejson.JSONEncoder):
             return super(MyEncoder, self).default(obj)
         dict=obj.__dict__
         for key in dict.keys():
-            if dict[key] in [-1,'N',None]:
-                dict[key]=u'未填'
-        if dict['age']!=u'未填':
+            if dict[key] in [-1,'N',None,u'未填']:
+                dict[key]=None
+        if dict['age']!=None:
             dict['age']=str(dict['age'])+u'岁'
+        if dict['height']!=None:
+             dict['height']=str(dict['height'])+u'厘米'
         return dict
     
 '''

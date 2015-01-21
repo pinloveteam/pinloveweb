@@ -17,6 +17,42 @@
             		}
             		window.location.href='/mobile/radar_compare/?type='+type+'&userId='+userList[0].userId
             	});
+            	
+            	$('.btn-score-my').click(function() {
+    				content=this;
+    				userId=$(content).closest('.frame').find('#userId').val();
+    				$.ajax({
+    					type:'GET',
+    					url:'/recommend/check_charge_for_socre_my/',
+    					dataType:"json",
+    					data:{userId:userId},
+    					success:function(data, textStatus){
+    						if(textStatus == 'success'){
+    			            	if( data.type=='score'){
+    			            		var body = $("<p>查看Ta对你的打分需消耗"+data.amount+"拼爱币。请确认？</p>")
+    			            		var hehe = function(){
+    			            			score_my(content,userId,data.type);
+    			            			}
+    			            		$.poplayer({body:body,btnFunc:hehe});
+    			            	}else if( data.type=='charge') {
+    			            		var body = $("<p>查看Ta对你的打分需消耗"+data.amount+"拼爱币。请确认？</p>")
+    			            		var hehe = function(){
+    			            			score_my(content,userId,data.type)
+    			            			}
+    			            		$.poplayer({body:body,btnFunc:hehe});
+    			            	}else if(data.type=='less'){
+    			            		var body = $("<p>请充值!</p>")
+    			            		 $.poplayer({body:body});
+    			            	} 
+    			            }
+    					},
+    					error:function(response){
+    						var body = $("<p>异常错误!</p>")
+    						$.poplayer({body:body});
+    					},
+    			});
+    				
+    			});
             });
 			
 			
@@ -25,12 +61,25 @@
 				$('.img-rounded').attr('src',userList[0].head);
 				radar_list.push(userList[0].data);
 				$('.score').html(userList[0].score);
+				$('#userId').val(userList[0].userId);
+				if(userList[0].scoreMy>=0){
+					$('.score-my').html(userList[0].scoreMy);
+				}
 				
 				if(userList.length==2){
+					var score_frame=$('.score-frame').clone();
+					score_frame.find('#userId').val(userList[1].userId);
+					if(userList[1].scoreMy>=0){
+						score_frame.find('.score-my').html(userList[1].scoreMy);
+					}else{
+						score_frame.find('.score-my').html('<button class="btn btn-xs btn-success btn-sm btn-score-my">查看</button>');
+					}
+					$('body').append(score_frame);
 					var user_clone=$('.user').clone();
 					user_clone.find('img').attr('src',userList[1].head)
-					user_clone.find('.score').html(userList[0].score);
+					user_clone.find('.score').html(userList[1].score);
 					user_clone.find('.compare').remove();
+					
 					$('body').append(user_clone);
 					radar_list.push(userList[1].data);
 					$('.compare').html('取消对比')
@@ -72,6 +121,39 @@
 					angleLineColor: "rgba(0,0,0,.5)"
 				});
 			};
+			
+			
+			
+			
+			
+			
+function score_my(e,userId,type){
+current = $(e);
+ //userId=$(this).val()
+ //e.stopPropagation();    //  阻止事件冒泡
+ $.ajax({
+		type:'GET',
+		url:'/recommend/socre_my/',
+		dataType:"json",
+		data:{userId:userId,type:type},
+		success:function(data, textStatus){
+			if(textStatus=='success'){
+				if(data['result']=='success'){
+					current.closest('.score-my').html(data['scoreMyself'])
+				}else if(data['result']=='error'){
+					var body = $("<p>"+data['error_messge']+"</p>")
+		       	    $.poplayer({body:body});
+				}
+				
+			}
+		},
+		error:function(response){
+			var body = $("<p>网络异常!</p>")
+       	    $.poplayer({body:body});
+		},
+});
+}
+			
 		</script>
 {% endblock %}
 {% block content %}
@@ -100,6 +182,17 @@
 				<div class="col-xs-4">
 					<br />
 					<button class="btn btn-success btn-sm compare">对比其他用户</button>
+				</div>
+			</div>
+		</div>
+		<div class="frame score-frame">
+		   <input type="hidden" id="userId" value="">
+			<div class="row">
+				<div class="col-xs-6">
+					Ta对我的打分
+				</div>
+				<div class="col-xs-6 score-my">
+					<button class="btn btn-xs btn-success btn-sm btn-score-my">查看</button>
 				</div>
 			</div>
 		</div>
