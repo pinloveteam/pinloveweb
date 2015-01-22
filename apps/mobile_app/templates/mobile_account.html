@@ -28,6 +28,7 @@ function upload_avatar_error(error_msg) {
 
 var imgSelect;
 function upload_avatar_success(image_url) {
+	alert('jin')
 	window.location.href='/mobile/update_avtar/?image='+image_url
 }
 </script>
@@ -204,7 +205,7 @@ function upload_avatar_success(image_url) {
 		{% csrf_token %}
                 <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" style="display: none;">
         </form>
-        <iframe id="uploadAvatarIframe" width="0px" height="0px" style="display: none;"></iframe>
+        <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" width="0px" height="0px" style="display: none;"></iframe>
 
 	</body>
 
