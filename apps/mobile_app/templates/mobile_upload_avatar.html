@@ -88,8 +88,6 @@
                 $('#uploadAvatarValueY1').val('');
                 $('#uploadAvatarValueX2').val('');
                 $('#uploadAvatarValueY2').val('');
-                rotate_value=0;	
-                $('#rotate_value').val(rotate_value)
                 $(this).removeAttr('disabled');
                 return false;
             });
@@ -137,43 +135,43 @@
         
         var imgSelect;
         function upload_avatar_success(image_url) {
-        	rotate_value=0;	
-            $('#rotate_value').val(rotate_value)
             $('#uploadAvatarSelectArea').empty();
             $('#uploadAvatarPreviewArea div').empty();
             $('#uploadAvatarPreviewArea div').append('<img />');
             $('#uploadAvatarPreviewArea div img').attr('src', image_url);
             
-            $('#uploadAvatarSelectArea').append('<img />');
-            $('#uploadAvatarSelectArea img').attr('src', image_url).css('vertical-align','middle').load(function(){
+            var theImage = new Image();
+
+            theImage.src = image_url;
+            
+            $('#uploadAvatarSelectArea').append(theImage);
+            
+            $('#uploadAvatarSelectArea img').css('vertical-align','middle').load(function(){
                 $(this).unbind('load');
                 
-                var img_width = $(this).width();
-                var img_height = $(this).height();
+                var img_width = theImage.width;
+                var img_height = theImage.height;
                 
                 divWidth=$('#uploadAvatarSelectArea').width();
                 divHeight=$('#uploadAvatarSelectArea').css('height',divWidth).height();
+                $('#border_size').val(divWidth)
                 //alert(img_width+'  '+img_height)
                  //alert(divHeight+'  '+divWidth)
                 if(img_width > divWidth|| img_height >divHeight) {
                 	if(img_width>img_height){
                 		if(img_width > divWidth) {
                             $(this).css('width', divWidth);
-                            $('#border_size').val(divWidth)
                         }
                         else {
                              $(this).css('height', divHeight);
-                            $('#border_size').val(divHeight)
                         }
                 		
                 	}else{
                 		if(img_width <= divWidth) {
                             $(this).css('width', divWidth);
-                            $('#border_size').val(divWidth)
                         }
                         else {
                              $(this).css('height', divHeight);
-                            $('#border_size').val(divHeight)
                         }
                 		
                 	}
@@ -234,7 +232,6 @@
         	window.location.href="/mobile/account/"
         	
         };
-        var rotate_value=0;
         
     </script>
 {% endblock %}
