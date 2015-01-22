@@ -36,6 +36,7 @@ function init_card(cards){
 			template.find('.age').after('&nbsp;&nbsp;');
 		}
 		template.find('.city').html(cards[x].city);
+		template.find('.country').html(cards[x].country);
 		template.find('.height').html(cards[x].height);
  		if(cards[x].height!=null){
 			template.find('.height').after('&nbsp;&nbsp;');
@@ -117,6 +118,7 @@ $(window).scroll( function() {
 						<small class="education"></small>
 					</div>
 					<div class="row">
+					    <small class="country"></small>
 						<small class="city"></small>
 					</div>
 				</div>

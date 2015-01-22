@@ -78,8 +78,9 @@ class Card(CardBase):
     
     
 class CardMobile(CardBase):  
-    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,avatar_name_status='3'):
+    def __init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,country,avatar_name_status='3'):
         CardBase.__init__(self,userId,username,avatar_name,height,age,education,income,jobIndustry,city,avatar_name_status)
+        self.country=country 
  
 ###################################web版的方法#################################################   
 '''
@@ -246,6 +247,7 @@ def matchResultList_to_CardMobileList(myId,matchResultList):
        income=userBaiscProfile.get_income_display()
        jobIndustry=userBaiscProfile.jobIndustry
        city=userBaiscProfile.city
+       country=userBaiscProfile.country
        followStatus=0
        #判断头像是否通过审核
        if userBaiscProfile.avatar_name_status=='3':
@@ -254,7 +256,7 @@ def matchResultList_to_CardMobileList(myId,matchResultList):
        else:
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
-       recommendResult=CardMobile(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
+       recommendResult=CardMobile(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,country)
        recommendResult.limit_fileds()
        recommendResultList.append(recommendResult)
     return recommendResultList
@@ -274,6 +276,7 @@ def userProfileList_to_CardMobileList(myId,userProfileList):
        education=userProfile.get_education_display()
        income=userProfile.get_income_display()
        jobIndustry=userProfile.jobIndustry
+       country=userProfile.country
        followStatus=0
        city=userProfile.city
        #判断头像是否通过审核
@@ -283,7 +286,7 @@ def userProfileList_to_CardMobileList(myId,userProfileList):
        else:
            avatar_name=DEFAULT_IMAGE_NAME
            isVote=False
-       recommendResult=CardMobile(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
+       recommendResult=CardMobile(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,country)
        recommendResult.limit_fileds()
        recommendResultList.append(recommendResult)
      return recommendResultList
@@ -312,6 +315,7 @@ def fllowList_to_CardMobileList(myId,fllowList,type):
         education=userProfile.get_education_display()
         income=userProfile.get_income_display()
         jobIndustry=userProfile.jobIndustry
+        country=userProfile.country
         followStatus=0
         if userProfile.avatar_name_status=='3':
            avatar_name=userProfile.avatar_name
@@ -323,7 +327,7 @@ def fllowList_to_CardMobileList(myId,fllowList,type):
             avatar_name=userProfile.avatar_name
             isVote=False
         city=userProfile.city
-        recommendResult=CardMobile(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city)
+        recommendResult=CardMobile(userId,username,avatar_name,height,age,education,income,jobIndustry,followStatus,isVote,city,country)
         recommendResult.limit_fileds()
         recommendResultList.append(recommendResult)
     return recommendResultList 
