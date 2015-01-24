@@ -153,6 +153,8 @@ class UserProfile(models.Model, UploadAvatarMixIn):
         if  isinstance(self.city,basestring) and len(self.city.encode('gbk'))>limit_length:
             if self.city.find(u' ')!=-1:
                 return self.city[:self.city.find(u' ')]
+        else:
+            return self.city
     streetAddress = models.CharField(verbose_name=r"街道地址", max_length=255,null=True,blank=True,)
     INCOME_CHOICES = ((-1,"未填"),(1,"5万以下"))
     for income in range(5,100,1):  
