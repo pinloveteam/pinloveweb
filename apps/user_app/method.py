@@ -31,6 +31,7 @@ def user_info_mobile(userId,myId):
                         'city' :  userProfile.limit_city_length(),
                         'height' :('%s%s' % (userProfile.height,'厘米')) if userProfile.height!=-1 else userProfile.height,
                         'education' : userProfile.get_education_display(),
+                        'country' : userProfile.country,
                         'income' : userProfile.get_income_display(),
                         'trade' : userProfile.get_jobIndustry_display(),
                         'constellation' : userProfile.get_sunSign_display(),
@@ -40,7 +41,9 @@ def user_info_mobile(userId,myId):
     #判断信息是否未填
     for  key in data.keys():
         if data[key] in missing_value:
-            data[key]='未填'
+            data[key]=u'未填'
+    if data['city']!=u'未填':
+        data['city']=data['country']+data['city']
     from apps.recommend_app.views import get_socre_for_other
     socreForOther=get_socre_for_other(myId,userId)
     data['voteScore']=-1
