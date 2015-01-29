@@ -245,7 +245,7 @@ def info_detail(request,userId,template_name='mobile_info.html'):
         from apps.user_app.method import user_info_mobile
         args=user_info_mobile(int(userId),request.user.id,)
         from apps.friend_dynamic_app.method import get_pic
-        args['picList']=get_pic(request.user.id)
+        args['picList']=get_pic(int(userId))
         #获取标签信息
         tagList=UserTag.objects.select_related('tag').filter(user_id=userId,type=0)
         tags=[]
