@@ -15,7 +15,7 @@
 
         }      
         #uploadAvatarBtns{
-          height: 50px;
+          /*height: 50px;*/
           opacity: 0.5;
           background-color: rgb(213, 213, 193);
         }
@@ -268,15 +268,13 @@
     
     <div id="uploadAvatarCropResult" style="display: none;"></div>
      </div>
-     <div class="row" >
-      <div id="uploadAvatarBtns" >
+     <div class="row" id="uploadAvatarBtns" >
+       <center>
          <div class="col-xs-2">
-           <center>
-            <span id="uploadAvatarCropSubmit">{{ CROP_IMAGE }}</span>
+           <button id="uploadAvatarCropSubmit" type="button" class="btn btn-success">{{ CROP_IMAGE }}</button>
         <!--  <span class="rotate_right" >旋转</span>-->
-           </center>
          </div>
        
-      </div>
+       </center>
       </div>
 {% endblock %}

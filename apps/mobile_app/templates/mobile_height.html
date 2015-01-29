@@ -19,6 +19,7 @@ categories=['160', '165', '170', '175', '180', '185', '190', '195'];
 series_data=[{{grade_for_other.heighty1}},{{grade_for_other.heighty2}},{{grade_for_other.heighty3}},{{grade_for_other.heighty4}},{{grade_for_other.heighty5}},{{grade_for_other.heighty6}},{{grade_for_other.heighty7}},{{grade_for_other.heighty8}}]
 {% endifequal %}
 $(document).ready(function () {
+	try{
 	var chart = new Highcharts.Chart({
 	    		
 	    	    chart: {
@@ -50,6 +51,9 @@ $(document).ready(function () {
 	    		},
 	    	    plotOptions: {
 	    	        series: {
+	    	        	marker: {
+                            radius: 8,  //曲线点半径，默认是4
+                        },
 	    	            cursor: 'ns-resize',
 	    	            point: {
 	    	                events: {
@@ -132,7 +136,9 @@ $(document).ready(function () {
 	                            });
 	                            return false;
 	                        });
-	    
+	}catch(e){ 
+		alert(e)
+	}
 	    });
 	    
 	</script>

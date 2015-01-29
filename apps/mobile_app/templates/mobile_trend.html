@@ -37,8 +37,8 @@ function init_dynamic(dynamicList){
 		dynamic.find('#content').html(this.content);
 		dynamic.find('#agreeNum').html(this.argeeNum);
 		dynamic.find('#dynamicId').val(dynamicObj.id);
-		if(userId==this.publishUserId){
-			dynamic.find('.comment').before('<a class="trend-like delete" href="javascript:void(0);">删除</a>');
+		if(userId!=this.publishUserId){
+			dynamic.find('.delete').remove();
 		}
 		if(this.type==2){
 			dataList=Array();
@@ -342,15 +342,21 @@ function del_dynamic(e){
 			</div>
 			<div class="row">
 				<div class="col-xs-2">
-
 				</div>
-				<div class="col-xs-6">
-					<i class="glyphicon glyphicon-heart-empty text-pink"></i>
-					<span id="agreeNum"  class="trend-like text-gray">1</span>
+				<div class="col-xs-10">
+				   <div class="row">
+				      <div class="col-xs-4">
+				       <i class="glyphicon glyphicon-heart-empty text-pink"></i><span id="agreeNum"  class="trend-like text-gray">1</span>
+				      </div>
+				      <center class="col-xs-5">
+				        <a class="trend-like delete" href="javascript:void(0);">删除</a>
+				      </center>
+				      <div class="col-xs-3" style="text-align: right;">
+				          <i class="glyphicon glyphicon-comment text-blue comment"></i>
+				      </div>
+				   </div>
 				</div>
-				<div class="col-xs-3" style="text-align: right;">
-					<i class="glyphicon glyphicon-comment text-blue comment"></i>
-				</div>
+				
 			</div>
 		</div>
 		</div>

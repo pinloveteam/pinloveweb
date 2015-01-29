@@ -69,6 +69,8 @@
 				if(userList.length==2){
 					var score_frame=$('.score-frame').clone();
 					score_frame.find('#userId').val(userList[1].userId);
+				    var t = $("#frame_radar").offset().top;
+				    $(window).scrollTop(t);
 					if(userList[1].scoreMy>=0){
 						score_frame.find('.score-my').html(userList[1].scoreMy);
 					}else{
@@ -196,7 +198,7 @@ current = $(e);
 				</center >
 			</div>
 		</div>
-		<div class="frame">
+		<div id='frame_radar' class="frame">
 			<center class="row ">
 				<canvas class="radar" height="290px" width="290px"></canvas>
 			</center>
