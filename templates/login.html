@@ -11,7 +11,13 @@
 		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.scrollUp.min.js"></script>
 		<link href="{{STATIC_URL}}css/login.css" rel="stylesheet">
 		<script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
+		<script src="{{STATIC_URL}}js/common.js" type="text/javascript" charset="utf-8"></script>
 		<title>拼爱网 </title>
+		<script type="text/javascript">
+			if(!is_PC()){
+				window.location.href='/mobile/'
+			}
+		</script>
 	</head>
 	<body>
 		<div class="stage" style="background-color: #5DA6CF;;">

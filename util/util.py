@@ -94,6 +94,7 @@ def is_guide(userId,guide,guideField):
         return False
     else:
         return True
+    
 '''
 距离现在的时间
 @param dateTime:datetime 

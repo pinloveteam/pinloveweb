@@ -71,12 +71,17 @@ color:red;
 		$('#id_email').change(function(){
 	    	flag=true;
 	    	error_message=null
+	    	re = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
 	    	error=$('#email_error')
 	    	var email=$('#id_email').val().trim();
 	    	if (email.length==0){
 	    		error_message='邮箱不能为空!';
 	    		flag=false;
-	    	}else{
+	    	}else if(re.test(email)){
+	    		error_message='邮箱格式不对!';
+	    		flag=false;
+	    	}
+	    	else{
 	    	  $.ajax({
 	    		type:'get',
 	    		data:{email:email,type:'check_email'},

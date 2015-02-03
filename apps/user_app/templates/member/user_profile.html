@@ -164,7 +164,7 @@ $(document).ready(function() {
 		$('.vip-panel').hide();
 		$(href).show();
 		window.location.hash=href+'_'
-		//init_weight_guide(href)
+		init_weight_guide(href)
 	});
 	
 	$('.cerbtn').click(function(){
@@ -206,6 +206,7 @@ function init_tab(){
 	$('.vip-panel').hide();
 	$(tab).show();
 }
+//引导
 function init_weight_guide(href){
 	if(href=='#weight'){
 	var tour = {
@@ -217,8 +218,7 @@ function init_weight_guide(href){
 				placement : "top"
 			}]
 		};
-	x=$('#_x').html()
-	num=x.substring(0,x.indexOf('%'))
+	num=$('#surplus').html()
 	if(num=='100'){
 			hopscotch.startTour(tour);
 		}

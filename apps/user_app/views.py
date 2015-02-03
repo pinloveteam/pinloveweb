@@ -75,6 +75,13 @@ def detailed_info(request):
             args=detailed_info_div(request.user.id,userId,compareId)
         else:
             args=detailed_info_div(request.user.id,userId)
+        #引导
+        guide=UserProfile.objects.get(user=request.user).guide
+        from util.util import is_guide
+        if not is_guide(request.user.id,guide,'compareButton'):
+            args['compare_guide']=True
+        else:
+            args['compare_guide']=False
     except Exception as e:
         logger.exception('用户详细信息，出错!')
         args={'result':'error','error_message':e.message}

@@ -3,6 +3,8 @@
 {% block staticfiles %}
   <link rel="stylesheet" type="text/css" href="/static/css/dragdealer.css" />
   <script src="/static/js/dragdealer.min.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/hopscotch-0.1.2.min.css"/>
+  <script src="{{ STATIC_URL }}js/hopscotch-0.1.2.min.js" type="text/javascript"></script>
 {% endblock %}
 {% block js %}
 <script>
@@ -91,7 +93,28 @@ $(document).ready(function(){
           });
 			  return false;
 		});
+	 
+	 
+	 init_weight_guide();
 });	
+//引导
+function init_weight_guide(){
+	var tour = {
+			id : "hello-hopscotch",
+			steps : [{
+				title : "身高权重",
+				content : "拖动这里，可以设置对方的身高权重",
+				target : "heightweight",
+				placement : "right",
+				yOffset:-23,
+				xOffset:30,
+			}]
+		};
+	num=$('#surplus').html()
+	if(num=='100'){
+			hopscotch.startTour(tour);
+		}
+	}
 </script>
 {% endblock %}
 {% block content %}
@@ -128,7 +151,7 @@ $(document).ready(function(){
 					<div class="col-xs-9">
 						<div id="slidera" class="dragdealer">
 							<div class="handle red-bar">
-								<span class="value"></span>%
+								<span id="heightweight" class="value"></span>%
 							</div>
 						</div>
 						<input type="hidden" name="height" value="{{heightweight}}">

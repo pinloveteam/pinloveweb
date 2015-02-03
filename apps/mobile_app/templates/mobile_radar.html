@@ -15,7 +15,7 @@
             			$(this).html('取消对比');
             			type='del'
             		}
-            		window.location.href='/mobile/radar_compare/?type='+type+'&userId='+userList[0].userId
+            		window.location.href='/mobile/radar_compare/?type='+type+'&userId='+userList[0].userId+'&prevUrl='+get_url_param('prevUrl')
             	});
             	
             	$('.btn-score-my').click(function() {

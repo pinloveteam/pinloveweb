@@ -12,7 +12,6 @@
     <link href="{{STATIC_URL}}css/poplayer.css" rel="stylesheet">
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.poplayer.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.loading.js"></script>
-    <script src="{{STATIC_URL}}js/jquery.loading.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{STATIC_URL}}js/common.js" type="text/javascript" charset="utf-8"></script>
     <script>
     $(document).ready(function() {
@@ -140,7 +139,7 @@ var isChard=false;
 var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
 //拉取信息数量
 var time=1000*5;
-interval = self.setInterval("polling()", time);  
+interval = self.setInterval("polling()", time);   
  var polling=function(){
 	 var data={};
 	  if(isChard){
@@ -175,22 +174,6 @@ function set_count(noReadCount){
 }
 
 
-// 从Cookie获得信息
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 </script>
 
 {% endblock %}

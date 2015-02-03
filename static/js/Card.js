@@ -8,7 +8,7 @@ var compare_flag=false;
 //选择用户
 var check_id=null;
 var diaogList={user1:[null,null,null,],user2:null};
-var mgr = hopscotch.getCalloutManager(),
+var mgr = hopscotch.getCalloutManager();
 state = hopscotch.getState();
 //判断是不是有card页面
 isChard=true;
@@ -421,7 +421,9 @@ window.Card = function(person){
 							title : "对比信息",
 							content : "点击头像就可以进行信息对比",
 							target : 'compare_img',
-							placement : "bottom"
+							placement : "bottom",
+							yOffset:-200,
+							xOffset:100
 						}]
 					};
 			 
@@ -528,15 +530,21 @@ window.Card = function(person){
 						
 					}
 					$.poplayer(options);
+					guide=data.compare_guide
 					if(compare_flag){
 						//取消对比
 						$('#compare_button').click(function(){
-							 compare(userId,2,false)
+							 compare(userId,2,guide)
 						 })
 					}else{
 						$('#compare_button').click(function(){
-							 compare(userId,1,false)
+							 compare(userId,1,guide)
 						 });
+						if(guide){
+							//对比引导
+							compare_radar_button_guide();
+						}
+						
 					}
 					$("div.dragdealer").closest('.row').find('#appearancevote').click(function(){
 						vote(this);
@@ -749,4 +757,19 @@ function get_card_chat(num){
 	   });
 	   };
 	  
+}
+
+//对比引导按钮
+function compare_radar_button_guide(){
+	var compare_radar_button = {
+			id : "compare_radar_button_hopscotch",
+			steps : [{
+				title : "与其他用户进行对比",
+				content : "点击按钮可以与其他用户进行对比",
+				target : "compare_button",
+				placement : "bottom",
+				xOffset:20
+			}]
+		};
+		hopscotch.startTour(compare_radar_button);
 }

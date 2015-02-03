@@ -1,21 +1,352 @@
-﻿<!DOCTYPE html>
-{% load tz %}
-<head>
-  <title>Pusher Test  </title>
-  <script src="//js.pusher.com/2.2/pusher.min.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    // Enable pusher logging - don't include this in production
-    Pusher.log = function(message) {
-      if (window.console && window.console.log) {
-        window.console.log(message);
-      }
-    };
+﻿<imgSel>
+<div id="uploadAvatar">
+ <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}imgareaselect/css/imgareaselect-default_1.css" type="text/css" />
+    <script type="text/javascript" src="{{ STATIC_URL }}imgareaselect/jquery.imgareaselect_1.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jQueryRotate.js"></script>
+    
+    <style type="text/css">
+        #uploadAvatarBtnLayout {
+            position: relative;
+        }
+        
+        #uploadAvatarBtnLayout {
+            overflow: hidden;
+        }
+        
+        #uploadAvatarBtnLayout button {
+           /*  width: 100%;
+            height: 100%; */
+        }
+        
+        #uploadAvatarInputFile {
+            position: absolute;
+            top: 0;
+            left: -20px;
+            font-size: 300%;
+        }
+        
+        #uploadAvatarSelectArea {
+            width: {{ crop_image_area_size }}px;
+            height: {{ crop_image_area_size }}px;
+            border: 1px solid #74BADD;
+            overflow: hidden;
+            /*float: left;*/
+            margin-left: 100px;
+            background:url("{{STATIC_URL}}img/信息设置-29.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+            
+           display:inline-block;
+           text-align:center;
+           
+           /*非IE的主流浏览器识别的垂直居中的方法*/
+           display: table-cell;
+           vertical-align:middle;
+           /*设置水平居中*/
+           text-align:center;
+           /* 针对IE的Hack */
+         
 
-    var pusher = new Pusher('96c2a47c4f074b2cc22e');
-    var channel = pusher.subscribe('private_{{chanel}}');
-    channel.bind('my_event', function(data) {
-      alert(data.message);
-    });
-  </script>
-</head>
-{{user.id}}{{user.username}}  --{{tz}}
+
+        }
+        
+        #uploadAvatarSelectArea img{
+          vertical-align:middle;
+        }
+        #uploadAvatarPreviewArea {
+           float: right;
+            position: relative;
+            right: 50px;
+            top:-360px;
+      
+        }
+        
+        .rotate_revolve{
+           height: 20px;
+           padding-top: 15px;
+           width: 106px;
+           left: 120px;
+           position: relative;
+        }
+        .rotate_left{
+           cursor: pointer;
+        }
+        .rotate_right{
+           left: 20px;
+           position: relative;
+           cursor: pointer;
+        }
+         /*#uploadAvatarCropSubmit{
+			 left: 140px;
+    position: absolute;
+    top: 120px;
+
+		}*/
+        {% for p in preview_areas %}
+            #uploadAvatarPreviewArea{{ p.size }} {
+                /* vertical-align:middle; */
+                width: {{  p.size }}px;
+                height: {{ p.height }}px;
+                border: 1px solid #ddd;
+                overflow: hidden;
+               /* border-radius:50%;*/
+                background:url("{{STATIC_URL}}img/信息设置-{{ p.size }}.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+            }
+        {% endfor %}
+    </style>
+    
+    <script type="text/javascript">
+        $(function(){
+            $('#uploadAvatarBtnLayout button').click(function(){
+                return false;
+            });
+            
+            var input_width = 0;
+            var input_height = 0;
+            
+            $('#uploadAvatarBtnLayout').find('.btn').click(function(){
+            	$('#uploadAvatarInputFile').click();
+            })
+            $('#uploadAvatarInputFile').css({opacity: 0}).width(input_width + 50).height(input_height).change(function(){
+                if($(this).val() == ''){return;}
+                var $last_img = $('#uploadAvatarSelectArea img');
+                if($last_img.length) {
+                    var img_obj = $last_img.imgAreaSelect({instance: true});
+                    img_obj.remove();
+                }
+                $('#uploadAvatarSelectArea').empty();
+                $('#uploadAvatarPreviewArea div').empty();
+                var p = new RegExp(/\.(jpg|jpeg|png|gif)$/);
+                var fileanme = $(this).val().toLowerCase().replace(/^\s+|\s+$/g, '');
+                if(!p.test(fileanme)){alert("{{ INVALID_IMAGE }}"); return;}
+                $('#uploadAvatarForm').submit();
+                $(this).val('');
+                $('#uploadAvatarCropSubmit').removeAttr('disabled');
+            });
+            
+            
+            $('#uploadAvatarCropSubmit').click(function(){
+                $(this).attr('disabled', 'disabled');
+                var x1 = $('#uploadAvatarValueX1').val();
+                var y1 = $('#uploadAvatarValueY1').val();
+                var x2 = $('#uploadAvatarValueX2').val();
+                var y2 = $('#uploadAvatarValueY2').val();
+                if((x1 != "" ||  x2 != "" ) && (x1-x2==0)){
+                	 var body=$('<p>请选择区域!</p>')
+                     $.poplayer({body:body});
+                	 $(this).removeAttr('disabled');
+                	 return false;
+                }
+                if(x1 == "" || y1 == "" || x2 == "" ||y2 == "") {
+                    $(this).removeAttr('disabled');
+                    return false;
+                }
+                
+                $('#uploadAvatarCropForm').submit();
+                $('#uploadAvatarValueX1').val('');
+                $('#uploadAvatarValueY1').val('');
+                $('#uploadAvatarValueX2').val('');
+                $('#uploadAvatarValueY2').val('');
+                rotate_value=0;	
+                $(this).removeAttr('disabled');
+                return false;
+            });
+            
+            $('.rotate_left,.rotate_right').click(function(){
+            	if($('#uploadAvatarSelectArea img').length=0){
+            		return false;
+            	}
+            	if($(this).attr('class')=='rotate_left'){
+            		rotate_value-=90;
+            	}else{
+            		rotate_value+=90;
+            	};
+            	$('#rotate_value').val(rotate_value)
+            	var images=$('#uploadAvatarSelectArea img');
+            	$('div[id^="uploadAvatarPreviewArea"] img').each(function(){
+            		$(this).rotate({animateTo:rotate_value});
+            	});
+            	images.rotate({ 
+            		animateTo:rotate_value,
+            		callback: function(){ 
+            			img_width = images.width();
+                        img_height = images.height();
+                        var sel = {};
+                        sel['x1'] = Math.round(img_width/2-70 > 0 ? img_width/2-70 : 0),
+                        sel['y1'] = Math.round(img_height/2-87.5 > 0 ? img_height/2-87.5 : 0),
+                        sel['x2'] = Math.round(img_width/2+70 > img_width ? img_width : img_width/2+70),
+                        sel['y2'] = Math.round(img_height/2+87.5 > img_height ? img_height : img_height/2+87.5),
+                        sel['width'] = 140;
+                         if(rotate_value%180){
+                        	imgSelect.setAngelNum(1)
+                        }else{
+                        	imgSelect.setAngelNum(0)
+                        }  
+                        
+                        updateCoors({'width': img_width}, sel);
+                    }
+            		});
+            	
+            	
+            	
+            });
+        });
+        
+        function upload_avatar_error(error_msg) {
+            alert(error_msg);
+        };
+        
+        var imgSelect;
+        function upload_avatar_success(image_url) {
+            $('#uploadAvatarSelectArea').empty();
+            $('#uploadAvatarPreviewArea div').empty();
+            $('#uploadAvatarPreviewArea div').append('<img />');
+            $('#uploadAvatarPreviewArea div img').attr('src', image_url);
+            
+            $('#uploadAvatarSelectArea').append('<img />');
+            $('#uploadAvatarSelectArea img').attr('src', image_url).css('vertical-align','middle').load(function(){
+                $(this).unbind('load');
+                
+                var img_width = $(this).width();
+                var img_height = $(this).height();
+                
+                
+                if(img_width > {{ crop_image_area_size }} || img_height > {{ crop_image_area_size }}) {
+                    if(img_width >= img_height) {
+                        $(this).css('width', "{{ crop_image_area_size }}px");
+                    }
+                    else {
+                        $(this).css('height', "{{ crop_image_area_size }}px");
+                    }
+                }
+                
+                img_width = $(this).width();
+                img_height = $(this).height();
+                
+                var sel = {};
+                sel['x1'] = Math.round(img_width/2-70 > 0 ? img_width/2-70 : 0),
+                sel['y1'] = Math.round(img_height/2-87.5 > 0 ? img_height/2-87.5 : 0),
+                sel['x2'] = Math.round(img_width/2+70 > img_width ? img_width : img_width/2+70),
+                sel['y2'] = Math.round(img_height/2+87.5 > img_height ? img_height : img_height/2+87.5),
+                sel['width'] = 140;
+                window.console.log(img_width+" "+img_height);
+                window.console.log(sel);
+                imgSelect=$(this).imgAreaSelect({
+                    handles: true,
+                    aspectRatio: "4:5",
+                    fadeSpeed: 100,
+                    minHeight: 120,
+                    minWidth: 96,
+                    x1: sel.x1,
+                    y1: sel.y1,
+                    x2: sel.x2,
+                    y2: sel.y2,
+                    show:true,
+                    instance:true,
+                    parent:'#uploadAvatarSelectArea',
+                    onSelectChange: updateCoors
+                });
+                
+                updateCoors({'width': img_width}, sel);
+            });
+            
+            $('div[id^="uploadAvatarPreviewArea"]:gt(0)').css("background-image","url('')"); 
+            $('#uploadAvatarSelectArea').css("background-image","url('')"); 
+        };
+        
+        function updateCoors(img, selection) {
+          $("#uploadAvatarValueX1").val(selection.x1);
+          $("#uploadAvatarValueY1").val(selection.y1);
+          $("#uploadAvatarValueX2").val(selection.x2);
+          $("#uploadAvatarValueY2").val(selection.y2);
+          
+          {% for p in preview_areas %}
+            updatePreview{{ p.size }}(img, selection);
+          {% endfor %}
+        };
+        
+        {% for p in preview_areas %}
+            function updatePreview{{ p.size }}(img, selection) {
+              if(parseInt(selection.width) > 0) {
+                var ratiox = {{ p.size }} / selection.width;
+             /*   console.log('selection:('+selection.x1+','+selection.y1+'),,('+selection.x2+','+selection.y2+')')  */
+                if(rotate_value%180==0){
+                $("#uploadAvatarPreviewArea{{ p.size }} img").css({
+                  width: Math.round(ratiox * img.width) + 'px',
+                  marginLeft: '-' + Math.round(ratiox * selection.x1) + 'px',
+                  marginTop: '-' + Math.round(ratiox * selection.y1) + 'px'
+                });
+                }else{
+                	curenImg=$("#uploadAvatarPreviewArea{{ p.size }} img");
+                	var adjust=(curenImg.height()-curenImg.width())/2;
+                	ratiox = {{ p.size }} / selection.width;
+                	/* console.log(Math.round(ratiox * selection.x1)+'===='+Math.round(ratiox * selection.y1)+'========='+adjust);
+                	console.log(ratiox); */
+                	$("#uploadAvatarPreviewArea{{ p.size }} img").css({
+                		width: Math.round(ratiox * img.width) + 'px',
+                        marginLeft: 0-(Math.round(ratiox * selection.x1)-adjust) + 'px',
+                        marginTop: 0-(Math.round(ratiox * selection.y1)+adjust)+ 'px'
+                      }) ;	
+                };
+              }
+            };
+        {% endfor %}
+        
+        function crop_avatar_success(msg,avatar_name) {
+        	var body = $('<p>'+msg+'</p>');
+        	$.poplayer({body:body});
+        	$('#avatar').attr('src',avatar_name+'-100.jpeg')
+        };
+        var rotate_value=0;
+        
+    </script>
+    <div class="tip">
+
+</div>
+    <form id="uploadAvatarCropForm" action="{% url 'uploadavatar_crop' %}" method="post" target="uploadAvatarIframe" style="display: none;">
+        {% csrf_token %}
+        <input id="uploadAvatarValueX1" type="text" name="x1"/>
+        <input id="uploadAvatarValueY1" type="text" name="y1"/>
+        <input id="uploadAvatarValueX2" type="text" name="x2"/>
+        <input id="uploadAvatarValueY2" type="text" name="y2"/>
+        <input id="rotate_value" type="text" name="rotate" value="0"/>
+    </form>
+    
+    
+    
+    <div id="uploadAvatarUploadArea" style="position: relative;">
+        <form id="uploadAvatarForm" action="{% url 'uploadavatar_upload' %}" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="uploadAvatarBtnLayout" >
+                <h5>请上传清晰美观的个人近照，给别人留下美好的第一印象。</h5>
+                <button class="btn btn-danger">{{ CHOOSE_IMAGE }}</button>
+                <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
+                <span class="text-muted">
+                 <small>支持jpg, gif, png格式，照片文件大小需在20K – 8M 之间。</small>
+                 </span>
+            </div>
+        </form>
+    </div>
+    <br>
+    <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
+    
+    <div id="uploadAvatarSelectArea"></div>
+    <div class="rotate_revolve">
+      <img class="rotate_left" src="{{STATIC_URL}}img/rotate_left.png"/>
+      <img class="rotate_right" src="{{STATIC_URL}}img/rotate_right.png"/>
+    </div>
+    <div id="uploadAvatarPreviewArea">
+        {% for p in preview_areas %}
+        <p>{{ p.text }}</p>
+        <div id="uploadAvatarPreviewArea{{ p.size }}"></div>
+        {% endfor %}
+    </div>
+    
+    <div style="clear: both;"></div>
+    
+    <div id="uploadAvatarBtns">
+        <button id="uploadAvatarCropSubmit" class="btn btn-pink btn_self_info btn-save" disabled="disabled">{{ CROP_IMAGE }}</button>
+    </div>
+    
+    <div id="uploadAvatarCropResult" style="display: none;"></div>
+</div>
+</imgSel>

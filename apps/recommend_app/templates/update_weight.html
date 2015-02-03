@@ -92,16 +92,16 @@ $(document).ready(function(){
 您最看中TA的哪些方面？是身高还是学历？请标出 TA的各个方面在您心中的重要程度，以帮助系统更好的向您推荐。TA的总分由您定义的权重和TA在各个方面得分累积计算得出：
 </p>
 <p>总分=身高权重×身高得分+外貌权重×外貌得分+学历权重×学历得分+外貌权重×收入得分+性格权重×性格得分</p>
-<form id="update_weight" action="" method="post">
+<form id="update_weight" action="" method="post">{% csrf_token %}
      <div class="row" style="margin-top: 30px;">
 			<div class="col-xs-1">身高</div>
 			<div class="col-xs-11">
 				<div id="slidera" class="dragdealer">
 					<div class="handle red-bar">
-						<span class="value"></span>%
+						<span id="heightweight" class="value"></span>%
 					</div>
 				</div>
-				<input type="hidden" name="height" value="{{heightweight}}">
+				<input  type="hidden" name="height" value="{{heightweight}}">
 			</div>
 		</div>
 		<div class="row" style="margin-top: 30px;">

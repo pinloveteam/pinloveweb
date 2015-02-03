@@ -241,7 +241,7 @@ def register_user(request,template_name='login.html') :
             from apps.user_score_app.method import get_score_by_invite_friend_login,get_score_by_user_login
             get_score_by_user_login(request.user.id)
             url=request.path
-            url='%s%s'%(url[0:(url.find('/',1))],'/loggedin/previous_page=register')
+            url='%s%s'%(url[0:(url.find('/',1))],'/loggedin/?previous_page=register')
             return HttpResponseRedirect(url)
         else : 
             args['user_form'] = userForm

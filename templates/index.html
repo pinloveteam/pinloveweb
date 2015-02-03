@@ -23,6 +23,13 @@ $(document).ready(function(){
 guide_1=false;
 function guide(){
 	//向导
+	var url=window.location.pathname;
+	var title=$('title').html();
+	var state = {
+                title: title,
+                url: url,
+                };
+    window.history.replaceState(state, title, url) 
 	var firstCard=$('.card_row').children(":first");
 	firstCard.find('.username').attr('id','card-name');
 	firstCard.find(".glyphicon").attr('id','like')

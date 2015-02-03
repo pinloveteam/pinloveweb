@@ -210,7 +210,7 @@ def character_tags(request):
             UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOhterList)
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
-            cal_recommend(request.user.id,['userExpect']) 
+            cal_recommend(request.user.id,['userExpect','tag']) 
             args['result']='success'
             json=simplejson.dumps(args)
         return HttpResponse(json)

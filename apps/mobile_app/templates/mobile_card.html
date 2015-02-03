@@ -1,3 +1,5 @@
+<script src="{{STATIC_URL}}js/hopscotch-0.1.2.min.js" type="text/javascript"></script>
+<link href="{{STATIC_URL}}css/hopscotch-0.1.2.min.css" rel="stylesheet">
 <style>
 #cardList a{
 color: #333;
@@ -51,7 +53,7 @@ function init_card(cards){
 		{% if has_recommend %}
 		template.find('.radar').click(function(){
 			userId=$(this).closest('.row').find('.userId').val();
-			window.location.href='/mobile/radar/'+userId+'/'
+			window.location.href='/mobile/radar/'+userId+'/?prevUrl='+encodeURIComponent(window.location.pathname)
 		});
 		{% else %}
 		template.find('.radar').click(function(){
@@ -99,6 +101,82 @@ $(window).scroll( function() {
 		}
 }); 
 
+</script>
+<script>
+$(function(){
+	{%if first%}
+	guide()
+	{%endif%}
+	if(get_url_param('compare_guide')){
+		guide_compare_radar();
+	}
+	
+})
+function guide(){
+	var url=window.location.pathname;
+	var title=$('title').html();
+	var state = {
+                title: title,
+                url: url,
+                };
+	//向导
+	var firstCard=$('#cardList').find('.frame:eq(1)');
+	$('.self').find('.img-circle').attr('id','self-info');
+	firstCard.find(".avatar_name").attr('id','other-info')
+	firstCard.find('.radar').attr('id','radar');
+	var tour = {
+		id : "hello-hopscotch",
+		steps : [
+		 {
+			title : "修改详细信息",
+			content : "点击头像名字修改个人信息",
+			target : "self-info",
+			placement : "bottom",
+			xOffset:10
+		}, {
+			title : "查看TA的信息",
+			content : "点击头像名字可以查看TA的信息",
+			target : "other-info",
+			placement : "bottom",
+			xOffset:10
+		},{
+			title : "显示雷达图",
+			content : "点击按钮显示或对比雷达图",
+			target : "radar",
+			placement : "left",
+			xOffset:40,
+			yOffset:-20,
+		}]
+	};
+	hopscotch.startTour(tour);
+	/*hopscotch.listen('end', function(){
+		firstCard.find('.name').css('top','307px');
+		firstCard.find('.tag').css('top','-20px');
+	});
+	hopscotch.listen('close', function(){
+		firstCard.find('.name').css('top','307px');
+		firstCard.find('.tag').css('top','-20px');
+	});*/
+	
+}
+
+function guide_compare_radar(){
+	$('#cardList').children(':eq(0)').find('.radar').attr('id','radar')
+	var tour_compare = {
+			id : "tour-compare-hopscotch",
+			steps : [
+			 {
+				 title : "显示雷达图",
+					content : "点击按钮显示或对比雷达图",
+					target : "radar",
+					placement : "left",
+					xOffset:40,
+					yOffset:-20
+			}]
+		};
+	
+	hopscotch.startTour(tour_compare);
+};
 </script>
 <div id="card_clone" style="display: none;">
      <div class="frame">
