@@ -457,7 +457,7 @@ def register_by_three_party(request):
         #创建第三方登录表信息
         user=create_user(confirmInfo.cleaned_data['username'],DEFAULT_PASSWORD,**kwarg)
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
-        create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'],**kwarg)
+        create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'])
         login(request,user.username,DEFAULT_PASSWORD)
         if request.get('channel')==u'mobile':
             return HttpResponseRedirect('/mobile/loggedin/')

@@ -4,7 +4,7 @@ import os
 import hashlib
 import time
 from functools import wraps
-
+import logging
 from PIL import Image
 
 from django.http import HttpResponse
@@ -38,7 +38,8 @@ from apps.upload_avatar.app_settings import UPLOAD_AVATAR_MIX_SIZE,\
     UPLOAD_AVATAR_FORMAT
 from django.http.response import HttpResponseServerError
 from django.shortcuts import render
-
+import simplejson
+logger=logging.getLogger(__name__)
 
 
 border_size = UPLOAD_AVATAR_WEB_LAYOUT['crop_image_area_size']
@@ -140,6 +141,7 @@ def crop_avatar(request):
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['NO_IMAGE'])
     
     orig_w, orig_h = orig.size
+    global  border_size 
     if request.POST.get('border_size',False):
         border_size=int(request.POST.get('border_size',False))
     if orig_w <= border_size and orig_h <= border_size:
@@ -149,12 +151,10 @@ def crop_avatar(request):
             ratio = float(orig_w) / border_size
         else:
             ratio = float(orig_h) / border_size
-            
+         
+    #logger.exception('------------------------'+simplejson.dumps(request.POST))
     box = [int(x * ratio) for x in [x1, y1, x2, y2]]
-    if request.POST.get('rotate',False):
-        rotate=0-int(float(request.POST['rotate']))
-        if rotate!=0:
-            orig=orig.rotate(rotate)
+
     avatar = orig.crop(box)
     avatar_name, _ = os.path.splitext(upim.image)
     count = UserProfile.objects.filter(user_id=get_uid(request)).count()

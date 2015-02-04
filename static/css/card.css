@@ -304,17 +304,11 @@ hr {
 	margin-right: 1px;
 }
 
-/* icon */
-.icon_ding, .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3, .icon_dislike {
-	margin-right: 3px;
-	display: inline-block;
-	height: 32px;
-	width: 32px;
-}
+
 
 .icon_ding, .icon_like_0, .icon_like_1, .icon_like_2, .icon_like_3, .icon_dislike {
 	height: 20px;
-	width: 24px;
+	width: 24px !important;
 	position: absolute;
 	transition: opacity 0.5s;
 	opacity: 0;
