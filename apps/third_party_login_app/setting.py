@@ -69,8 +69,8 @@ else:
     QQ_MOBILE_CALLBACK_URL=WEB_ROOT+'/mobile/qq_login/'
    
     #sign in with sina
-    SinaAppKey='3477271030'
-    SinaAppSercet='415b5aef35b05962842be73b904ac4e6'
+    SinaAppKey='112291859'
+    SinaAppSercet='a951c7dac0d23e09ed42e6a6377c8723'
     SINA_CALLBACK_URL =WEB_ROOT+'/third_party_login/sina_login/' # callback url
     SINA_MOBILE_CALLBACK_URL =WEB_ROOT+'/mobile/sina_login/'
 
