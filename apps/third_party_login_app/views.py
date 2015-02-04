@@ -459,7 +459,7 @@ def register_by_three_party(request):
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
         create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'])
         login(request,user.username,DEFAULT_PASSWORD)
-        if request.get('channel')==u'mobile':
+        if request.GET.get('channel')==u'mobile':
             return HttpResponseRedirect('/mobile/loggedin/')
         return HttpResponseRedirect('/account/loggedin/?previous_page=register')
     else:
