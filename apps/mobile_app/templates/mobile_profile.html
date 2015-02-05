@@ -236,7 +236,7 @@ function select_school(content){
 					现居地
 				</div>
 				<div class="col-xs-3">
-				  <select id="id_country" name="country" class="form-control" >
+				  <select id="id_country" name="country" class="form-control" autocomplete="off">
 					{%ifnotequal country Null%}
                         <option value="" >请选择</option>
                         <option value="{{country}}" selected="selected">{{country}}</option>
@@ -246,7 +246,7 @@ function select_school(content){
                     </select>
                   </div>
                   <div class="col-xs-3">
-                    <select id="id_stateProvince" name="stateProvince" class="form-control" >
+                    <select id="id_stateProvince" name="stateProvince" class="form-control" autocomplete="off">
                         {%ifnotequal stateProvince Null%}
                         <option value="" >请选择</option>
                         <option value="{{stateProvince}}" selected="selected">{{stateProvince}}</option>
@@ -256,7 +256,7 @@ function select_school(content){
                     </select>
                   </div>
                   <div class="col-xs-3">
-                    <select id="id_city" name="city" class="form-control" >
+                    <select id="id_city" name="city" class="form-control" autocomplete="off">
                         {%ifnotequal city Null%}
                         <option value="" >请选择</option>
                         <option value="{{city}}" selected="selected">{{city}}</option>

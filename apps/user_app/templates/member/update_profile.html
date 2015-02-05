@@ -201,7 +201,7 @@
 						
 				<div class="form-row">
 					<label class="form-label">现居地<span class="text-danger">*</span></label>
-					<select id="id_country" name="country" class="form-input"  style="width: 200px;">
+					<select id="id_country" name="country" class="form-input"  style="width: 200px;" autocomplete="off">
 					{%ifnotequal country Null%}
                         <option value="" >请选择</option>
                         <option value="{{country}}" selected="selected">{{country}}</option>
@@ -209,7 +209,7 @@
                         <option value="" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                    <select id="id_stateProvince" name="stateProvince" class="form-input" >
+                    <select id="id_stateProvince" name="stateProvince" class="form-input" autocomplete="off">
                         {%ifnotequal stateProvince Null%}
                         <option value="" >请选择</option>
                         <option value="{{stateProvince}}" selected="selected">{{stateProvince}}</option>
@@ -217,7 +217,7 @@
                         <option value="" >请选择</option>
                         {%endifnotequal%}
                     </select>
-                    <select id="id_city" name="city" class="form-input" >
+                    <select id="id_city" name="city" class="form-input" autocomplete="off">
                         {%ifnotequal city Null%}
                         <option value="" >请选择</option>
                         <option value="{{city}}" selected="selected">{{city}}</option>

@@ -154,7 +154,9 @@ def crop_avatar(request):
          
     #logger.exception('------------------------'+simplejson.dumps(request.POST))
     box = [int(x * ratio) for x in [x1, y1, x2, y2]]
-
+    rotate=0-int(float(request.POST.get('rotate',0)))
+    if rotate!=0:
+        orig=orig.rotate(rotate)
     avatar = orig.crop(box)
     avatar_name, _ = os.path.splitext(upim.image)
     count = UserProfile.objects.filter(user_id=get_uid(request)).count()
@@ -163,7 +165,6 @@ def crop_avatar(request):
         res = avatar.resize((size[0], size[1]), Image.ANTIALIAS)
         res_name = '%s-%d.%s' % (avatar_name, size[0], UPLOAD_AVATAR_SAVE_FORMAT)
         res_path = os.path.join(UPLOAD_AVATAR_AVATAR_ROOT, res_name)
-        
         
         res.save(res_path, UPLOAD_AVATAR_SAVE_FORMAT, quality=UPLOAD_AVATAR_SAVE_QUALITY)
         
