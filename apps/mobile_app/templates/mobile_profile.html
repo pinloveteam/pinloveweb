@@ -64,6 +64,10 @@ $(document).ready(function(){
 			$('.schoolList').hide();
 		}
 	});
+	
+	$('#id_educationSchool,#id_educationSchool_2').blur(function(){
+		$(this).next().hide();
+	});
 		
 	$('#id_educationSchool,#id_educationSchool_2').bind('input propertychange',function(){
 		var type=null;
