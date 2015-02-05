@@ -15,7 +15,9 @@ $(document).ready(function(){
 	 $(window).load(function() {
 	    	 for(i=0;i<area.length-1;i++)
 	 	        document.getElementById(area[i]).onblur=new Function("change("+(i+1)+")");
-	 	        change(0);
+	    	    for(var i=0;i<3;i++){
+	    	    	change(i);
+	    	    }
 	 	       $('#id_country').bind('change',function(){
 	 	    	  change(1)
 	       		 	});
@@ -44,7 +46,7 @@ $(document).ready(function(){
  }
 
  function change(v){
-  var country=$('#id_country').find("option:selected").text();
+  var country=$('#'+area[v]).find("option:selected").text();
 //  alert(country)
   var str="0";
   for(i=0;i<v;i++){ str+=("_"+(document.getElementById(area[i]).selectedIndex-1));};

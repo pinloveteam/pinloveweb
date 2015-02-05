@@ -18,8 +18,10 @@
    var series_data=[0,0,0,0,0,0,0,0];
    {% ifequal gender 'F' %}
    categories=['160厘米', '165厘米', '170厘米', '175厘米', '180厘米', '185厘米', '190厘米', '195厘米'];
+   series_data=[50,60,70,80,90,80,70,60];
     {%  else %}
     categories=['150厘米', '155厘米','160厘米', '165厘米', '170厘米', '175厘米', '180厘米', '185厘米'];
+    series_data=[60,70,80,90,80,70,60,50];
    {% endifequal %}
    {%ifequal grade_for_other False %}
    {% else %}

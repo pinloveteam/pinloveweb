@@ -69,11 +69,6 @@
 				</a>
 				<em class="icon-recomm header-park-recomm"></em>
 			</li>
-			<li id="game_pintu">
-				<a href="/game/game_pintu/">
-					缘分拼图
-				</a>
-			</li>
 			<li id="member">
 			   <a href="/pay/member/"> 
 			       会员中心
@@ -139,7 +134,7 @@ var isChard=false;
 var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
 //拉取信息数量
 var time=1000*5;
-interval = self.setInterval("polling()", time);   
+interval = self.setInterval("polling()", time); 
  var polling=function(){
 	 var data={};
 	  if(isChard){
