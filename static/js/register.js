@@ -1,7 +1,9 @@
 var area=["id_country","id_stateProvince","id_city"];
 var opt0 = ["请选择","请选择","请选择"]; 
 $(document).ready(function(){
-	
+	for(var i=0;i<3;i++){
+    	change(i);
+    }
 //	     $('#id_stateProvince').bind('change',function(){
 //	    	 getProvinces()
 //   		 	});
@@ -15,9 +17,7 @@ $(document).ready(function(){
 	 $(window).load(function() {
 	    	 for(i=0;i<area.length-1;i++)
 	 	        document.getElementById(area[i]).onblur=new Function("change("+(i+1)+")");
-	    	    for(var i=0;i<3;i++){
-	    	    	change(i);
-	    	    }
+	    	 
 	 	       $('#id_country').bind('change',function(){
 	 	    	  change(1)
 	       		 	});
@@ -47,7 +47,6 @@ $(document).ready(function(){
 
  function change(v){
   var country=$('#'+area[v]).find("option:selected").text();
-//  alert(country)
   var str="0";
   for(i=0;i<v;i++){ str+=("_"+(document.getElementById(area[i]).selectedIndex-1));};
   var ss=document.getElementById(area[v]);
