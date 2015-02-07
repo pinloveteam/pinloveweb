@@ -25,6 +25,7 @@ from django.utils import simplejson
 from pinloveweb.method import create_invite_code
 from django.views.decorators.http import require_POST
 import urllib
+from util import detect_device
 logger = logging.getLogger(__name__)
 ####################
 ######1.0
@@ -59,6 +60,9 @@ def login(request,template_name='login.html',nextUrl='/account/loggedin') :
             args['redirectURL']=redirectURL
         args['user_form']= RegistrationForm() 
         args.update(csrf(request))
+        #检测设备
+        if detect_device.detectTiermobileTablet(request):
+            template_name='mobile_login.html'
         return render(request, template_name, args,) 
     
 def auth_view(request,template_name='login.html') : 
@@ -99,6 +103,11 @@ def auth_view(request,template_name='login.html') :
         #将个人相关信息插入缓存
         from util.cache import init_info_in_login
         init_info_in_login(user.id)
+        #检测推荐信息完善情况
+        from apps.recommend_app.recommend_util import recommend_info_status
+        recommendStatus=recommend_info_status(request)
+        if recommendStatus['result']:
+            request.session['recommendStatus']=simplejson.dumps(recommendStatus['data'])
         #获取登录成=成功跳转地址
         from util.urls import next_url
         redirectURL = next_url(request)
@@ -145,8 +154,15 @@ def loggedin(request,template_name='index.html',**kwargs) :
     #判断是否是从注册页面过来
     if request.GET.get('previous_page','')=='register':
         arg['first']=True
+    #推荐信息完善
+    if request.session.get('recommendStatus',False):
+        arg['recommendStatus']=request.session.pop('recommendStatus')
     from pinloveweb.method import init_person_info_for_card_page
     arg.update(init_person_info_for_card_page(userProfile))
+    #检测设备
+    if detect_device.detectTiermobileTablet(request):
+        template_name='mobile_recommend.html'
+   
     return render(request, template_name,arg )
 
 '''

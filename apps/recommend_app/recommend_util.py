@@ -9,6 +9,56 @@ from apps.recommend_app.models import Grade, AppearanceVoteRecord
 import MySQLdb
 from pinloveweb import settings
 from apps.common_app.models import School
+from apps.user_app.models import UserProfile
+from util import detect_device
+""""
+推荐信息填写情况
+attribute：null
+
+return: 填写情况(dict)
+   
+"""
+def recommend_info_status(request):
+    userId=request.user.id
+    args={'result':True,'data':{}}
+    #检测设备
+    if detect_device.detectTiermobileTablet(request):
+         dict={
+          'userExpect':{'info':'Ta的身高打分','href':'/mobile/grade_height/'},
+          'weight':{'info':'权重打分','href':'/mobile/get_weight/'},
+          'tag':{'info':'性格标签','href':'/mobile/character_tag/'},
+          'info':{'info':'个人信息','href':'/mobile/profile/'},
+          'avatar':{'info':'头像','href':'/mobile/account/'}
+          }
+    else:
+        dict={
+          'userExpect':{'info':'Ta的身高打分','href':'/user/user_profile/#progress_'},
+          'weight':{'info':'权重打分','href':'/user/user_profile/#weight_'},
+          'tag':{'info':'性格标签','href':'/user/user_profile/#personality_'},
+          'info':{'info':'个人信息','href':'/user/user_profile/#self_info_'},
+          'avatar':{'info':'头像','href':'/user/user_profile/#upload_head_'}
+          }
+       
+    keys=['userExpect','grade','tag']
+    from util.cache import get_recommend_status
+    recommendStatus=get_recommend_status(userId)
+    for key in keys:
+        if not recommendStatus[key]:
+            if key=='grade':
+                grade=Grade.objects.get(user_id=userId)
+                if grade.heightweight==None:
+                    args['data']['weight']=dict['weight']
+                if grade.incomescore==None or  grade.educationscore==None:
+                    args['data']['info']=dict['info']
+                if grade.appearancescore:
+                    avatar_name_status=UserProfile.objects.get(user_id=userId).avatar_name_status
+                    if avatar_name_status not in[u'2',u'3']:
+                        args['data']['avatar']=dict['avatar']
+            else:
+                args['data'][key]=dict[key]
+    return  args           
+    
+            
 
 """"
 根据用户id，相貌打分计算最终相貌分数

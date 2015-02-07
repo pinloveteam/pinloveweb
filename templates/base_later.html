@@ -111,6 +111,20 @@ $(document).ready(function() {
 	$('#message_icon').click(function(){
 		window.location.href='/message/'
 	})
+	
+	//推荐信息完善提示
+	var recommendStatus='{{recommendStatus|safe}}';
+	if(recommendStatus.length>0){
+		var recommendStatus=$.parseJSON(recommendStatus);
+		message='<p>如需查看对方的雷达图和打分，必须完善你的'
+			for(var v in recommendStatus){
+				message= message+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
+			}
+			message=message+'的资料信息<p>'
+			$.poplayer({body:message});
+	}
+	
+		
 });
 
 //切换导航栏
@@ -134,7 +148,7 @@ var isChard=false;
 var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
 //拉取信息数量
 var time=1000*5;
-interval = self.setInterval("polling()", time); 
+/*interval = self.setInterval("polling()", time); */
  var polling=function(){
 	 var data={};
 	  if(isChard){

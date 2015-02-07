@@ -142,7 +142,7 @@ class AvatarCheckAdmin(admin.ModelAdmin):
     search_fields =('user__username',)
     readonly_fields=('image_img','avatar_name',)
     list_filter=('avatar_name_status',)    
-    fields =('user','image_img','avatar_name','avatar_name_status','appearancescore')
+    fields =('user','gender','image_img','avatar_name','avatar_name_status','appearancescore')
     def __init__(self, *args, **kwargs):
         super(AvatarCheckAdmin, self).__init__(*args, **kwargs)
 #         # Here we will redefine our test field.

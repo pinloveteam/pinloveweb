@@ -154,7 +154,7 @@ def crop_avatar(request):
          
     #logger.exception('------------------------'+simplejson.dumps(request.POST))
     box = [int(x * ratio) for x in [x1, y1, x2, y2]]
-    rotate=0-int(float(request.POST.get('rotate',0)))
+    rotate=int(float(request.POST.get('rotate',0)))
     if rotate!=0:
         orig=orig.rotate(rotate)
     avatar = orig.crop(box)

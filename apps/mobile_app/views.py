@@ -441,16 +441,21 @@ def update_radar_compare(request,template_name='mobile_recommend.html'):
     args={}
     try:
         type=request.REQUEST.get('type',False)
+        url=request.REQUEST.get('prevUrl')
         if not type :
             raise Exception('传入参数错误!')
         if type=='add':
             request.session['radar_compare_id']=int(request.REQUEST['userId'])
             request.session['radar_compare']=True
+            from util.util import is_guide
+            guide=UserProfile.objects.get(user=request.user).guide
+            if not is_guide(request.user.id,guide,'compareButton'):
+                url='%s%s'%(url,'?compare_guide=true')
         elif type=='del':
             del request.session['radar_compare']
         else:
             raise Exception('传入参数错误!')
-        return HttpResponseRedirect('/mobile/')
+        return HttpResponseRedirect(url)
     except Exception as e:
         logger.exception(e.message)
         args={'result':'error','error_message':e.message}
