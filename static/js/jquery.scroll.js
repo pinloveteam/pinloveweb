@@ -1,6 +1,7 @@
 load_next_page=true;
 var next_page=0;
 var totalheight = 0; 
+var has_load=false;
 (function($){
 			$.fn.extend({
 			insertAtCaret: function(myValue){
@@ -39,11 +40,11 @@ function get_load_next_page(){
 }
 //滚动加载
 //no_load不加载   ,success成功
-function loadData(no_load,success,loading,load=false)
+function loadData(no_load,success,loading,has_load)
 { 
     totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
 
-    if (load||$(document).height() <= totalheight) 
+    if (has_load||$(document).height() <= totalheight) 
 	{ 
 		//加载数据
 		if(next_page==-1){
@@ -65,6 +66,7 @@ function loadData(no_load,success,loading,load=false)
 	         complete: function(XMLHttpRequest, textStatus){
 	        	 loading(false);
 	        	 load_next_page=true;
+	        	 has_load=false;
 	         },
 	         error: function(response){
 	             alert('网络异常!')
