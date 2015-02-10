@@ -56,19 +56,14 @@ def dynamic(request,template_name):
                 picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
                 picture.save()
             del request.session['images_path']
-#                 pictureList.append(picture.picPath)
         return HttpResponseRedirect('/dynamic/')
-    #userProfile=UserProfile.objects.get(user_id=request.user.id)
-    #from pinloveweb.method import init_person_info_for_card_page
-    #arg.update(init_person_info_for_card_page(userProfile))
-    arg=init_dynamic(request,request.user.id,arg,0,dynamicId=dynamicId)
-    #arg['picList']=simplejson.loads(request.session['images_path']) if request.session.get('images_path',False) else  []
     arg['user']=request.user
     from apps.user_app.method import get_avatar_name
     arg['avatar_name']=get_avatar_name(request.user.id,request.user.id)
     from pinloveweb.method import get_no_read_web_count
     arg.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
     if request.is_ajax():
+        arg=init_dynamic(request,request.user.id,arg,0,dynamicId=dynamicId)
         from apps.pojo.dynamic import MyEncoder
         json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
         return HttpResponse(json, mimetype='application/json')
@@ -133,6 +128,7 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
 def comment_list(request,template_name):
     args={}
     try:
+        if request.is_ajax():
             if FriendDynamicComment.objects.get_no_read_comment_count(request.user.id)>0:
                 friendDynamicCommentList=FriendDynamicComment.objects.get_no_read_comment_list(request.user.id)
                 data=page(request,friendDynamicCommentList)
@@ -152,18 +148,24 @@ def comment_list(request,template_name):
                     args['next_page_number']=data['pages'].next_page_number()
             else:
                 args['next_page_number']=-1
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+        else: 
             from pinloveweb.method import get_no_read_web_count
             args.update(get_no_read_web_count(request.user.id,u'message'))
-            if request.is_ajax():
-                json=simplejson.dumps(args)
-                return HttpResponse(json)    
-            else:
-                args['user']=request.user
-                from apps.user_app.method import get_avatar_name
-                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
-                return render(request,template_name,args,)
+            args['user']=request.user
+            from apps.user_app.method import get_avatar_name
+            args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+            return render(request,template_name,args,)
     except Exception,e:
         logger.exception('获取评论列表,出错')
+        args={'result':'error','error_message':'获取评论列表出错'}
+        if request.is_ajax():
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+        else:
+            return render(request,'error.html',args)
+
 
 '''
 获得赞的列表
@@ -171,6 +173,7 @@ def comment_list(request,template_name):
 def agree_list(request,template_name):
     args={}
     try:
+        if request.is_ajax():
             if FriendDynamicArgee.objects.get_no_read_agree_count(request.user.id)>0:
                 friendDynamicArgeeList=FriendDynamicArgee.objects.get_no_read_agree_List(request.user.id)
                 data=page(request,friendDynamicArgeeList)
@@ -190,19 +193,23 @@ def agree_list(request,template_name):
                     args['next_page_number']=data['pages'].next_page_number()
             else:
                 args['next_page_number']=-1
+            json=simplejson.dumps(args)
+            return HttpResponse(json)  
+        else:
             from pinloveweb.method import get_no_read_web_count
             args.update(get_no_read_web_count(request.user.id,u'message'))
-            if request.is_ajax():
-                json=simplejson.dumps(args)
-                return HttpResponse(json)  
-            else:
-                args['user']=request.user
-                from apps.user_app.method import get_avatar_name
-                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
-                return render(request,template_name,args)
-            
+            args['user']=request.user
+            from apps.user_app.method import get_avatar_name
+            args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+            return render(request,template_name,args)
     except Exception,e:
         logger.exception('获取赞的列表,出错')
+        args={'result':'error','error_message':'获取赞的列表出错'}
+        if request.is_ajax():
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+        else:
+            return render(request,'error.html',args)
 
 '''
 获取未读评论列表

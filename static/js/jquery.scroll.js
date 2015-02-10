@@ -39,11 +39,11 @@ function get_load_next_page(){
 }
 //滚动加载
 //no_load不加载   ,success成功
-function loadData(no_load,success,loading)
+function loadData(no_load,success,loading,load=false)
 { 
     totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop()); 
 
-    if ($(document).height() <= totalheight) 
+    if (load||$(document).height() <= totalheight) 
 	{ 
 		//加载数据
 		if(next_page==-1){

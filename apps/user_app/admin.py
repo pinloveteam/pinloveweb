@@ -8,7 +8,7 @@ Created on Jul 4, 2013
 from django.contrib import admin
 from models import UserProfile
 from django.db import  transaction
-from apps.user_app.models import Follow
+from apps.user_app.models import Follow, UserTag
 from django.conf import settings
 from apps.recommend_app.models import Grade
 from django import forms
@@ -202,6 +202,17 @@ class FollowAdmin(admin.ModelAdmin):
     fields =('my','follow',)
 #     list_filter=('type','hasCar','hasHouse','financialCondition','parentEducation',)   
 
+
+'''
+'''
+class UserTagAdmin(admin.ModelAdmin):
+    list_display=('user','tag',)
+    def get_tag_content(self,obj):
+        return obj.content
+    get_tag_content.short_description='标签'
+    search_fields =('get_tag_content','tag__content',)
+    fields =('user','tag',)
+
 admin.site.register(UserBasicProfile,UserBasicProfileAdmin)
 admin.site.register(UserAppearance,UserAppearanceAdmin)
 admin.site.register(UserStudyWork,UserStudyWorkAdmin)
@@ -209,6 +220,5 @@ admin.site.register(UserFamilyInformation,UserFamilyInformationAdmin)
 admin.site.register(UserPersonalHabit,UerPersonalHabitAdmin)
 admin.site.register(AvatarCheck,AvatarCheckAdmin)
 admin.site.register(Follow,FollowAdmin)
-# admin.site.register(Dictionary)
-# admin.site.register(Message)
-# admin.site.register(new)
+admin.site.register(UserTag,UserTagAdmin)
+

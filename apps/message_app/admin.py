@@ -1,10 +1,12 @@
-# #-*- coding: utf-8 -*-
-# '''
-# Created on Jul 4, 2013
-# 
-# @author: jin
-# '''
-# from django.contrib import admin
+#-*- coding: utf-8 -*-
+'''
+Created on Jul 4, 2013
+ 
+@author: jin
+'''
+from django.contrib import admin
+
+
 # from pinloveweb.settings import STATIC_URL, DEFAULT_FROM_EMAIL
 # import datetime
 # from django.db import models, connection

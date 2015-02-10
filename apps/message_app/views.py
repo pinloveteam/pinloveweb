@@ -23,37 +23,52 @@ logger=logging.getLogger(__name__)
 '''
 def message(request,template_name):
     args={}
-    isRad=False
-    user=request.user
-    from apps.message_app.models import get_no_read_message_dynamic_list_count,get_message_dynamic_list
-    if get_no_read_message_dynamic_list_count(user.id)>0:
-        messageDynamicList=get_message_dynamic_list(user.id,False)
-    else:
-        messageDynamicList=get_message_dynamic_list(user.id,True)
-        isRad=True
-    pages=page(request,messageDynamicList)
-    if not isRad: 
-        #标记成已读
-        from apps.message_app.method import clean_message_Dynamic
-        clean_message_Dynamic(user.id,pages['pages'].object_list)
-    from apps.pojo.message import messagedynamics_to_message_page
-    messageDynamicsList=messagedynamics_to_message_page(pages['pages'].object_list)
-    if pages['pages'].has_next():
-        #如果为未读
-        if not  pages['pages'].object_list[0]['isRead']:
-            args['next_page_number']=1
+    try:
+        isRad=False
+        user=request.user
+        if request.is_ajax():
+            from apps.message_app.models import get_no_read_message_dynamic_list_count,get_message_dynamic_list
+            if get_no_read_message_dynamic_list_count(user.id)>0:
+                messageDynamicList=get_message_dynamic_list(user.id,False)
+            else:
+                messageDynamicList=get_message_dynamic_list(user.id,True)
+                isRad=True
+            pages=page(request,messageDynamicList)
+            if not isRad: 
+                #标记成已读
+                from apps.message_app.method import clean_message_Dynamic
+                clean_message_Dynamic(user.id,pages['pages'].object_list)
+            from apps.pojo.message import messagedynamics_to_message_page
+            messageDynamicsList=messagedynamics_to_message_page(pages['pages'].object_list)
+            if pages['pages'].has_next():
+                #如果为未读
+                if not  pages['pages'].object_list[0]['isRead']:
+                    args['next_page_number']=1
+                else:
+                    args['next_page_number']=pages['pages'].next_page_number()
+            else:
+                args['next_page_number']=-1
+            args['messageList']=simplejson.dumps(messageDynamicsList)
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
         else:
-            args['next_page_number']=pages['pages'].next_page_number()
-    else:
-        args['next_page_number']=-1
-    args['messageList']=simplejson.dumps(messageDynamicsList)
-    #获取未读信息条数
-    from pinloveweb.method import get_no_read_web_count
-    args.update(get_no_read_web_count(user.id,fromPage=u'message'))
-    if request.is_ajax():
-        json=simplejson.dumps(args)
-        return HttpResponse(json)
-    return render(request,template_name,args)
+            #获取未读信息条数
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(user.id,fromPage=u'message'))
+            return render(request,template_name,args)
+        
+    except Exception as e:
+        logger.exception('初始化个人消息出错!')
+        args={'result':'error','error_message':'初始化个人消息出错'}
+        if request.is_ajax():
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+        else:
+            return render(request,'error.html',args)
+       
+   
+    
+
     
 '''
 用户私信列表
@@ -61,6 +76,7 @@ def message(request,template_name):
 def message_list(request,template_name):
     args={}
     try:
+        if request.is_ajax():
             if MessageLog.objects.get_no_read_private_msessge_count(request.user.id)>0:
                 messageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id)
                 data=page(request,messageLogList)
@@ -80,23 +96,25 @@ def message_list(request,template_name):
                     args['next_page_number']=data['pages'].next_page_number()
             else:
                 args['next_page_number']=-1
+            json=simplejson.dumps(args)
+            return HttpResponse(json)  
+        else:
             #获取未读信息条数
             from pinloveweb.method import get_no_read_web_count
             args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
-            if request.is_ajax():
-                json=simplejson.dumps(args)
-                return HttpResponse(json)  
-            else:
-                args['user']=request.user
-                from apps.user_app.method import get_avatar_name
-                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
-                return render(request,template_name,args)
+            args['user']=request.user
+            from apps.user_app.method import get_avatar_name
+            args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+            return render(request,template_name,args)
             
     except Exception ,e:
         logger.exception('私信列表私信列表出错!')
         args={'result':'error','error_message':'私信列表出错'}
-        json=simplejson.dumps(args)
-        return HttpResponse(json)
+        if request.is_ajax():
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+        else:
+            return render(request,'error.html',args)
 
 '''
 关注消息列表
@@ -104,6 +122,7 @@ def message_list(request,template_name):
 def get_follow_message(request,template_name):
     args={}
     try:
+        if request.is_ajax():
             if MessageLog.objects.get_no_read_follow_message_count(request.user.id)>0:
                 followList=MessageLog.objects.get_follow_message_list(request.user.id,0)
                 data=page(request,followList)
@@ -123,21 +142,23 @@ def get_follow_message(request,template_name):
                     args['next_page_number']=data['pages'].next_page_number()
             else:
                 args['next_page_number']=-1
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+        else:
             from pinloveweb.method import get_no_read_web_count
             args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
-            if request.is_ajax():
-                json=simplejson.dumps(args)
-                return HttpResponse(json)
-            else:
-                args['user']=request.user
-                from apps.user_app.method import get_avatar_name
-                args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
-                return render(request,template_name,args)
+            args['user']=request.user
+            from apps.user_app.method import get_avatar_name
+            args['avatar_name']=get_avatar_name(request.user.id,request.user.id)  
+            return render(request,template_name,args)
     except Exception ,e:
         logger.exception('关注消息列表出错!')
         args={'result':'error','error_message':'私信列表私信列表出错'}
-        json=simplejson.dumps(args)
-        return HttpResponse(json)
+        if request.is_ajax():
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+        else:
+            return render(request,'error.html',args)
        
 '''
 获取我和指定异性之间所有私信

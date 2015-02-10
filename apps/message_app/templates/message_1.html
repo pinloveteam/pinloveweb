@@ -8,8 +8,7 @@
 
  <script>
 	$(document).ready(function(){
-                messageList={{messageList|safe }};
-                init_message(messageList);
+		        loadData(no_load,success,loading,true);
                 if(next_page==-1){
                 	no_load();
                 }
@@ -391,7 +390,7 @@
         </script>
         <script type="text/javascript">
 	   //滚动加载
-	   var next_page={{next_page_number|safe}}
+	   var next_page=1;
 	   no_load=function(){
 	    	var no_dynamic=$('#no_dynamic')
 			$('.col-xs-9').append('<div class="row" style="margin-top: 20px;text-align: center;">没有消息了</div>')

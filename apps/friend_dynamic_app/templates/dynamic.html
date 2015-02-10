@@ -11,7 +11,6 @@
   <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
   <script type="text/javascript" src="{{STATIC_URL}}js/jquery.scroll.js"></script>
   <script type="text/javascript">
-  var page={{next_page_number}};
   $(document).ready(function(){
 		change_navi()
 	})
@@ -133,10 +132,9 @@ var userName="{{user.username}}";
 var userId={{user.id}};
 
 $(document).ready(function(){
-	dynamicList={{friendDynamicList|safe}}
+	dynamicList=loadData(no_load,success,loading,true);
 	//字数限制
 	$(".publishInputArea").keydown(limit_length);
-	init_dynamic(dynamicList);
 	
 	//上传图片
 	$('#publishInputPhoto').click(function(){
@@ -222,10 +220,10 @@ function init_dynamic(dynamicList){
 		dynamic=$('#dynamic_clone').find('.row').first().clone();
 		dynamicObj=this;
 		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-100.jpeg');
-		dynamic.find('#username').html(this.publishUserName);
-		dynamic.find('#time').html(this.publishTime+'发布');
-		dynamic.find('#content').html(this.content);
-		dynamic.find('#agreeNum').html('('+this.argeeNum+')');
+		dynamic.find('#username').text(this.publishUserName);
+		dynamic.find('#time').text(this.publishTime+'发布');
+		dynamic.find('#content').text(this.content);
+		dynamic.find('#agreeNum').text('('+this.argeeNum+')');
 		if(userId==this.publishUserId){
 			dynamic.find('.trend').prepend('<span class="delete">删除 </span>')
 		}
@@ -336,14 +334,14 @@ function init_comment(dynamic_div,commentList,publishUserId){
 	$(commentList).each(function(){
 		var comment=$('#dynamic_clone').find('#comment').clone();
 		comment.find('img').attr('src','/media/'+this.reviewerAvatarName+'-100.jpeg')
-		reviewerHref=comment.find('#username').html(this.reviewerName).parent().attr('id',this.reviewerId)
+		reviewerHref=comment.find('#username').text(this.reviewerName).parent().attr('id',this.reviewerId)
 		if(this.receiverName!=null){
 			reviewerHref.after('&nbsp;回复&nbsp;<a id="'+this.receiverId+'" href="javascript:void(0)"><span>'+this.receiverName+'</span><a>:');
 		}else{
 			reviewerHref.after(':')
 		}
 		reviewerHref.parent().find('a').click(detail_info);
-		comment.find('.comment-text').html(this.content);
+		comment.find('.comment-text').text(this.content);
 		comment.find('#commentId').val(this.id);
 		comment.find('#reviewerId').val(this.reviewerId);
 		if(publishUserId==userId||this.reviewerId==userId){
@@ -836,7 +834,7 @@ function sendExpression(e) {
 		</script> 
 		<script type="text/javascript">
 	   //滚动加载
-	   var next_page={{next_page_number|safe}}
+	   var next_page=1;
 	   no_load=function(){
 		   $('#dynamic').append('<div class="col-xs-12" style="text-align:center;height:30px;" >没有更多动态<div>')
 			stop_load_next_page();
