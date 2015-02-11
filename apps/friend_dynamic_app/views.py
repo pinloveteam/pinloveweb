@@ -69,6 +69,7 @@ def dynamic(request,template_name):
         return HttpResponse(json, mimetype='application/json')
     if  'images_path' in request.session:
         del request.session['images_path']
+    arg['publish']=True
     return render(request, template_name,arg )
 
 '''
