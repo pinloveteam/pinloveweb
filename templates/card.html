@@ -23,11 +23,7 @@ display: inline;
 <script type="text/javascript">
 
 //下一页
-{% if pages.has_next %}
-var next_page={{pages.next_page_number}}
-{%else%}
-var next_page=-1
-{% endif %}
+var next_page=1
 
 
 //关注
@@ -36,10 +32,7 @@ var follow={% if follow %}{{follow}}{%else%}0{% endif %}
 var fans={% if fans %}{{fans}}{%else%}0{% endif %}
 
 $(document).ready(function(){
-	
-	//获取卡片集合
-	var cards =jQuery.parseJSON('{{pages.object_list|safe }}');
-	init_card(cards);
+	loadData(no_load,success,loading,true);
 	pane = $('.chat');
 	pane.jScrollPane();
 	//判断平台
@@ -80,7 +73,8 @@ success=function(data){
 		      init_card(data.cards)
 		      venobox(); 
 	 }else{
-		 var body=$('<p>加载失败!</p>')
+		 var body=$('<p>'+data.error_message+'</p>')
+		 $.poplayer({body:body});
 	 }
 	
 };

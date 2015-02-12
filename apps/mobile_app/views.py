@@ -422,9 +422,9 @@ def dynamic(request,template_name='mobile_trend.html'):
                 del request.session['images_path']
             return HttpResponseRedirect('/mobile/dynamic/')
         args['user']=request.user
-        from apps.friend_dynamic_app.views import init_dynamic
-        arg=init_dynamic(request,request.user.id,args,0,dynamicId=dynamicId)
         if request.is_ajax():
+            from apps.friend_dynamic_app.views import init_dynamic
+            arg=init_dynamic(request,request.user.id,args,0,dynamicId=dynamicId)
             from apps.pojo.dynamic import MyEncoder
             json=simplejson.dumps( {'friendDynamicList':args['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
             return HttpResponse(json, mimetype='application/json')

@@ -134,7 +134,7 @@ var userId={{user.id}};
 $(document).ready(function(){
 	dynamicList=loadData(no_load,success,loading,true);
 	//字数限制
-	$(".publishInputArea").keydown(limit_length);
+	$(".publishInputArea").keydown(function(){limit_length(this)});
 	
 	//上传图片
 	$('#publishInputPhoto').click(function(){
@@ -145,63 +145,71 @@ $(document).ready(function(){
 		$('#updateFileForm').submit();
 	});
 	
-	//回复
-	$('form[name="relpy_form"]').submit(function(){
-		var context=$(this);
-		if(context.find('textarea').val().trim().length==0){
-			var body=$('<p>评论不能为空!</p>')
-			$.poplayer({body:body});
-			return false;
-		}
-		data=context.serialize()
-		$.ajax({
-			dataType:"json",
-			 type: "POST",
-			url:'/dynamic/comment/',
-			data:data,
-			beforeSend:function(XMLHttpRequest){
-				context.attr('disabled',true);
-			},
-			complete:function(XMLHttpRequest, textStatus){
-				$('.follow').attr('disabled',false)
-			},
-			success:function(data, textStatus){
-				if (data['type']=='success'){
-					init_comment(context.closest('.trend'),data['dynamicCommentList'])
-					context.find('textarea').val('');
-					context.closest('#reply').hide();
-			        }else if(data['type']=='error'){
-			        	var body=$('<p>'+data['error_message']+'</p>')
-			        	$.poplayer({body:body});
-			        }else{
-			            window.location.href='http://127.0.0.1:8000/';
-			        }
-			},
-            error: function(response){
-            	var body=$('<p>网络异常!</p>')
-				 $.poplayer({body:body});
-            },
-			
-		});
-		return false;
-	});
+	
 });
+
+function relpy(){
+	var context=$(this);
+	if(context.find('textarea').val().trim().length==0){
+		var body=$('<p>评论不能为空!</p>')
+		$.poplayer({body:body});
+		return false;
+	}
+	data=context.serialize()
+	$.ajax({
+		dataType:"json",
+		 type: "POST",
+		url:'/dynamic/comment/',
+		data:data,
+		beforeSend:function(XMLHttpRequest){
+			context.attr('disabled',true);
+		},
+		complete:function(XMLHttpRequest, textStatus){
+			$('.follow').attr('disabled',false)
+		},
+		success:function(data, textStatus){
+			if (data['result']=='success'){
+				init_comment(context.closest('.trend'),data['dynamicCommentList'])
+				context.find('textarea').val('');
+				context.closest('#reply').hide();
+		        }else if(data['result']=='error'){
+		        	var body=$('<p>'+data['error_message']+'</p>')
+		        	$.poplayer({body:body});
+		        }else{
+		            window.location.href='http://pinlove.com/';
+		        }
+		},
+        error: function(response){
+        	var body=$('<p>网络异常!</p>')
+			 $.poplayer({body:body});
+        },
+		
+	});
+	return false;
+}
 //字数限制
-function limit_length(){
-	publishTextArea=$(this).find('textarea')
+function limit_length(e){
+	publishTextArea=$(e).find('textarea')
    var curLength=publishTextArea.val().length;
    var limitLenght=199
-   if(curLength>=limitLenght){
+   if(curLength>limitLenght){
       var num=publishTextArea.val().substr(0,limitLenght);
-      $(".#publishTextArea_1").val(num);
-        alert("超过字数限制，多出的字将被截断！" );
+      $("#publishTextArea_1").val(num);
+      var body=$('<p>超过字数限制，多出的字将被截断！</p>')
+      $.poplayer({body:body});
+      publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght-publishTextArea.val().length);
+ 	 return false;
        }
      else{
-    	 publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght-publishTextArea.val().length)
+    	 publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght-publishTextArea.val().length);
+    	 return true
       }
 }
-//发布
 function public(e){
+	var publishInputArea=$(e).closest('.col-xs-9').find('#pubblicFrom .publishInputArea')
+	if(!limit_length(publishInputArea[0])){
+		return false;
+	}
 	var content= $(e).closest('.col-xs-9').find("#publishTextArea_1").val();
        var length= $.trim(content).length
        if (length >0){
@@ -209,7 +217,8 @@ function public(e){
            $('#pubblicFrom').submit();
        }
        else{
-           alert("内容不能为空！")
+    	   var body=$('<p>不能为空！</p>')
+    	     $.poplayer({body:body});
        };
 };
 
@@ -307,6 +316,9 @@ function init_dynamic(dynamicList){
 			}
 			
 			});
+		
+		//回复
+	    reply_clone.find('form[name="relpy_form"]').submit(relpy);
 		//删除动态
 		dynamic.find('.delete').click(function(){
 			del_dynamic(this);

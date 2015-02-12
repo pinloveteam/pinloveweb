@@ -44,11 +44,10 @@ def the_people_nearby(request):
         userList=is_focus_each_other(request.user.id,userList)
     else:
         userList.object_list=[]
-    if request.GET.get('ajax')=='true':
+    if request.is_ajax():
         from pinloveweb.method import load_cards_by_ajax
         return load_cards_by_ajax(request,userList)
     from apps.pojo.card import MyEncoder
-    from django.utils import simplejson
     userList.object_list=simplejson.dumps(userList.object_list,cls=MyEncoder)
     arg['pages']=userList
     from pinloveweb.method import init_person_info_for_card_page

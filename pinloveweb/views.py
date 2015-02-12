@@ -131,40 +131,40 @@ def auth_view(request,template_name='login.html') :
         return render(request,template_name,args)
 
 
-def loggedin(request,template_name='index.html',**kwargs) :
+def loggedin(request,template_name='index.html',**kwargs):
     arg={} 
-    #判断推荐分数是否生成
-    flag=MatchResult.objects.is_exist_by_userid(request.user.id)
-    userProfile=UserProfile.objects.get_user_info(request.user.id)
-    #从缓存中获取不推荐用户id
-    from util.cache import get_no_recomend_list_by_cache
-    disLikeUserIdList=get_no_recomend_list_by_cache(request.user.id)
-    #获取推荐列表
-    matchResultList=get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs)
-    from pinloveweb.method import get_no_read_web_count
-    arg.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
-    if kwargs.get('card')==True:
-        return matchResultList
-    if request.is_ajax():
-        from pinloveweb.method import load_cards_by_ajax
-        return load_cards_by_ajax(request,matchResultList)
-    from apps.pojo.card import MyEncoder
-    matchResultList.object_list=simplejson.dumps(matchResultList.object_list,cls=MyEncoder)
-    arg['pages']=matchResultList
-    #判断是否是从注册页面过来
-    if request.GET.get('previous_page','')=='register':
-        arg['first']=True
-    #推荐信息完善
-    if request.session.get('recommendStatus',False):
-        arg['recommendStatus']=request.session.pop('recommendStatus')
-    from pinloveweb.method import init_person_info_for_card_page
-    arg.update(init_person_info_for_card_page(userProfile))
-    #检测设备
-    if detect_device.detectTiermobileTablet(request):
-        template_name='mobile_recommend.html'
-   
-    return render(request, template_name,arg )
-
+    is_ajax=False
+    try:
+        userProfile=UserProfile.objects.get_user_info(request.user.id)
+        if request.is_ajax():
+            is_ajax=True
+            matchResultList=get_recommend_list(request,userProfile)
+            from pinloveweb.method import load_cards_by_ajax
+            return load_cards_by_ajax(request,matchResultList)
+        from pinloveweb.method import get_no_read_web_count
+        arg.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
+        #判断是否是从注册页面过来
+        if request.GET.get('previous_page','')=='register':
+            arg['first']=True
+        #推荐信息完善
+        if request.session.get('recommendStatus',False):
+            arg['recommendStatus']=request.session.pop('recommendStatus')
+        from pinloveweb.method import init_person_info_for_card_page
+        arg.update(init_person_info_for_card_page(userProfile))
+        #检测设备
+        if detect_device.detectTiermobileTablet(request):
+            template_name='mobile_recommend.html'
+    except Exception as e:
+        errorMessage='推荐页面出错,错误原因:'+e.message
+        logger.exception(errorMessage)
+        arg={'result':'error','error_message':errorMessage}
+        template_name='error.html'
+    if is_ajax:
+        json=simplejson.dumps(arg)
+        return HttpResponse(json)
+    else:
+        return render(request, template_name,arg )
+    
 '''
 获得推荐列表
 attribute：
@@ -173,7 +173,12 @@ attribute：
   focusEachOtherList(List)：相互关注列表
   userProfile(UserProfile)：当前用户详细信息
 '''
-def get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs):
+def get_recommend_list(request,userProfile,**kwargs):
+    #判断推荐分数是否生成
+    flag=MatchResult.objects.is_exist_by_userid(request.user.id)
+    #从缓存中获取不推荐用户id
+    from util.cache import get_no_recomend_list_by_cache
+    disLikeUserIdList=get_no_recomend_list_by_cache(request.user.id)
     if flag:
          matchResultList=MatchResult.objects.get_match_result_by_userid(request.user.id,disLikeUserIdList)
          arg=page(request,matchResultList,**kwargs)

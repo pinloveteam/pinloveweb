@@ -12,6 +12,7 @@ from apps.user_app.models import Follow, UserTag
 from django.conf import settings
 from apps.recommend_app.models import Grade
 from django import forms
+import os
 '''
   基本信息
 '''
@@ -121,6 +122,7 @@ class AvatarCheck(UserProfile):
 class AvatarCheckForm(forms.ModelForm):
     from django.core.validators import MaxValueValidator,MinValueValidator
     appearancescore=forms.FloatField(label=u"外貌分数",validators = [MinValueValidator(0), MaxValueValidator(100)],help_text=u'分数在[0,100]区间')
+    roate=forms.ChoiceField(label=u"图片旋转",widget=forms.RadioSelect, choices=((0,'默认'),(-90,'顺时针90度'),(-180,'顺时针180度'),(90,'逆时针90度'),),initial=0,)
     class Meta:
         model=AvatarCheck
 #     def __init__(self, *args, **kwargs):
@@ -142,7 +144,7 @@ class AvatarCheckAdmin(admin.ModelAdmin):
     search_fields =('user__username',)
     readonly_fields=('image_img','avatar_name',)
     list_filter=('avatar_name_status',)    
-    fields =('user','gender','image_img','avatar_name','avatar_name_status','appearancescore')
+    fields =('user','gender','image_img','roate','avatar_name','avatar_name_status','appearancescore')
     def __init__(self, *args, **kwargs):
         super(AvatarCheckAdmin, self).__init__(*args, **kwargs)
 #         # Here we will redefine our test field.
@@ -184,6 +186,17 @@ class AvatarCheckAdmin(admin.ModelAdmin):
         obj.save()
         user_1=obj.user
         appearancescore=form.cleaned_data['appearancescore']
+        roate=int(form.cleaned_data['roate'])
+        if roate !=0:
+            from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
+            imgPath=os.path.join(os.path.dirname(UPLOAD_AVATAR_UPLOAD_ROOT),obj.avatar_name).replace('\\','/')
+            import Image
+            from apps.upload_avatar.app_settings import UPLOAD_AVATAR_RESIZE_SIZE,UPLOAD_AVATAR_SAVE_FORMAT
+            for size in UPLOAD_AVATAR_RESIZE_SIZE:
+                imagePath='%s%s%s%s%s'%(imgPath,'-',size[0],'.',UPLOAD_AVATAR_SAVE_FORMAT)
+                image = Image.open(imagePath)
+                image=image.rotate(roate)
+                image.save(imagePath,UPLOAD_AVATAR_SAVE_FORMAT)
         if  Grade.objects.filter(user=user_1,appearancescore__lte=0).exists():
             Grade.objects.filter(user=user_1).update(appearancescore=appearancescore,sysappearancescore=appearancescore)
         else:

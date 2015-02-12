@@ -16,8 +16,7 @@
 
 <script>
 	$(document).ready(function(){
-                messageList={{messageList|safe }};
-                init_message(messageList);
+		       loadData(no_load,success,loading,true);
                 init_menu();
                 
                 $('.reply-btn').click(reply);

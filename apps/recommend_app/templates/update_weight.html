@@ -3,6 +3,11 @@
 <script>
 var data=[]
 $(function() {
+	init_weight()
+	});
+//初始化权重	
+function init_weight(){
+  try{
  	var slider = ['slidera','sliderb','sliderc','sliderd','slidere'];
  	var flag = [true,true,true,true,true,true];
  	data = [{{heightweight}}/100,{{educationweight}}/100,{{incomeweight}}/100,{{appearanceweight}}/100,{{characterweight}}/100];
@@ -21,7 +26,6 @@ $(function() {
 	      	s=100;
 	      	flag[k] = false;
 	      }
-	      
 	      data[k] = Math.round(x * s)/100;
 	      $('#'+v+' .value').text(Math.round(x * s));
 	      $('#'+v+' .value').closest('.row').find('input').val(Math.round(x * s))
@@ -33,14 +37,16 @@ $(function() {
 	  
 	  dds[k] = dd;
  	});
- 	
+  }catch(e){
+	  var body = $("<p>权重出错,原因"+e.message+"  请刷新页面!</p>")
+		$.poplayer({body:body});
+  }
  	$('.handle').mousedown(function(){
  		dds.forEach(function(v){
  			v.bounds.availWidth = 10000;
  		});
  	});
-	});
-	
+}
 $(document).ready(function(){
 	 //提交权重
 

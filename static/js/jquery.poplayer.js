@@ -68,7 +68,7 @@
 			    new Dragdealer(this.id, {
 					  animationCallback: function(x, y) {
 						  row=$('#'+context).parents('.row');
-					    row.find('.score').text(Math.round(x * 100));
+					    row.find('.score').text(Math.round(x * 100)+'分');
 					    row.find('#vote_value').val(Math.round(x * 100))
 					  },
 					  x:voteScore[index]/100
@@ -138,7 +138,7 @@
 		i3.find('#income').html(user.income);
 		i3.find('#constellation').html(user.constellation);
 
-		var i4 = $('<div class="row"><hr /><p class="title">为TA相貌打分</p><div class="col-xs-6" style="padding: 0;"><div class="dragdealer" id="slider-'+user.userId+'"><div class="handle red-bar" style="perspective: 1000px; backface-visibility: hidden; transform: translateX(144px);"></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span>分<input id="vote_value" type="hidden" value=""></div><div class="col-xs-3"><button id="appearancevote" class="btn btn-xs btn-primary">确认</button></div></div>');
+		var i4 = $('<div class="row"><hr /><p class="title">为TA相貌打分</p><div class="col-xs-6" style="padding: 0;"><div class="dragdealer" id="slider-'+user.userId+'"><div class="handle red-bar" style="perspective: 1000px; backface-visibility: hidden; transform: translateX(144px);"></div></div></div><div class="col-xs-3" style="padding-right: 0;"><span class="score">0</span><input id="vote_value" type="hidden" value=""></div><div class="col-xs-3"><button id="appearancevote" class="btn btn-xs btn-primary">确认</button></div></div>');
 		infoframe.append(i1).append(i2).append(i3).append(i4);
 		
 		return infoframe;

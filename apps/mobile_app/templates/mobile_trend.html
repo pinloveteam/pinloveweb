@@ -14,10 +14,9 @@ var userId={{user.id}};
 			});
 </script>
 <script type="text/javascript">
-var page={{next_page_number}};
+var page=1;
 $(document).ready(function(){
-	dynamicList={{friendDynamicList|safe}}
-	init_dynamic(dynamicList);
+	loadData(no_load,success,loading,true);
 	//动态评论
 	$('.comment').click(function(){
 		dynamicId=$(this).closest('.trend').find('#dynamicId').val();
@@ -258,7 +257,7 @@ function del_dynamic(e){
 </script>
 <script type="text/javascript">
 	   //滚动加载
-	   var next_page={{next_page_number|safe}}
+	   var next_page=1;
 	   no_load=function(){
 		   $('#dynamic_list').append('<div class="trend" style="text-align:center;height:30px;" >没有更多动态<div>')
 			stop_load_next_page();
@@ -325,7 +324,7 @@ function del_dynamic(e){
 				</div>
 				<div class="col-xs-10">
 					<div class="row">
-						<div class="col-xs-4" style="margin-left:8px">
+						<div class="col-xs-4" style="padding-left:8px">
 							<p id="username" class="name" >张全蛋</p>
 						</div>
 						<div class="col-xs-5">

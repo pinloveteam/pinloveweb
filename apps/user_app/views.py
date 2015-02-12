@@ -52,8 +52,8 @@ def dislike(request):
         json=simplejson.dumps(arg)
         return HttpResponse(json)
     #获取分页数据
-    from pinloveweb.views import loggedin
-    matchResult=loggedin(request,page=page,card=True)
+    from pinloveweb.views import get_recommend_list
+    matchResult=get_recommend_list(request,page=page,card=True)
     arg['card']=matchResult.object_list[7]
     if page+1<=matchResult.paginator.num_pages:
         arg['has_next']=True

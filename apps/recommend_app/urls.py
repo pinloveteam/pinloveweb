@@ -6,18 +6,11 @@ Created on Sep 4, 2013
 '''
 from django.conf.urls import patterns, url
 urlpatterns=patterns('apps.recommend_app.views',
-    url(r'^recommend/?page', 'recommend'),
-    url(r'^recommend/$', 'recommend'),
-    #权重
-    url(r'^weight/$', 'weight'),
     url(r'^user_vote/$', 'user_vote'),
     url(r'^socre_my/$', 'socre_my'),
     url(r'^get_socre_for_other/$', 'get_socre_for_other'),
-    url(r'^test_match/$', 'test_match'),
-    
-)
-urlpatterns+=patterns('apps.recommend_app.views',
-    #更新权重                     
+   
+     #更新权重                     
     url(r'^update_weight/$', 'update_weight'),
     #对另一半打分
     url(r'^grade_for_other/$', 'grade_for_other'),
@@ -27,4 +20,7 @@ urlpatterns+=patterns('apps.recommend_app.views',
     url(r'^buy_score_for_other/$', 'buy_score_for_other'),
      #检查对另一半打分的拼爱币积分是否足够
     url(r'^check_charge_for_socre_my/$', 'check_score_and_PLprice_for_socre_my'),
-)                 
+    
+     url(r'^test_match/$', 'test_match'),
+    
+)

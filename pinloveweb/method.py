@@ -105,33 +105,29 @@ def is_focus_each_other(userId,cardList):
 通过ajax加载页面card
 '''
 def load_cards_by_ajax(request,cardList,chanel='web'):
-         data={}
-         data['has_next']=cardList.has_next()
-         if cardList.has_next():
-             data['next_page_number']=cardList.next_page_number()
-         else:
-             data['next_page_number']=-1
-         if cardList.has_previous():
-            data['previous_page_number']=cardList.previous_page_number()
-         data['has_previous']=cardList.has_previous()
-         data['result']='success'
-         if request.GET.get('choseCards[]')!=None:
-             choseCardslist=request.GET.getlist('choseCards[]')
-             cardList.object_list = [card for card in cardList.object_list if str(card.user_id) not in choseCardslist]
-             if len(cardList.object_list)<8:
-                 data['removeCard']=True
-#              for matchResult in cardList.object_list:
-#                  if str(matchResult.user_id) in choseCardslist:
-#                      cardList.object_list.remove(matchResult) 
-#                      data['removeCard']=True
-         data['cards']=cardList.object_list
-         if chanel =='mobile':
-             from apps.pojo.card import CardMobileEncoder
-             json=simplejson.dumps(data,cls=CardMobileEncoder)
-         else:
-             from apps.pojo.card import MyEncoder
-             json=simplejson.dumps(data,cls=MyEncoder)
-         return HttpResponse(json)
+    data={}
+    data['has_next']=cardList.has_next()
+    if cardList.has_next():
+        data['next_page_number']=cardList.next_page_number()
+    else:
+        data['next_page_number']=-1
+    if cardList.has_previous():
+        data['previous_page_number']=cardList.previous_page_number()
+    data['has_previous']=cardList.has_previous()
+    data['result']='success'
+    if request.GET.get('choseCards[]')!=None:
+        choseCardslist=request.GET.getlist('choseCards[]')
+        cardList.object_list = [card for card in cardList.object_list if str(card.user_id) not in choseCardslist]
+        if len(cardList.object_list)<8:
+            data['removeCard']=True
+    data['cards']=cardList.object_list
+    if chanel =='mobile':
+        from apps.pojo.card import CardMobileEncoder
+        json=simplejson.dumps(data,cls=CardMobileEncoder)
+    else:
+        from apps.pojo.card import MyEncoder
+        json=simplejson.dumps(data,cls=MyEncoder)
+    return HttpResponse(json)
      
 '''
 生成邀请码

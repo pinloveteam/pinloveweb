@@ -31,7 +31,7 @@ def dynamic(request,template_name):
     if request.method=="POST":
         flag=True
         content=request.POST.get('content').strip()
-        p = re.compile('[.(\n|\r)]*')
+        p = re.compile('[(\n|\r)]*')
         content=p.sub('',content)
         if content.rstrip()=='':
             arg['error']={'error':u'发布内容不能为空！'}
@@ -245,7 +245,6 @@ def no_read_comment_list(request,template_name):
 '''
  发布消息
 '''
-logger = logging.getLogger('django_request_logfile')
 def send_dynamic(request):
     arg={}
     if request.user.is_authenticated():
@@ -551,16 +550,4 @@ def del_comment(request):
 
 
 
-#用于初始化card页面所需要的信息
-def init_card(arg,userProfile):
-    if userProfile.avatar_name_status!='3':
-        arg['avatar_name']='user_img/image.png'
-    else:
-        arg['avatar_name']=userProfile.avatar_name
-    arg['age']=userProfile.age
-    arg['height']=userProfile.height
-    arg['income']=userProfile.income
-    arg['education']=userProfile.get_education_display()
-    arg['jobIndustry']=userProfile.jobIndustry
-    return arg
    
