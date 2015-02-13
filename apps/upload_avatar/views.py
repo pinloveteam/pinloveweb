@@ -39,6 +39,7 @@ from apps.upload_avatar.app_settings import UPLOAD_AVATAR_MIX_SIZE,\
 from django.http.response import HttpResponseServerError
 from django.shortcuts import render
 import simplejson
+import ExifTags
 logger=logging.getLogger(__name__)
 
 
@@ -49,7 +50,27 @@ class UploadAvatarError(Exception):
     pass
 
 
-
+'''
+检查相机设备导致的旋转
+'''
+def detect_image_rotate(image):
+    filename=image.filename
+    has_rotate=False
+    for orientation in ExifTags.TAGS.keys() : 
+        if ExifTags.TAGS[orientation]=='Orientation' : break 
+    exif=dict(image._getexif().items())
+    if   exif[orientation] == 3 : 
+        image=image.rotate(180, expand=True)
+        has_rotate=True
+    elif exif[orientation] == 6 : 
+        image=image.rotate(270, expand=True)
+        has_rotate=True
+    elif exif[orientation] == 8 : 
+        image=image.rotate(90, expand=True)
+        has_rotate=True
+    if has_rotate:
+        image.save(filename)
+        
 def protected(func):
     @wraps(func)
     def deco(request, *args, **kwargs):
@@ -93,7 +114,7 @@ def upload_avatar(request):
             f.write(c)
             
     try:
-        Image.open(fpath)
+        image=Image.open(fpath)
     except IOError:
         try:
             os.unlink(fpath)
@@ -101,6 +122,8 @@ def upload_avatar(request):
             pass
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['INVALID_IMAGE'])
         
+    #检测手机设备导致的选择
+    detect_image_rotate(image)
     # uploaed image has been saved on disk, now save it's name in db
     if UploadedImage.objects.filter(uid=get_uid(request)).exists():
         uid=UploadedImage.objects.get(uid=get_uid(request))
@@ -139,7 +162,6 @@ def crop_avatar(request):
         orig = Image.open(image_orig)
     except IOError:
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['NO_IMAGE'])
-    
     orig_w, orig_h = orig.size
     global  border_size 
     if request.POST.get('border_size',False):
