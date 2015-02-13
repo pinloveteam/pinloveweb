@@ -190,7 +190,7 @@ class AvatarCheckAdmin(admin.ModelAdmin):
         if roate !=0:
             from pinloveweb.settings import UPLOAD_AVATAR_UPLOAD_ROOT
             imgPath=os.path.join(os.path.dirname(UPLOAD_AVATAR_UPLOAD_ROOT),obj.avatar_name).replace('\\','/')
-            import Image
+            from PIL import Image
             from apps.upload_avatar.app_settings import UPLOAD_AVATAR_RESIZE_SIZE,UPLOAD_AVATAR_SAVE_FORMAT
             for size in UPLOAD_AVATAR_RESIZE_SIZE:
                 imagePath='%s%s%s%s%s'%(imgPath,'-',size[0],'.',UPLOAD_AVATAR_SAVE_FORMAT)
