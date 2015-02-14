@@ -58,6 +58,8 @@ def detect_image_rotate(image):
     has_rotate=False
     for orientation in ExifTags.TAGS.keys() : 
         if ExifTags.TAGS[orientation]=='Orientation' : break 
+    if image._getexif() is None:
+        return False
     exif=dict(image._getexif().items())
     if   exif[orientation] == 3 : 
         image=image.rotate(180, expand=True)
