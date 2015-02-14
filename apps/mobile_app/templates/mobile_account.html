@@ -22,12 +22,14 @@ $(function(){
 	});
 });
 function upload_avatar_error(error_msg) {
+	$('.container').removeShade();
 	var body = $('<p>'+error_msg+'</p>');
 	$.poplayer({body:body});
 };
 
 var imgSelect;
 function upload_avatar_success(image_url) {
+	$('.container').removeShade();
 	window.location.href='/mobile/update_avtar/?image='+image_url
 }
 </script>
@@ -48,7 +50,7 @@ function upload_avatar_success(image_url) {
 			</div>
 		</div>
 		<div class="container">
-			<div id="upload_avatar" class="account row" href="#">
+			<div id="upload_avatar" class="account row" >
 				<div  class="col-xs-8" >
 					<img width="28px" src="/static/img/修改头像.png" />&nbsp;&nbsp;
 					<span>修改头像</span>
