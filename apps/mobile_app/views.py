@@ -40,16 +40,8 @@ def get_weight(request,template_name='mobile_weight.html'):
     '''
     args={}
     try:
-        grade=Grade.objects.filter(user_id=request.user.id)
-        if len(grade)==0:
-            for field in ['heightweight','incomeweight','educationweight','appearanceweight','characterweight']:
-                args[field]=0
-        else:
-            for field in ['heightweight','incomeweight','educationweight','appearanceweight','characterweight']:
-                value=getattr(grade[0],field)
-                if value==None:
-                    value=0;
-                args[field]=int(value*100)
+        from apps.recommend_app.method import get_weight_star
+        args=get_weight_star(request.user.id)
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)

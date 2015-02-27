@@ -4,8 +4,10 @@ Created on 2014年4月22日
 
 @author: jin
 '''
-from apps.recommend_app.models import MatchResult, NotRecommendUser
+from apps.recommend_app.models import MatchResult, NotRecommendUser, WeightStar,\
+    Grade
 import logging
+from apps.recommend_app.form import StartForm
 
 '''
 获取你对另一半的打分，如果没有返回None
@@ -80,3 +82,20 @@ def update_no_recommend_update_black_list(myId,otherId):
 '''
 def get_no_recommend_list(userId):
     return [int(user.other_id) for user in NotRecommendUser.objects.filter(my_id=userId)]
+
+'''
+获取权重对应的星星数
+'''
+def get_weight_star(userId):
+#     args={'heightweight':0,'incomeweight':0,'educationweight':0,'appearanceweight':0,'characterweight':0}
+    weightStar=WeightStar.objects.filter(user_id=userId)
+    if len(weightStar)>0:
+        startForm=StartForm(instance=weightStar[0])
+    else:
+        startForm=StartForm()
+#         for field in args.keys():
+#             value=getattr(weightStar[0],field)
+#             if value==None:
+#                 value=0;
+#             args[field]=value
+    return {'startForm':startForm}

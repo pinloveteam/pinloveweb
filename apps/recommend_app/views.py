@@ -4,23 +4,18 @@ Created on Sep 3, 2013
 
 @author: jin
 '''
-from apps.user_app.models import UserProfile, Follow, UserTag,\
+from apps.user_app.models import UserProfile, UserTag,\
     BrowseOherScoreHistory
-from apps.recommend_app.models import MatchResult, Grade, UserExpect
-from util.page import page
-from django.shortcuts import render
-from apps.upload_avatar import app_settings
-from apps.pojo.recommend import RecommendResult
-from apps.recommend_app.form import WeightForm
+from apps.recommend_app.models import MatchResult, Grade, UserExpect, WeightStar
 from django.utils import simplejson
-from django.core.context_processors import csrf
 from django.http import HttpResponse
 import logging
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from apps.recommend_app.method import get_matchresult
 from pinloveweb.settings import ADMIN_ID
 from apps.recommend_app.recommend_settings import BUY_SCORE_FOR_OTHER_MESSAGE_TEMPLATE
+from django.views.decorators.http import require_POST
+from apps.recommend_app.form import StartForm
 logger = logging.getLogger(__name__)  
 #######################################
 #1.0使用版本
@@ -28,41 +23,34 @@ logger = logging.getLogger(__name__)
 '''
  更新权重
 '''
+@require_POST
+@transaction.commit_on_success    
 def update_weight(request):
     args={}
-    flag=True
     try:
-        height=float(request.POST.get('height',-1))/100
-        income=float(request.POST.get('income',-1))/100
-        appearance=float(request.POST.get('appearance',-1))/100
-        education=float(request.POST.get('education',-1))/100
-        character=float(request.POST.get('character',-1))/100
-   
-        if ( int(education)<0 and int(character)<0 and int(income)<0 and int(appearance)<0 and int(height)<0):
-           flag=False
-           args['result']='error'
-           args['msg']='传输参数错误!'
-        if int(education+character+income+appearance+height)!=1:
-            flag=False
-            args['result']='error'
-            args['msg']='数值总和不为100!'
-        if flag:
-            if Grade.objects.filter(user_id=request.user.id,heightweight=None).exists():
-                from apps.user_score_app.method import get_score_by_weight
-                get_score_by_weight(request.user.id)
-            Grade.objects.create_update_grade(request.user.id,heightweight=height,\
-                                          incomeweight=income,educationweight=education,appearanceweight=appearance,characterweight=character)
+        userId=request.user.id
+        weightStar=WeightStar.objects.filter(user_id=userId)
+        if len(weightStar)>0:
+            startFrom=StartForm(request.POST,instance=weightStar[0],)
+        else:
+            startFrom=StartForm(request.POST)
+        if startFrom.is_valid():
+            weightStar=startFrom.save(commit=False)
+            weightStar.user=request.user
+            weightStar.save()
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
             cal_recommend(request.user.id,['grade'])
             args['result']='success'
         else:
             args['result']='error'
-    
+            args['error_message']=''
+            errors=startFrom.errors.items()
+            for error in errors:
+                args['error_message']+=error[1][0]
     except Exception as e:
-        flag=False
         args['result']='error'
-        args['msg']=e.message
+        args['error_message']=e.message
         logger.exception('更新权重错误！')
     json=simplejson.dumps(args)
     return HttpResponse(json)
@@ -298,43 +286,3 @@ def user_vote(request):
         json = simplejson.dumps(args)
         return HttpResponse(json)
         
-##########################################
-
-     
-    
-
-       
-def test_match(request):
-    args={}
-    userId=int(request.GET.get('userId'))
-    gradeMy=Grade.objects.get(user_id=request.user.id)
-    matchResult=MatchResult.objects.get(my_id=request.user.id,other_id=userId)
-    grade=Grade.objects.get(user_id=userId)
-    args['我的收入得分']=gradeMy.incomescore
-    args['我的学历得分']=gradeMy.educationscore
-    args['我的外貌得分']=gradeMy.appearancescore
-    #对方得分
-    args['对方的收入得分']=grade.incomescore
-    args['对方的学历得分']=grade.educationscore
-    args['对方的外貌得分']=grade.appearancescore
-    #相互打分
-    args['异性对我的打分和']=matchResult.scoreMyself
-    args['我对异性的打分和']=matchResult.scoreMyself
-#     args['macthScore']=matchResult.macthScore
-    args['我对异性的身高打分（权重）']=matchResult.heighMatchOther
-    args['异性对我的身高打分（权重）']=matchResult.heighMatchMy
-    args['异性对我的收入打分（权重）']=matchResult.incomeMatchMy
-    args['我对异性的收入打分（权重）']=matchResult.incomeMatchOther
-    args['我对异性的学历打分（权重）']=matchResult.edcationMatchOther
-    args['异性对我的学历打分（权重）']=matchResult.edcationMatchMy
-    args['我对异性的外貌打分（权重）']=matchResult.appearanceMatchOther
-    args['异性对我的外貌打分（权重）']=matchResult.appearanceMatchMy
-    args['异性对我的性格打分（权重）']= matchResult.characterMatchMy
-    args['异性对我的性格打分（权重）']=matchResult.characterMatchMy 
-    
-    args['我匹配标签得分']=matchResult.tagMatchOtherScore
-    args['异性对我的匹配标签得分']=matchResult.tagMatchMyScore
-    args['我匹配身高得分']=matchResult.heighMatchOtherScore
-    args['异性对我的身高标签得分']=matchResult.heighMatchMyScore
-    json=simplejson.dumps(args)
-    return HttpResponse(json)

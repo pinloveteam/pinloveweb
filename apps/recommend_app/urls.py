@@ -21,6 +21,5 @@ urlpatterns=patterns('apps.recommend_app.views',
      #检查对另一半打分的拼爱币积分是否足够
     url(r'^check_charge_for_socre_my/$', 'check_score_and_PLprice_for_socre_my'),
     
-     url(r'^test_match/$', 'test_match'),
     
 )

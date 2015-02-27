@@ -1,169 +1,254 @@
-<script type="text/javascript" src="/static/js/dragdealer.js"></script>
-<link href="/static/css/dragdealer.css" rel="stylesheet">
-<script>
-var data=[]
-$(function() {
-	init_weight()
-	});
-//初始化权重	
-function init_weight(){
-  try{
- 	var slider = ['slidera','sliderb','sliderc','sliderd','slidere'];
- 	var flag = [true,true,true,true,true,true];
- 	data = [{{heightweight}}/100,{{educationweight}}/100,{{incomeweight}}/100,{{appearanceweight}}/100,{{characterweight}}/100];
- 	var dds = [];
- 	var surplus = 100;
- 	var width = $('.dragdealer').width()-$('.handle').width();
- 	slider.forEach(function(v,k){
- 		var dd = new Dragdealer(v, {
-	    animationCallback: function(x, y) {
-//	      console.warn( "nothing selected, can't validate, returning nothing" );
-//			      s = surplus + parseInt($('#'+v+' .value').text()?$('#'+v+' .value').text():0);
-		  s = surplus + (flag[k]?0:data[k]*100);
-	      this.bounds.availWidth = width * s / 100;
-	      surplus = s-Math.round(x * (flag[k]?100:s));
-	      if(flag[k]){
-	      	s=100;
-	      	flag[k] = false;
-	      }
-	      data[k] = Math.round(x * s)/100;
-	      $('#'+v+' .value').text(Math.round(x * s));
-	      $('#'+v+' .value').closest('.row').find('input').val(Math.round(x * s))
-	      $('#surplus').text(Math.round(surplus));
-	    },
-	    x:data[k],
-	    slide:false
-	  });
-	  
-	  dds[k] = dd;
- 	});
-  }catch(e){
-	  var body = $("<p>权重出错,原因"+e.message+"  请刷新页面!</p>")
-		$.poplayer({body:body});
-  }
- 	$('.handle').mousedown(function(){
- 		dds.forEach(function(v){
- 			v.bounds.availWidth = 10000;
- 		});
- 	});
+<style>
+.form-horizontal .glyphicon {
+	height: 40px;
+	padding: 4px 0;
+	margin-left: 25px;
+	line-height: 1.42857;
 }
-$(document).ready(function(){
-	 //提交权重
+.glyphicon-star{
+cursor: pointer;
+}
+</style>
+<script>
+function Score(options) {
+	this.config = {
+		selector: '.star', // 评分容器
+		renderCallback: null, // 渲染页面后回调
+		callback: null // 点击评分回调                         
+	};
 
+	this.cache = {
+		iStar: 0,
+		iScore: 0
+	};
+
+	this.init(options);
+}
+
+Score.prototype = {
+
+	constructor: Score,
+
+	init: function(options) {
+		this.config = $.extend(this.config, options || {});
+		var self = this,
+			_config = self.config,
+			_cache = self.cache;
+
+		self._renderHTML(options['weightList']);
+	},
+	_renderHTML: function(weightList) {
+		var self = this,
+			_config = self.config;
+		$(_config.selector).each(function(index, item) {
+			$(item).wrap($('<div class="parentCls" style="position:relative"></div>'));
+			var parentCls = $(item).closest('.parentCls');
+			self._bindEnv(parentCls,weightList);
+			_config.renderCallback && $.isFunction(_config.renderCallback) && _config.renderCallback();
+		});
+
+	},
+	_bindEnv: function(parentCls,weightList) {
+		var self = this,
+			_config = self.config,
+			_cache = self.cache;
+
+		$(_config.selector + ' li', parentCls).each(function(index, item) {
+			// 鼠标点击
+			$(item).click(function(e) {
+				var index = $(_config.selector + ' li', parentCls).index($(this));
+				_cache.iStar = index + 1;
+				ismax(index + 1);
+				$(this).closest(_config.selector).find('.weightVaule').val(_cache.iStar);
+			});
+
+		});
+		
+		$(_config.selector, parentCls).each(function(index, item) {
+			weightInput=$(this).find('.weightVaule')
+			weightVaule=weightList[weightInput.attr('name')]
+			weightInput.val(weightVaule);
+			_cache.iStar = weightVaule;
+			ismax(weightVaule);
+			weightInput.val();
+		}); 
+		
+		function ismax(iArg) {
+			_cache.iScore = iArg || _cache.iStar;
+			var lis = $(_config.selector + ' li', parentCls);
+
+			for (var i = 0; i < lis.length; i++) {
+				lis[i].className = i < _cache.iScore ? "text-danger glyphicon glyphicon-star" : "glyphicon glyphicon-star";
+			}
+			_config.callback(parentCls,_cache.iScore);
+		}2
+	}
+};
+
+$(function(){
+	weightList={'height':{{startForm.height.value}},'income':{{startForm.income.value}},'education':{{startForm.education.value}},'appearance':{{startForm.appearance.value}},'character':{{startForm.character.value}}};
+	var score = new Score({
+		weightList:weightList,
+		callback: function(element,score) {
+4					}
+	});
+});
+
+//计算分数
+function cal_score(){
+var field_list=['income','height','education','character','appearance'];
+for(var i in field_list){
+	
+}
+};
+
+
+$(document).ready(function(){
+	//提交权重
 	 $("#update_weight").submit(function(){
 		    
 		     try{
-				    var weightData=$(this).find('input')
-				    var sum=0;
+				    var weightData=$(this).find('input');
+				     flag=false;
 				    for (var i=0; i<weightData.length; i++){
-				    	sum+=parseInt(weightData[i].value)
+				    	value=weightData[i].value;
+				    	if(value>5){
+				    		throw new Error('选择星星数量不能大于5!');
+				    	}
+				    	if(value>0){
+				    		flag=true
+				    	}
 				    }
-				    if (sum<100){
-				    	var body = $("<p>权重总和需为100%!</p>")
-					$.poplayer({body:body});
-				    	return false;
-				    }
+				    if(!flag){
+				    	throw new Error('权重不能为空!');
+				    } 
 				 }catch(msg){
-				    	//alert('填写失误请重新填写！')
-				    	return false;
+					 var body = $("<p>"+msg.message+"</p>")
+					$.poplayer({body:body});
+				    return false;
 				    }  
 			var data=$(this).serialize();
 			$.ajax({
-              type:'post',
-              url: "/recommend/update_weight/",
-              data:data,
-              success: function(data,textStatus){
-           	   data=$.parseJSON(data)
-           	   if(data.result== 'success'){
-           		   var body = $("<p>修改成功!</p>");
-           		var button=function(){
-           			$('.buy-nav').find('li').eq(4).click();
-        		};
+             type:'post',
+             url: "/recommend/update_weight/",
+             data:data,
+             success: function(data,textStatus){
+          	   data=$.parseJSON(data)
+          	   if(data.result== 'success'){
+          		   var body = $("<p>修改成功!</p>");
+          		var button=function(){
+          			$('.buy-nav').find('li').eq(4).click();
+       		};
 				$.poplayer({body:body,btnFunc:button});
 				$('.poplayer button').html('继续');
 
-
-                  }else if(data.result == 'error'){
-               	   var body = $("<p>"+data.msg+"</p>")
+                 }else if(data.result == 'error'){
+              	   var body = $("<p>"+data.error_message+"</p>")
 					$.poplayer({body:body});
-                  }
-              },
-          
-          });
+                 }
+             },
+         
+         });
 			  return false;
 		});
+	 
 });	
 </script>
 <p>
 您最看中TA的哪些方面？是身高还是学历？请标出 TA的各个方面在您心中的重要程度，以帮助系统更好的向您推荐。TA的总分由您定义的权重和TA在各个方面得分累积计算得出：
 </p>
 <p>总分=身高权重×身高得分+外貌权重×外貌得分+学历权重×学历得分+外貌权重×收入得分+性格权重×性格得分</p>
-<form id="update_weight" action="" method="post">{% csrf_token %}
-     <div class="row" style="margin-top: 30px;">
-			<div class="col-xs-1">身高</div>
-			<div class="col-xs-11">
-				<div id="slidera" class="dragdealer">
-					<div class="handle red-bar">
-						<span id="heightweight" class="value"></span>%
+<form class="form-horizontal" role="form" id="update_weight" action="" method="post">{%csrf_token%}
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">身高权重</label>
+					<div class="col-sm-10 star">
+						<ul class="list-inline">
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+						</ul>
+					<input type="hidden" class="weightVaule" name="height" value="{{heightweight}}">
 					</div>
 				</div>
-				<input  type="hidden" name="height" value="{{heightweight}}">
-			</div>
-		</div>
-		<div class="row" style="margin-top: 30px;">
-			<div class="col-xs-1">学历</div>
-			<div class="col-xs-11">
-				<div id="sliderb" class="dragdealer">
-					<div class="handle red-bar">
-						<span class="value"></span>%
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">收入权重</label>
+					<div class="col-sm-10 star">
+						<ul class="list-inline">
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+						</ul>
+					<input type="hidden" class="weightVaule" name="income" value="">
 					</div>
 				</div>
-				<input type="hidden" name="education" value="{{educationweight}}">
-			</div>
-		</div>
-
-		<div class="row" style="margin-top: 30px;">
-			<div class="col-xs-1">收入</div>
-			<div class="col-xs-11">
-				<div id="sliderc" class="dragdealer">
-					<div class="handle red-bar">
-						<span class="value"></span>%
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">学历权重</label>
+					<div class="col-sm-10 star">
+						<ul class="list-inline">
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+						</ul>
+					<input type="hidden" class="weightVaule" name="education" value="">
 					</div>
 				</div>
-				<input type="hidden" name="income" value="{{incomeweight}}">
-			</div>
-		</div>
-
-		<div class="row" style="margin-top: 30px;">
-			<div class="col-xs-1">外貌</div>
-			<div class="col-xs-11">
-				<div id="sliderd" class="dragdealer">
-					<div class="handle red-bar">
-						<span class="value"></span>%
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">性格权重</label>
+					<div class="col-sm-10 star">
+						<ul class="list-inline">
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+						</ul>
+					<input type="hidden" class="weightVaule"name="character" value="">
 					</div>
 				</div>
-				<input type="hidden" name="appearance" value="{{appearanceweight}}">
-			</div>
-		</div>
-
-		<div class="row" style="margin-top: 30px;">
-			<div class="col-xs-1">性格</div>
-			<div class="col-xs-11">
-				<div id="slidere" class="dragdealer">
-					<div class="handle red-bar">
-						<span class="value"></span>%
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">外貌权重</label>
+					<div class="col-sm-10 star">
+						<ul class="list-inline">
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+							<li class="glyphicon glyphicon-star">
+							</li>
+						</ul>
+					<input type="hidden" class="weightVaule" name="appearance" value="">
 					</div>
 				</div>
-				<input type="hidden" name="character" value="{{characterweight}}">
-			</div>
-		</div>
-
-		<div class="row" style="margin-top: 30px;">
-			<div class="col-xs-1">剩余</div>
-			<div class="col-xs-11">
-				<span id="surplus">100</span>%
-			</div>
-		</div>
+				<button class="btn btn-pink btn-save">保存</button>
+			</form>
 		
-<button class="btn btn-pink btn-save">保存</button>
-</form>	

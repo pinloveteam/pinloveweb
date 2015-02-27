@@ -208,6 +208,36 @@ class NotRecommendUser(models.Model):
         verbose_name=u'不推荐用户'
         verbose_name_plural = u'不推荐用户'
         db_table='not_recommend_user'
+'''
+星星权重
+'''     
+class WeightStar(models.Model):
+    user=models.ForeignKey(User)
+    CHOICE=((0,'0星'),(1,'1星'),(2,'2星'),(3,'3星'),(4,'4星'),(5,'5星'),)
+    height=models.IntegerField(verbose_name=u"身高权重",choices=CHOICE,default=0)
+    income=models.IntegerField(verbose_name=u"收入分数",choices=CHOICE,default=0)
+    education=models.IntegerField(verbose_name=u"学历分数",choices=CHOICE,default=0)
+    appearance=models.IntegerField(verbose_name=u"外貌分数",choices=CHOICE,default=0)
+    character=models.IntegerField(verbose_name=u"性格权重",choices=CHOICE,default=0)
+    
+    def save(self,*args,**kwargs):
+        if Grade.objects.filter(user=self.user).exists():
+            grade=Grade.objects.get(user=self.user)
+        else:
+            grade=Grade(user=self.user)
+        fieldList=['height','income','education','appearance','character']
+        sum,avg=0,0
+        for field in fieldList:
+            sum+=getattr(self,field)
+        avg=100.00/sum
+        for field in fieldList:
+            setattr( grade,field+'weight',avg*getattr(self,field))
+        grade.save()
+        super(WeightStar,self).save(*args,**kwargs)
+    class Meta:
+        verbose_name = u'权重星星' 
+        verbose_name_plural = u'权重星星'
+        db_table=u'weight_star'
 # '''
 # 触发推荐事件
 # '''

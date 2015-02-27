@@ -215,16 +215,8 @@ def user_profile(request):
         tagbeanForOtherList=tag_to_tagbean(tagsForOther)
         args['tagbeanForOtherList']=tagbeanForOtherList
         #获取权重
-        grade=Grade.objects.filter(user_id=request.user.id)
-        if len(grade)==0:
-            for field in ['heightweight','incomeweight','educationweight','appearanceweight','characterweight']:
-                args[field]=0
-        else:
-            for field in ['heightweight','incomeweight','educationweight','appearanceweight','characterweight']:
-                value=getattr(grade[0],field)
-                if value==None:
-                    value=0;
-                args[field]=int(value*100)
+        from apps.recommend_app.method import get_weight_star
+        args.update(get_weight_star(request.user.id))
         #获得另一半身高期望   
         userExpect=UserExpect.objects.get_user_expect_by_uid(request.user.id)
         if userExpect==None:
