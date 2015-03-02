@@ -15,6 +15,8 @@ import logging
 from django.db import transaction
 from apps.message_app.method import add_message_121
 from pinloveweb.settings import ADMIN_ID
+from apps.message_app.message_settings import REPLY_CONTENT_LENGTH_LIMIT
+from util.util import verify_content
 logger=logging.getLogger(__name__)
 ###############################
 ##1.0
@@ -324,11 +326,13 @@ def message_send(request):
             args={'result':'error','error_message':'该用户已经将你拉入黑名单，你不能发送信息!'}   
         else:
             reply_content=request.REQUEST.get('reply_content')
+            #验证内容是否符合标准
+            reply_content=verify_content(reply_content,REPLY_CONTENT_LENGTH_LIMIT)
             message=add_message_121(user.id,receiver_id,reply_content,1)
             args={'result':'success','messageTime':message.sendTime.strftime("%m-%d %H:%M")}  
     except Exception ,e:    
         logger.error('私信   发送,出错')
-        args={'result':'error','error_message':'发送私信出错!'+e.message}   
+        args={'result':'error','error_message':e.message}   
     json = simplejson.dumps(args)
     return HttpResponse(json)
 

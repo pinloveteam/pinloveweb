@@ -13,7 +13,7 @@
 
 			var picBox = '<div class="swiper-container pic-box"><div class="swiper-wrapper pic-wrapper">';
 			for (var i = 0; i < imgArr.length; i++) {
-				picBox += '<center class="swiper-slide"><img src="' + imgArr[i] + '" /></center>';
+				picBox += '<center class="swiper-slide"><img style="max-width:100%" src="' + imgArr[i] + '" /></center>';
 			}
 			picBox += '</div><center class="my-pagination pic-pagination"></center></div>';
 			$('body').after(picBox);
@@ -201,7 +201,7 @@ jQuery.fn.extend({
 
 //js-confirm
 window.Comfirm = function(title,body){
-	var comfirm = $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">确认框</h4></div><div class="modal-body"><p>修改成功</p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">取消</button><button type="button" class="btn btn-primary">确认</button></div></div></div></div>');
+	var comfirm = $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">确认框</h4></div><div class="modal-body"><p>修改成功</p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">取消</button><button type="button" class="btn btn-primary" data-dismiss="modal">确认</button></div></div></div></div>');
 	comfirm.find('.modal-title').html(title);
 	comfirm.find('.modal-body').children().html(body);
 	return comfirm;

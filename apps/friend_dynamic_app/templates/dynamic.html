@@ -41,6 +41,7 @@
 			.trend-text {
 				text-indent: 2em;
 				padding: 10px 0;
+				word-wrap: break-word;
 			}
 
 			.trend-reply {
@@ -145,6 +146,39 @@ $(document).ready(function(){
 		$('#updateFileForm').submit();
 	});
 	
+	$('#pubblicFrom').submit(function(){
+		content=$(this)
+		data=content.serialize();
+		$.ajax({
+			dataType:"json",
+			 type: "POST",
+			url:'/dynamic/send/',
+			data:data,
+			beforeSend:function(XMLHttpRequest){
+				$('#submit-all').attr('disabled',true);
+			},
+			complete:function(XMLHttpRequest, textStatus){
+				$('#submit-all').attr('disabled',false)
+			},
+			success:function(data, textStatus){
+				if (data.result=='success'){
+					data.friendDynamicList=$.parseJSON(data.friendDynamicList)
+					init_dynamic(data.friendDynamicList,2)
+					content.find('#publishTextArea_1').val('').closest('.publishInputArea').find('#reserve').text(199);
+					$('.upload-pic ul').html('');
+			        }else if(data.result=='error'){
+			        	var body=$('<p>'+data.error_message+'</p>')
+			        	$.poplayer({body:body});
+			        }
+			},
+	        error: function(response){
+	        	var body=$('<p>网络异常!</p>');
+				 $.poplayer({body:body});
+	        },
+			
+		});
+		return false;
+	});
 	
 });
 
@@ -169,7 +203,7 @@ function relpy(){
 		},
 		success:function(data, textStatus){
 			if (data['result']=='success'){
-				init_comment(context.closest('.trend'),data['dynamicCommentList'])
+				init_comment(context.closest('.trend'),$.parseJSON(data['dynamicCommentList']))
 				context.find('textarea').val('');
 				context.closest('#reply').hide();
 		        }else if(data['result']=='error'){
@@ -188,16 +222,17 @@ function relpy(){
 	return false;
 }
 //字数限制
-function limit_length(e){
-	publishTextArea=$(e).find('textarea')
+function limit_length(context){
+	publishTextArea=$(context).find('textarea')
    var curLength=publishTextArea.val().length;
    var limitLenght=199
+   var currentLength=publishTextArea.val().length
    if(curLength>limitLenght){
       var num=publishTextArea.val().substr(0,limitLenght);
       $("#publishTextArea_1").val(num);
       var body=$('<p>超过字数限制，多出的字将被截断！</p>')
       $.poplayer({body:body});
-      publishTextArea.closest('.publishInputArea').find('#reserve').text(limitLenght-publishTextArea.val().length);
+      publishTextArea.closest('.publishInputArea').find('#reserve').text(0);
  	 return false;
        }
      else{
@@ -224,14 +259,14 @@ function public(e){
 
 //初始化动态
 var agree_status=true;
-function init_dynamic(dynamicList){
+function init_dynamic(dynamicList,type){
 	$(dynamicList).each(function(){
 		dynamic=$('#dynamic_clone').find('.row').first().clone();
 		dynamicObj=this;
 		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-100.jpeg');
 		dynamic.find('#username').text(this.publishUserName);
 		dynamic.find('#time').text(this.publishTime+'发布');
-		dynamic.find('#content').text(this.content);
+		dynamic.find('#content').html(this.content);
 		dynamic.find('#agreeNum').text('('+this.argeeNum+')');
 		if(userId==this.publishUserId){
 			dynamic.find('.trend').prepend('<span class="delete">删除 </span>')
@@ -291,15 +326,9 @@ function init_dynamic(dynamicList){
 		if(this.commentList.length>0){
 			init_comment(dynamic,$.parseJSON(this.commentList),this.publishUserId);
 		}
-		$('#dynamic').append(dynamic);
-		if(this.type==2){
-		pic=dynamic.find('#pic');
-		pic.attr('id','pic_'+this.id)
-		pic.actizPicShow({data:dataList});
-		}
 		reply_clone=$('#dynamic_clone').find('#reply').clone();
 		reply_clone.find('#dynamicId').val(dynamicObj.id);
-		reply_clone.find(".publishInputArea").keydown(limit_length);
+		reply_clone.find(".publishInputArea").keydown(function(){limit_length(this)});
 		reply_clone.find('textarea').attr('id','dynamic_'+this.id)
 		reply_clone.find('.publishInputExpression').attr('target','#dynamic_'+this.id).click(publishInputExpression);
 		dynamic.find('.reply-btn,.btn-comment').click(function() {
@@ -323,8 +352,22 @@ function init_dynamic(dynamicList){
 		dynamic.find('.delete').click(function(){
 			del_dynamic(this);
 		});
-		dynamic.find('.trend').append(reply_clone);
-		$('#dynamic').append($('#dynamic_clone').find('hr').clone());
+		
+		if(type==1){
+			$('#dynamic').append(dynamic);
+			dynamic.find('.trend').append(reply_clone);
+			$('#dynamic').append($('#dynamic_clone').find('hr').clone());
+		}else if(type==2){
+			dynamic.find('.trend').append(reply_clone);
+			$('#dynamic').children(':eq(1)').after(dynamic)
+			dynamic.after($('#dynamic_clone').find('hr').clone());
+		}
+		if(this.type==2){
+			pic=dynamic.find('#pic');
+			pic.attr('id','pic_'+this.id)
+			pic.actizPicShow({data:dataList});
+			}
+		
 	});
 };
 function init_agree(dynamic_div,agreeList,type){
@@ -353,7 +396,7 @@ function init_comment(dynamic_div,commentList,publishUserId){
 			reviewerHref.after(':')
 		}
 		reviewerHref.parent().find('a').click(detail_info);
-		comment.find('.comment-text').text(this.content);
+		comment.find('.comment-text').html(this.content);
 		comment.find('#commentId').val(this.id);
 		comment.find('#reviewerId').val(this.reviewerId);
 		if(publishUserId==userId||this.reviewerId==userId){
@@ -868,7 +911,7 @@ function sendExpression(e) {
        	if(typeof(data.messageList)!="object"){
        		data.messageList=$.parseJSON(data.friendDynamicList);
        	}
-	    init_dynamic(data.messageList);
+	    init_dynamic(data.messageList,1);
 	   };
 		$(window).scroll( function() { 
 				if(get_load_next_page()){

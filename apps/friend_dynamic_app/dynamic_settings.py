@@ -13,3 +13,5 @@ UPLOAD_PHOTO_TEXT={
                    'UPLOAD_FORMAT_ERROR':u'上传格式出错!',
                    'EORROR':'上传动态图片出错!'
                    }
+#动态内容长度
+DYNAMIC_CONTENT_LIMIT=199

@@ -5,7 +5,7 @@ Created on Sep 17, 2013
 @author: jin
 '''
 from django.utils import simplejson
-from util.util import regex_expression
+from util.util import regex_expression, regex_url
 from apps.user_app.method import get_avatar_name
 '''
 消息类类
@@ -84,8 +84,10 @@ def messagedynamics_to_message_page(messageDynamicList):
     for messageDynamic in messageDynamicList:
         message=messageDynamic
         message['sendTime']=message['sendTime'].strftime("%m-%d %H:%M")
+        message['content']=regex_url(message['content'])
         message['content']=regex_expression(message['content'])
         if 'friendDynamic_content' in message and message['friendDynamic_content'] !=None:
+            message['friendDynamic_content']=regex_url(message['friendDynamic_content'])
             message['friendDynamic_content']=regex_expression(message['friendDynamic_content'])
         if message['type']==2:
             #判断是否关注

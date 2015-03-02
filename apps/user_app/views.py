@@ -347,10 +347,13 @@ def reset_password(request):
 '''
 更新黑名单
 '''
+@transaction.commit_on_success
 def black_list(request):
     args={}
     try:
         userId=int(request.REQUEST.get('userId'))
+        if userId==request.user.id:
+            raise Exception('自己不能拉自己进黑名单!')
         from apps.user_app.method import update_black_list
         result=update_black_list(request.user.id,userId)
         if result==1:
@@ -364,7 +367,7 @@ def black_list(request):
         args={'result':'success','type':result}
     except Exception ,e:
         logger.exception('更新黑名单出错')
-        args={'result':'error','error_message':'黑名单修改出错!'}
+        args={'result':'error','error_message':'黑名单错误:'+e.message}
     json=simplejson.dumps(args)
     return HttpResponse(json)
         

@@ -69,7 +69,7 @@ function loadData(no_load,success,loading,has_load)
 	        	 has_load=false;
 	         },
 	         error: function(response){
-	             alert('网络异常!')
+	            // alert('网络异常!')
 	         }
 	     });
 		 

@@ -19,6 +19,9 @@ from util.page import page
 from apps.pojo.dynamic import MyEncoder
 from django.views.decorators.http import require_POST
 import re
+from django.db import transaction
+from apps.friend_dynamic_app.dynamic_settings import DYNAMIC_CONTENT_LIMIT
+from util.util import verify_content
 logger=logging.getLogger(__name__)
 '''
 卡片界面动态
@@ -27,36 +30,6 @@ logger=logging.getLogger(__name__)
 def dynamic(request,template_name):
     arg={}
     dynamicId=request.REQUEST.get('dynamicId',None)
-    #发布动态
-    if request.method=="POST":
-        flag=True
-        content=request.POST.get('content').strip()
-        p = re.compile('[(\n|\r)]*')
-        content=p.sub('',content)
-        if content.rstrip()=='':
-            arg['error']={'error':u'发布内容不能为空！'}
-            flag=False
-        friendDynamic=FriendDynamic()
-        friendDynamic.publishUser=request.user
-        friendDynamic.content=content
-        if 'images_path' in request.session.keys():
-            friendDynamic.data=simplejson.dumps(request.session['images_path'])
-            friendDynamic.type=2
-        else:
-            friendDynamic.type=1
-        friendDynamic.save()
-        if 'images_path' in request.session.keys():
-            photoList=request.session['images_path']
-            for photo in photoList:
-                picture=Picture()
-                picture.user=request.user
-                picture.friendDynamic=friendDynamic
-                picture.description=content
-                from util import util_settings
-                picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
-                picture.save()
-            del request.session['images_path']
-        return HttpResponseRedirect('/dynamic/')
     arg['user']=request.user
     from apps.user_app.method import get_avatar_name
     arg['avatar_name']=get_avatar_name(request.user.id,request.user.id)
@@ -245,48 +218,40 @@ def no_read_comment_list(request,template_name):
 '''
  发布消息
 '''
+@transaction.commit_on_success
 def send_dynamic(request):
-    arg={}
-    if request.user.is_authenticated():
-        if request.method=="POST":
-            flag=True
-            type=request.POST.get('type').strip()
-            content=request.POST.get('content').strip()
-            #判断失败条件
-            if int(type)>=3:
-                arg['error']={'error':u'发布失败！'}
-                flag=False
-            if content.rstrip()=='':
-                arg['error']={'error':u'发布内容不能为空！'}
-                flag=False
-            friendDynamic=FriendDynamic()
-            friendDynamic.publishUser=request.user
-            friendDynamic.type=type
-            friendDynamic.content=content
-            if type=='2':
-                friendDynamic.data=request.session['images_path']
-            friendDynamic.save()
-            if type=='2':
-                photoList=request.session['images_path']
-                for photo in photoList:
-                    picture=Picture()
-                    picture.user=request.user
-                    picture.friendDynamic=friendDynamic
-                    picture.description=content
-                    from util import util_settings
-                    picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
-                    picture.save()
-                del request.session['images_path']
-            arg=init_dynamic(request.user,arg)
-            if flag:
-                return render(request, 'send_dynamic.html', arg,)
-            else:
-                return render(request, 'send_dynamic.html', arg,)
+    args={}
+    try:
+        content=request.POST.get('content')
+        content=verify_content(content,DYNAMIC_CONTENT_LIMIT)
+        friendDynamic=FriendDynamic()
+        friendDynamic.publishUser=request.user
+        friendDynamic.content=content
+        if 'images_path' in request.session.keys():
+            friendDynamic.data=simplejson.dumps(request.session['images_path'])
+            friendDynamic.type=2
         else:
-            arg=init_dynamic(request.user,arg)
-            return render(request, 'send_dynamic.html', arg,)      
-    else:
-        return render(request, 'login.html', arg,)   
+            friendDynamic.type=1
+        friendDynamic.save()
+        if 'images_path' in request.session.keys():
+            photoList=request.session['images_path']
+            for photo in photoList:
+                picture=Picture()
+                picture.user=request.user
+                picture.friendDynamic=friendDynamic
+                picture.description=content
+                from util import util_settings
+                picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
+                picture.save()
+            del request.session['images_path']     
+        args['result']='success'    
+        from apps.pojo.dynamic import friendDynamicList_to_Dynamic
+        friendDynamicList=friendDynamicList_to_Dynamic([friendDynamic,], request.user.id)
+        args['friendDynamicList']=simplejson.dumps(friendDynamicList,cls=MyEncoder)
+    except Exception as e:
+        args={'result':'error','error_message':e.message}
+    json=simplejson.dumps(args)
+    return  HttpResponse(json)
 
 '''
  删除消息
@@ -467,31 +432,22 @@ def show_comment(request):
 发布评论
 '''
 def comment(request):
-        arg={}
-        try:
-            dynamicId=int(request.REQUEST.get('dynamicId'))
-            receiverId=request.REQUEST.get('receiverId','')
-            content=request.REQUEST.get('content')
-        except:
-            arg['result']='error' 
-            json=simplejson.dumps(arg)
-            return HttpResponse(json)
+    arg={}
+    try:
+        dynamicId=int(request.REQUEST.get('dynamicId'))
+        receiverId=request.REQUEST.get('receiverId','')
+        content=request.REQUEST.get('content')
+        content=verify_content(content,DYNAMIC_CONTENT_LIMIT)
         comment=FriendDynamicComment()
-        if len(content)==0:
-              arg={'result':'error','msg':'评论不能为空'}
         if len(receiverId)<=0:
             friendDynamic=FriendDynamic.objects.select_related('publishUser').get(id=dynamicId)
             if friendDynamic.publishUser.id!=request.user.id:
                 comment.receiver_id=friendDynamic.publishUser.id
             from util.cache import is_black_list
             if comment.receiver_id is not None and is_black_list(int(comment.receiver_id),int(request.user.id)):
-                arg={'result':'error','error_message':'该用户已经将你拉入黑名单，你不能评论!'} 
-                json=simplejson.dumps(arg)
-                return HttpResponse(json)
+                raise Exception('该用户已经将你拉入黑名单，你不能评论!')
         elif int(receiverId)==request.user.id:
-            arg={'result':'error','msg':'能自己对自己评论'}
-            json=simplejson.dumps(arg)
-            return HttpResponse(json)
+            raise Exception('不能自己对自己评论!')
         else:
             comment.receiver_id=receiverId
         m=re.search(u'^回复.*?:', content)
@@ -519,10 +475,13 @@ def comment(request):
         from apps.pojo.dynamic import FriendDynamicCommentList_to_DynamicCommentList
         dynamicCommentList=FriendDynamicCommentList_to_DynamicCommentList(request.user.id,[comment,])
         arg['result']='success'
-        arg['dynamicCommentList']=dynamicCommentList
         from apps.pojo.dynamic import DynamicCommentEncoder
-        json=simplejson.dumps(arg,cls=DynamicCommentEncoder)
-        return HttpResponse(json)  
+        arg['dynamicCommentList']=simplejson.dumps(dynamicCommentList,cls=DynamicCommentEncoder)
+    except Exception as e:
+        arg['result']='error' 
+        arg['error_message']=e.message
+    json=simplejson.dumps(arg)
+    return HttpResponse(json)
 
 '''
 删除评论

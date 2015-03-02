@@ -6,6 +6,8 @@ Created on 2014年7月7日
 '''
 from apps.friend_dynamic_app.models import FriendDynamicComment,\
     FriendDynamicArgee, Picture
+import re
+
 '''
 根据用户id获取未读消息数量
 '''
@@ -43,4 +45,4 @@ def get_pic(userId,first=0,end=100):
         pictureBeanList.append({'description':picture.description,'pic':pic,'smailPic':smailPic,'createTime':picture.createTime.strftime("%Y-%m-%d-%H")})
     return pictureBeanList
      
-            
+        

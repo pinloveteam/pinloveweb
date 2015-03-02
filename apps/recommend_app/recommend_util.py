@@ -50,12 +50,14 @@ def recommend_info_status(request):
                     args['data']['weight']=dict['weight']
                 if grade.incomescore==None or  grade.educationscore==None:
                     args['data']['info']=dict['info']
-                if grade.appearancescore:
+                if grade.sysappearancescore is None:
                     avatar_name_status=UserProfile.objects.get(user_id=userId).avatar_name_status
                     if avatar_name_status not in[u'2',u'3']:
                         args['data']['avatar']=dict['avatar']
             else:
                 args['data'][key]=dict[key]
+        else:
+            args['result']=False
     return  args           
     
             

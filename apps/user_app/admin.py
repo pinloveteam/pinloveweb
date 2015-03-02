@@ -121,7 +121,7 @@ class AvatarCheck(UserProfile):
            
 class AvatarCheckForm(forms.ModelForm):
     from django.core.validators import MaxValueValidator,MinValueValidator
-    appearancescore=forms.FloatField(label=u"外貌分数",validators = [MinValueValidator(0), MaxValueValidator(100)],help_text=u'分数在[0,100]区间')
+    appearancescore=forms.FloatField(label=u"外貌分数",required=False,validators = [MinValueValidator(0), MaxValueValidator(100)],help_text=u'分数在[0,100]区间')
     roate=forms.ChoiceField(label=u"图片旋转",widget=forms.RadioSelect, choices=((0,'默认'),(-90,'顺时针90度'),(-180,'顺时针180度'),(90,'逆时针90度'),),initial=0,)
     class Meta:
         model=AvatarCheck

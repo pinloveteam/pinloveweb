@@ -6,7 +6,7 @@ Created on Sep 17, 2014
 '''
 from django.utils import simplejson
 from simplejson.encoder import JSONEncoder
-from util.util import regex_expression
+from util.util import regex_expression, regex_url
 from apps.friend_dynamic_app.models import FriendDynamicComment
 '''
 评论类
@@ -22,6 +22,7 @@ class DynamicComment(object):
         else:
             self.receiverId=receiver.id
             self.receiverName=receiver.username
+        content=regex_url(content)
         self.content=regex_expression(content)
         self.commentTime=commentTime.strftime("%Y-%m-%d %H:%M:%S")
         self.reviewerAvatarName=reviewerAvatarName
@@ -84,6 +85,7 @@ def friendDynamicList_to_Dynamic(friendDynamicList,userId):
         dynamic=Dynamic()
         for field in ['id','type','content']:
             setattr(dynamic,field,getattr(friendDynamic,field))
+        dynamic.content=regex_url(dynamic.content)
         dynamic.content=regex_expression(dynamic.content)
         dynamic.publishUserId=friendDynamic.publishUser.id
         dynamic.publishUserName=friendDynamic.publishUser.username
@@ -121,7 +123,8 @@ class  CommentDynamic(DynamicComment):
     def __init__(self,id,reviewer,receiver,content,commentTime,reviewerAvatarName,dynamic):
         super(CommentDynamic,self).__init__(id,reviewer,receiver,content,commentTime,reviewerAvatarName)
         self.dynamicId=dynamic.id
-        self.dynamicConent=regex_expression(dynamic.content)
+        self.content=regex_url(dynamic.content)
+        self.dynamicConent=regex_expression(self.content)
         if dynamic.type==2:
             pics=(u'[图片]'*len(simplejson.loads(dynamic.data)))
             self.dynamicConent='%s%s'%(self.dynamicConent,pics)
