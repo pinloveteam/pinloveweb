@@ -13,6 +13,7 @@ from django.core.serializers import serialize
 from django.db.models.query import QuerySet
 from django.utils import simplejson
 from apps.user_app.models import UserProfile
+import re
 '''
 生成长度固定的字符串
 '''
@@ -64,8 +65,7 @@ def model_to_dict(instance,fields=None):
 def regex_expression(content):
     if not isinstance(content,basestring):
         return content
-    regex=u'{:pinlove_[0-9]{1,2}:}'
-    import re
+    regex=u'{:pinlove_(?:7[0-5]|[1-6][0-9]|[1-9]):}'
     return re.sub(regex, dashrepl, content)
  
 def dashrepl(matchobj):
@@ -73,6 +73,19 @@ def dashrepl(matchobj):
     num=s[10:-2]
     return '%s%s%s' % ('<img src="/static/img/arclist/',num,'.png" style="width: 24px; height: 24px;">')
  
+'''
+匹配字符串里的连接
+'''
+def regex_url(content):
+    if not isinstance(content,basestring):
+        return content
+    regex=u'((http|ftp|https)://)(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\&%_\./-~-]*)?'
+    return re.sub(regex, dashrepl_url, content)
+ 
+def dashrepl_url(matchobj):
+    s=matchobj.group(0)
+    return '%s%s%s%s%s' % ('<a target="_blank" href="',s,'">',s,'</a>')
+
 '''
 判断是否引导过
 attridute:
@@ -123,4 +136,19 @@ def time_for_now(dateTime):
     elif second<60:
         return  '刚刚'
         return  '%s%s'%(second,'秒')
+ 
     
+'''
+验证评论，动态内容
+'''
+def verify_content(content,limit_length):
+    content=content.strip()
+    p = re.compile('[\n\r]*')
+    content=p.sub('',content)
+    if content.rstrip()=='':
+        raise Exception('内容不能为空!')
+    elif len(content.rstrip())>limit_length:
+        raise Exception('%s%s%s'%('内容长度不得大于',limit_length,'!'))
+    from django.utils.html import escape
+    content=escape(content)
+    return content
