@@ -4,6 +4,9 @@ Created on 2014年4月17日
 
 @author: jin
 '''
+'''
+重置缓存
+'''
 from django.core.management.base import BaseCommand
 class Command(BaseCommand):
     def handle(self, *args, **options):

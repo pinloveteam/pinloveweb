@@ -58,15 +58,13 @@
                             		};
         							$.poplayer({body:body,btnFunc:button});
         							$('.poplayer button').html('继续');
+        							inputJudge('success','',$('#'+focus_error_id))
                             	}else{
                             		errors=data.errors
-                            		for(i=0;i<errors.length;i++){
-                            			error=errors[i]
-                            			id=$('#'+error[0]+'_error')
-                            			if(id.length>0){
-                            				id.html(error[1])
-                            			}
+                            		if(errors.length>0){
+                            			inputJudge('error',errors[0][1],$('#'+focus_error_id))
                             		}
+                            		
                             	}
                             	
                             }
@@ -113,8 +111,52 @@
         			 $(this).parent().hide()
         		})
         });
-
+        
     </SCRIPT> 
+     <script type="text/javascript">
+        var focus_error_id=null;
+		function inputJudge(type,message,element){
+			var feedback
+			if(element.next().length>0){
+				if(type == 'success'){
+					element.next().removeClass('text-danger glyphicon-remove').addClass('text-success glyphicon-ok');
+					if(element.attr('id')==focus_error_id){
+					   $('#errorInfo').html('').closest('.alert-danger').slideUp('slow');
+					}
+				}
+				if(type == 'error'){
+					element.next().removeClass('text-success glyphicon-ok').addClass('text-danger glyphicon-remove');
+					focus_error_id=element.attr('id')
+					$('#errorInfo').html(message);
+					$('#errorInfo').parents('.alert').slideDown('slow');
+					
+				}
+				
+			}else{
+				if(type == 'success'){
+					feedback = $('<span class="glyphicon glyphicon-ok form-control-feedback text-success"></span>');	
+					if(element.attr('id')==focus_error_id){
+						$('#errorInfo').html('').closest('.alert-danger').slideUp('slow');
+						}
+				}
+				if(type == 'error'){
+					feedback = $('<span class="glyphicon glyphicon-remove form-control-feedback text-danger"></span>');
+					focus_error_id=element.attr('id')
+					$('#errorInfo').html(message);
+					$('#errorInfo').parents('.alert').slideDown('slow');
+				}
+				element.after(feedback);
+			}
+			
+		}
+
+	</script>
+    
+           <center class="alert alert-danger alert-dismissible fade in" role="alert" style="line-height: 0.9;display: none;">
+ 			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
+			</button>
+			<span id="errorInfo"></span>
+			</center>
           <form id=updateUserProfile action="" method="post" >{% csrf_token %}
 				
 				<div class="form-row">

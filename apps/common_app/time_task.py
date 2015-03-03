@@ -12,6 +12,6 @@ def time_task():
         incomes=cal_income(user.income)
         from apps.recommend_app.models import Grade
         if Grade.objects.filter(user_id=user.user.id).exists():
-               Grade.objects.filter(user_id=user.user.id).update(incomescore=incomes)
+            Grade.objects.filter(user_id=user.user.id).update(incomescore=incomes)
         else:
-               Grade(user_id=user.user.id,incomescore=incomes).save()
+            Grade(user_id=user.user.id,incomescore=incomes).save()

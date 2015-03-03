@@ -1,64 +1,28 @@
-# coding: utf-8 
-import os, sys
-import datetime
-import re
-import logging
-from pinloveweb.settings import PATH
-from apps.third_party_login_app.models import FacebookPhoto
-from apps.third_party_login_app.facebook import GraphAPI
-from django.contrib.auth.models import User
+# -*- coding: utf-8 -*-
+from apps.third_party_login_app.models import ThirdPsartyLogin
+from django.shortcuts import render
+from apps.upload_avatar import get_uploadavatar_context
+from apps.user_app.models import UserProfile
+from django.http.response import HttpResponse
+from django.db import transaction
 
-
-
-#Calculate the path based on the location of the WSGI script.
-
-# sys.path.append(r'/home/pinloveteam/webapps/pinlove/pinloveweb')
-# 
-# os.environ['DJANGO_SETTINGS_MODULE'] = 'pinloveweb.settings'
-# 
-# os.environ['PYTHON_EGG_CACHE'] = '/tmp'
-# 
-# 
-# import django.core.handlers.wsgi
-# 
-# 
-# application = django.core.handlers.wsgi.WSGIHandler()
-# 
-# print  sys.stderr, sys.path
-# mobilePhone_re=re.compile(r'^1[3|4|5|8][0-9]\d{4,8}$')
-# match= mobilePhone_re.match('15558188991')
-# print  match.group()
-
-# a=eval('u'+'\u4e95\u5188\u5c71\u5b66\u9662')
-# s = '\u56c3\u67e4' 
-# i=u'背'
-# text = i.decode('GB2312')
-# print text
-# logger = logging.getLogger('django.db.backends')
-# try:
-#         from apps.user_app.models import Friend
-#         Friend.objects.filter(friend=1)
-#     
-# except:
-#         print '========================='
-#         logger.warn("test error")
-#         logging.exception('Got exception on main handler')
-# from celery.decorators import task
-# @task
-# def add(x,y):
-#     return x+y
-# if __name__ =='__main__':
-#     result=add.delay(8,8)
-#     result.wait()
-# =======
-# logger = logging.getLogger('django.db.backends')
-# try:
-#         from apps.user_app.models import Friend
-#         Friend.objects.filter(friend=1)
-#     
-# except:
-#         print '========================='
-#         logger.warn("test error")
-#         logging.exception('Got exception on main handler')
-# >>>>>>> Stashed changes 1386963224.48
-User.objects.filter(id>2)
+@transaction.commit_on_success
+def tests(request):
+    UserProfile.objects.filter(user=request.user).update(guide=None)
+    a=1
+    a=int('sd')
+    return HttpResponse('success')
+    
+def send_eamil_test():
+    from pinloveweb.settings import DEFAULT_FROM_EMAIL
+    subject, from_email, to = 'hello', DEFAULT_FROM_EMAIL, 'habfy65@gmail.com'    
+    text_content = 'This is an important message.'  
+    from django.template.loader import get_template
+    htmly=get_template('Email_Template.html')
+    from django.core.mail.message import EmailMultiAlternatives
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])  
+    from django.template.context import Context
+    d = Context({})
+    html_content = htmly.render(d)
+    msg.attach_alternative(html_content, "text/html")  
+    msg.send()  

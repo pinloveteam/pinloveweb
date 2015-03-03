@@ -6,6 +6,7 @@ from django.utils.translation import  ugettext_lazy as _
 
 from apps.user_app.models import UserProfile, UserContactLink, UserHobbyInterest
 from apps.user_app import user_validators
+import re
 # from apps.common_app.models import Area
 # countryList=Area.objects.get_country_list()
 # COUNTRY_CHOICES=[(None,'国家')]
@@ -76,6 +77,25 @@ class UserProfileForm(ModelForm):
         if not ((city==None and stateProvince==None and country==None)or(city!=None and stateProvince!=None and country!=None)):
             raise  forms.ValidationError(u'请正确填居住地!')
         return city
+        
+    def clean_educationSchool(self):
+        educationSchool=self.cleaned_data['educationSchool']
+        if not  educationSchool is None:
+            regex=u'^[\u4e00-\u9fa5\w\s]+$'
+            match1=re.match(regex,educationSchool)
+            if match1 is None:
+                raise  forms.ValidationError(u'国内学校格式不正确!')
+        return educationSchool
+    
+    def clean_educationSchool_2(self):
+        educationSchool_2=self.cleaned_data['educationSchool_2']
+        if not  educationSchool_2 is None:
+            regex=u'^[\u4e00-\u9fa5\w\s]+$'
+            match1=re.match(regex,educationSchool_2)
+            if match1 is None:
+                raise  forms.ValidationError(u'国外学校格式不正确!')
+        return educationSchool_2
+        
         
             
     class Meta : 

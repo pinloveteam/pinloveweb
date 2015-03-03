@@ -46,6 +46,7 @@ STATICFILES_DIRS = (
    ('css',os.path.join(PATH,'static/css').replace('\\','/') ),  
     ('js',os.path.join(PATH,'static/js').replace('\\','/') ), 
     ('img',os.path.join(PATH,'static/img').replace('\\','/') ), 
+    ('fonts',os.path.join(PATH,'static/fonts').replace('\\','/') ), 
      os.path.join(PATH,'apps/upload_avatar/static').replace('\\','/'), 
      os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
      os.path.join(PATH,'apps/verification_app/static').replace('\\','/'),
@@ -81,6 +82,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     #登录拦截     
      'middleware.authentication.AuthenticationMiddleware',
@@ -220,7 +222,7 @@ PAYPAL_TEST=False
 # }
 logger_app=['pinloveweb','apps.friend_dynamic_app','apps.game_app','apps.message_app',
             'apps.pay_app','apps.recommend_app','apps.search_app','apps.the_people_nearby','apps.third_party_login_app','apps.user_app',
-            'apps.user_score_app','apps.verification_app','apps.alipay_app','apps.weixin_app','apps.mobile_app']
+            'apps.user_score_app','apps.verification_app','apps.alipay_app','apps.weixin_app','apps.mobile_app','apps.upload_avatar']
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -356,61 +358,61 @@ CACHES = {
     },
 }
 # 本地环境
-# DATABASES = {
-#                                     
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'django',                      # Or path to database file if using sqlite3.
-#                                                 # The following settings are not used with sqlite3:
-#         'USER': 'root',                         #pinloveteam
-#         'PASSWORD': 'jin521436',                       #redyellowblue123#
-#         'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#         'PORT': '',      
-#                                                 # Set to empty string for default.
-#     }
-# }
-# MEDIA_URL = '/media/'
-# STATIC_URL = '/static/'
-# MEDIA_ROOT = os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
-# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-# UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
-# UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
-# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
-# DOMAIN='pinlove.xicp.net'
-# DEBUG = True
-# TEMPLATE_DEBUG = DEBUG
+DATABASES = {
+                                     
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'django',                      # Or path to database file if using sqlite3.
+                                                # The following settings are not used with sqlite3:
+        'USER': 'root',                         #pinloveteam
+        'PASSWORD': 'jin521436',                       #redyellowblue123#
+        'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',      
+                                                # Set to empty string for default.
+    }
+}
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
+STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+UPLOAD_AVATAR_AVATAR_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+DOMAIN='pinlove.xicp.net'
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 #---服务器环境-----
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
-DATABASES = {
-                                         
-      'default': {
-          'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-          'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
-                                                  # The following settings are not used with sqlite3:
-          'USER': 'pinloveteam',
-          'PASSWORD': 'redyellowblue123#',
-          'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-          'PORT': '',                             # Set to empty string for default.
-          'OPTIONS':{'init_command':'SET storage_engine=INNODB,character_set_connection=utf8,collation_connection=utf8_unicode_ci',},
-      }
-  }
-#upload 上传地址
-MEDIA_URL = '/media/'
-MEDIA_ROOT =os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
-#静态文件地址
-STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
-STATIC_URL = '/static/'
-#头像上传地址
-UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
-UPLOAD_AVATAR_AVATAR_ROOT=os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
-UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
-#grappelli
-UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
-DOMAIN='pinlove.com'
+# DEBUG = False
+# TEMPLATE_DEBUG = DEBUG
+# DATABASES = {
+#                                          
+#       'default': {
+#           'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#           'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
+#                                                   # The following settings are not used with sqlite3:
+#           'USER': 'pinloveteam',
+#           'PASSWORD': 'redyellowblue123#',
+#           'HOST': '',                             # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#           'PORT': '',                             # Set to empty string for default.
+#           'OPTIONS':{'init_command':'SET storage_engine=INNODB,character_set_connection=utf8,collation_connection=utf8_unicode_ci',},
+#       }
+#   }
+# #upload 上传地址
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT =os.path.join(os.path.dirname(PATH),'update').replace('\\','/')
+# #静态文件地址
+# STATIC_ROOT = os.path.join(PATH,'static').replace('\\','/')
+# STATIC_URL = '/static/'
+# #头像上传地址
+# UPLOAD_AVATAR_UPLOAD_ROOT= os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+# UPLOAD_AVATAR_AVATAR_ROOT=os.path.join(os.path.dirname(PATH),'update/user_img').replace('\\','/')
+# UPLOAD_AVATAR_URL_PREFIX_ORIGINAL='/media/user_img/'
+# #grappelli
+# UPLOAD_AVATAR_URL_PREFIX_CROPPED='/avatar/'
+# ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
+# DOMAIN='pinlove.com'
 
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}

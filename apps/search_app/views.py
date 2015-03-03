@@ -44,6 +44,16 @@ def search(request):
                     userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
                                                height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender).exclude(user=request.user).filter(avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)
                     searchList=get_recommend_list(request,userProfile,userProfileList)
+                else:
+                    args['result']='error'
+                    args['error_message']=[]
+                    errorList=searchForm.errors.items()
+                    for error in errorList:
+                        args['error_message'].append([SearchForm.base_fields[error[0]].label,error[1][0]])
+                    json=simplejson.dumps(args)
+                    return HttpResponse(json)
+                        
+                    
         
         else:
             userProfileList=UserProfile.objects.filter().exclude(user=request.user).exclude(gender=userProfile.gender).filter(avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)

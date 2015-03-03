@@ -38,3 +38,4 @@ class AuthenticationMiddleware(object):
                     return HttpResponseRedirect('%s%s%s'%(redirectUrl,'?next=',request.path))
         else:
             return None
+

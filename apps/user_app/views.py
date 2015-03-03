@@ -247,39 +247,24 @@ def update_profile(request):
         oldUserProfile=copy.deepcopy(userProfile)
         POSTdata=request.POST.copy()
         #如果出生年月已经存在填充userProfileForm
-#         if userProfile.check_birth():
-#             for field in ['year_of_birth','month_of_birth','day_of_birth']:
-#                 POSTdata[field]=getattr(userProfile,field)
         userProfileForm = UserProfileForm(POSTdata, instance=userProfile) 
         if userProfileForm.is_valid():
-#             tagList=request.REQUEST.get('tagList','').split(',')
             #保存 user_profle信息
             userProfile = userProfileForm.save(commit=False)
-#             userProfile.user.username=request.POST['username']
-#             for field in ['country','stateProvince','city']:
-#                 setattr(userProfile,field,request.POST[field])
             #计算资料完成度
             from apps.user_app.method import get_profile_finish_percent_and_score
             userProfile=get_profile_finish_percent_and_score(userProfile,oldUserProfile)
             userProfile.save(oldUserProfile=oldUserProfile)
             data={}
-#             if userProfile.check_birth():
-#                 year_of_birth=userProfile.year_of_birth
-#                 month_of_birth=userProfile.month_of_birth
-#                 day_of_birth=userProfile.day_of_birth
-#                 data['birth']='{0}年{1}月{2}日'.format(year_of_birth,month_of_birth,day_of_birth)
-#                 data['age']=userProfile.age
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
             cal_recommend(request.user.id,['userProfile'])     
             data['result']='success'
-            json=simplejson.dumps(data)
-            return HttpResponse(json, mimetype='application/json')
         else:
             errors=userProfileForm.errors.items()
             data={'errors':errors,'result':'error'}
-            json=simplejson.dumps(data)
-            return HttpResponse(json, mimetype='application/json')
+        json=simplejson.dumps(data)
+        return HttpResponse(json, mimetype='application/json')
  
 
 '''

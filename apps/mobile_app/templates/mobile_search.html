@@ -124,6 +124,9 @@ $(document).ready(function(){
 				<div class="col-xs-1">
 					岁
 				</div>
+				<div class="col-xs-4" style="color:red">
+					{{searchForm.maxAge.errors}}
+				</div>
 			</div>
 			<div class="row frame">
 			  <div class="col-xs-12">
@@ -140,6 +143,9 @@ $(document).ready(function(){
 				</div>
 				<div class="col-xs-3">
 					厘米
+				</div>
+				<div class="col-xs-2" style="color:red">
+					{{searchForm.maxHeigh.errors}}
 				</div>
 			</div>
 			<div class="row frame">
@@ -168,6 +174,9 @@ $(document).ready(function(){
 				<div class="col-xs-3">
 					万/年
 				</div>
+				<div class="col-xs-2" style="color:red">
+					{{searchForm.maxIncome.errors}}
+				</div>
 			</div>
 			<div class="row frame">
 			 <div class="col-xs-12">
@@ -179,6 +188,9 @@ $(document).ready(function(){
 					{{searchForm.jobIndustry}}
 				</div>
 			</div>
+			<div class="col-xs-4" style="color:red">
+					{{searchForm.maxIncome.errors}}
+				</div>
 
 			<div id="sunSignList" class="row frame">
 				<center class="row js-labels">

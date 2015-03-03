@@ -356,11 +356,11 @@ def search(request,template_name='mobile_search.html'):
             from apps.search_app.views import init_search_condition
             initial=init_search_condition(request.user.id)
             searchForm=SearchMobileForm(initial=initial)
-            from apps.search_app.views import get_disable_condition
-            args.update(get_disable_condition(userProfile))
-            args['searchForm']=searchForm
-            from apps.search_app.forms import SUN_SIGN_CHOOSICE
-            args['sunSign']=SUN_SIGN_CHOOSICE
+        from apps.search_app.views import get_disable_condition
+        args.update(get_disable_condition(userProfile))
+        args['searchForm']=searchForm
+        from apps.search_app.forms import SUN_SIGN_CHOOSICE
+        args['sunSign']=SUN_SIGN_CHOOSICE
 #             from pinloveweb.method import get_no_read_web_count
 #             args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
         if request.is_ajax():

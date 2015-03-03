@@ -12,6 +12,9 @@
 	$.fn.removeLoading = function() {
 		loading.remove();
 	};
+	$.fn.failLoading = function() {
+		loading.find('small').html('加载失败请刷新!')
+	};
 	
 	$.addShade=$.fn.addShade = function(content) {
 		var bodyWidth = document.documentElement.clientWidth; 
