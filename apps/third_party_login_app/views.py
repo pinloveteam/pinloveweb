@@ -30,7 +30,7 @@ from .setting import (
       PublicWeiXinAppSecret
      )
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD,\
-    WEIXIN_CHECK_AUTHORIZATION_URL
+    WEIXIN_CHECK_AUTHORIZATION_URL, WEB_ROOT
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from apps.third_party_login_app.models import FacebookUser, FacebookPhoto,\
@@ -105,7 +105,7 @@ def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    return HttpResponseRedirect(request.get('next_url'))
+    return HttpResponseRedirect(request.GET.get('next_url',WEB_ROOT))
      
 '''
 微信登录链接
@@ -298,7 +298,7 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    return HttpResponseRedirect(request.get('next_url'))
+    return HttpResponseRedirect(request.GET.get('next_url',WEB_ROOT))
     user_info=client.users.show.get(uid=uid)
     return HttpResponse(user_info['screen_name'])
 
@@ -349,7 +349,7 @@ def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
         user=ThirdPsartyLogin.objects.get(provider='2',uid=user_info['id']).user
         login(request,user.username,DEFAULT_PASSWORD)
         
-    return HttpResponseRedirect(request.get('next_url'))
+    return HttpResponseRedirect(request.GET.get('next_url',WEB_ROOT))
 
 
 
