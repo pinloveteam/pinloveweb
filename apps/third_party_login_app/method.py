@@ -16,11 +16,4 @@ def judge_client(request,return_url):
         return_url='%s%s'%(return_url,'?next_url=/account/loggedin/')
     return return_url
 
-'''
-从回调连接中获取跳转链接连接
-'''
-def get_next_url_by_callback_url(url):
-    parsed=urlparse.urlparse(url)
-    next_url=urlparse.parse_qs(parsed.query).get('next_url')  
-    return next_url
     

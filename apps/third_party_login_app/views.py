@@ -48,8 +48,7 @@ import hashlib
 import time
 from django.utils.crypto import get_random_string
 import re
-from apps.third_party_login_app.method import judge_client,\
-    get_next_url_by_callback_url
+from apps.third_party_login_app.method import judge_client
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
@@ -106,7 +105,7 @@ def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    return HttpResponseRedirect(get_next_url_by_callback_url(SINA_CALLBACK_URL))
+    return HttpResponseRedirect(request.get('next_url'))
      
 '''
 微信登录链接
@@ -299,7 +298,7 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    return HttpResponseRedirect(get_next_url_by_callback_url(SINA_CALLBACK_URL))
+    return HttpResponseRedirect(request.get('next_url'))
     user_info=client.users.show.get(uid=uid)
     return HttpResponse(user_info['screen_name'])
 
@@ -350,7 +349,7 @@ def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
         user=ThirdPsartyLogin.objects.get(provider='2',uid=user_info['id']).user
         login(request,user.username,DEFAULT_PASSWORD)
         
-    return HttpResponseRedirect(get_next_url_by_callback_url(SINA_CALLBACK_URL))
+    return HttpResponseRedirect(request.get('next_url'))
 
 
 
