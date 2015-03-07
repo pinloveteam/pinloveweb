@@ -48,6 +48,8 @@ import hashlib
 import time
 from django.utils.crypto import get_random_string
 import re
+from apps.third_party_login_app.method import judge_client,\
+    get_next_url_by_callback_url
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
@@ -56,7 +58,8 @@ log=logging.getLogger(__name__)
 '''   
 def get_qq_login_url(request,CALLBACK_URL=QQ_CALLBACK_URL):     
     from apps.third_party_login_app.openqqpy import OpenQQClient
-    client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL)
+    CALLBACK_URL=judge_client(request,CALLBACK_URL)
+    client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=CALLBACK_URL)
     #获取qq授权登录地址
     return HttpResponseRedirect(client.get_auth_url())  
 
@@ -75,9 +78,6 @@ def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL):
     request.session['expires_in']=expires_in
     client.set_access_token( access_token,expires_in )
     openid=client.request_openid() #返回openid
-    #判断登录路径
-    if  re.match('^/mobile',request.path)  is not None:
-        args['channel']='mobile'
     #判断是否有第三方登录过
     if not ThirdPsartyLogin.objects.filter(provider='0',uid=openid).exists():
         client.set_openid(openid)
@@ -106,10 +106,7 @@ def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    if args.get('channel',None)=='mobile':
-        return HttpResponseRedirect('/mobile/loggedin/')
-    else:
-        return HttpResponseRedirect('/account/loggedin/')
+    return HttpResponseRedirect(get_next_url_by_callback_url(SINA_CALLBACK_URL))
      
 '''
 微信登录链接
@@ -248,8 +245,9 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
 获取sina授权登录地址,跳转到回调地址（redirect_uri）
 '''
 def sina_login_url(request,CALLBACK_URL=SINA_CALLBACK_URL):
+    CALLBACK_URL=judge_client(request,SINA_CALLBACK_URL)
     from apps.third_party_login_app.weibo import APIClient
-    client = APIClient(app_key=SinaAppKey, app_secret=SinaAppSercet, redirect_uri=SINA_CALLBACK_URL)
+    client = APIClient(app_key=SinaAppKey, app_secret=SinaAppSercet, redirect_uri=CALLBACK_URL)
     url = client.get_authorize_url()
 #     log.error('%s%s' %('url====',url))
     return HttpResponseRedirect(url)
@@ -278,9 +276,6 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
 #     log.error('access_token===='+access_token)
 #     log.error('expires_in====='+str(expires_in))
 #     log.error('uid====='+str(uid))
-    #判断登录路径
-    if  re.match('^/mobile',request.path)  is not None:
-        args['channel']='mobile'
     if not ThirdPsartyLogin.objects.filter(provider='1',uid=uid).exists():
             #获取用户信息
             user_info=client.users.show.get(uid=uid)
@@ -304,11 +299,7 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
         login(request,user.username,DEFAULT_PASSWORD)
-    if args.get('channel',None)=='mobile':
-        return HttpResponseRedirect('/mobile/loggedin/')
-    else:
-        return HttpResponseRedirect('/account/loggedin/')
-
+    return HttpResponseRedirect(get_next_url_by_callback_url(SINA_CALLBACK_URL))
     user_info=client.users.show.get(uid=uid)
     return HttpResponse(user_info['screen_name'])
 
@@ -319,8 +310,9 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
 '''
 @csrf_exempt
 def facebook_login_url(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
+    CALLBACK_URL=judge_client(request,CALLBACK_URL)
     from apps.third_party_login_app.facebook import auth_url
-    url=auth_url(FaceBookAppID,FACEBOOK_CALLBACK_URL)
+    url=auth_url(FaceBookAppID,CALLBACK_URL)
 #     log.error('%s%s' %('url====',url))
     return HttpResponseRedirect(url)
 
@@ -335,9 +327,6 @@ def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
     from apps.third_party_login_app import facebook
     graph = facebook.GraphAPI(access_token)
     user_info = graph.get_object('me')
-    #判断登录路径
-    if  re.match('^/mobile',request.path)  is not None:
-        args['channel']='mobile'
     if not ThirdPsartyLogin.objects.filter(provider='2',uid=user_info['id']).exists():
             request.session['three_registe']={'provider':'2','uid':user_info['id'],'access_token':access_token,'country':user_info['locale']}
             genderList=['m',u"男",'male']
@@ -361,10 +350,7 @@ def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
         user=ThirdPsartyLogin.objects.get(provider='2',uid=user_info['id']).user
         login(request,user.username,DEFAULT_PASSWORD)
         
-    if args.get('channel',None)=='mobile':
-        return HttpResponseRedirect('/mobile/loggedin/')
-    else:
-        return HttpResponseRedirect('/account/loggedin/')
+    return HttpResponseRedirect(get_next_url_by_callback_url(SINA_CALLBACK_URL))
 
 
 
