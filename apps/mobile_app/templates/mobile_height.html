@@ -16,7 +16,11 @@ series_data=[50,60,70,80,90,80,70,60];
  series_data=[60,70,80,90,80,70,60,50];
 {% endifequal %}
 {%ifequal grade_for_other False %}
-
+$(function(){
+	   for(var i=0;i<series_data.length;i++){
+		   $('#dj_'+i).val(series_data[i]);
+	    }
+})
 {% else %}
 series_data=[{{grade_for_other.heighty1}},{{grade_for_other.heighty2}},{{grade_for_other.heighty3}},{{grade_for_other.heighty4}},{{grade_for_other.heighty5}},{{grade_for_other.heighty6}},{{grade_for_other.heighty7}},{{grade_for_other.heighty8}}]
 {% endifequal %}

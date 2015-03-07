@@ -164,6 +164,12 @@ function hide_school_list(){
 			}
 			
 		}
+		
+		$(function(){
+			$('#errorInfo').prev().click(function(){
+				$(this).closest('center').slideUp('slow');
+			})
+		});
 
 	</script>
 {% endblock %}
@@ -184,7 +190,7 @@ function hide_school_list(){
 
 		<div class="container profile">
 		<center role="alert" class="alert alert-danger alert-dismissible fade in">
-				<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
+				<button class="close" type="button"><span >×</span><span class="sr-only">Close</span>
 				</button>
 				<span id="errorInfo"></span>
 			</center>

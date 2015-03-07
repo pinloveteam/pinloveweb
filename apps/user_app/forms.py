@@ -80,7 +80,7 @@ class UserProfileForm(ModelForm):
         
     def clean_educationSchool(self):
         educationSchool=self.cleaned_data['educationSchool']
-        if not  educationSchool is None:
+        if (not  educationSchool is None) and len(educationSchool)>0 :
             regex=u'^[\u4e00-\u9fa5\w\s]+$'
             match1=re.match(regex,educationSchool)
             if match1 is None:
@@ -89,7 +89,7 @@ class UserProfileForm(ModelForm):
     
     def clean_educationSchool_2(self):
         educationSchool_2=self.cleaned_data['educationSchool_2']
-        if not  educationSchool_2 is None:
+        if( not  educationSchool_2 is None) and len(educationSchool_2)>0:
             regex=u'^[\u4e00-\u9fa5\w\s]+$'
             match1=re.match(regex,educationSchool_2)
             if match1 is None:

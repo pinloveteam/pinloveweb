@@ -83,7 +83,7 @@ $(window).scroll( function() {
 		/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
 		console.log("页面的文档高度 ："+$(document).height());
 		console.log('浏览器的高度：'+$(window).height()); */
-		loadData(no_load,success,loading);
+		loadData(no_load,success,loading,false);
 		}
 }); 
 
@@ -173,7 +173,7 @@ function venobox(){
 								<img class="avatar_name" src="" width="60px"/>
 								<span class ="user_name" style="font-size: 16px;margin-left: 40px;"></span>
 						</div>
-						<div class="chat"></div>
+						<div class="chat" style="width: 250px"></div>
 						<textarea rows="1" class="chat_textarea"></textarea>
 						<button class="btn btn-xs btn-primary  btn_send_msg">发送</button>
 					</div>
