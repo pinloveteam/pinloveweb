@@ -84,5 +84,7 @@ urlpatterns+=patterns('',
     url(r'^logout/', 'pinloveweb.views.logout'),                
     url(r'^register/$','pinloveweb.views.register_user',{'template_name':'mobile_register.html'}),
     url(r'^auth/$','pinloveweb.views.auth_view',{'template_name':'mobile_login.html'}),
-    url(r'^$','pinloveweb.views.login',{'template_name':'mobile_login.html','nextUrl':'loggedin'})
+    url(r'^$','pinloveweb.views.login',{'template_name':'mobile_login.html','nextUrl':'loggedin'}),
+    
+    
 )

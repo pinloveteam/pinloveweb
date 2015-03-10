@@ -10,7 +10,7 @@ import urlparse
 判断客户端返回回调连接
 '''
 def judge_client(request,return_url):
-    if  re.match('^/mobile',request.path)  is not None:
+    if  request.REQUEST.get('channel',None)  == 'mobile':
         return_url='%s%s'%(return_url,'?next_url=/mobile/loggedin/')
     else:
         return_url='%s%s'%(return_url,'?next_url=/account/loggedin/')

@@ -31,10 +31,6 @@ urlpatterns = patterns('apps.third_party_login_app.views',
     url(r'^weixin_check_authorization/', 'public_weixin_check_authorization'),
     
     
-     
-    
-    
-    
 )
 
 
