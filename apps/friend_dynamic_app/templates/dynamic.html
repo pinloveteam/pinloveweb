@@ -912,6 +912,10 @@ function sendExpression(e) {
        		data.messageList=$.parseJSON(data.friendDynamicList);
        	}
 	    init_dynamic(data.messageList,1);
+	  //打开上传图片
+		if(window.location.hash=='#openPic'){
+			$('#publishInputPhoto').click();
+		}
 	   };
 		$(window).scroll( function() { 
 				if(get_load_next_page()){

@@ -17,11 +17,6 @@ var userId={{user.id}};
 var page=1;
 $(document).ready(function(){
 	loadData(no_load,success,loading,true);
-	//动态评论
-	$('.comment').click(function(){
-		dynamicId=$(this).closest('.trend').find('#dynamicId').val();
-		window.location.href='/mobile/editer/?receiver_id=&type=dynamic_comment&dynamicId='+dynamicId;
-	})
 });
 
 //初始化动态
@@ -50,6 +45,7 @@ function init_dynamic(dynamicList){
 		if(!this.isAgree){
 			dynamic.find('.glyphicon-heart-empty').removeClass('text-pink')
 		}
+		//点赞事件
 		dynamic.find('.glyphicon-heart-empty').click(function(){
 			var conext=$(this);
 			var dynamicId=conext.closest('.trend').find('#dynamicId').val();
@@ -87,7 +83,12 @@ function init_dynamic(dynamicList){
 				
 			});
 		});
-		
+		//
+		//动态评论
+	   dynamic.find('.comment').click(function(){
+		dynamicId=$(this).closest('.trend').find('#dynamicId').val();
+		window.location.href='/mobile/editer/?receiver_id=&type=dynamic_comment&dynamicId='+dynamicId;
+	   })
 		if(this.commentList.length>0){
 			init_comment(dynamic,$.parseJSON(this.commentList),this.publishUserId);
 		}

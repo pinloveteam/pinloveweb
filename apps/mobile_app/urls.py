@@ -26,8 +26,6 @@ urlpatterns=patterns('apps.mobile_app.views',
      url(r'^editer/$','editer'),
      #搜索
      url(r'^search/$','search'),
-     #动态
-     url(r'^dynamic/$','dynamic'),
      #雷达图
      url(r'^radar/(\d+)/$','radar'),
      url(r'^radar_compare/$','update_radar_compare'),
@@ -47,6 +45,8 @@ urlpatterns+=patterns('',
      
        #上传头像
     url(r'^uploadavatar_upload/$','apps.upload_avatar.views.upload_avatar'),
+    #动态
+     url(r'^dynamic/$', 'apps.friend_dynamic_app.views.dynamic',{'template_name':'mobile_trend.html'}), 
    #修改密码
     url(r'^change_password/$', 'apps.user_app.views.change_password',{'tempate_name':'mobile_change_password.html'}),
      #退出

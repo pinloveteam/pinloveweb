@@ -297,7 +297,7 @@ def editer(request,template_name='mobile_editer.html'):
             args['textarea']=textarea%('content')
             args['inputHtml']=input%('receiverId',request.REQUEST.get('receiver_id'))+' '+input%('dynamicId',request.REQUEST.get('dynamicId'))
         elif type==u'dynamic':
-            args['url']='/mobile/dynamic/'
+            args['url']='/dynamic/send/'
             args['upload']=True
             args['textarea']=textarea%('content')
         else:
@@ -373,58 +373,6 @@ def search(request,template_name='mobile_search.html'):
         args={'result':'error','error_message':e.message}
         return render(request,ERROR_TEMLATE_NAMR,args)
   
-  
-def dynamic(request,template_name='mobile_trend.html'):
-    '''
-    动态页面
-    '''
-    args={}
-    try:
-        dynamicId=request.REQUEST.get('dynamicId',None)
-        if request.method=="POST":
-            content=request.POST.get('content').strip()
-            import re
-            p = re.compile('[.(\n|\r)]*')
-            content=p.sub('',content)
-            if content.rstrip()=='':
-                args={'result':'error','error_message':'发布内容不能为空！'}
-                args['url']='/dynamic/'
-                textarea=' <textarea rows="6" class="form-control" id="content" name="%s"></textarea>'
-                args['textarea']=textarea%('content')
-                return render(request,'mobile_editer.html',args)
-            friendDynamic=FriendDynamic()
-            friendDynamic.publishUser=request.user
-            friendDynamic.content=content
-            if 'images_path' in request.session.keys():
-                friendDynamic.data=simplejson.dumps(request.session['images_path'])
-                friendDynamic.type=2
-            else:
-                friendDynamic.type=1
-            friendDynamic.save()
-            if 'images_path' in request.session.keys():
-                photoList=request.session['images_path']
-                for photo in photoList:
-                    picture=Picture()
-                    picture.user=request.user
-                    picture.friendDynamic=friendDynamic
-                    picture.description=content
-                    from util import util_settings
-                    picture.picPath='%s%s' % (util_settings.RELATRVE_IMAGE_UPLOAD_PATH_M,photo)
-                    picture.save()
-                del request.session['images_path']
-            return HttpResponseRedirect('/mobile/dynamic/')
-        args['user']=request.user
-        if request.is_ajax():
-            from apps.friend_dynamic_app.views import init_dynamic
-            arg=init_dynamic(request,request.user.id,args,0,dynamicId=dynamicId)
-            from apps.pojo.dynamic import MyEncoder
-            json=simplejson.dumps( {'friendDynamicList':args['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
-            return HttpResponse(json, mimetype='application/json')
-        return render(request,template_name,args)
-    except Exception,e:
-        logger.exception('动态页面出错!')
-        args={'result':'error','error_message':'动态页面出错'+e.message}
-        return render(request,ERROR_TEMLATE_NAMR,args)
   
 def update_radar_compare(request,template_name='mobile_recommend.html'):
     '''
