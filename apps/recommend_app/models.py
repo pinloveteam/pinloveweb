@@ -229,7 +229,7 @@ class WeightStar(models.Model):
         sum,avg=0,0
         for field in fieldList:
             sum+=getattr(self,field)
-        avg=100.00/sum
+        avg=1.00/sum
         for field in fieldList:
             setattr( grade,field+'weight',avg*getattr(self,field))
         grade.save()
