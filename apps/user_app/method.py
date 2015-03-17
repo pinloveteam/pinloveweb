@@ -219,7 +219,7 @@ def detailed_info_div(myId,userId,compareId=None):
     socreForOther=get_socre_for_other(myId,userId)
     #判断个人信息是否填写完整
     if socreForOther['result']=='error':
-        args['result']='error'
+        args['result']='less'
         args['error_message']=socreForOther['error_message']
         args['user1']=get_detail_info(myId,userId,socreForOther)
         return args

@@ -586,7 +586,7 @@ window.Card = function(person){
 						
 					});
                 	
-				}else if(data.result=='error'){
+				}else if(data.result=='less'){
 					data.user1.data=[undefined,undefined,undefined,undefined,undefined];
 					options={
 							compar:compare_flag,
@@ -598,6 +598,9 @@ window.Card = function(person){
 						
 					}
 					$.poplayer(options);
+				}else if(data.result=='error'){
+					var body = $("<p>"+data.error_message+"</p>")
+		        	 $.poplayer({body:body});
 				}
 			},
 			error:function(response){
