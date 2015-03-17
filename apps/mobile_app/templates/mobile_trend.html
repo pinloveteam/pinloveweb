@@ -1,5 +1,5 @@
 {% extends "mobile_base.html" %} 
-{% block title %} 拼爱网 --动态{% endblock %}
+{% block title %} 拼爱网 --{{title}}{% endblock %}
 {% block staticfiles %}
   <link rel="stylesheet" href="/static/css/idangerous.swiper.css" />
   <script type="text/javascript" src="/static/js/idangerous.swiper.min.js" ></script>
@@ -26,7 +26,7 @@ function init_dynamic(dynamicList){
 		dynamic=$('#dynamic_clone').find('.trend').clone();
 		dynamicObj=this;
 		dynamic.find('#avatar').attr('src','/media/'+this.avatarName+'-100.jpeg');
-		dynamic.find('#username').html(this.publishUserName);
+		dynamic.find('#username').html('<a href="/mobile/dynamic_person/?userId='+this.publishUserId+'">'+this.publishUserName+'</a>');
 		dynamic.find('#time').html(this.publishTime);
 		dynamic.find('#content').html(this.content);
 		dynamic.find('#agreeNum').html(this.argeeNum);

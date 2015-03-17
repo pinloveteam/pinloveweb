@@ -51,11 +51,24 @@ function loadData(no_load,success,loading,has_load)
 			return no_load()
 		}
 		if(load_next_page==true){
-		
+			var urlParamStr=window.location.search;
+			if(urlParamStr.length==0){
+				data={page:next_page};
+			}else{
+				urlParamStr=urlParamStr.substring(1);
+				urlParamStrList=urlParamStr.split('&');
+				data={};
+				for(var i in  urlParamStrList ){
+					temp=urlParamStrList[i].split('=');
+					data[temp[0]]=temp[1];
+				}
+				data['page']=next_page;
+			}
+			
 		 $.ajax({
 	         type: 'GET',
 	         url:window.location.pathname,
-	         data:{page:next_page},
+	         data:data,
 	         beforeSend: function(XMLHttpRequest){
 	        	 loading(true);
 	        	 load_next_page=false;

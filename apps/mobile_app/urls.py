@@ -54,6 +54,9 @@ urlpatterns+=patterns('',
     #忘记密码
     url(r'^forget_password/$', 'pinloveweb.views.forget_password',{'template_name':'mobile_forget_password.html'}),
     
+    #个人动态
+    url(r'^dynamic_person/$','apps.friend_dynamic_app.views.person_dynamic',{'template_name':'mobile_trend.html'}), 
+    
     #手机qq登陆
      url(r'^qq_login_url/$', 'apps.third_party_login_app.views.get_qq_login_url',{'CALLBACK_URL':QQ_MOBILE_CALLBACK_URL}),
      url(r'^qq_login/$', 'apps.third_party_login_app.views.qq_login',{'CALLBACK_URL':QQ_MOBILE_CALLBACK_URL}),

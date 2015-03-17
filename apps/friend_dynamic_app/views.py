@@ -22,6 +22,7 @@ import re
 from django.db import transaction
 from apps.friend_dynamic_app.dynamic_settings import DYNAMIC_CONTENT_LIMIT
 from util.util import verify_content
+from django.contrib.auth.models import User
 logger=logging.getLogger(__name__)
 '''
 卡片界面动态
@@ -43,12 +44,13 @@ def dynamic(request,template_name):
     if  'images_path' in request.session:
         del request.session['images_path']
     arg['publish']=True
+    arg["title"]='动态'
     return render(request, template_name,arg )
 
 '''
 用户个人动态中心
 '''
-def person_dynamic(request):
+def person_dynamic(request,template_name="dynamic.html"):
     arg={}
     try:
         userId=int(request.REQUEST.get('userId'))
@@ -56,14 +58,22 @@ def person_dynamic(request):
         userProfile=UserProfile.objects.get(user_id=request.user.id)
         from pinloveweb.method import init_person_info_for_card_page
         arg.update(init_person_info_for_card_page(userProfile))
-        arg=init_dynamic(request,userId,arg,1)
-        if request.GET.get('type')=='ajax':
+        if int(request.user.id)==userId:
+            arg['publish']=True
+            arg["title"]='相册'
+        else:
+            arg["title"]=User.objects.get(id=userId).username
+        if request.is_ajax():
+            arg=init_dynamic(request,userId,arg,1)
             from apps.pojo.dynamic import MyEncoder
             json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
             return HttpResponse(json, mimetype='application/json')
-        return render(request, 'person_dynamic.html',arg )
+        arg['result']='success'
     except Exception as e:
         logger.expction('用户个人动态中心,出错!')
+        arg={'result':'error','error_message':e.message}
+        template_name='error.html'
+    return render(request, template_name,arg )
 '''
 初始化动态
 attridute 
