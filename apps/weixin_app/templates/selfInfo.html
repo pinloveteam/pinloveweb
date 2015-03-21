@@ -3,12 +3,80 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<meta content="width=device-width, initial-scale=1" name="viewport">
-		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="/static/css/main.css"/>
-		<script type="text/javascript" src="/static/js/jquery.min.js"></script>
-		<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-		<script src="/static/js/main.js" type="text/javascript" charset="utf-8"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<title></title>
+	</head>
+
+	<body>
+		<header data-am-widget="header" class="am-header am-header-default">
+			<div class="am-header-left am-header-nav">
+				<a href="#left-link" class="">
+					<i class="am-header-icon am-icon-home"></i>
+				</a>
+			</div>
+			<h3 class="am-header-title">请输入个人信息</h3>
+			<!--<div class="am-header-right am-header-nav">
+		    <a href="#right-link" class="">
+		      <i class="am-header-icon am-icon-bars"></i>
+		    </a>
+		  </div>-->
+		</header>
+		<div class="am-g">
+			<div class="am-panel am-panel-default">
+			 <form class="am-form am-form-horizontal" action="/weixin/self_info/" method="POST">{% csrf_token %}
+			    <input type="hidden" name="userKey" value="{{userKey}}">
+			     <input type="hidden" name="tagMyList" id="tagMyList" value="">
+				<div class="am-panel-bd">
+						<div class="am-form-group">
+							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">身高</label>
+							<div class="am-u-sm-4 am-u-end">
+								{{infoForm.height}}
+							</div>
+						</div>
+						<div class="am-form-group">
+							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">学历</label>
+							<div class="am-u-sm-4 am-u-end">
+								{{infoForm.education}}
+							</div>
+						</div>
+						<div class="am-form-group">
+							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">学校所在地</label>
+							<div class="am-u-sm-4 am-u-end">
+							<select id="country" name="country" data-am-selected="{btnSize: 'sm'}">
+						       <option value="0">中国</option>
+						       <option value="1">海外</option>
+						    </select>
+							</div>
+						</div>
+						<div class="am-form-group">
+							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">学校类型</label>
+							<div class="am-u-sm-4 am-u-end">
+							<select id="schoolType" name="schoolType"data-am-selected="{btnSize: 'sm'}">
+						    </select>
+							</div>
+						</div>
+						<div class="am-form-group">
+							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">收入</label>
+							<div class="am-u-sm-4 am-u-end">
+								{{infoForm.income}}
+							</div>
+						</div>
+						<div class="am-form-group">
+							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">性格</label>
+						</div>
+					<div class="am-container">
+						<div id="xg" class="am-g">
+						</div>
+					</div>
+					
+					<button type="submit" class="am-btn am-btn-primary am-btn-block">看看我的得分</button>
+				</div>
+				</form>
+			</div>
+		</div>
+		<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>
 		{% include "weixin_js_base.html" %}
 		<script type="text/javascript">
 		$(document).ready(function() {
@@ -23,7 +91,7 @@
 		//提交事件
 		$("form").submit(function(){
 			    var tagMyObj = new Array();
-			    var tagMy=$(this).find('.label-success');
+			    var tagMy=$('#xg').find('input:radio:checked');
 			    tagMy.each(function(){
 			    	tagMyObj.push($(this).attr('name'));
 			    });
@@ -63,73 +131,36 @@
 				$('#schoolType').append(schoolTypeStr).parent().prev().html(schoolTypeName);
 		};
 		</script>
-		<title></title>
-	</head>
-
-	<body>
-		<div class="container">
-			<div class="page-header">
-				 <h2 id="forms-horizontal">请输入你的个人信息</h2>
-			</div>
-			<form class="form-horizontal" role="form" action="/weixin/self_info/" method="POST">{% csrf_token %}
-			     <input type="hidden" name="userKey" value="{{userKey}}">
-			     <input type="hidden" name="tagMyList" id="tagMyList" value="">
-				<div class="form-group">
-					<label for="inputEmail3" class="col-sm-2 control-label">身高</label>
-					<div class="col-sm-10">
-						{{infoForm.height}}
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputPassword3" class="col-sm-2 control-label">学历</label>
-					<div class="col-sm-10">
-						{{infoForm.education}}
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputPassword3" class="col-sm-2 control-label">学校所在地</label>
-					<div class="col-sm-10">
-						<select id="country" name="country" class="form-control">
-						  <option value="0">中国</option>
-						  <option value="1">海外</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputPassword3" class="col-sm-2 control-label">学校类型</label>
-					<div class="col-sm-10">
-						<select id="schoolType" name="schoolType" class="form-control">
-						  
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputPassword3" class="col-sm-2 control-label">收入</label>
-					<div class="col-sm-10">
-						{{infoForm.income}}
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputPassword3" class="col-sm-2 control-label">性格</label>
-					<div class="col-sm-10">
-						<div class="container">
-							{% for tag in tagbeanList %}
-							<div class="row">
-							   <span name="{{tag.0.id}}" class="label label-default">{{tag.0.content}}</span>
-		                       <span name="{{tag.1.id}}" class="label label-success">适中</span>
-		                       <span name="{{tag.2.id}}" class="label label-default">{{tag.2.content}}</span>
-		                    </div>
-		                    {% endfor %}
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-warning">看看我的得分</button>
-					</div>
-				</div>
-			</form>
-		</div>
+		<script>
+			$(document).ready(function() {
+				var xg1 = [];
+				var xg2 = [];
+				var xg3 = [];
+				{% for tag in tagbeanList %}
+				xg1.push([{{tag.0.id}},"{{tag.0.content}}"]);
+				xg2.push([{{tag.1.id}},"适中"]);
+				xg3.push([{{tag.2.id}},"{{tag.2.content}}"]);
+				{% endfor %}
+				var xgs = [xg1,xg2,xg3];
+				xgs.forEach(function(val,i){
+					var xg_col = $('<div class="am-u-sm-4"></div>');
+					var flag=false;
+					if(i==1){
+						flag=true
+					}else{
+						flag=false;
+					}
+					val.forEach(function(val,k){
+						var xg = $('<label class="am-radio am-secondary"><input type="radio" data-am-ucheck="" value="" name="'+val[0]+'" class="am-ucheck-radio"><span class="am-ucheck-icons"><i class="am-icon-unchecked"></i><i class="am-icon-checked"></i></span>' +val[1]+'</label>')
+						if(flag){
+							xg.find('input:radio').attr("checked","checked");
+						}
+						xg_col.append(xg);
+					});
+					$('#xg').append(xg_col);
+				});
+			});
+		</script>
 	</body>
 
 </html>

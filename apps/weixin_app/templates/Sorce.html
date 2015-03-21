@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
-		<meta content="width=device-width, initial-scale=1" name="viewport">
-		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/main.css"/>
-		<script type="text/javascript" src="/static/js/jquery.min.js"></script>
-		<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<title>PinLove</title>
+		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<title></title>
 		{% include "weixin_js_base.html" %}
 		<script type="text/javascript">
 		$(document).ready(function() {
@@ -16,45 +15,60 @@
 		});
 		</script>
 		<title></title>
-		<style>
-			.score{
-				margin-bottom: -170px;
-				color: #fff;
-				font-size: 16px;
-				padding-left: 15px;
-				position: relative;
-				z-index: 1;
-			}
-			.btn{
-				position: relative;
-				z-index: 2;
-			}
-			.glyphicon-heart{
-				font-size: 250px;
-				color: #E74C3C;
-			}
-			.text-24{
-				font-size: 24px;
-			}
-			.page-header{
-				margin: 60px 0;
-			}
-		</style>
 	</head>
 	<body>
-		<center class="container">
-			<div class="page-header">
-				 <h2 id="forms-horizontal">你在TA心目中的得分</h2>
+		
+		
+		
+		<header data-am-widget="header" class="am-header am-header-default">
+			<div class="am-header-left am-header-nav">
+				<a href="#left-link" class="">
+					<i class="am-header-icon am-icon-home"></i>
+				</a>
 			</div>
-			<div class="score">
-				<p>你在TA心目中的得分是</p> 
-				<p class="text-24">{{score}}分</p>
-				<p>排名第 <span>{{rank}}</span></p>
+			<h3 class="am-header-title">你在TA心目中的得分</h3>
+			<!--<div class="am-header-right am-header-nav">
+		    <a href="#right-link" class="">
+		      <i class="am-header-icon am-icon-bars"></i>
+		    </a>
+		  </div>-->
+		</header>
+		<div class="am-g">
+			<div class="am-panel am-panel-default">
+				<center class="am-panel-bd">
+					<!--<i class="am-icon-heart"></i>-->
+					<canvas class="radar" height="290px" width="290px"></canvas>
+					<p>你的得分是：{{score}}</p>
+					<p>排名第{{rank}}</p>
+				</center>
 			</div>
-			<div>
-				<i class="glyphicon glyphicon-heart"></i>
-			</div>
-			<button type="submit" class="btn btn-danger btn-lg">我也要给好友打分</button>
-		</center>
+		</div>
+		<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>
+		<script src="http://cdn.bootcss.com/Chart.js/1.0.1-beta.4/Chart.min.js"></script>
+		<script type="text/javascript">
+			var ctx = $("canvas").get(0).getContext("2d");
+			var datasets = {
+					fillColor: "rgba(0,0,0,0)",
+					strokeColor: "rgb(0,151,36)",
+					pointColor: "rgb(0,151,36)"
+				}
+				//var ctx = $("canvas").get(0).getContext("2d");
+			datasets.data = {{data}};
+			var data = {
+				labels: ["教育程度", "性格", "收入情况","身高"],
+				datasets: [datasets]
+			};
+			var myNewChart = new Chart(ctx).Radar(data, {
+				scaleOverride: true,
+				scaleSteps: 4,
+				scaleStepWidth: 25,
+				scaleStartValue: 0,
+				scaleLineColor: "rgba(0,0,0,.5)",
+				//				scaleShowLabels : true,
+				pointLabelFontColor: '#333',
+				angleLineColor: "rgba(0,0,0,.5)"
+			});
+		</script>
 	</body>
 </html>

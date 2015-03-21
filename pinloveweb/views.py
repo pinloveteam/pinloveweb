@@ -263,6 +263,11 @@ def register_user(request,template_name='login.html') :
             get_score_by_user_login(request.user.id)
             url=request.path
             url='%s%s'%(url[0:(url.find('/',1))],'/loggedin/?previous_page=register')
+            #检测推荐信息填写情况
+            from apps.recommend_app.recommend_util import recommend_info_status
+            recommendStatus=recommend_info_status(request)
+            if recommendStatus['result']:
+                request.session['recommendStatus']=simplejson.dumps(recommendStatus['data'])
             return HttpResponseRedirect(url)
         else : 
             args['user_form'] = userForm

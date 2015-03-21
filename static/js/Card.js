@@ -28,7 +28,9 @@ var sendMsg = function(){
 			   chat.append('<div class="chat_content_group self"><div class="chat_content">'+send_content+'<div class="cloudArrow"></div></div></div>');
 				content.val('');
 				pane.jScrollPane();
-			    api.scrollTo(0,9999);
+			    //api.scrollTo(0,9999);
+				var jsppanel=$(this).prev().prev().children();
+			    jsppanel.animate({scrollTop:jsppanel.height()},100)
 		   }else{
 			   var body=$('<p>'+data.error_message+'</p>')
 			   $.poplayer({body:body});
@@ -755,6 +757,8 @@ function get_card_chat(num){
 						chat.append('<div class="chat_content_group other"><div class="chat_content">'+messageBean.content+'<div class="cloudArrow "></div></div></div>');
 						pane.jScrollPane();
 						api.scrollTo(0,9999);
+						var jsppanel=chat.parent();
+					    jsppanel.animate({scrollTop:jsppanel.height()},100)
 			      }
 			   set_count(data['noReadCount'])
 	   });

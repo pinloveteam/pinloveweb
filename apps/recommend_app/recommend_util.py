@@ -56,8 +56,8 @@ def recommend_info_status(request):
                         args['data']['avatar']=dict['avatar']
             else:
                 args['data'][key]=dict[key]
-        else:
-            args['result']=False
+    if len(args['data'])==0:
+        args['result']=False
     return  args           
     
             

@@ -13,6 +13,7 @@ class ScoreRank(models.Model):
     score=models.FloatField(verbose_name=u"分数")
     nickname=models.CharField(verbose_name=u"昵称",max_length=128)
     time=models.DateTimeField(verbose_name='时间')
+    data=models.CharField(verbose_name='详细数据',max_length=255)
     def save(self, *args, **kwargs):
         self.time=datetime.datetime.now()
         super(ScoreRank, self).save(*args, **kwargs)

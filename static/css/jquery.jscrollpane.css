@@ -7,7 +7,7 @@
 
 .jspContainer
 {
-	overflow: hidden;
+	overflow: scroll;
 	position: relative;
 }
 

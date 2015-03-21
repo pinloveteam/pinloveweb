@@ -494,6 +494,9 @@ def recommend(request,template_name='mobile_recommend.html',**kwargs):
         #判断是否是从注册页面过来
         if request.GET.get('previous_page','')=='register':
             args['first']=True
+        #推荐信息完善
+        if request.session.get('recommendStatus',False):
+            args['recommendStatus']=request.session.pop('recommendStatus')
         from pinloveweb.method import init_person_info_for_card_page
         args.update(init_person_info_for_card_page(userProfile))
         return render(request, template_name,args )

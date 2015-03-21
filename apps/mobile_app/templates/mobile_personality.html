@@ -49,8 +49,10 @@
 		                    		var button=function(){
 		                    			$('.buy-nav').find('li').eq(3).click();
 		                    		};
-									$.poplayer({body:body,btnFunc:button});
-									$('.poplayer button').html('继续');
+		                    		var btnFunc=function(){
+		                        		window.location.href="/mobile/account/"
+		                        	}
+		        					$.poplayer({body:body,btnFunc:btnFunc,btnText:'返回个人中心'});
 		                    	}else{
 		                    		var body = $("<p>"+data.error_messge+"</p>")
 		                			$.poplayer({body:body});

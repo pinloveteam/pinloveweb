@@ -39,8 +39,7 @@
 			//判断是否能投票
 			function is_vote(isVote,voteScore){
 					if(isVote=='False'){
-						$('#appearancevote').attr('disabled',true);
-						$('.score').html('不能打分');
+						$('#appearancevote').attr('disabled',true).html('不能打分');
 					    new Dragdealer('slider-186', {
 							  animationCallback: function(x, y) {
 							  },
@@ -214,7 +213,7 @@
 					    <input type="hidden" id="vote_value" name="vote_value" value="0"/>
 					</div>
 				</div>
-				<div class="col-xs-2"><span class="score">100</span>
+				<div class="col-xs-2"><span class="score"></span>
 					<input type="hidden" value="0" id="vote_value">
 				</div> 
 				<div class="col-xs-2">

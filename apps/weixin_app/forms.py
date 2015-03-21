@@ -16,7 +16,7 @@ class InfoForm (ModelForm) :
             if isinstance(self.fields[key],TypedChoiceField):
                 self.fields[key].choices=self.fields[key].choices[2:]
             self.fields[key].required = False
-            self.fields[key].widget.attrs['class']='form-control'
+            self.fields[key].widget.attrs['data-am-selected']="{btnSize: 'sm'}"
             if key in [u'income','height']:
                 incomeChoicesList=[]
                 if key==u'income':

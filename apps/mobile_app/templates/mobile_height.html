@@ -128,7 +128,10 @@ $(document).ready(function () {
 	                                	data=$.parseJSON(data)
 	                                    if(data.result== 'success'){
 	                                    	var body = $("<p>修改成功!</p>")
-	            							$.poplayer({body:body});
+	                                    	var btnFunc=function(){
+	                                    		window.location.href="/mobile/account/"
+	                                    	}
+	            							$.poplayer({body:body,btnFunc:btnFunc,btnText:'返回个人中心'});
 	                                    }else if(data.result == 'error'){
 	                                    	 alert(data.msg)
 	                                    }

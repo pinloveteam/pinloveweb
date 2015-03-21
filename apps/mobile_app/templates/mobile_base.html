@@ -29,4 +29,19 @@
 {% block navigation %}
 {%include "mobile_navigation.html" %}
 {% endblock %}
+<script type="text/javascript">
+$(function(){
+	//推荐信息完善提示
+	var recommendStatus='{{recommendStatus|safe}}';
+	if(recommendStatus.length>0){
+		var recommendStatus=$.parseJSON(recommendStatus);
+		message='<p>如需查看对方的雷达图和打分，必须完善你的'
+			for(var v in recommendStatus){
+				message= message+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
+			}
+			message=message+'的资料信息<p>'
+			$.poplayer({body:message});
+	}
+});
+</script>
 </html> 

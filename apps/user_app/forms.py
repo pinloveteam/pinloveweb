@@ -21,7 +21,10 @@ class UserProfileForm(ModelForm):
         for key in self.fields:
             from django.forms.fields import TypedChoiceField
             if isinstance(self.fields[key],TypedChoiceField):
-                self.fields[key].choices=self.fields[key].choices[1:]
+                if self.initial[key] not in [-1,'-1']:
+                    self.fields[key].choices=self.fields[key].choices[2:]
+                else:
+                    self.fields[key].choices=self.fields[key].choices[1:]
             self.fields[key].required = False
             self.fields[key].widget.attrs['class']='form-input'
 #         for key in self.initial:
