@@ -9,6 +9,8 @@ import time
 import hashlib
 import urllib
 from django.utils import simplejson
+from apps.third_party_login_app.setting import PublicWeiXinAppID,\
+    PublicWeiXinAppSecret
 '''
 我心游戏期望甚高计算
 @param gender:用户性别
@@ -96,6 +98,9 @@ def get_signature(jsapi_ticket,url):
 
 
 def get_jsapi_ticket(request,access_token):
+    access_token_url='https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s'%(PublicWeiXinAppID,PublicWeiXinAppSecret)
+    f=urllib.urlopen(access_token_url)
+    access_token=simplejson.loads(f.read())['access_token']
     url='https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi'%(access_token)
     f=urllib.urlopen(url)
     result=simplejson.loads(f.read())
