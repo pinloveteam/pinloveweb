@@ -97,7 +97,7 @@ def get_signature(jsapi_ticket,url):
     return args
 
 
-def get_jsapi_ticket(request,access_token):
+def get_jsapi_ticket(request):
     access_token_url='https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s'%(PublicWeiXinAppID,PublicWeiXinAppSecret)
     f=urllib.urlopen(access_token_url)
     access_token=simplejson.loads(f.read())['access_token']
