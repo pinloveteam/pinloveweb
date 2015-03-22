@@ -93,7 +93,7 @@ def get_signature(jsapi_ticket,url):
           'timestamp':int(time.time()),
           'url':url
           }
-    args['signature']=hashlib.sha1(args).hexdigest()
+    args['signature']=hashlib.sha1(urllib.urlencode(args)).hexdigest()
     return args
 
 
