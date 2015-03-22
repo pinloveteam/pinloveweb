@@ -130,7 +130,7 @@ def score(userId,otherId):
 '''
 def other_info(request):
     args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
-    args.update(get_signature(request.session['jsapi_ticket'],request.path))
+    args.update(get_signature(request.session['jsapi_ticket'],request.build_absolute_uri()))
     flag=True
     try:
         userProfile=UserProfile.objects.get(user=request.user)
