@@ -17,6 +17,8 @@ wx.config({
     signature: signature,// 必填，签名，见附录1
     jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 });
+
+wx.ready(function () {
  
 wx.onMenuShareTimeline({
     title: shareTitle, // 分享标题
@@ -71,6 +73,8 @@ wx.onMenuShareWeibo({
     cancel: function () { 
         // 用户取消分享后执行的回调函数
     }
+});
+
 });
 
 /* if ('{{has_share}}' =='False'){
