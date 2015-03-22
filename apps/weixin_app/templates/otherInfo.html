@@ -132,7 +132,7 @@
 			var tagOtherObj = new Array();
 		    var tagMy=$('#xg').find('input:radio:checked')
 		    tagMy.each(function(){
-		    	tagOtherObj.push($(this).attr('name'));
+		    	tagOtherObj.push($(this).attr('value'));
 		    });
 		    $('#tagOtherList').val(tagOtherObj.toString())
 		}
@@ -176,7 +176,7 @@
 						flag=false;
 					}
 					val.forEach(function(val,k){
-						var xg = $('<label class="am-radio am-secondary"><input type="radio" data-am-ucheck="" value="" name="'+val[0]+'" class="am-ucheck-radio"><span class="am-ucheck-icons"><i class="am-icon-unchecked"></i><i class="am-icon-checked"></i></span>' +val[1]+'</label>')
+						var xg = $('<label class="am-radio am-secondary"><input type="radio" data-am-ucheck="" value="'+val[0]+'" name="'+k+'" class="am-ucheck-radio"><span class="am-ucheck-icons"><i class="am-icon-unchecked"></i><i class="am-icon-checked"></i></span>' +val[1]+'</label>')
 						if(flag){
 							xg.find('input:radio').attr("checked","checked");
 						}
