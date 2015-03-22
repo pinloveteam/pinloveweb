@@ -88,7 +88,7 @@ def has_share_in_game(userId):
 '''    
 def get_signature(jsapi_ticket,url):
     args={     
-          'noncestr':random_str(),
+          'noncestr':random_str(16),
           'jsapi_ticket':jsapi_ticket,
           'timestamp':int(time.time()),
           'url':url
@@ -108,4 +108,3 @@ def get_jsapi_ticket(request):
         request.session['jsapi_ticket']=result['ticket']
     else:
         raise Exception('获取jsapi_ticket出错，出错原因：'+result['errmsg'])
-    
