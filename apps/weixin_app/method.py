@@ -96,7 +96,7 @@ def get_signature(jsapi_ticket,url):
 
 
 def get_jsapi_ticket(request,access_token):
-    url='"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"'%(access_token)
+    url='https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi'%(access_token)
     f=urllib.urlopen(url)
     result=simplejson.loads(f.read())
     if result.get('errcode')==0:
