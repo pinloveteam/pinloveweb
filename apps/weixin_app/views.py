@@ -24,7 +24,7 @@ logger=logging.getLogger(__name__)
 def self_info(request):
         args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
         userKey=request.REQUEST.get('userKey')
-        get_jsapi_ticket(request,request.session['access_toke'])
+        get_jsapi_ticket(request,request.session['access_token'])
         args.update(get_signature(request.session['jsapi_ticket'],request.path+'?userKey='+userKey))
         args['userKey']=userKey
         if userKey==None:
