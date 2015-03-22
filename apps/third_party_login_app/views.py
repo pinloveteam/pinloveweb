@@ -128,7 +128,7 @@ def public_weixin_check_authorization(request):
     access=client.request_access_token(request.GET.get('code'))
     request.session['access_token']=access['access_token']
     request.session['expires_in']=access['expires_in']
-#     log.error('access:%s'%str(access))
+    logging.error(PublicWeiXinAppID+'access:%s'%str(access))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
         login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
