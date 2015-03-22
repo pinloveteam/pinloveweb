@@ -93,6 +93,7 @@ def self_info(request):
              args['result']='success'
              args.update(score(request.user.id,otherId))
              if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
+                data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
                 nickname=data['nickname']
                 ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname,data=simplejson.dumps(args['data'])).save()
              args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gt=args['score']).count()+1)
