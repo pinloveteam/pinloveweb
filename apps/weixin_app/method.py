@@ -8,6 +8,7 @@ from apps.verification_app.views import random_str
 import time
 import hashlib
 import urllib
+from django.utils import simplejson
 '''
 我心游戏期望甚高计算
 @param gender:用户性别
@@ -97,7 +98,7 @@ def get_signature(jsapi_ticket,url):
 def get_jsapi_ticket(request,access_token):
     url='"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"'%(access_token)
     f=urllib.urlopen(url)
-    result=f.read()
+    result=simplejson.loads(f.read())
     if result.get('errcode')==0:
         request.session['jsapi_ticket']=result['ticket']
     else:
