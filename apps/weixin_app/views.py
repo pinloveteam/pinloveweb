@@ -16,6 +16,7 @@ from apps.third_party_login_app.setting import PublicWeiXinAppID,\
     WEIXIN_CHECK_AUTHORIZATION_URL
 from apps.third_party_login_app.models import ThirdPsartyLogin
 from _mysql import result
+from apps.weixin_app.method import get_jsapi_ticket, get_signature
 logger=logging.getLogger(__name__)
 '''
 完善个人信息
@@ -23,6 +24,8 @@ logger=logging.getLogger(__name__)
 def self_info(request):
         args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
         userKey=request.REQUEST.get('userKey')
+        get_jsapi_ticket(request,request.session['access_toke'])
+        args.update(get_signature(request.session['jsapi_ticket'],request.path+'?userKey='+userKey))
         args['userKey']=userKey
         if userKey==None:
             return render(request,'error.html',{'result':'error','error_message':'没有用户标识，请联系客服!'})
@@ -127,6 +130,7 @@ def score(userId,otherId):
 '''
 def other_info(request):
     args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
+    args.update(get_signature(request.session['jsapi_ticket'],request.path))
     flag=True
     try:
         userProfile=UserProfile.objects.get(user=request.user)

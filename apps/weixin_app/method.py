@@ -4,6 +4,10 @@ Created on 2014年11月20日
 
 @author: jin
 '''
+from apps.verification_app.views import random_str
+import time
+import hashlib
+import urllib
 '''
 我心游戏期望甚高计算
 @param gender:用户性别
@@ -75,3 +79,27 @@ def has_share_in_game(userId):
         return True
     else:
         return False
+    
+'''
+微信获取签名
+'''    
+def get_signature(jsapi_ticket,url):
+    args={     
+          'noncestr':random_str(),
+          'jsapi_ticket':jsapi_ticket,
+          'timestamp':int(time.time()),
+          'url':url
+          }
+    args['signature']=hashlib.sha1(args).hexdigest()
+    return args
+
+
+def get_jsapi_ticket(request,access_token):
+    url='"https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"'%(access_token)
+    f=urllib.urlopen(url)
+    result=f.read()
+    if result.get('errcode')==0:
+        request.session['jsapi_ticket']=result['ticket']
+    else:
+        raise Exception('获取jsapi_ticket出错，出错原因：'+result['errmsg'])
+    
