@@ -93,7 +93,7 @@ def get_signature(jsapi_ticket,url):
           'timestamp':int(time.time()),
           'url':url
           }
-    paramter='%s=%s&%s=%s&%s=%s&%s=%s'%('noncestr',args['noncestr'],'jsapi_ticket',args['jsapi_ticket'],'timestamp',args['timestamp'],'url',args['url'],)
+    paramter='%s=%s&%s=%s&%s=%s&%s=%s'%('jsapi_ticket',args['jsapi_ticket'],'noncestr',args['noncestr'],'timestamp',args['timestamp'],'url',args['url'],)
     args['signature']=hashlib.sha1(paramter).hexdigest()
     return args
 
