@@ -191,3 +191,10 @@ def other_info(request):
         args={'result':'error','error_message':'出错%s:'%(e.message)}
         return render(request,'error.html',args)
         
+def test(request):
+    eduction=request.GET.get('eduction')
+    schoolType=request.GET.get('schoolType')
+    country=request.GET.get('country')
+    from apps.weixin_app.method import cal_eduction_in_game
+    result=cal_eduction_in_game(eduction,schoolType,country)
+    return HttpResponse(result)
