@@ -66,7 +66,7 @@ def self_info(request):
                 #计算学历
                 from apps.weixin_app.method import cal_eduction_in_game
                 eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['education']),int(schoolType),int(country))
-                logging.error('233esddfsd-----'+int(infoFrom.cleaned_data['education'])+'  '+int(schoolType)+' '+int(country))
+                logging.error('233esddfsd-----%s %s %s'%(int(infoFrom.cleaned_data['education']),int(schoolType),int(country)))
                 Grade.objects.filter(user_id=request.user.id).update(educationscore=eductionScore)
                 args.update(score(request.user.id,otherId))
                 if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
