@@ -17,6 +17,7 @@ from apps.third_party_login_app.setting import PublicWeiXinAppID,\
 from apps.third_party_login_app.models import ThirdPsartyLogin
 from _mysql import result
 from apps.weixin_app.method import get_jsapi_ticket, get_signature
+from django.db import transaction
 logger=logging.getLogger(__name__)
 '''
 完善个人信息
@@ -68,6 +69,7 @@ def self_info(request):
                 eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['education']),int(schoolType),int(country))
                 logging.error('233esddfsd-----%s %s %s %s'%(int(infoFrom.cleaned_data['education']),int(schoolType),int(country),eductionScore))
                 Grade.objects.filter(user_id=request.user.id).update(educationscore=eductionScore)
+                transaction.commit()
                 args.update(score(request.user.id,otherId))
                 if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
                     data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
