@@ -9,6 +9,7 @@
 {
 	overflow: scroll;
 	position: relative;
+	overflow-x:hidden;
 }
 
 .jspPane
