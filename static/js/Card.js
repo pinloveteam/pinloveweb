@@ -29,8 +29,7 @@ var sendMsg = function(){
 				content.val('');
 				pane.jScrollPane();
 			    //api.scrollTo(0,9999);
-				var jsppanel=$(this).prev().prev().children();
-			    jsppanel.animate({scrollTop:jsppanel.height()},100)
+				chat.animate({scrollTop:9999},100)
 		   }else{
 			   var body=$('<p>'+data.error_message+'</p>')
 			   $.poplayer({body:body});
