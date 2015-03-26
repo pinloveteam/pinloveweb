@@ -258,7 +258,7 @@ def update_profile(request):
             data={}
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
-            cal_recommend(request.user.id,['grade'])     
+            cal_recommend(request.user.id,['info'])     
             data['result']='success'
         else:
             errors=userProfileForm.errors.items()

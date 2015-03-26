@@ -75,6 +75,7 @@ urlpatterns = patterns('',
     (r'^alipay', include('apps.alipay_app.urls')),
     (r'^mobile/', include('apps.mobile_app.urls')),
     (r'^common/', include('apps.common_app.urls')),
+    url(r'^test/$', 'pinloveweb.test.tests'),
     
 )
 
@@ -96,7 +97,6 @@ if settings.DEBUG:
                           url(r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_ROOT },name="static"),
                            url(r'^site_media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT },name="site_media"),
                           url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT },name="media"),
-                          url(r'^test/$', 'pinloveweb.test.tests'),
 )
     
    

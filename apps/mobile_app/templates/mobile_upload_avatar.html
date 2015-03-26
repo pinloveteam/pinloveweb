@@ -38,14 +38,17 @@
     
     <script type="text/javascript">
         $(function(){
+        	{%if guide%}
+        	$('#uploadAvatarCropSubmit').attr('id','uploadAvatarBtnLayout').html('上传图片');
         	
+        	{%else%}
         	upload_avatar_success('{{image}}')
-            
+            {%endif%}
             
             var input_width = 0;
             var input_height = 0;
             
-            $('#uploadAvatarBtnLayout').find('.btn').click(function(){
+            $('#uploadAvatarBtnLayout').click(function(){
             	$('#uploadAvatarInputFile').click();
             })
             $('#uploadAvatarInputFile').css({opacity: 0}).width(input_width + 50).height(input_height).change(function(){
@@ -55,8 +58,8 @@
                     var img_obj = $last_img.imgAreaSelect({instance: true});
                     img_obj.remove();
                 }
-                $('#uploadAvatarSelectArea').empty();
-                $('#uploadAvatarPreviewArea div').empty();
+                //$('#uploadAvatarSelectArea').empty();
+                // $('#uploadAvatarPreviewArea div').empty();
                 var p = new RegExp(/\.(jpg|jpeg|png|gif)$/);
                 var fileanme = $(this).val().toLowerCase().replace(/^\s+|\s+$/g, '');
                 if(!p.test(fileanme)){alert("{{ INVALID_IMAGE }}"); return;}
@@ -211,12 +214,40 @@
                     parent:'#uploadAvatarSelectArea',
                     onSelectChange: updateCoors
                 });
-                
+                $('#uploadAvatarSelectArea').css('height',$(this).height())
                 updateCoors({'width': img_width}, sel);
             });
             
             $('div[id^="uploadAvatarPreviewArea"]:gt(0)').css("background-image","url('')"); 
             $('#uploadAvatarSelectArea').css("background-image","url('')"); 
+            
+            
+            $('#uploadAvatarBtnLayout').unbind().attr('id','uploadAvatarCropSubmit').html('保存');
+            $('#uploadAvatarCropSubmit').click(function(){
+                $(this).attr('disabled', 'disabled');
+                var x1 = $('#uploadAvatarValueX1').val();
+                var y1 = $('#uploadAvatarValueY1').val();
+                var x2 = $('#uploadAvatarValueX2').val();
+                var y2 = $('#uploadAvatarValueY2').val();
+                if((x1 != "" ||  x2 != "" ) && (x1-x2==0)){
+                	 var body=$('<p>请选择区域!</p>')
+                     $.poplayer({body:body});
+                	 $(this).removeAttr('disabled');
+                	 return false;
+                }
+                if(x1 == "" || y1 == "" || x2 == "" ||y2 == "") {
+                    $(this).removeAttr('disabled');
+                    return false;
+                }
+                
+                $('#uploadAvatarCropForm').submit();
+                $('#uploadAvatarValueX1').val('');
+                $('#uploadAvatarValueY1').val('');
+                $('#uploadAvatarValueX2').val('');
+                $('#uploadAvatarValueY2').val('');
+                $(this).removeAttr('disabled');
+                return false;
+            });
         };
         
         function updateCoors(img, selection) {
@@ -229,9 +260,18 @@
    
         
         function crop_avatar_success(msg,avatar_name) {
+        	{%if guide%}
+        	window.location.href="{{guide_next_url}}";
+        	{%else%}
         	window.location.href="/mobile/account/"
+        	{%endif%}
         	
         };
+        
+        function upload_avatar_error(error_msg) {
+            alert(error_msg);
+        };
+        
         
     </script>
 {% endblock %}
@@ -245,9 +285,10 @@
 					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
 				</div>
 				<div class="col-xs-8">
-					上传头像
+					{%if guide%}{{title}}{%else%}上传头像{%endif%}
 				</div>
 				<div class="col-xs-2">
+				{%if guide%}<i class="glyphicon glyphicon-remove-sign jump_over"></i>{%endif%}
 				</div>
 			</div>
 		</div>
@@ -261,9 +302,15 @@
         <input id="border_size" type="text" name="border_size" value="0"/>
     </form>
     
+    <form id="uploadAvatarForm" action="/upload_avatar/uploadavatar_upload/" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
+        </form>
+       <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
+    
     <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" style="display: none;"></iframe>
     <center>
-    <div id="uploadAvatarSelectArea"  style="position:relative;"></div>
+    <div id="uploadAvatarSelectArea"  style="position:relative;">{%if guide%}<img alt="" src="{{image}}">{%endif%}</div>
     </center>
     
     <div id="uploadAvatarCropResult" style="display: none;"></div>

@@ -15,6 +15,7 @@ from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
 from apps.friend_dynamic_app.models import Picture, FriendDynamic
 from util.cache import get_has_recommend
 from apps.mobile_app.__init__ import ERROR_TEMLATE_NAMR
+from apps.recommend_app.recommend_util import recommend_info_status
 logger=logging.getLogger(__name__)
 
 def account(request):
@@ -42,6 +43,8 @@ def get_weight(request,template_name='mobile_weight.html'):
     try:
         from apps.recommend_app.method import get_weight_star
         args=get_weight_star(request.user.id)
+        if request.GET.get('guide')==u'1':
+            args.update({'guide':True,'title':'第四步：完善权重','guide_next_url':'/mobile/grade_height/?guide=1'})
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
@@ -71,11 +74,13 @@ def profile(request,template_name='mobile_profile.html'):
                 userProfile.save(oldUserProfile=oldUserProfile)
                 #判断推荐条件是否完善
                 from apps.recommend_app.recommend_util import cal_recommend
-                cal_recommend(request.user.id,['userProfile'])     
+                cal_recommend(request.user.id,['info'])     
                 args['result']='success'
-                return render(request,template_name,args)
             else:
-                args['user_profile_form'] = userProfileForm
+                 errors=userProfileForm.errors.items()
+                 args={'errors':errors,'result':'error'}
+            json=simplejson.dumps(args)
+            return HttpResponse(json, mimetype='application/json')
               
         else:
             args['user_profile_form'] = UserProfileMbolieForm(instance=userProfile) 
@@ -84,6 +89,8 @@ def profile(request,template_name='mobile_profile.html'):
         fields=['country','city','stateProvince']
         for field in fields:
             args[field]=getattr(userProfile,field)
+        if request.GET.get('guide')==u'1':
+            args.update({'guide':True,'title':'第二步：完善个人信息','guide_next_url':'/mobile/character_tag/?guide=1'})
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
@@ -105,6 +112,8 @@ def character_tag(request,template_name='mobile_personality.html'):
         tagsForOther=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=1)
         tagbeanForOtherList=tag_to_tagbean(tagsForOther)
         args['tagbeanForOtherList']=tagbeanForOtherList
+        if request.GET.get('guide')==u'1':
+            args.update({'guide':True,'title':'第三步：填写性格标签','guide_next_url':'/mobile/get_weight/?guide=1'})
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
@@ -179,7 +188,12 @@ def follow(request,type,ajax='false',template_name="mobile_follow.html"):
             args['next_page_number']=cardList.next_page_number()
         else:
             args['next_page_number']=-1
-        args['has_recommend']=get_has_recommend(request.user.id)
+        #判断推荐完成情况
+        recommend_status=recommend_info_status(request.user.id,channel='mobile')
+        if recommend_status['result']:
+            args['has_recommend']=True
+        else:
+            args['recommend_finish']=recommend_status['data']
         if request.is_ajax():
             data={}
             if cardList.has_next():
@@ -217,7 +231,12 @@ def nearby(request,template_name="mobile_neardy.html"):
             userList.object_list=userProfileList_to_CardMobileList(request.user.id,userList.object_list)
         else:
             userList.object_list=[]
-        args['has_recommend']=get_has_recommend(request.user.id)
+        #判断推荐完成情况
+        recommend_status=recommend_info_status(request.user.id,channel='mobile')
+        if recommend_status['result']:
+            args['has_recommend']=True
+        else:
+            args['recommend_finish']=recommend_status['data']
         if request.is_ajax():
             from pinloveweb.method import load_cards_by_ajax
             return load_cards_by_ajax(request,userList,chanel='mobile')
@@ -413,6 +432,8 @@ def grade_height(request,template_name='mobile_height.html'):
             args['grade_for_other']=False
         else:
             args['grade_for_other']=userExpect
+        if request.GET.get('guide')==u'1':
+            args.update({'guide':True,'title':'第五步：Ta的身高打分','guide_next_url':'/mobile/loggedin/?previous_page=register'})
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
@@ -429,6 +450,8 @@ def update_avtar(request,template_name='mobile_upload_avatar.html'):
         from apps.upload_avatar import get_uploadavatar_context
         args=get_uploadavatar_context()
         args['image']=request.GET.get('image')
+        if request.GET.get('guide')==u'1':
+            args.update({'image':'/static/img/信息设置-29.png','guide':True,'title':'第一步：上传头像','guide_next_url':'/mobile/profile/?guide=1'})
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
@@ -483,7 +506,12 @@ def recommend(request,template_name='mobile_recommend.html',**kwargs):
         matchResultList=get_recommend_list(request,flag,disLikeUserIdList,userProfile,**kwargs)
         from pinloveweb.method import get_no_read_web_count
         args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
-        args['has_recommend']=get_has_recommend(request.user.id)
+        #判断推荐完成情况
+        recommend_status=recommend_info_status(request.user.id,channel='mobile')
+        if not recommend_status['result']:
+            args['has_recommend']=True
+        else:
+            args['recommend_finish']=simplejson.dumps(simplejson.dumps(recommend_status['data']))
         if kwargs.get('card')==True:
             return matchResultList
         if request.is_ajax():

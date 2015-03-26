@@ -202,6 +202,10 @@ def get_detail_info(myId,userId,socreForOther):
                         'scoreMy':int(socreForOther['matchResult'].get('scoreMyself',-3)),
                         'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
                      })
+    elif socreForOther['result']=='less':
+        from apps.recommend_app.recommend_util import recommend_info_status
+        data.update({'error_message':recommend_info_status(myId,channel='web')['data']})
+        
     for  key in data.keys():
         if data[key] in missing_value:
             data[key]='未填'
@@ -217,18 +221,11 @@ def detailed_info_div(myId,userId,compareId=None):
     args={}
     from apps.recommend_app.views import get_socre_for_other
     socreForOther=get_socre_for_other(myId,userId)
-    #判断个人信息是否填写完整
-    if socreForOther['result']=='error':
-        args['result']='less'
-        args['error_message']=socreForOther['error_message']
-        args['user1']=get_detail_info(myId,userId,socreForOther)
-        return args
-    #获取页面详细信息
     args['user1']=get_detail_info(myId,userId,socreForOther)
     if not compareId is None:
         compareSocreForOther=get_socre_for_other(myId,compareId)
         args['user2']=get_detail_info(myId,compareId,compareSocreForOther)
-    args['result']='success'
+    args['result']=socreForOther['result']
     return args
     
 '''

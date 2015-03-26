@@ -39,7 +39,7 @@ from apps.upload_avatar.app_settings import UPLOAD_AVATAR_MIX_SIZE,\
 from django.http.response import HttpResponseServerError
 from django.shortcuts import render
 import simplejson
-import ExifTags
+from PIL import ExifTags
 logger=logging.getLogger(__name__)
 
 
@@ -203,7 +203,9 @@ def crop_avatar(request):
     avatar_crop_done.send(sender=None, uid=get_uid(request), avatar_name=avatar_name)
     if UPLOAD_AVATAR_DELETE_ORIGINAL_AFTER_CROP:
         upim.delete()
-        
+    #判断推荐条件是否完善
+    from apps.recommend_app.recommend_util import cal_recommend
+    cal_recommend(request.user.id,['avatar'])    
     return HttpResponse(
         u"<script>window.parent.crop_avatar_success('%s','%s%s')</script>"  % (UPLOAD_AVATAR_TEXT['SUCCESS'],MEDIA_URL,avatar_name)
     )

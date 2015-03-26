@@ -42,6 +42,10 @@ $(function(){
 			message=message+'的资料信息<p>'
 			$.poplayer({body:message});
 	}
+	//跳过引导
+	$('.jump_over').click(function(){
+		window.location.href="/mobile/loggedin/?previous_page=register"
+	})
 });
 </script>
 </html> 

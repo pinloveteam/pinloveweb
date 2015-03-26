@@ -40,7 +40,7 @@ def update_weight(request):
             weightStar.save()
             #判断推荐条件是否完善
             from apps.recommend_app.recommend_util import cal_recommend
-            cal_recommend(request.user.id,['grade'])
+            cal_recommend(request.user.id,['weight'])
             args['result']='success'
         else:
             args['result']='error'
@@ -153,7 +153,7 @@ def get_socre_for_other(userId,otherId):
 #              matchResult=get_match_score_other(userId,otherId)
 #              if matchResult==None:
                  #判断是否可用匹配
-                 from util.cache import get_has_recommend,get_recommend_status,has_recommend
+                 from util.cache import get_has_recommend,has_recommend
                  for field in ['userExpect','grade','tag']:
                      has_recommend(userId,field)
                  if get_has_recommend(userId):
@@ -161,13 +161,7 @@ def get_socre_for_other(userId,otherId):
                      matchResult=match_score(userId,otherId)
                      args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
                  else:
-                     recommendStatus=get_recommend_status(userId)
-                     dict={'userProfile':u'个人信息  ','userExpect':u'身高期望  ','grade':u'权重  ','tag':u'标签  '}
-                     errorMessge=''
-                     for key in recommendStatus.keys():
-                         if not recommendStatus[key]:
-                             errorMessge+=dict[key]
-                     args={'result':'error','error_message':'%s%s' %(errorMessge,u'未填写完整!')}
+                     args={'result':'less'}
 #              else:
 #                  from apps.pojo.recommend import MarchResult_to_RecommendResult
 #                  matchResult=MarchResult_to_RecommendResult(matchResult)

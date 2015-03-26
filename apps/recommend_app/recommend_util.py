@@ -18,11 +18,13 @@ attribute：null
 return: 填写情况(dict)
    
 """
-def recommend_info_status(request):
-    userId=request.user.id
+def recommend_info_status(userId,channel='web'):
+    '''
+    channel 来源 web(电脑) mobile(手机)
+    '''
     args={'result':True,'data':{}}
     #检测设备
-    if detect_device.detectTiermobileTablet(request):
+    if channel=='mobile':
          dict={
           'userExpect':{'info':'Ta的身高打分','href':'/mobile/grade_height/'},
           'weight':{'info':'权重打分','href':'/mobile/get_weight/'},
@@ -39,23 +41,11 @@ def recommend_info_status(request):
           'avatar':{'info':'头像','href':'/user/user_profile/#upload_head_'}
           }
        
-    keys=['userExpect','grade','tag']
     from util.cache import get_recommend_status
     recommendStatus=get_recommend_status(userId)
-    for key in keys:
-        if not recommendStatus[key]:
-            if key=='grade':
-                grade=Grade.objects.get(user_id=userId)
-                if grade.heightweight==None:
-                    args['data']['weight']=dict['weight']
-                if grade.incomescore==None or  grade.educationscore==None:
-                    args['data']['info']=dict['info']
-                if grade.sysappearancescore is None:
-                    avatar_name_status=UserProfile.objects.get(user_id=userId).avatar_name_status
-                    if avatar_name_status not in[u'2',u'3']:
-                        args['data']['avatar']=dict['avatar']
-            else:
-                args['data'][key]=dict[key]
+    for key,value in recommendStatus.items():
+        if not value: 
+            args['data'][key]=dict[key]
     if len(args['data'])==0:
         args['result']=False
     return  args           

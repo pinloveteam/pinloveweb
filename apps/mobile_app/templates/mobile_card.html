@@ -50,7 +50,12 @@ function init_card(cards){
 		});
 		{% else %}
 		template.find('.radar').click(function(){
-			var body = $('<p>如需查看对方的雷达图和打分，必须完善你的<span class="text-red">择偶标准</span>。<a href="/mobile/character_tag/">点此</a>完善资料<p>')
+			txt='<br /><span ">如需查看对方的雷达图和打分，必须完善你的</span>'
+				var recommendStatus=$.parseJSON({{recommend_finish|safe}});
+				for(var v in recommendStatus){
+						txt= txt+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
+					}
+				var body = $(txt)
        	    $.poplayer({body:body});
 		});
 		{% endif  %}

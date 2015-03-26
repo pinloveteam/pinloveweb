@@ -49,10 +49,18 @@
 		                    		var button=function(){
 		                    			$('.buy-nav').find('li').eq(3).click();
 		                    		};
+		                    		{%if guide %}
+		                    		url="{{guide_next_url}}";
+		                    		btnText="下一步";
+		                    		{%else%}
+		                    		url="/mobile/account/";
+		                    		btnText='返回个人中心';
+		                    		{%endif%}
 		                    		var btnFunc=function(){
-		                        		window.location.href="/mobile/account/"
+		                    			
+		                        		window.location.href=url
 		                        	}
-		        					$.poplayer({body:body,btnFunc:btnFunc,btnText:'返回个人中心'});
+		        					$.poplayer({body:body,btnFunc:btnFunc,btnText:btnText});
 		                    	}else{
 		                    		var body = $("<p>"+data.error_messge+"</p>")
 		                			$.poplayer({body:body});
@@ -111,9 +119,10 @@
 					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
 				</div>
 				<div class="col-xs-8">
-					性格标签
+					{%if guide %}{{title}}{%else%}性格标签{%endif%}
 				</div>
 				<div class="col-xs-2">
+				{%if guide%}<i class="glyphicon glyphicon-remove-sign jump_over"></i>{%endif%}
 				</div>
 			</div>
 		</div>

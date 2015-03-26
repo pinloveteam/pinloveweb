@@ -16,7 +16,7 @@ $(document).ready(function(){
     var income=$(this).find('select[name="income"] option:selected').val();
     $.ajax({
         type: $(this).attr('method'),
-        url: "/user/update_profile/",
+        url: "/mobile/profile/",
         data:data,
         beforeSend: function(XMLHttpRequest){
         	 $(this).find('button').attr('disabled', 'disabled');
@@ -30,10 +30,18 @@ $(document).ready(function(){
             		/* var button=function(){
             			$('.buy-nav').find('li').eq(2).click();
             		}; */
+            		{%if guide %}
+            		url="{{guide_next_url}}";
+            		btnText="下一步";
+            		{%else%}
+            		url="/mobile/account/";
+            		btnText='返回个人中心';
+            		{%endif%}
             		var btnFunc=function(){
-                		window.location.href="/mobile/account/"
+            			
+                		window.location.href=url
                 	}
-					$.poplayer({body:body,btnFunc:btnFunc,btnText:'返回个人中心'});
+					$.poplayer({body:body,btnFunc:btnFunc,btnText:btnText});
             		inputJudge('success','',$('#'+focus_error_id))
             	}else{
             		errors=data.errors
@@ -184,9 +192,10 @@ function hide_school_list(){
 					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
 				</div>
 				<div class="col-xs-8">
-					填写个人信息
+					{%if guide %}{{title}}{%else%}填写个人信息{%endif%}
 				</div>
 				<div class="col-xs-2">
+				{%if guide%}<i class="glyphicon glyphicon-remove-sign jump_over"></i>{%endif%}
 				</div>
 			</div>
 		</div>

@@ -99,15 +99,16 @@ def init_user_score():
 '''           
 def get_has_recommend(user_id):
     recommend=cache.get('HAS_RECOMMEND')
+    fieldList=['userExpect','weight','tag','info',"avatar"]
     if recommend.get(user_id)==None:
-        recommend[user_id]={'userExpect':False,'grade':False,'tag':False}
+        recommend[user_id]=dict((field,False) for field in fieldList)
         return False
     else:
-         user=recommend.get(user_id)
-         if user.get('userExpect') and user.get('grade') and user.get('tag'):
-             return True
-         else:
-             return False
+        user=recommend.get(user_id)
+        for field in fieldList:
+            if user.get(field,False)==False:
+                return False
+        return True
 
 '''
 获取推荐数据填写状态
@@ -115,7 +116,8 @@ def get_has_recommend(user_id):
 def get_recommend_status(user_id):
     recommend=cache.get('HAS_RECOMMEND')
     if recommend.get(user_id)==None:
-        recommend[user_id]={'userExpect':False,'grade':False,'tag':False}
+        fieldList=['userExpect','weight','tag','info',"avatar"]
+        recommend[user_id]=dict((field,False) for field in fieldList)
     user=recommend.get(user_id)
     return user
     
@@ -124,27 +126,33 @@ def get_recommend_status(user_id):
 '''
 def has_recommend(user_id,field):
     recommend=cache.get('HAS_RECOMMEND')
+    flag,fieldList=False,['userExpect','weight','tag','info',"avatar"]
+    if field not in fieldList:
+        return None
     if recommend.get(user_id)==None:
-        recommend[user_id]={'userExpect':False,'grade':False,'tag':False}
+        recommend[user_id]=dict((field,False) for field in fieldList)
     user=recommend.get(user_id)
     if field =='userExpect':
         from apps.recommend_app.models import UserExpect
         if UserExpect.objects.filter(user_id=user_id).exists() and (not (UserExpect.objects.filter(user_id=user_id ,heighty1=0.00,heighty2=0.00,heighty3=0.00,heighty4=0.00,heighty5=0.00,heighty6=0.00,heighty7=0.00,heighty8=0.00).exists())):
-            user['userExpect']=True
-        else:
-            user['userExpect']=False
-    elif field =='grade':
+            flag=True
+    elif field =='weight':
         from apps.recommend_app.models import Grade
-        if Grade.objects.filter(user_id=user_id,heightweight__isnull=False,incomescore__isnull=False,incomeweight__isnull=False,educationscore__isnull=False,educationweight__isnull=False,appearancescore__isnull=False,appearanceweight__isnull=False).exists():
-            user['grade']=True
-        else:
-            user['grade']=False
+        if Grade.objects.filter(user_id=user_id,heightweight__isnull=False,incomeweight__isnull=False,educationweight__isnull=False,appearanceweight__isnull=False).exists():
+            flag=True
     elif field=='tag':
         from apps.user_app.models import UserTag
         if UserTag.objects.filter(user_id=user_id,type=1).exists() and UserTag.objects.filter(user_id=user_id,type=0).exists():
-            user['tag']=True
-        else:
-            user['tag']=False
+            flag=True
+    elif field == 'avatar':
+        from apps.user_app.models import UserProfile
+        if UserProfile.objects.filter(user_id=user_id,avatar_name_status__in=[u'2',u'3']):
+            flag=True
+    elif field=='info':
+        from apps.user_app.models import UserProfile
+        if UserProfile.objects.filter(user_id=user_id,income__gt=-1,education__gt=-1,height__gt=-1).exclude(educationSchool=None).exists():
+            flag=True
+    user[field]=flag
     recommend[user_id]=user
     cache.set('HAS_RECOMMEND',recommend)
 '''

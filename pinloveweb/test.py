@@ -8,10 +8,20 @@ from django.db import transaction
 
 @transaction.commit_on_success
 def tests(request):
-    UserProfile.objects.filter(user=request.user).update(guide=None)
-    a=1
-    a=int('sd')
+    from django.core.cache import cache
+    recommend=cache.get('HAS_RECOMMEND')
+    for key in recommend.keys():
+        result=recommend[key]
+        fieldList=['userExpect','weight','tag','info',"avatar"]
+        for field in fieldList:
+            from util.cache import has_recommend
+            has_recommend(key,field)
+    recommend=cache.get('HAS_RECOMMEND')
+    for key in recommend.keys():
+        recommend[key].pop('grade')
+    cache.set('HAS_RECOMMEND',recommend)
     return HttpResponse('success')
+    
     
 def send_eamil_test():
     from pinloveweb.settings import DEFAULT_FROM_EMAIL

@@ -183,7 +183,12 @@
 			r1.find('#score').remove();
 			var info = r1.find('#compare_button').parent();
 			r1.find('#compare_button').remove();
-			var txt = $('<br /><p class="text-white">如需查看对方的雷达图和打分，必须完善你的<span class="text-red">择偶标准</span>。<a href="/user/user_profile/#self_info_">点此</a>完善资料<p>');
+			recommendStatus=options.user1.error_message;
+			txt='<br /><span class="text-white">如需查看对方的雷达图和打分，必须完善你的</span>'
+			for(var v in recommendStatus){
+				txt= txt+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
+			}
+			var txt = $(txt);
 			info.append(txt);
 			txt.find('a').click(function(){
 				var url = $(this).attr('href');
