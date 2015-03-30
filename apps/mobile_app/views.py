@@ -16,6 +16,8 @@ from apps.friend_dynamic_app.models import Picture, FriendDynamic
 from util.cache import get_has_recommend
 from apps.mobile_app.__init__ import ERROR_TEMLATE_NAMR
 from apps.recommend_app.recommend_util import recommend_info_status
+from apps.search_app.forms import SearchMobileForm
+import urllib
 logger=logging.getLogger(__name__)
 
 def account(request):
@@ -335,32 +337,10 @@ def search(request,template_name='mobile_search.html'):
     args={}
     try:
         userProfile=UserProfile.objects.get_user_info(request.user.id)
-        from apps.search_app.forms import SearchMobileForm
         if request.method=='POST':
                 searchForm=SearchMobileForm(request.POST)
                 if searchForm.is_valid():
-                    searchSql={}
-                    minAge=searchForm.cleaned_data['minAge'] if searchForm.cleaned_data['minAge']!=u'' else 0
-                    maxAge=searchForm.cleaned_data['maxAge'] if searchForm.cleaned_data['maxAge']!=u'' else 10000
-                    education=searchForm.cleaned_data['education'] if searchForm.cleaned_data['education'] !=u'' else -1
-                    minIcome=searchForm.cleaned_data['minIcome'] if searchForm.cleaned_data['minIcome']!=u'' else 0
-                    maxIncome=searchForm.cleaned_data['maxIncome'] if searchForm.cleaned_data['maxIncome'] !=u'' else 100000 
-                    #最大收入为不限
-                    if maxIncome=='-1':
-                        maxIncome='100000'
-                    minHeigh=searchForm.cleaned_data['minHeigh'] if searchForm.cleaned_data['minHeigh']!=u'' else 0
-                    maxHeigh=searchForm.cleaned_data['maxHeigh'] if searchForm.cleaned_data['maxHeigh']!=u'' else 1000
-                    sunSign=request.REQUEST.get('sunSign','').rstrip()
-                    if len(sunSign)>0:
-                        sunSign=[int(sunSignBean)for sunSignBean in sunSign.split(',')]
-                        searchSql['sunSign__in']=sunSign
-                    jobIndustry=searchForm.cleaned_data['jobIndustry']
-                    if jobIndustry!='None' and jobIndustry!=u'':
-                        searchSql['jobIndustry']=jobIndustry
-                    if education=='0':
-                        searchSql['education']=education
-                    userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
-                                               height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender).exclude(user=request.user).filter(avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)
+                    userProfileList=searchForm.select_data(request.REQUEST.get('sunSign','').rstrip(),userProfile.gender,request.user.id)
                     args=page(request,userProfileList)
                     searchList=args['pages']
                     from apps.pojo.card import userProfileList_to_CardMobileList
@@ -369,28 +349,117 @@ def search(request,template_name='mobile_search.html'):
                     args['pages']=searchList
                     from pinloveweb.method import init_person_info_for_card_page
                     args.update(init_person_info_for_card_page(userProfile))
+                    args['result']='success'
+                    POSTcopy=request.POST.copy()
+                    POSTcopy.pop('csrfmiddlewaretoken')
+                    args['url']=(request.path+'?'+urllib.urlencode(POSTcopy))
                     return render(request, 'mobile_search_result.html',args)
-        
+        elif request.is_ajax():
+            searchForm=SearchMobileForm(request.GET)
+            if searchForm.is_valid():
+                userProfileList=searchForm.select_data(request.REQUEST.get('sunSign','').rstrip(),userProfile.gender,request.user.id)
+                args=page(request,userProfileList)
+                searchList=args['pages']
+                from apps.pojo.card import userProfileList_to_CardMobileList
+                searchList.object_list=userProfileList_to_CardMobileList(request.user.id,searchList.object_list)
+                searchList.object_list=simplejson.dumps(searchList.object_list,cls=CardMobileEncoder)
+                args['pages']=searchList
+                args['result']='success'
+                
         else:
-            from apps.search_app.views import init_search_condition
-            initial=init_search_condition(request.user.id)
-            searchForm=SearchMobileForm(initial=initial)
-        from apps.search_app.views import get_disable_condition
-        args.update(get_disable_condition(userProfile))
-        args['searchForm']=searchForm
-        from apps.search_app.forms import SUN_SIGN_CHOOSICE
-        args['sunSign']=SUN_SIGN_CHOOSICE
-#             from pinloveweb.method import get_no_read_web_count
-#             args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
-        if request.is_ajax():
+            searchForm=SearchMobileForm()
+            searchForm.init_search_condition(request.user.id)
+            from apps.search_app.views import get_disable_condition
+            args.update(get_disable_condition(userProfile))
+            args['searchForm']=searchForm
+            from apps.search_app.forms import SUN_SIGN_CHOOSICE
+            args['sunSign']=SUN_SIGN_CHOOSICE
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
+            args['result']='success'
+        if args.get('result',False) !='success':
+            args['result']='error'
+            args['error_message']=[]
+            errorList=searchForm.errors.items()
+            for error in errorList:
+                args['error_message'].append([SearchMobileForm.base_fields[error[0]].label,error[1][0]])
+            json=simplejson.dumps(args)
+            return HttpResponse(json)
+    except Exception as e:
+        error_message='搜索也卖弄出错：出错原因：'+e.message
+        logger.exception(error_message)
+        args['result']='success'
+        args['error_message']=error_message
+        template_name='error.html'
+    if request.is_ajax():
             from pinloveweb.method import load_cards_by_ajax
             return load_cards_by_ajax(request,searchList,chanel='mobile')
-        else:
-            return render(request, template_name,args)
-    except Exception as e:
-        logger.exception('搜索,出错!')
-        args={'result':'error','error_message':e.message}
-        return render(request,ERROR_TEMLATE_NAMR,args)
+    else:
+        return render(request,template_name,args)
+    
+    
+    
+    
+    
+#     args={}
+#     try:
+#         userProfile=UserProfile.objects.get_user_info(request.user.id)
+#         from apps.search_app.forms import SearchMobileForm
+#         if request.method=='POST':
+#                 searchForm=SearchMobileForm(request.POST)
+#                 if searchForm.is_valid():
+#                     searchSql={}
+#                     minAge=searchForm.cleaned_data['minAge'] if searchForm.cleaned_data['minAge']!=u'' else 0
+#                     maxAge=searchForm.cleaned_data['maxAge'] if searchForm.cleaned_data['maxAge']!=u'' else 10000
+#                     education=searchForm.cleaned_data['education'] if searchForm.cleaned_data['education'] !=u'' else -1
+#                     minIcome=searchForm.cleaned_data['minIcome'] if searchForm.cleaned_data['minIcome']!=u'' else 0
+#                     maxIncome=searchForm.cleaned_data['maxIncome'] if searchForm.cleaned_data['maxIncome'] !=u'' else 100000 
+#                     #最大收入为不限
+#                     if maxIncome=='-1':
+#                         maxIncome='100000'
+#                     minHeigh=searchForm.cleaned_data['minHeigh'] if searchForm.cleaned_data['minHeigh']!=u'' else 0
+#                     maxHeigh=searchForm.cleaned_data['maxHeigh'] if searchForm.cleaned_data['maxHeigh']!=u'' else 1000
+#                     sunSign=request.REQUEST.get('sunSign','').rstrip()
+#                     if len(sunSign)>0:
+#                         sunSign=[int(sunSignBean)for sunSignBean in sunSign.split(',')]
+#                         searchSql['sunSign__in']=sunSign
+#                     jobIndustry=searchForm.cleaned_data['jobIndustry']
+#                     if jobIndustry!='None' and jobIndustry!=u'':
+#                         searchSql['jobIndustry']=jobIndustry
+#                     if education=='0':
+#                         searchSql['education']=education
+#                     userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
+#                                                height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=userProfile.gender).exclude(user=request.user).filter(avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)
+#                     args=page(request,userProfileList)
+#                     searchList=args['pages']
+#                     from apps.pojo.card import userProfileList_to_CardMobileList
+#                     searchList.object_list=userProfileList_to_CardMobileList(request.user.id,searchList.object_list)
+#                     searchList.object_list=simplejson.dumps(searchList.object_list,cls=CardMobileEncoder)
+#                     args['pages']=searchList
+#                     from pinloveweb.method import init_person_info_for_card_page
+#                     args.update(init_person_info_for_card_page(userProfile))
+#                     return render(request, 'mobile_search_result.html',args)
+#         
+#         else:
+#             from apps.search_app.views import init_search_condition
+#             initial=init_search_condition(request.user.id)
+#             searchForm=SearchMobileForm(initial=initial)
+#         from apps.search_app.views import get_disable_condition
+#         args.update(get_disable_condition(userProfile))
+#         args['searchForm']=searchForm
+#         from apps.search_app.forms import SUN_SIGN_CHOOSICE
+#         args['sunSign']=SUN_SIGN_CHOOSICE
+# #             from pinloveweb.method import get_no_read_web_count
+# #             args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
+#         if request.is_ajax():
+#             from pinloveweb.method import load_cards_by_ajax
+#             return load_cards_by_ajax(request,searchList,chanel='mobile')
+#         else:
+#             return render(request, template_name,args)
+#     except Exception as e:
+#         logger.exception('搜索,出错!')
+#         args={'result':'error','error_message':e.message}
+#         return render(request,ERROR_TEMLATE_NAMR,args)
   
   
 def update_radar_compare(request,template_name='mobile_recommend.html'):

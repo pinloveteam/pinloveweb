@@ -1,3 +1,18 @@
 {% extends "mobile_recommend.html" %} 
 {% block title %} 拼爱网 --搜索结果{% endblock %}
 {% block theme %} 搜索结果{% endblock %}
+{% block js %}
+{% if url%}
+<script type="text/javascript">
+$(function(){
+	 var title=$('title').val()
+	   var url='{{url|safe}}';
+		  var state = {
+			    title: title,
+			    url: url,
+			};
+		  window.history.replaceState(state, title, url);
+})
+{% endif %}
+</script>
+{% endblock %}

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from apps.user_app.models import UserProfile
+from pinloveweb import STAFF_MEMBERS
 
 MIN_AGE=[(i,i) for i in range(18,60)]
 MAX_AGE=[(i,i) for i in range(19,70)]
@@ -28,14 +30,10 @@ class SearchForm(forms.Form):
         super(SearchForm,self).__init__(*args,**kwargs)
         for key in self.fields:
             self.fields[key].required = False
-        self.fields['minAge'].widget.attrs['class']='condition-input condition-input-pre'
-        self.fields['maxAge'].widget.attrs['class']='condition-input condition-input-bak'
-        self.fields['minHeigh'].widget.attrs['class']='condition-input condition-input-pre'
-        self.fields['maxHeigh'].widget.attrs['class']='condition-input condition-input-bak'
-        self.fields['education'].widget.attrs['class']='condition-input condition-input-pre'
-        self.fields['minIcome'].widget.attrs['class']='condition-input condition-input-pre'
-        self.fields['maxIncome'].widget.attrs['class']='condition-input condition-input-bak'
-        self.fields['jobIndustry'].widget.attrs['class']='condition-input condition-input-pre'
+            if key in ['minAge','minHeigh','education','minIcome','jobIndustry']:
+                self.fields[key].widget.attrs['class']='condition-input condition-input-pre'
+            elif key in ['maxAge','maxHeigh','maxIncome']:
+                self.fields[key].widget.attrs['class']='condition-input condition-input-pre'
     minAge=forms.ChoiceField(label="最小年龄",choices=MIN_AGE)
     maxAge=forms.ChoiceField(label="最大年龄",choices=MAX_AGE)
     education = forms.ChoiceField(label="学历",choices=EDUCATION_DEGREE_CHOICES)
@@ -45,19 +43,77 @@ class SearchForm(forms.Form):
     maxHeigh=forms.ChoiceField(label="最大身高",choices=HEIGHT_CHOICES)
     jobIndustry=forms.ChoiceField(label="行业",choices=JOB_INDUSRY_CHOICE,initial=None)
     
+    def init_search_condition(self,user_id):
+        '''
+初始化搜索条件
+attribute：
+   user_id 用户id
+ 
+'''
+        initial={}
+        userProfile=UserProfile.objects.get(user_id=user_id)
+        initial['isAvatar']=True
+        initial['maxIncome']=-1
+        initial['minIcome']=-1
+        initial['jobIndustry']=None
+        if userProfile.height==None:
+            initial['minHeigh']=155
+            initial['maxHeigh']=195
+        if userProfile.age==None:
+            initial['minAge']=18
+            initial['maxAge']=30
+        initial['education']=-1
+        if userProfile.gender=='F':
+            if  userProfile.height!=None:
+                initial['minHeigh']=userProfile.height
+                max=userProfile.height+30
+                if max>226:
+                    initial['maxHeigh']=226
+                else:
+                    initial['maxHeigh']=int(max)
+            if userProfile.age!=None:
+                initial['minAge']=int(userProfile.age)
+                initial['maxAge']=int(userProfile.age+10)
+        else:
+            if userProfile.height!=None:
+                initial['minHeigh']=int(userProfile.height-25)
+                initial['maxHeigh']=int(userProfile.height)
+            if userProfile.age!=None:
+                initial['minAge']=int(userProfile.age-10)
+                initial['maxAge']=int(userProfile.age)
+        self.initial=initial
+        
+    def select_data(self,sunSign,gender,userId):
+        '''
+        查询搜索
+        '''
+        searchSql={}
+        minAge=self.cleaned_data['minAge'] if self.cleaned_data['minAge']!=u'' else 0
+        maxAge=self.cleaned_data['maxAge'] if self.cleaned_data['maxAge']!=u'' else 10000
+        education=self.cleaned_data['education'] if self.cleaned_data['education'] !=u'' else -1
+        minIcome=self.cleaned_data['minIcome'] if self.cleaned_data['minIcome']!=u'' else 0
+        maxIncome=self.cleaned_data['maxIncome'] if self.cleaned_data['maxIncome'] !=u'' else 100000 
+        #最大收入为不限
+        if maxIncome=='-1':
+            maxIncome='100000'
+        minHeigh=self.cleaned_data['minHeigh'] if self.cleaned_data['minHeigh']!=u'' else 0
+        maxHeigh=self.cleaned_data['maxHeigh'] if self.cleaned_data['maxHeigh']!=u'' else 1000
+        if len(sunSign)>0:
+            sunSign=[int(sunSignBean)for sunSignBean in sunSign.split(',')]
+            searchSql['sunSign__in']=sunSign
+        jobIndustry=self.cleaned_data['jobIndustry']
+        if jobIndustry!='None' and jobIndustry!=u'':
+            searchSql['jobIndustry']=jobIndustry
+        if education=='0':
+            searchSql['education']=education
+        userProfileList=UserProfile.objects.select_related('user').filter(age__gte=minAge,age__lte=maxAge,education__gte=education,income__gte=minIcome,income__lte=maxIncome,
+                                    height__gte=minHeigh,height__lte=maxHeigh,**searchSql).exclude(gender=gender).exclude(user=userId).filter(avatar_name_status='3').exclude(user_id__in=STAFF_MEMBERS)[:80]
+        return   userProfileList  
     
-class SearchMobileForm(forms.Form):
+class SearchMobileForm(SearchForm):
     def __init__(self,*args,**kwargs):
         super(SearchMobileForm,self).__init__(*args,**kwargs)
         for key in self.fields:
             self.fields[key].required = False
             self.fields[key].widget.attrs['class']='form-control'
             
-    minAge=forms.ChoiceField(label="最小年龄",choices=MIN_AGE)
-    maxAge=forms.ChoiceField(label="最大年龄",choices=MAX_AGE)
-    education = forms.ChoiceField(label="学历",choices=EDUCATION_DEGREE_CHOICES)
-    minIcome=forms.ChoiceField(label="最少年收入",choices=INCOME_CHOICES)
-    maxIncome=forms.ChoiceField(label="最大年收入",choices=INCOME_CHOICES)
-    minHeigh=forms.ChoiceField(label="最小身高",choices=HEIGHT_CHOICES)
-    maxHeigh=forms.ChoiceField(label="最大身高",choices=HEIGHT_CHOICES)
-    jobIndustry=forms.ChoiceField(label="行业",choices=JOB_INDUSRY_CHOICE,initial=None)

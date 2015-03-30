@@ -49,53 +49,6 @@ $(document).ready(function(){
 	     return false;
 	 });
 	 
-	 function searchajax(context,data){
-		 $.ajax({
-	         type: context.attr('method'),
-	         url: "/search/",
-	         data:data,
-	         beforeSend: function(XMLHttpRequest){
-	         },
-	         success: function(data, textStatus){
-	        	 data=$.parseJSON(data)
-	            if(data['result'] == 'success'){
-	            	$('.card_row').children().hide('slow');
-	            	if (data['has_next']){
-						 next_page=data['next_page_number'];
-					 }else{
-						 next_page=-1;
-						 $('.next').hide();
-					 }
-	            	 $('.card_row').children().remove()
-	            	 var cards=data['cards'];
-	            	 init_card(cards);
-	            	 venobox();
-	            	pane = $('.chat');
-	            	pane.jScrollPane();
-					 /* if  (data['removeCard']){
-						 choseCardsSize=0
-					 }
-					 for(x=0;x<cards.length;x++){
-							 new Card(new Person(cards[x].username,cards[x].age,cards[x].city,'/media/'+cards[x].avatar_name,cards[x].user_id,cards[x].followStatus));
-						 } 
-					 preCard.remove();
-					 venobox(); */
-	             }else if(data['result'] == 'error'){
-	            	 erors=data['error_message'];
-	            	 if(erors.length>0){
-	            		 var body = $("<p>"+erors[0][0]+"错误!  错误原因："+erors[0][1]+"</p>")
-	     				$.poplayer({body:body});
-	            	 }
-	             }
-	         },
-	         complete: function(XMLHttpRequest, textStatus){
-	         },
-	         error: function(response){
-	        	 var body = $("<p>网络异常!</p>")
-  				$.poplayer({body:body});
-	         }
-	     });
-	 }
 	 //searchAvailable
 	 /* var conditionHead = $('.searchAvailable .condition-head');
 				conditionHead.click(function() {
@@ -129,6 +82,54 @@ $(document).ready(function(){
 		})
 		
 });
+function searchajax(context,data){
+	 $.ajax({
+        type: context.attr('method'),
+        url: "/search/",
+        data:data,
+        beforeSend: function(XMLHttpRequest){
+       	 loading(true);
+       	 load_next_page=false;
+        },
+        complete: function(XMLHttpRequest, textStatus){
+       	 loading(false);
+       	 load_next_page=true;
+       	 has_load=false;
+        },
+        success: function(data, textStatus){
+   	    	data=$.parseJSON(data);
+	           if(data.result=='success'){
+	        	  $('.card_row').children().remove();
+	        	   next_page=data['next_page_number']
+	        	   if(typeof(data.cards)!="object"){
+	        		   data.cards=$.parseJSON(data.cards);
+	        		   }
+	        	   init_card(data.cards)
+	        	   venobox(); 
+	        	   var title=$('title').val()
+	        	   var url=data.url
+	        		  var state = {
+	        			    title: title,
+	        			    url: url,
+	        			};
+           	window.history.replaceState(state, title, url);
+	        }else if(result.result=='error'){
+	        	erors=data.error_message;
+		           var body=$('<p>'+data.error_message+'</p>')
+		          if(erors.length>0){
+	            		 var body = $("<p>"+erors[0][0]+"错误!  错误原因："+erors[0][1]+"</p>")
+	     				$.poplayer({body:body});
+	            	 }
+	       }
+       	 
+        },
+        error: function(response){
+       	 var body = $("<p>网络异常!</p>")
+				$.poplayer({body:body});
+        }
+    });
+}
+
 </SCRIPT>
 <div class="col-xs-3">
 	<div class="card_panel" style="width: 255px;">

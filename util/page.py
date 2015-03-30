@@ -22,7 +22,7 @@ def page(request,querySet,**kwargs):
      page=kwargs.get('page',None)
      try:
          if page==None:
-               page=int(request.GET.get('page', '1'))
+               page=int(request.REQUEST.get('page', '1'))
                if page<1:
                    page=1
      except:
