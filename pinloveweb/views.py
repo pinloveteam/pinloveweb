@@ -266,11 +266,12 @@ def register_user(request,template_name='login.html') :
             #手机端做引导页面
             if url.find('/mobile/')!=-1:
                 url='/mobile/update_avtar/?guide=1'
-            #检测推荐信息填写情况
-            from apps.recommend_app.recommend_util import recommend_info_status
-            recommendStatus=recommend_info_status(request.user.id,channel='mobile' if request.path.find('/mobile/')!=-1 else 'web')
-            if recommendStatus['result']:
-                request.session['recommendStatus']=simplejson.dumps(recommendStatus['data'])
+            else:
+                #检测推荐信息填写情况
+                from apps.recommend_app.recommend_util import recommend_info_status
+                recommendStatus=recommend_info_status(request.user.id,channel='mobile' if request.path.find('/mobile/')!=-1 else 'web')
+                if recommendStatus['result']:
+                    request.session['recommendStatus']=simplejson.dumps(recommendStatus['data'])
             return HttpResponseRedirect(url)
         else : 
             args['user_form'] = userForm
