@@ -5,9 +5,18 @@ from apps.upload_avatar import get_uploadavatar_context
 from apps.user_app.models import UserProfile
 from django.http.response import HttpResponse
 from django.db import transaction
+from util.email import TemplateEmail
+from django.core.mail import send_mail
 
 @transaction.commit_on_success
 def tests(request):
+    send_mail(u'拼爱网，密码找回', 'sdsds','pinloveteam@pinlove.com',['jin521436'])
+#     email=TemplateEmail('jin521436@163.com','jin')
+#     email.send()
+    return HttpResponse('success')
+ 
+    
+def uodate_recommend(request):
     from django.core.cache import cache
     recommend=cache.get('HAS_RECOMMEND')
     for key in recommend.keys():
@@ -21,8 +30,7 @@ def tests(request):
         recommend[key].pop('grade')
     cache.set('HAS_RECOMMEND',recommend)
     return HttpResponse('success')
-    
-    
+
 def send_eamil_test():
     from pinloveweb.settings import DEFAULT_FROM_EMAIL
     subject, from_email, to = 'hello', DEFAULT_FROM_EMAIL, 'habfy65@gmail.com'    

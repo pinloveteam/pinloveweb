@@ -162,6 +162,7 @@ INSTALLED_APPS = (
 'apps.alipay_app',
 'apps.weixin_app',
 'apps.mobile_app',
+'django_ses',
 )
  
 PAYPAL_RECEIVER_EMAIL = "pinloveteam@gmail.com"
@@ -328,23 +329,30 @@ for app in logger_app:
         }
     
     
-# Host for sending e-mail.
-EMAIL_HOST = 'smtp.webfaction.com'
+# # Host for sending e-mail.
+# EMAIL_HOST = 'smtp.webfaction.com'
+# 
+# 
+# # Port for sending e-mail.
+# EMAIL_PORT = 587
+# 
+# # Optional SMTP authentication information for EMAIL_HOST.
+# EMAIL_HOST_USER = 'pinloveteam'
+# EMAIL_HOST_PASSWORD = 'redyellowblue123#'
+# DEFAULT_FROM_EMAIL = 'pinloveteam@pinpinlove.com'
+# SERVER_EMAIL = 'pinloveteam@pinpinlove.com'
+# EMAIL_USE_TLS = True
+# 
+# # EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 
-
-# Port for sending e-mail.
-EMAIL_PORT = 587
-
-# Optional SMTP authentication information for EMAIL_HOST.
-EMAIL_HOST_USER = 'pinloveteam'
-EMAIL_HOST_PASSWORD = 'redyellowblue123#'
-DEFAULT_FROM_EMAIL = 'pinloveteam@pinpinlove.com'
-SERVER_EMAIL = 'pinloveteam@pinpinlove.com'
-EMAIL_USE_TLS = True
-
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
+AWS_ACCESS_KEY_ID = 'AKIAIORWNMNFCERVAYVA'
+AWS_SECRET_ACCESS_KEY = 'AjGomzkvKtpzOBQvj/l3+PB6T15ERPvMOp2TbaNoq2Ku'
+EMAIL_BACKEND = 'django_ses.SESBackend'
+# Additionally, you can specify an optional region, like so:
+AWS_SES_REGION_NAME = 'us-east-1'
+AWS_SES_REGION_ENDPOINT = 'email-smtp.us-east-1.amazonaws.com'
 
 #set the session paramter session的控制
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -359,7 +367,7 @@ CACHES = {
 }
 # 本地环境
 # DATABASES = {
-#                                      
+#                                       
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 #         'NAME': 'django',                      # Or path to database file if using sqlite3.
@@ -387,7 +395,7 @@ CACHES = {
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 DATABASES = {
-                                          
+                                           
       'default': {
           'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
           'NAME': 'pinlove_db_1',                      # Or path to database file if using sqlite3.
@@ -457,6 +465,7 @@ FACEBOOK_DEBUG_SIGNEDREQ ='6sZoh3-0-nHQejXO-gAIrtMel76FWQR7OupEkqAS0TU.eyJhbGdvc
 # FACEBOOK_DEBUG_SIGNEDREQ ='RoHqy693wl3t917auOIyLYavI8ZDUP5L3RKj4T_01IU.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImV4cGlyZXMiOjEzOTUzNzQ0MDAsImlzc3VlZF9hdCI6MTM5NTM2OTQ2MCwib2F1dGhfdG9rZW4iOiJDQUFGc0hkWkN0UEtBQkFOcEZ0QWdMVzJqWkFwejliNG93S3BYYUVOd2F0aWlGWkFRZzlpU1FzbGxUMmZrb21oQkYzVzhTdkpnWkMwa2tZdllMNVU4Q1JDNG5INDg4ek9WenJ6NEdXeThaQnNnVjhZWkNoUTU4SGNzMnZMNnc4S2FXd0RFZFpBdFpCa3ZvbVpCQnptR0g1WkJWMndMUXZHMlc2ZUVxV1RIbnhTVWRuZXRPR1ZZZW5tekxLOUI3cUM5cEtQakNWRFpCNkFVeWdRVmdaRFpEIiwidXNlciI6eyJjb3VudHJ5IjoianAiLCJsb2NhbGUiOiJlbl9VUyIsImFnZSI6eyJtaW4iOjEzLCJtYXgiOjE3fX0sInVzZXJfaWQiOiIxMDAwMDcyNDc0NzAyODkifQ'
 #admin id
 ADMIN_ID=1
+
 if __name__=='__main__':
     print os.path.join(os.path.dirname(PATH))
     print MEDIA_ROOT
