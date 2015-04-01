@@ -2,9 +2,9 @@
 	var loading = $('<div><div><small>正在加载，请稍候...</small></div></div>');
 	loading.css('text-align','center').find('div').css({
 		'display': 'inline-block',
-		'background': 'no-repeat url(../img/loading.gif)',
+		'background': 'no-repea url(../img/onload.gif)t',
 		'line-height': '16px',
-		'padding-left': '20px'
+		'padding-left': '20px',
 });
 	$.fn.popLoading = function() {
 		this.append(loading);
@@ -42,7 +42,7 @@
 			'position':"absolute",
 			'top':bodyHeight / 2 - 32 + "px",
 			'left':bodyWidth / 2 + "px",
-			'background':"no-repeat url(../img/onload.gif)",
+			'background':"no-repeat url(../../static/img/onload.gif)",
 			'width':"100px",
 			'height':"100px",
 			'zIndex' : "10000",
@@ -51,9 +51,11 @@
 		if(content!=undefined ){
 			contentDiv=$('<span id="loadingDiv323242423">'+content+'</span>');
 			contentDiv.css({
-				'position':"absolute",
-				'top':bodyHeight / 2 - 32 + "px",
-				'left':bodyWidth / 2 -20+ "px",
+				'position':'relative',
+				'color':'white',
+			  'left': '40px',
+			  'top': '5px',
+			 ' font-size': 'initial',
 			});
 			loadingObj.append(contentDiv)
 		}
