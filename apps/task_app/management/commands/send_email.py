@@ -30,7 +30,7 @@ class Command(BaseCommand):
             send_notify_email()
         else:
             temp='%s%s'%('用户ids：',args[0])
-            userIdList=args[0].split()
+            userIdList=args[0].split(',')
             send_notify_email(userIdList=userIdList)
         self.stdout.write('发送推荐邮件成功!')
         #添加任务记录
