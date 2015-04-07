@@ -21,7 +21,6 @@ def send_notify_email(userIdList=None):
     for userProfile in userProfileList:
       try:
         if userProfile.user.email is not None:
-            'sds'.toSting()
             recommendList=UserProfile.objects.get_email_recommed_list(userProfile.user_id)
             if recommendList=='less':
                 raise Exception('推荐人数不足!')
