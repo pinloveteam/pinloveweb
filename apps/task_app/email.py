@@ -34,6 +34,6 @@ def send_notify_email(userIdList=None):
             emailRecommendHistoryList=[EmailRecommendHistory(user_id=userProfile.user_id,recommender_id=recommend['userId']) for recommend in args['recommendList']]
             EmailRecommendHistory.objects.bulk_create(emailRecommendHistoryList)
       except BotoServerError as e:
-        logger.error('发送推荐邮件出错，出错用户id为'+userProfile.user_id+'错误内容：'+e.body)
+        logger.error('%s%s%s%s'%('发送推荐邮件出错，出错用户id为',userProfile.user_id,'错误内容：',e.body))
       except Exception as e:
-        logger.exception('发送推荐邮件出错，出错用户id为'+userProfile.user_id+'错误内容：'+e.message)
+        logger.exception('%s%s%s%s'%('发送推荐邮件出错，出错用户id为',userProfile.user_id,'错误内容：',e.message))
