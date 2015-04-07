@@ -20,7 +20,7 @@ def send_register_email(user,user_code):
      
      
 
-class TemplateEmail(object):
+class Email(object):
     '''
     发送模板邮件
     '''

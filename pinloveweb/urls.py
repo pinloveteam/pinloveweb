@@ -76,6 +76,7 @@ urlpatterns = patterns('',
     (r'^mobile/', include('apps.mobile_app.urls')),
     (r'^common/', include('apps.common_app.urls')),
     url(r'^test/$', 'pinloveweb.test.tests'),
+    url(r'^admin/django-ses/', include('django_ses.urls')),
     
 )
 

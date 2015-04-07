@@ -5,15 +5,23 @@ from apps.upload_avatar import get_uploadavatar_context
 from apps.user_app.models import UserProfile
 from django.http.response import HttpResponse
 from django.db import transaction
-from util.email import TemplateEmail
+from util.email import Email
 from django.core.mail import send_mail
+from django.core.mail.message import EmailMessage
 
 @transaction.commit_on_success
 def tests(request):
-    send_mail(u'拼爱网，密码找回', 'sdsds','pinloveteam@pinlove.com',['jin521436'])
-#     email=TemplateEmail('jin521436@163.com','jin')
-#     email.send()
-    return HttpResponse('success')
+    from apps.task_app.email import send_notify_email
+    args=send_notify_email(userIdList=[54,3])
+    return  render(request,'Email_Template.html',args)
+#     if request.GET.get('type')  is not None:
+#         email=Email('jin521436@163.com','jin')
+#         email.send(from_addr='pinloveteam@pinlove.com')
+#     else:
+#         email = EmailMessage('tsest', 'test', 'pinloveteam@pinlove.com', ['jin521436@163.com'])
+#         email.send()
+# 
+#     return HttpResponse('success')
  
     
 def uodate_recommend(request):

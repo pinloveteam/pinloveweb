@@ -3,7 +3,7 @@
 import os
 import sys
 PATH=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-
+WEBSITE='http://pinlove.com'
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -223,7 +223,7 @@ PAYPAL_TEST=False
 # }
 logger_app=['pinloveweb','apps.friend_dynamic_app','apps.game_app','apps.message_app',
             'apps.pay_app','apps.recommend_app','apps.search_app','apps.the_people_nearby','apps.third_party_login_app','apps.user_app',
-            'apps.user_score_app','apps.verification_app','apps.alipay_app','apps.weixin_app','apps.mobile_app','apps.upload_avatar']
+            'apps.user_score_app','apps.verification_app','apps.alipay_app','apps.weixin_app','apps.mobile_app','apps.upload_avatar','apps.task_app']
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -339,7 +339,7 @@ for app in logger_app:
 # # Optional SMTP authentication information for EMAIL_HOST.
 # EMAIL_HOST_USER = 'pinloveteam'
 # EMAIL_HOST_PASSWORD = 'redyellowblue123#'
-# DEFAULT_FROM_EMAIL = 'pinloveteam@pinpinlove.com'
+DEFAULT_FROM_EMAIL = 'pinloveteam@pinlove.com'
 # SERVER_EMAIL = 'pinloveteam@pinpinlove.com'
 # EMAIL_USE_TLS = True
 # 
@@ -347,12 +347,10 @@ for app in logger_app:
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_FILE_PATH = 'email_message/' # change this to a proper location
 
-AWS_ACCESS_KEY_ID = 'AKIAIORWNMNFCERVAYVA'
-AWS_SECRET_ACCESS_KEY = 'AjGomzkvKtpzOBQvj/l3+PB6T15ERPvMOp2TbaNoq2Ku'
+AWS_ACCESS_KEY_ID = 'AKIAI4FL6KRW6QR2GBRA'
+AWS_SECRET_ACCESS_KEY = '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'
 EMAIL_BACKEND = 'django_ses.SESBackend'
-# Additionally, you can specify an optional region, like so:
-AWS_SES_REGION_NAME = 'us-east-1'
-AWS_SES_REGION_ENDPOINT = 'email-smtp.us-east-1.amazonaws.com'
+
 
 #set the session paramter session的控制
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -58,6 +58,42 @@ class UserProfileManager(models.Manager):
             from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
             return DEFAULT_IMAGE_NAME
         
+    def get_email_recommed_list(self,userId,limit=8):
+        '''
+        获取邮件推荐的用户列表
+        paramters:
+          limit :推荐人数默认8
+        '''
+        sql1='''
+        select * from recommend_match_result u3 ,user_profile u1 ,auth_user u2
+where u3.my_id=u2.id and u1.user_id =u3.other_id and u2.id=%s and u3.other_id not in 
+(SELECT u4.recommender_id from email_recommend_history u4 where u4.user_id=%s)
+and  u3.other_id not in (SELECT u5.other_id from black_list u5 where u5.my_id=%s)
+and u3.other_id not in (SELECT u6.follow_id from follow u6 where u6.my_id=%s)
+LIMIT %s
+        '''
+        sql2='''
+        select * from user_profile u1 ,auth_user u2
+where u1.user_id =u2.id and avatar_name_status=3 and u1.user_id not in 
+(SELECT u4.recommender_id from email_recommend_history u4 where u4.user_id=%s)
+and  u1.user_id not in (SELECT u5.other_id from black_list u5 where u5.my_id=%s)
+and u1.user_id not in (SELECT u6.follow_id from follow u6 where u6.my_id=%s)
+and u1.user_id not in (SELECT u7.other_id from recommend_match_result u7 where u7.my_id=%s)
+and u1.user_id !=%s
+ORDER BY u2.date_joined DESC
+LIMIT %s
+        '''
+        userProfileSql=UserProfile.objects.raw(sql1%(userId,userId,userId,userId,limit))
+        userProfileList=list(userProfileSql)
+        num=limit-len(userProfileList)
+        if num!=0:
+            userProfileList+=list(UserProfile.objects.raw(sql2%(userId,userId,userId,userId,userId,num)))
+        if len(userProfileList)==limit:
+            return userProfileList
+        else:
+            return 'less'
+        
+        
 class UserProfile(models.Model, UploadAvatarMixIn):
     
     user = models.ForeignKey(User)
