@@ -82,7 +82,7 @@ and  u1.user_id not in (SELECT u5.other_id from black_list u5 where u5.my_id=%s)
 and u1.user_id not in (SELECT u6.follow_id from follow u6 where u6.my_id=%s)
 and u1.user_id not in (SELECT u7.other_id from recommend_match_result u7 where u7.my_id=%s)
 and u1.user_id !=%s and
-u1.gender!='%s'
+u1.gender!='%s' and u1.age is not null
 ORDER BY u2.date_joined DESC
 LIMIT %s
         '''
