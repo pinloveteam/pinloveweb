@@ -58,7 +58,7 @@ class UserProfileManager(models.Manager):
             from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
             return DEFAULT_IMAGE_NAME
         
-    def get_email_recommed_list(self,userId,limit=8):
+    def get_email_recommed_list(self,userId,gender,limit=8):
         '''
         获取邮件推荐的用户列表
         paramters:
@@ -79,7 +79,8 @@ where u1.user_id =u2.id and avatar_name_status=3 and u1.user_id not in
 and  u1.user_id not in (SELECT u5.other_id from black_list u5 where u5.my_id=%s)
 and u1.user_id not in (SELECT u6.follow_id from follow u6 where u6.my_id=%s)
 and u1.user_id not in (SELECT u7.other_id from recommend_match_result u7 where u7.my_id=%s)
-and u1.user_id !=%s
+and u1.user_id !=%s and
+u1.gender!='%s'
 ORDER BY u2.date_joined DESC
 LIMIT %s
         '''
@@ -87,7 +88,7 @@ LIMIT %s
         userProfileList=list(userProfileSql)
         num=limit-len(userProfileList)
         if num!=0:
-            userProfileList+=list(UserProfile.objects.raw(sql2%(userId,userId,userId,userId,userId,num)))
+            userProfileList+=list(UserProfile.objects.raw(sql2%(userId,userId,userId,userId,userId,gender,num)))
         if len(userProfileList)==limit:
             return userProfileList
         else:

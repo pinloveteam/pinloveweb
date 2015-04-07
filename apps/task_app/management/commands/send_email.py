@@ -29,15 +29,15 @@ class Command(BaseCommand):
         if len(args)==0:
             send_notify_email()
         else:
-            temp='用户ids：'+args[0]
+            temp='%s%s'%('用户ids：',args[0])
             userIdList=args[0].split()
             send_notify_email(userIdList=userIdList)
         self.stdout.write('发送推荐邮件成功!')
         #添加任务记录
-        TaskRecode(content='发送推荐邮件 '+temp,result='success').save()
+        TaskRecode(content='%s%s'%('发送推荐邮件 ',temp),result='success').save()
       except Exception as e:
           #添加任务记录
-          TaskRecode(content='发送推荐邮件 '+temp,result='error',data=e.message).save()
+          TaskRecode(content='%s%s'%('发送推荐邮件 ',temp),data=e.message).save()
           self.stdout.write(e.message)
       finally:
           self.stdout.write('end')
