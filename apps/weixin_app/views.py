@@ -111,7 +111,7 @@ def my_character(request,template_name='character_tag.html'):
                 get_score_by_character_tag(request.user.id)
             #保存tag
             UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagMyList)
-            args=update({'url':"/weixin/score/?userKey=%s"%(userKey),"result":'success'})
+            args.update({'url':"/weixin/score/?userKey=%s"%(userKey),"result":'success'})
         else:
             #获取自己个人标签
             tags=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=0)
