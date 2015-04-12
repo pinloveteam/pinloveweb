@@ -73,7 +73,7 @@ def self_info(request):
                 args['next_url']='/weixin/my_character/?userKey='+userKey
             else:
                errors=infoFrom.errors.items()
-               args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else InfoForm.base_fields[errors[0][0]].label +" "+errors[0][1][0]}
+               args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
             json=simplejson.dumps(args)
             return HttpResponse(json)
         elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
@@ -138,8 +138,9 @@ def score(request,template_name="Score.html"):
         args=common(request)
         userProfile=UserProfile.objects.get(user=request.user)
         try:
-            otherProfile=UserProfile.objects.get(link=userKey)
+            otherProfile=UserProfile.objects.select_related('user').get(link=userKey)
             otherId=otherProfile.user_id
+            args['username']=otherProfile.user
         except UserProfile.DoesNotExist as e:
             return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
         except UserProfile.MultipleObjectsReturned as e:
@@ -158,7 +159,7 @@ def score(request,template_name="Score.html"):
             args['data']=simplejson.loads(scoreRank.data)
             args['score']=int(scoreRank.score)
         args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gt=args['score']).count()+1)
-        filedList={'MM':u'你的%s的基友指数'%(request.user),'FF':u'你的%s的闺蜜指数'%(request.user),'MF':u'你在女神%s心中的亲密指数'%(request.user),'FM':u'你在男神%s心中的亲密指数'%(request.user),}
+        filedList={'MM':u'你和%s的基友指数'%(otherProfile.user),'FF':u'你和%s的闺蜜指数'%(otherProfile.user),'MF':u'你在女神%s心中的亲密指数'%(otherProfile.user),'FM':u'你在男神%s心中的亲密指数'%(request.user),}
         args['score_content']=filedList[u'%s%s'%(userProfile.gender,otherProfile.gender)]
         #判断他的条件是否成立
         if (not Grade.objects.filter(user_id=request.user.id,heightweight=None,incomeweight=None,educationweight=None,characterweight=None)) and UserTag.objects.filter(user_id=request.user.id).exists():
@@ -174,7 +175,7 @@ def score(request,template_name="Score.html"):
 '''
 完善我对别人打分信息
 '''
-def other_info(request):
+def other_info(request,template_name='otherInfo.html'):
     args={}
     try:
         args=common(request)
@@ -192,17 +193,23 @@ def other_info(request):
                     get_score_by_weight(request.user.id)
                 grade=taInfoForm.cal_weight(request.user.id)
                 grade.save()
-                return HttpResponseRedirect('/weixin/ta_character/')
+                args.update({'result':'success','next_url':'/weixin/ta_character/'})
             else:
                 errors=taInfoForm.errors.items()
-                args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else TaInfoForm.base_fields[errors[0][0]].label +" "+errors[0][1][0]}
-        args['TaInfoForm']=TaInfoForm(initial={'gender':userProfile.gender})
-        args['gender']=userProfile.gender
-        return render(request,'otherInfo.html',args)
+                args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(TaInfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
+        else:
+            args['TaInfoForm']=TaInfoForm(initial={'gender':userProfile.gender})
+            args['gender']=userProfile.gender
     except Exception as e:
         logger.exception('完善我对别人打分信息：%s'%(e.message))
         args={'result':'error','error_message':'出错%s:'%(e.message)}
-        return render(request,'error.html',args)
+        template_name="error.html"
+    if request.is_ajax():
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    else:
+        return render(request,template_name,args)
+    
         
         
 def ta_character(request,template_name="character_tag.html"):
