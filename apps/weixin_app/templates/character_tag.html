@@ -146,10 +146,10 @@
                         	}
                             if(textStatus== 'success'){
                             	if(data.result=='success'){
-                            		if (data.url==undefined){
+                            		if (data.next_url==undefined){
                             			$('#share_div').show();
                             		}else{
-                            			window.location.href=data.url;
+                            			window.location.href=data.next_url;
                             		}
                             	}else{
                             		$('.am-modal .am-modal-bd').text(data.error_message)
