@@ -72,6 +72,7 @@ where u3.my_id=u2.id and u1.user_id =u3.other_id and u2.id=%s and u3.other_id no
 (SELECT u4.recommender_id from email_recommend_history u4 where u4.user_id=%s)
 and  u3.other_id not in (SELECT u5.other_id from black_list u5 where u5.my_id=%s)
 and u3.other_id not in (SELECT u6.follow_id from follow u6 where u6.my_id=%s)
+and u1.gender!='%s' and u1.age is not null and u1.avatar_name_status=3 
 LIMIT %s
         '''
         sql2='''

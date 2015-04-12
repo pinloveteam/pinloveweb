@@ -17,7 +17,6 @@ from apps.third_party_login_app.setting import PublicWeiXinAppID,\
 from apps.third_party_login_app.models import ThirdPsartyLogin
 from apps.weixin_app.method import get_jsapi_ticket, get_signature
 from django.db import transaction
-from buildtools import update
 logger=logging.getLogger(__name__)
 def common(request):
     '''
