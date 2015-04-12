@@ -4,169 +4,134 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<title>PinLove</title>
 		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 		<title></title>
+		<style>
+			.mask{
+				background-color: rgba(0,0,0,0.6);
+				/*display: none;*/
+			}
+			.yutang{
+				margin-top: 100px;
+				background-image: url(img/yutang.png);
+				background-repeat:no-repeat;
+				background-size:100% 100%;
+			}
+			.text-red{
+				color: #E91112;
+			}
+		</style>
 	</head>
 
 	<body>
-		<header data-am-widget="header" class="am-header am-header-default">
+		<header data-am-widget="header" class="am-header">
 			<div class="am-header-left am-header-nav">
-				<a href="#left-link" class="">
-					<i class="am-header-icon am-icon-home"></i>
-				</a>
 			</div>
-			<h3 class="am-header-title">请输入个人信息</h3>
-			<!--<div class="am-header-right am-header-nav">
-		    <a href="#right-link" class="">
-		      <i class="am-header-icon am-icon-bars"></i>
-		    </a>
-		  </div>-->
+			<h3 class="am-header-title">第一步，先测测您的硬实力</h3>
 		</header>
 		<div class="am-g">
-			<div class="am-panel am-panel-default">
-			 <form class="am-form am-form-horizontal" action="/weixin/self_info/" method="POST">{% csrf_token %}
+			<form class="am-form am-form-horizontal" action="/weixin/self_info/" method="POST">{% csrf_token %}
 			    <input type="hidden" name="userKey" value="{{userKey}}">
-			     <input type="hidden" name="tagMyList" id="tagMyList" value="">
-				<div class="am-panel-bd">
-						<div class="am-form-group">
-							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">身高</label>
-							<div class="am-u-sm-4 am-u-end">
-								{{infoForm.height}}
-							</div>
-						</div>
-						<div class="am-form-group">
-							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">学历</label>
-							<div class="am-u-sm-4 am-u-end">
-								{{infoForm.education}}
-							</div>
-						</div>
-						<div class="am-form-group">
-							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">学校所在地</label>
-							<div class="am-u-sm-4 am-u-end">
-							<select id="country" name="country" data-am-selected="{btnSize: 'sm'}">
-						       <option value="0">中国</option>
-						       <option value="1">海外</option>
-						    </select>
-							</div>
-						</div>
-						<div class="am-form-group">
-							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">学校类型</label>
-							<div class="am-u-sm-4 am-u-end">
-							<select id="schoolType" name="schoolType"data-am-selected="{btnSize: 'sm'}">
-							<option value="4">985</option>
-						  <option value="3">211</option>
-						  <option value="2">一本</option>
-						  <option value="1">二本</option>
-						  <option value="0">三本</option>
-						  <option value="-1">都不是</option>
-						    </select>
-							</div>
-						</div>
-						<div class="am-form-group">
-							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">收入</label>
-							<div class="am-u-sm-4 am-u-end">
-								{{infoForm.income}}
-							</div>
-						</div>
-						<div class="am-form-group">
-							<label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">性格</label>
-						</div>
-					<div class="am-container">
-						<div id="xg" class="am-g">
-						</div>
+				<div class="am-form-group"></div>
+				<div class="am-form-group">
+					<label class="am-u-sm-5 am-form-label text-blue" style="padding-top: 0;"><img width="48px" src="/static/img/height_b.png"/>&nbsp;&nbsp;海拔</label>
+					<div class="am-u-sm-7">
+						{{infoForm.height}}
 					</div>
-					
-					<button type="submit" class="am-btn am-btn-primary am-btn-block">看看我的得分</button>
 				</div>
-				</form>
+				<div class="am-form-group">
+					<label class="am-u-sm-5 am-form-label text-blue" style="padding-top: 0;"><img width="48px" src="/static/img/degrees_b.png"/>&nbsp;&nbsp;学历</label>
+					<div class="am-u-sm-7">
+						{{infoForm.education}}
+					</div>
+				</div>
+				<div class="am-form-group">
+					<label class="am-u-sm-5 am-form-label text-blue" style="padding-top: 0;padding-right: 0;"><img width="48px" src="/static/img/school_b.png"/>&nbsp;&nbsp;学校类型</label>
+					<div class="am-u-sm-7">
+						{{infoForm.schoolType}}
+					</div>
+				</div>
+				<div class="am-form-group">
+					<label class="am-u-sm-5 am-form-label text-blue" style="padding-top: 0;"><img width="48px" src="/static/img/income_b.png"/>&nbsp;&nbsp;年薪</label>
+					<div class="am-u-sm-7">
+						{{infoForm.income}}
+					</div>
+				</div>
+			<button type="submit" class="am-btn am-btn-success am-btn-block">下一步</a>
+			</form>
+		</div>
+		<div class="am-g mask" style="display: none;">
+			<div class="am-container yutang">
+				<center><p style="color: #fff;">获得称号</p></center>
+				<div class="am-u-sm-4">
+				</div>
+				<div class="am-u-sm-8" style="padding-left: 18px;">
+					<div>恭喜！</div>
+					<div>获得称号“<span class="text-red">鱼塘塘主</span>”</div>
+					<div style="color: #577EDD;font-size: 13px;">稀有程度
+						<i class="am-icon-star"></i>
+						<i class="am-icon-star"></i>
+						<i class="am-icon-star"></i>
+						<i class="am-icon-star"></i>
+						<i class="am-icon-star"></i>
+					</div>
+					<div class="text-gray" style="padding-bottom: 35px;">可以在排名中看到称号</div>
+				</div>
 			</div>
 		</div>
+		
+		<!-- 提示框 -->
+		<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">错误</div>
+    <div class="am-modal-bd">
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn">确定</span>
+    </div>
+  </div>
+</div>
 		<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
 		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>
-		{% include "weixin_js_base.html" %}
-		<script type="text/javascript">
-		$(document).ready(function() {
-		if('{{country}}'== '中国'){
-			$("#country").val('0');
-		}else{
-			$("#country").val('1');
-		}
-		//学校类型
-		get_schoolType_from_country();
-		$('#country').change(get_schoolType_from_country);
-		//提交事件
-		$("form").submit(function(){
-			    var tagMyObj = new Array();
-			    var tagMy=$('#xg').find('input:radio:checked');
-			    tagMy.each(function(){
-			    	tagMyObj.push($(this).attr('value'));
-			    });
-			    $('#tagMyList').val(tagMyObj.toString());
-	        });
-		  });
-		
-		function get_schoolType_from_country(){
-				var country=$('#country').find("option:selected").val();
-				if(country=='0'){
-					schoolTypeName='学校类型';
-					schoolTypeStr='\
-						<option value="4">985</option>\
-						  <option value="3">211</option>\
-						  <option value="2">一本</option>\
-						  <option value="1">二本</option>\
-						  <option value="0">三本</option>\
-						  <option value="-1">都不是</option>'
-				}else{
-					schoolTypeName='学校排名';
-					schoolTypeStr='<option value="5">1-5</option>\
-						<option value="10">6-10</option>\
-						<option value="20">11-20</option>\
-						<option value="30">21-50</option>\
-						<option value="100">51-100</option>\
-						<option value="200">100-200</option>\
-						<option value="300">201-300</option>\
-						<option value="400">301-400</option>\
-						<option value="500">401-500</option>\
-						<option value="600">501-600</option>\
-						<option value="700">601-700</option>\
-						<option value="800">701-800</option>\
-						<option value="900">800以后</option>\
-					'
-				}
-				$('#schoolType').html('');
-				$('#schoolType').append(schoolTypeStr).parent().prev().html(schoolTypeName);
-				$('#schoolType').trigger('chosen:updated');
-		};
-		</script>
 		<script>
-			$(document).ready(function() {
-				var xg1 = [];
-				var xg2 = [];
-				var xg3 = [];
-				{% for tag in tagbeanList %}
-				xg1.push([{{tag.0.id}},"{{tag.0.content}}"]);
-				xg2.push([{{tag.1.id}},"适中"]);
-				xg3.push([{{tag.2.id}},"{{tag.2.content}}"]);
-				{% endfor %}
-				var xgs = [xg1,xg2,xg3];
-				xgs.forEach(function(val,i){
-					var xg_col = $('<div class="am-u-sm-4"></div>');
-					var flag=false;
-					if(i==1){
-						flag=true
-					}else{
-						flag=false;
-					}
-					val.forEach(function(val,k){
-						var xg = $('<label class="am-radio am-secondary"><input type="radio" data-am-ucheck="" value="'+val[0]+'" name="'+k+'" class="am-ucheck-radio"><span class="am-ucheck-icons"><i class="am-icon-unchecked"></i><i class="am-icon-checked"></i></span>' +val[1]+'</label>')
-						if(flag){
-							xg.find('input:radio').attr("checked","checked");
-						}
-						xg_col.append(xg);
-					});
-					$('#xg').append(xg_col);
-				});
+			$(document).delegate('.mask', 'click', function() {
+				$(this).remove();
 			});
+			
+			$("form").submit(function(){
+			    $.ajax({
+                    type: $(this).attr('method'),
+                    url: $(this).attr('action'),
+                    data:$(this).serialize(),
+                    beforeSend: function(XMLHttpRequest){
+                    	 $(this).find('button').attr('disabled', 'disabled').html("正在提交...");
+                    },
+                    success: function(data, textStatus){
+                    	if(typeof data!="object"){
+                    		data=$.parseJSON(data);
+                    	}
+                        if(textStatus== 'success'){
+                        	if(data.result=='success'){
+                        		window.location.href=data.next_url;
+                        	}else{
+                        		$('.am-modal .am-modal-bd').text(data.error_message)
+                            	$('.am-modal').modal()
+                        	}
+                        	
+                        }
+                    },
+                    complete: function(XMLHttpRequest, textStatus){
+                    	$(this).find('button').removeAttr('disabled').html("下一步");
+                    },
+                    error: function(response){
+                    	$('.am-modal .am-modal-bd').text("请求失败!")
+                    	$('.am-modal').modal()
+                    }
+                });
+                return false;
+	        });
 		</script>
 	</body>
 

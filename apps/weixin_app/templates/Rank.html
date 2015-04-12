@@ -1,15 +1,56 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<title>PinLove</title>
 		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/dragdealer.css" />
+		<link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
 		<title></title>
+		<style>
+			.dragdealer {
+				height: 10px;
+			}
+			.name {
+				margin-bottom: 10px;
+				color: #64584C;
+				display: inline-block;
+			}
+			.progress-bar {
+				background-color: #4DACB0;
+				width: 80%;
+			}
+			.tip {
+				top: 30px;
+				color: #FFF;
+				font-size: 14px;
+				line-height: 20px;
+				text-align: center;
+			}
+			.tip-bt {
+				left: -4px;
+				top: -14px;
+			}
+			.am-container{
+				margin-top: 20px;
+			}
+			.text-gray{
+				color: #BDBDBD;
+			}
+		</style>
 	</head>
 
 	<body>
-		  <header data-am-widget="header" class="am-header am-header-default">
-		  {%ifequal count 0%}
+		<header data-am-widget="header" class="am-header">
+			<div class="am-header-left am-header-nav">
+			</div>
+			<h3 class="am-header-title">排名</h3>
+		</header>
+		<div class="am-g">
+		{%ifequal count 0%}
 		<div class="am-g">
 			<div class="am-panel am-panel-default">
 				<div class="am-panel-bd">
@@ -18,36 +59,26 @@
 			</div>
 		</div>
 	    {%endifequal%}
-			<div class="am-header-left am-header-nav">
-				<a href="#left-link" class="">
-					<i class="am-header-icon am-icon-home"></i>
-				</a>
-			</div>
-			<h3 class="am-header-title">排名</h3>
-		</header>
-		<div class="am-g">
-			<div class="am-panel am-panel-default">
-				<div class="am-panel-bd">
-				<table class="am-table am-table-striped">
-					<thead>
-						<tr>
-							<th>排名</th>
-							<th>好友</th>
-							<th>得分</th>
-						</tr>
-					</thead>
-					<tbody>
-					  {%for scoreRank in scoreRankList%}
-					     <tr {%ifequal forloop.counter 1 %}class="am-danger"{%endifequal%} {%ifequal forloop.counter 2 %}class="am-primary"{%endifequal%} {%ifequal forloop.counter 3 %} class="am-success"{%endifequal%}>
-							<td>{{ forloop.counter }}</td>
-							<td>{{scoreRank.nickname }}</td>
-							<td>{{scoreRank.score }}</td>
-						</tr>
-					    {%endfor%}
-					</tbody>
-				</table>
+	       {%for scoreRank in scoreRankList%}
+			<div class="am-container">
+				<div class="am-u-sm-4">
+					<span class="text-num">{{ forloop.counter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<img width="48px" src="/static/img/gfs_03.png" />
+				</div>
+				<div class="am-u-sm-7">
+					<span class="name">{{scoreRank.nickname }}&nbsp;&nbsp;<span class="text-gray">糕富帅</span></span>
+					<div id="sliderd" class="dragdealer">
+						<div class="progress-bar" style="width: {{scoreRank.score }}%;"></div>
+					</div>
+				</div>
+				<div class="am-u-sm-1">
+					<div class="tip">
+						<div class="tip-bd bg-green">{{scoreRank.score }}</div>
+						<div class="tip-bt bg-green"></div>
+					</div>
 				</div>
 			</div>
+			{%endfor%}
+			
 		</div>
 		<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
 		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>

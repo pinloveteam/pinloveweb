@@ -1,0 +1,79 @@
+html,
+body,
+.am-g {
+	height: 100%;
+}
+body {
+	padding-bottom: 49px;
+}
+.am-header {
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.am-header-title {
+	color: #4daf7b;
+}
+.am-btn {
+	position: absolute;
+	bottom: 0;
+}
+.text-blue,
+.text-pink {
+	font-weight: normal;
+}
+.text-pink {
+	color: #ff2d55;
+}
+.text-blue {
+	color: #0278FC;
+}
+.text-gray {
+	color: #646464;
+	font-size: 12px;
+}
+.mask {
+	position: absolute;
+	top: 0;
+}
+.bg-green {
+	background-color: #4DB07B;
+}
+.bg-red {
+	background-color: #E45E39;
+}
+.bg-yellow {
+	background-color: #EAC85D;
+}
+.bg-blue {
+	background-color: #5F90B0;
+}
+.progress-bar {
+	height: 100%;
+}
+.tip {
+	position: relative;
+	top: -30px;
+	left: -12px;
+	width: 35px;
+}
+.tip-bd {
+	border-radius: 3px;
+	font-family: 'Droid Serif', serif;
+}
+.tip-bt {
+	width: 10px;
+	height: 10px;
+	position: relative;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	left: 12px;
+	top: -7px;
+	z-index: -1;
+}
+.text-num{
+	font-family: 'Droid Serif', serif;
+}
+/*.am-form select {
+	border: none;
+	border-bottom: solid 1px #282828;
+	text-align: center;
+}*/

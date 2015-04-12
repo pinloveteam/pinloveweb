@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<title>PinLove</title>
+		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+		<link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
+		<title></title>
+		<style>
+			html,body,.am-g{
+				overflow: hidden;
+			}
+			.am-g{
+				color: #64584C;
+			}
+			.bg{
+				position: relative;
+				transform:rotate(45deg);
+				-webkit-transform:rotate(45deg);
+				z-index: -1;
+			}
+			#bg1{
+				width: 169px;
+				height: 169px;
+				background-color: #F3D574;
+				top: -236px;
+			}
+			#bg2{
+				width: 127px;
+				height: 127px;
+				background-color: #E3C362;
+				top: -384px;
+			}
+			#bg3{
+				width: 84px;
+				height: 84px;
+				background-color: #D7B958;
+				top: -490px;
+			}
+			#bg4{
+				width: 43px;
+				height: 43px;
+				background-color: #C4A444;
+				top: -552px;
+			}
+			#score{
+				position: relative;
+				top: -420px;
+			}
+			.text-num{
+				font-weight: bold;
+			}
+			.mask{
+				background-color: rgba(0,0,0,0.9);
+				color: #fff;
+				display: none;
+			}
+			.ar{
+				text-align: right;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header data-am-widget="header" class="am-header">
+			<h3 class="am-header-title">你在{{user.username}}心中的印象</h3>
+		</header>
+		<div class="am-g">
+		<center>
+			<canvas class="radar" height="290px" width="290px"></canvas>
+			<div class="bg" id="bg1"></div>
+			<div class="bg" id="bg2"></div>
+			<div class="bg" id="bg3"></div>
+			<div class="bg" id="bg4"></div>
+			<div id="score">
+				<p>{{score_content}}：<span class="text-num">{{score}}</span></p>
+				<hr style="margin: 0 90px;border-color: #64584C;"/>
+				<p>排名第：<span class="text-num">{{rank}}</span></p>
+			</div>
+		</center>
+		<button id="share" class="am-btn am-btn-success am-btn-block">分享给好友</button>
+		</div>
+		<div class="am-g mask">
+			<div class="am-container ar">
+				<p></p>
+				<img width="80px" src="/static/img/right.png"/>
+			</div>
+			<div class="am-container">
+				<p>1.点击右上角的&nbsp;&nbsp;<img width="30px" src="/static/img/menu.png"/>&nbsp;&nbsp;按钮</p>
+				<p>2.选择&nbsp;&nbsp;<img width="50px" src="/static/img/friends.png"/>&nbsp;&nbsp;发送给朋友或&nbsp;&nbsp;<img width="50px" src="/static/img/circle.png"/>&nbsp;&nbsp;分享到朋友圈</p>
+			</div>
+		</div>
+		<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>
+		<script src="http://cdn.bootcss.com/Chart.js/1.0.1-beta.4/Chart.min.js"></script>
+		<script type="text/javascript">
+			var ctx = $("canvas").get(0).getContext("2d");
+			var datasets = {
+					fillColor: "rgba(126, 179, 110,0.7)",
+					strokeColor: "rgba(126, 179, 110,0)",
+					pointColor: "rgba(0, 0, 0,0)"
+				}
+			datasets.data ={{data}};
+			var data = {
+				labels: ["教育程度", "性格", "收入情况","身高"],
+				datasets: [datasets]
+			};
+			var myNewChart = new Chart(ctx).Radar(data, {
+				scaleOverride: true,
+				scaleSteps: 4,
+				scaleStepWidth: 25,
+				scaleStartValue: 0,
+				scaleLineColor: "rgba(255,255,255,0)",
+//				scaleShowLabels : true,
+				pointLabelFontColor: '#64584C',
+				scaleBackdropColor: "rgba(126, 0, 110,0.7)",
+				angleLineColor: "rgba(255,255,255,.5)"
+			});
+			$('#share').click(function(){
+				{%if is_recommend%}
+				$('.mask').show();
+				{%else%}
+				window.location.href="{{next_url}}"
+				{%endif%}
+				
+			});
+		</script>
+	</body>
+
+</html>

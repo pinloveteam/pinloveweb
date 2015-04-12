@@ -547,9 +547,10 @@ class TagManage(models.Manager):
     批量插入用户标签表
     '''   
     @transaction.commit_on_success 
-    def bulk_insert_user_tag(self,user_id,type,tagIdList):
+    def bulk_insert_user_tag(self,user_id,type,tagIdList,count=None):
         tagTupe=Tag.objects.all()
-        count=len(tagTupe)/3
+        if count is  None:
+            count=len(tagTupe)/3
         if len(tagIdList)!=count:
             if type==0:
                 raise Exception('我的性格标签必须全部选择') 

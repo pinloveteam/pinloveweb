@@ -4,187 +4,150 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<title>PinLove</title>
 		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/dragdealer.css" />
 		<title></title>
-		
-		<title></title>
+		<style>
+			.am-container{
+				margin-top: 40px;
+			}
+			.item-name{
+				display: inline-block;
+				margin-bottom: 5px;
+			}
+		</style>
 	</head>
 
 	<body>
-		
-		<header data-am-widget="header" class="am-header am-header-default">
+		<header data-am-widget="header" class="am-header">
 			<div class="am-header-left am-header-nav">
-				<a href="#left-link" class="">
-					<i class="am-header-icon am-icon-home"></i>
-				</a>
 			</div>
-			<h3 class="am-header-title">对TA的打分标准</h3>
+			<h3 class="am-header-title">第三步， 请选出你心目中男神、女神的标准 – 硬实力篇</h3>
 		</header>
 		<div class="am-g">
-			<div class="am-panel am-panel-default">
-				<form class="am-form am-form-horizontal"  method="POST">{% csrf_token %}
-				<div class="am-panel-bd">
+			<form class="am-form am-form-horizontal" action="/weixin/other_info/" method="POST">{% csrf_token %}
 				<div class="am-form-group">
-				     <label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">TA的理想身高</label>
-				     <div class="am-u-sm-4 am-u-end">
-						<select name="expectHeight" data-am-selected="{btnSize: 'sm'}">
-						</select>
+
+				</div>
+				<div class="am-form-group">
+					<label class="am-u-sm-3 am-form-label text-pink" style="padding-top: 0;"><img width="48px" src="/static/img/height_r.png"/>&nbsp;&nbsp;身高</label>
+					<div class="am-u-sm-9">
+						{{TaInfoForm.expectHeight}}
 					</div>
 				</div>
-				<div class="am-form-group">
-				     <label for="doc-ipt-pwd-2" class="am-u-sm-4 am-form-label">性格</label>
-				</div>
+			
 				
-				<div class="am-container">
-				<input type="hidden" id="tagOtherList" name="tagOtherList">
-						<div id="xg" class="am-g">
+			<header data-am-widget="header" class="am-header">
+			 <div class="am-header-left am-header-nav">
+			 </div>
+			 <h3 class="am-header-title">TA的权重</h3>
+		   </header>
+		   <div class="am-container">
+				<div class="am-u-sm-2">
+					<span style="display: inline-block;">&nbsp;</span>
+					<img width="36px" src="/static/img/6_03-06.png" />
+				</div>
+				<div class="am-u-sm-10">
+				<input type="hidden" name="heightweight" id="heightweight">
+					<span class="item-name">身高</span>
+					<div id="slidera" class="dragdealer">
+						<div class="handle red-bar">
+							<div class="tip">
+								<div class="tip-bd bg-green"></div>
+								<div class="tip-bt bg-green"></div>
+							</div>
 						</div>
-					</div>
-				<div class="am-form-group">
-					<label for="inputEmail3" class="am-u-sm-2">身高</label>
-					<input type="hidden" name="heightweight">
-					<div class="am-u-sm-10" id="heightweight">
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
+						<div class="progress-bar bg-green"></div>
 					</div>
 				</div>
-				<div class="am-form-group">
-					<label for="inputEmail3" class="am-u-sm-2">收入</label>
-					<input type="hidden" name="incomeweight">
-					<div class="am-u-sm-10" id="incomeweight">
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-					</div>
-				</div>
-				<div class="am-form-group">
-					<label for="inputEmail3" class="am-u-sm-2">学历</label>
-					<input type="hidden" name="educationweight">
-					<div class="am-u-sm-10" id="educationweight">
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-					</div>
-				</div>
-				<div class="am-form-group">
-					<label for="inputEmail3" class="am-u-sm-2">性格</label>
-					<input type="hidden" name="characterweight">
-					<div class="am-u-sm-10" id="characterweight">
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-						<span class="am-icon-heart"></span>
-					</div>
-				</div>
-				<button type="submit" class="am-btn am-btn-primary am-btn-block">让朋友们来测一测</button>
-				</div>
-				</form>
 			</div>
+			<div class="am-container">
+				<div class="am-u-sm-2">
+					<span style="display: inline-block;">&nbsp;</span>
+					<img width="36px" src="/static/img/6_10.png" />
+				</div>
+				<div class="am-u-sm-10">
+				<input type="hidden" name="educationweight" id="educationweight">
+					<span class="item-name">学历</span>
+					<div id="sliderb" class="dragdealer">
+						<div class="handle red-bar">
+							<div class="tip">
+								<div class="tip-bd bg-red"></div>
+								<div class="tip-bt bg-red"></div>
+							</div>
+						</div>
+						<div class="progress-bar bg-red"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="am-container">
+				<div class="am-u-sm-2">
+				<input type="hidden" name="characterweight" id="characterweight">
+					<span style="display: inline-block;">&nbsp;</span>
+					<img width="36px" src="/static/img/6_12.png" />
+				</div>
+				<div class="am-u-sm-10">
+					<span class="item-name">性格</span>
+					<div id="sliderc" class="dragdealer">
+						<div class="handle red-bar">
+							<div class="tip">
+								<div class="tip-bd bg-yellow"></div>
+								<div class="tip-bt bg-yellow"></div>
+							</div>
+						</div>
+						<div class="progress-bar bg-yellow"></div>
+					</div>
+				</div>
+			</div>
+			<div class="am-container">
+				<div class="am-u-sm-2">
+				<input type="hidden" name="incomeweight" id="incomeweight">
+					<span style="display: inline-block;">&nbsp;</span>
+					<img width="36px" src="/static/img/6_14.png" />
+				</div>
+				<div class="am-u-sm-10">
+					<span class="item-name">年薪</span>
+					<div id="sliderd" class="dragdealer">
+						<div class="handle red-bar">
+							<div class="tip">
+								<div class="tip-bd bg-blue"></div>
+								<div class="tip-bt bg-blue"></div>
+							</div>
+						</div>
+						<div class="progress-bar bg-blue"></div>
+					</div>
+				</div>
+			</div>
+				<button type="submit" class="am-btn am-btn-success am-btn-block">继续</button>
+			</form>
+			
 		</div>
+		
 		<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-		{% include "weixin_js_base.html" %}
-		<script type="text/javascript">
-		$(document).ready(function() {
-			//初始化身高
-			init_height();
-			//提交信息
-			$('form').submit(function(){
-				if(check_weight()){
-					$('#weight_error').html('请将权重填写完整!').show();
-					return false;
-				}else{
-					$('#weight_error').html('').hide();
-				};
-				cal_weight();
-				cal_tag();
-			});
-		  });
-		function check_weight(){
-			weightList=['heightweight','incomeweight','educationweight','characterweight']
-			var flag=false;
-			for(var i=0;i<weightList.length;i++){
-				count=$('#'+weightList[i]).find('.am-text-danger').length;
-				if(count==0){
-					flag=true;
-					break;
-				}
-			};
-			return flag
-		}
-		function cal_weight(){
-			weightList=['heightweight','incomeweight','educationweight','characterweight']
-			for(var i=0;i<weightList.length;i++){
-				count=$('#'+weightList[i]).find('.am-text-danger').length;
-				$('input[name="'+weightList[i]+'"]').val(count);
-			}
-		}
-		//标签
-		function cal_tag(){
-			var tagOtherObj = new Array();
-		    var tagMy=$('#xg').find('input:radio:checked')
-		    tagMy.each(function(){
-		    	tagOtherObj.push($(this).attr('value'));
-		    });
-		    $('#tagOtherList').val(tagOtherObj.toString())
-		}
-		function init_height(){
-			var gender='{{gender}}';
-			var heightSeclect=$('select[name="expectHeight"]')
-			if(gender=="M"){
-				for(var i=155;i<=190;i+=5){
-					heightSeclect.append('<option value="'+i+'">'+i+'cm</option>')
-				}
-			}else{
-				for(var i=160;i<=195;i+=5){
-					heightSeclect.append('<option value="'+i+'">'+i+'cm</option>')
-				}
-			};
-		} 
-		</script>
 		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>
+		<script src="/static/js/dragdealer.min.js" type="text/javascript" charset="utf-8"></script>
 		<script>
-			$(document).ready(function() {
-				$('.am-icon-heart').click(function(){
-					$(this).parent().children().removeClass('am-text-danger');
-					$(this).addClass('am-text-danger').prevAll().addClass('am-text-danger');
+			$(function() {
+				 	var slider = ['slidera','sliderb','sliderc','sliderd'];
+				 	var data = [0.1,0.1,0.1,0.1];
+				 	var dds = [];
+				 	slider.forEach(function(v,k){
+				 		var dd = new Dragdealer(v, {
+					    animationCallback: function(x, y) {
+					      $('#'+v+' .tip-bd').text(Math.round(x * 100));
+					      $('#'+v+' .progress-bar').css('width',x * 100+'%');
+					      $('#'+v).closest('.am-container').find('input').val(Math.round(x * 100));
+					    },
+	//				    x:data[k],
+					    slide:false
+					  });
+					  
+					  dds[k] = dd;
+				 	});
 				});
-			});
-			$(document).ready(function() {
-				var xg1 = [];
-				var xg2 = [];
-				var xg3 = [];
-				{% for tag in tagbeanForOtherList %}
-				xg1.push([{{tag.0.id}},"{{tag.0.content}}"]);
-				xg2.push([{{tag.1.id}},"适中"]);
-				xg3.push([{{tag.2.id}},"{{tag.2.content}}"]);
-                {% endfor %}
-				var xgs = [xg1,xg2,xg3];
-				xgs.forEach(function(val,i){
-					var xg_col = $('<div class="am-u-sm-4"></div>');
-					var flag=false;
-					if(i==1){
-						flag=true
-					}else{
-						flag=false;
-					}
-					val.forEach(function(val,k){
-						var xg = $('<label class="am-radio am-secondary"><input type="radio" data-am-ucheck="" value="'+val[0]+'" name="'+k+'" class="am-ucheck-radio"><span class="am-ucheck-icons"><i class="am-icon-unchecked"></i><i class="am-icon-checked"></i></span>' +val[1]+'</label>')
-						if(flag){
-							xg.find('input:radio').attr("checked","checked");
-						}
-						xg_col.append(xg);
-					});
-					$('#xg').append(xg_col);
-				});
-			});
 		</script>
 	</body>
 
