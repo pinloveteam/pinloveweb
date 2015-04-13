@@ -137,6 +137,7 @@ def score(request,template_name="Score.html"):
         userKey=request.REQUEST.get('userKey')
         args=common(request)
         userProfile=UserProfile.objects.get(user=request.user)
+        args['link']=userProfile.link
         try:
             otherProfile=UserProfile.objects.select_related('user').get(link=userKey)
             otherId=otherProfile.user_id
