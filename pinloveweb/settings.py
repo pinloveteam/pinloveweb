@@ -51,7 +51,6 @@ STATICFILES_DIRS = (
      os.path.join(PATH,'apps/user_app/static').replace('\\','/'),
      os.path.join(PATH,'apps/verification_app/static').replace('\\','/'),
      os.path.join(PATH,'apps/pay_app/static').replace('\\','/'),
-     os.path.join(PATH,'apps/weixin_app/static').replace('\\','/'),
      os.path.join(PATH,'apps/mobile_app/static').replace('\\','/'),
      
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
