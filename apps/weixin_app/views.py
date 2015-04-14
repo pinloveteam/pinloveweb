@@ -17,13 +17,14 @@ from apps.third_party_login_app.setting import PublicWeiXinAppID,\
 from apps.third_party_login_app.models import ThirdPsartyLogin
 from apps.weixin_app.method import get_jsapi_ticket, get_signature
 from django.db import transaction
+import datetime
 logger=logging.getLogger(__name__)
 def common(request):
     '''
     微信公共函数
     '''
     args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
-    if "jsapi_ticket" not in request.session:
+    if ("jsapi_ticket_expires" not in request.session) or (request.session['jsapi_ticket_expires']>datetime.datetime.now()):
         get_jsapi_ticket(request) 
     args.update(get_signature(request.session['jsapi_ticket'],request.build_absolute_uri()))  
     return args    
@@ -165,6 +166,7 @@ def score(request,template_name="Score.html"):
         #判断他的条件是否成立
         if (not Grade.objects.filter(user_id=request.user.id,heightweight=None,incomeweight=None,educationweight=None,characterweight=None)) and UserTag.objects.filter(user_id=request.user.id).exists():
             args['is_recommend']=True
+            args['has_share']=True
         else:
             args['is_recommend']=False
             args['next_url']='/weixin/other_info/'

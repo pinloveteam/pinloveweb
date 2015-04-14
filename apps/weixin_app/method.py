@@ -11,6 +11,7 @@ import urllib
 from django.utils import simplejson
 from apps.third_party_login_app.setting import PublicWeiXinAppID,\
     PublicWeiXinAppSecret
+import datetime
 '''
 我心游戏期望甚高计算
 @param gender:用户性别
@@ -108,5 +109,6 @@ def get_jsapi_ticket(request):
     result=simplejson.loads(f.read())
     if result.get('errcode')==0:
         request.session['jsapi_ticket']=result['ticket']
+        request.session['jsapi_ticket_expires']=datetime.datetime.now()+datetime.timedelta(seconds=result['expires_in'])
     else:
         raise Exception('获取jsapi_ticket出错，出错原因：'+result['errmsg'])
