@@ -9,6 +9,9 @@
 		<link rel="stylesheet" type="text/css" href="/static/css/weixin/app.css" />
 		<title></title>
 		<style>
+		.am-g {
+				min-height: 100%;
+			}
 			.label{
 				color: #fff;
 				padding: 7px 0;
@@ -130,7 +133,7 @@
 			//提交事件
 			$("form").submit(function(){
 				    var tagMyObj = new Array();
-				    var tagMy=$('#selected-label input')
+				    var tagMy=$('#selected-label li:visible').find('input')
 				    tagMy.each(function(){
 				    	tagMyObj.push($(this).attr('value'));
 				    });
