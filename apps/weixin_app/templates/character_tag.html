@@ -40,6 +40,7 @@
 				background-color: rgba(0,0,0,0.9);
 				color: #fff;
 				display: none;
+				height:100%;
 			}
 			.ar{
 				text-align: right;
@@ -94,14 +95,15 @@
 		xg2.push([{{tag.2.id}},"{{tag.2.content}}"]);
 		{% endfor %}
 			xg1.forEach(function(v,i){
-				var lb = $('<li id=label-'+i+' class=lb-'+i+'><input type="radio" data-am-ucheck="" value="'+v[0]+'" name="'+i+'" class="am-ucheck-radio"><span class="label label-red">'+v[1]+'</span></li>');
+				var lb = $('<li id=label-'+i+' class=lb-'+i+'><input type="hidden" value="'+v[0]+'"><span class="label label-red">'+v[1]+'</span></li>');
 				$('#all-label').append(lb);
 			});
 			
 			xg2.forEach(function(v,i){
-				var lb = $('<li id=label-'+i+' class=lb-'+i+'><input type="radio" data-am-ucheck="" value="'+v[0]+'" name="'+i+'" class="am-ucheck-radio"><span class="label label-blue">'+v[1]+'</span></li>');
+				var lb = $('<li id=label-1'+i+' class=lb-'+i+'><input type="hidden" value="'+v[0]+'"><span class="label label-blue">'+v[1]+'</span></li>');
 				$('#all-label').append(lb);
 			});
+			
 			
 			$('#all-label li').click(function(){
 				var type = $(this).attr('class');
@@ -147,7 +149,7 @@
                             if(textStatus== 'success'){
                             	if(data.result=='success'){
                             		if (data.next_url==undefined){
-                            			$('#share_div').show();
+                            			$('#share_div').css('height',document.body.scrollHeight).show();
                             		}else{
                             			window.location.href=data.next_url;
                             		}
