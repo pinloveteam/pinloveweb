@@ -154,11 +154,11 @@
                             	if(data.result=='success'){
                             		if (data.next_url==undefined){
                             			$('#share_div').css('height',document.body.scrollHeight).show();
+                            			show_menu();
                             		}else{
                             			window.location.href=data.next_url;
                             		}
                             	}else{
-                            		show_menu();
                             		$('.am-modal .am-modal-bd').text(data.error_message)
                                 	$('.am-modal').modal()
                             	}
