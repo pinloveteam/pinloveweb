@@ -73,6 +73,9 @@
 			<input type="hidden" name="tagList" id="tagList" value="">
 			<button type="submit" class="am-btn am-btn-success am-btn-block">下一步</button>
 			</form>
+			
+			<button type="show" >显示</button>
+			<button type="hide" >隐藏</button>
 		</div>
 		
 		
@@ -175,6 +178,13 @@
                     });
                     return false;
 		        });
+			
+			$('#show').click(function(){
+				wx.showOptionMenu();
+			});
+$('#hide').click(function(){
+	wx.hideOptionMenu();
+			});
 		</script>
 	</body>
 </html>
