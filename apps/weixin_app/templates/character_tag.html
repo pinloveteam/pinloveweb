@@ -74,8 +74,8 @@
 			<button type="submit" class="am-btn am-btn-success am-btn-block">下一步</button>
 			</form>
 			
-			<button id="show" >显示</button>
-			<button id="hide" >隐藏</button>
+			<button type="show" class="am-btn am-btn-success am-btn-block">显示</button>
+			<button type="hide" class="am-btn am-btn-success am-btn-block">隐藏</button>
 		</div>
 		
 		
@@ -161,9 +161,9 @@
                             			window.location.href=data.next_url;
                             		}
                             	}else{
+                            		show_menu();
                             		$('.am-modal .am-modal-bd').text(data.error_message)
                                 	$('.am-modal').modal()
-                                	wx.showOptionMenu();
                             	}
                             	
                             }
@@ -179,12 +179,9 @@
                     return false;
 		        });
 			
-			$('#show').click(function(){
+			function show_menu(){
 				wx.showOptionMenu();
-			});
-$('#hide').click(function(){
-	wx.hideOptionMenu();
-			});
+			};
 		</script>
 	</body>
 </html>
