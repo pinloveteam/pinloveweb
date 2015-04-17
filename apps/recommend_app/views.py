@@ -188,6 +188,19 @@ def character_tags(request):
                 from apps.user_score_app.method import get_score_by_character_tag
                 get_score_by_character_tag(request.user.id)
             #保存tag
+            type=0
+            try:
+                UserTag.objects.bulk_insert_user_tag(request.user.id,type,tagMyList)
+                type=1
+                UserTag.objects.bulk_insert_user_tag(request.user.id,type,tagOhterList)
+            except Exception as e:
+                error_messsage=e.message
+                content="TA的性格标签" if type==1 else "我的性格标签"
+                if e.message=='less':
+                    error_messsage='%s要全部选择！'%(content)
+                elif e.message=='more':
+                    error_messsage='%s选择的个数超标了！'%(content)
+                raise Exception(error_messsage)
             UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagMyList)
             UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOhterList)
             #判断推荐条件是否完善

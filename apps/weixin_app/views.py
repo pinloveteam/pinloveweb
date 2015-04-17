@@ -111,14 +111,23 @@ def my_character(request,template_name='character_tag.html'):
                 from apps.user_score_app.method import get_score_by_character_tag
                 get_score_by_character_tag(request.user.id)
             #保存tag
-            UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagMyList)
+            gltNum=5
+            try:
+                UserTag.objects.bulk_insert_user_tag(request.user.id,0,tagMyList,gltNum=gltNum)
+            except Exception as e:
+                error_messsage=e.message
+                if e.message=='less':
+                    error_messsage='亲！起码要选择%s个哦！'%(gltNum)
+                elif e.message=='more':
+                    error_messsage=error_messsage='亲！你选择的个数超标了！'
+                raise Exception(error_messsage)
             args.update({'next_url':"/weixin/score/?userKey=%s"%(userKey),"result":'success'})
         else:
             #获取自己个人标签
             tags=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=0)
             from apps.pojo.tag import tag_to_tagbean
             tagbeanList=tag_to_tagbean(tags)
-            args['tagbeanList']=tagbeanList
+            args['tagbeanList']=[tagbean for tagbean in tagbeanList if tagbean[0].id not in[14,27,4]]
         args['result']='success'
     except Exception as e:
         args={'result':'error','error_message':e.message}
@@ -205,7 +214,7 @@ def other_info(request,template_name='otherInfo.html'):
             args['gender']=userProfile.gender
     except Exception as e:
         logger.exception('完善我对别人打分信息：%s'%(e.message))
-        args={'result':'error','error_message':'出错%s:'%(e.message)}
+        args={'result':'error','error_message':(e.message)}
         template_name="error.html"
     if request.is_ajax():
         json=simplejson.dumps(args)
@@ -228,18 +237,29 @@ def ta_character(request,template_name="character_tag.html"):
             if not UserTag.objects.filter(user_id=request.user.id).exists():
                 from apps.user_score_app.method import get_score_by_character_tag
                 get_score_by_character_tag(request.user.id)
-            UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOtherList)
+                
+            gltNum=5
+            try:
+                UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOtherList,gltNum=gltNum)
+            except Exception as e:
+                error_messsage=e.message
+                if e.message=='less':
+                    error_messsage='亲！起码要选择%s个哦！'%(gltNum)
+                elif e.message=='more':
+                    error_messsage='亲！你选择的个数超标了！'
+                raise Exception(error_messsage)
+            
             args["result"]='success'
         else:
             #获取对另一半期望标签
             tagsForOther=UserTag.objects.get_tags_by_type(user_id=request.user.id,type=1)
             from apps.pojo.tag import tag_to_tagbean
             tagbeanForOtherList=tag_to_tagbean(tagsForOther)
-            args['tagbeanList']=tagbeanForOtherList
+            args['tagbeanList']=[tagbeanForOther for tagbeanForOther in tagbeanForOtherList if tagbeanForOther[0].id not in[14,27,4]]
             args['gender']=userProfile.gender
     except Exception as e:
         logger.exception('完善我对别人打分信息：%s'%(e.message))
-        args={'result':'error','error_message':'出错%s:'%(e.message)}
+        args={'result':'error','error_message':(e.message)}
         template_name='error.html'
     if request.is_ajax():
         json=simplejson.dumps(args)
