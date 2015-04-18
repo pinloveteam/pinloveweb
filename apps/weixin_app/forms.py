@@ -16,7 +16,7 @@ MAN_HEIGHT_CHIOCES=((185,u'鹤立鸡群(男大于1.85)'),(175,u' 玉树凌风(�
                 (170,u'俊秀挺拔(男大于1.7)'),(160,u'及格线上(男大于1.6)'),(155,u'短小精悍(男小于1.6)'))
 FEMAN_HEIGHT_CHIOCES=((175,u'鹤立鸡群（女大于1.75)'),(165,u' 玉树凌风(女大于1.65)'),
                 (160,u'俊秀挺拔(女大于1.6)'),(150,u'及格线上(女大于1.55)'),(145,u'短小精悍(女小于1.5)'))
-SCHOOL_CHIOCES=((4,u'如雷贯耳(985学校)'),(3,u'百年学府(重点学校)'),(2,u'中流砥柱(本科学校)'),(1,u'马马虎虎(专科学校)'),(0,u'布鲁弗莱(专科以下)'))
+SCHOOL_CHIOCES=((4,u'如雷贯耳(985学校)'),(3,u'百年学府(重点学校)'),(2,u'中流砥柱(本科学校)'),(1,u'马马虎虎(专科学校)'),(0,u'布鲁弗莱(专科以下)'),)
 
 INCOME_CHIOCES=((99,u'钻石王老五(年薪>100w)'),(50,u'金领(年薪>50w)'),(30,u'蓝领(年薪>30w)'),(10,u'白领(年薪>10w)'),(5,u'无领白领(年薪>5w)'))
 class InfoForm (ModelForm) : 
@@ -28,7 +28,7 @@ class InfoForm (ModelForm) :
         else:
             self.fields['height'].choices=MAN_HEIGHT_CHIOCES
         self.fields['income'].choices=INCOME_CHIOCES
-    schoolType=forms.TypedChoiceField(label=u"学校类型",choices=SCHOOL_CHIOCES)   
+    schoolType=forms.ChoiceField(label=u"学校类型",choices=SCHOOL_CHIOCES,required=True,)   
     class Meta : 
         model = UserProfile  
         fields = ( 'height',  'income','education',)

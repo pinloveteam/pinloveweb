@@ -41,49 +41,49 @@ def self_info(request):
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
         #查看排名
-        if userKey!=u'rank':
-            try:
-                otherId=UserProfile.objects.get(link=userKey).user_id
-            except UserProfile.DoesNotExist as e:
-                return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
-            except UserProfile.MultipleObjectsReturned as e:
-                return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
-        if userKey==u'rank' or otherId==request.user.id  :
-            scoreRankBeanbList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
-            scoreRankList=[]
-            for scoreRankBean in scoreRankBeanbList:
-                scoreRankBean.score=int(scoreRankBean.score)
-                scoreRankList.append(scoreRankBean)
-            args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
-            return render(request,'Rank.html',args)
-        if request.method=="POST":
-            import copy
-            oldUserProfile=copy.deepcopy(userProfile)
-            POSTdata=request.POST.copy()
-            infoFrom = InfoForm(POSTdata, instance=userProfile) 
-            if infoFrom.is_valid():
-                userProfile = infoFrom.save(commit=False)
-                userProfile.save(oldUserProfile=oldUserProfile)
-                #计算学历
-                from apps.weixin_app.method import cal_eduction_in_game
-                eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['schoolType']))
-#                 logging.error('233esddfsd-----%s %s %s %s'%(int(infoFrom.cleaned_data['education']),int(schoolType),int(country),eductionScore))
-                Grade.objects.filter(user_id=request.user.id).update(educationscore=eductionScore)
-                transaction.commit()
-                args['result']='success'
-                args['next_url']='/weixin/my_character/?userKey='+userKey
-            else:
-               errors=infoFrom.errors.items()
-               args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
-            json=simplejson.dumps(args)
-            return HttpResponse(json)
-        elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
-            return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
-        elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists():
-           if UserTag.objects.filter(user_id=request.user.id,type=0).exists():
-             return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
-           else:
-            return my_character(request)
+#         if userKey!=u'rank':
+#             try:
+#                 otherId=UserProfile.objects.get(link=userKey).user_id
+#             except UserProfile.DoesNotExist as e:
+#                 return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
+#             except UserProfile.MultipleObjectsReturned as e:
+#                 return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
+#         if userKey==u'rank' or otherId==request.user.id  :
+#             scoreRankBeanbList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
+#             scoreRankList=[]
+#             for scoreRankBean in scoreRankBeanbList:
+#                 scoreRankBean.score=int(scoreRankBean.score)
+#                 scoreRankList.append(scoreRankBean)
+#             args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
+#             return render(request,'Rank.html',args)
+#         if request.method=="POST":
+#             import copy
+#             oldUserProfile=copy.deepcopy(userProfile)
+#             POSTdata=request.POST.copy()
+#             infoFrom = InfoForm(POSTdata, instance=userProfile) 
+#             if infoFrom.is_valid():
+#                 userProfile = infoFrom.save(commit=False)
+#                 userProfile.save(oldUserProfile=oldUserProfile)
+#                 #计算学历
+#                 from apps.weixin_app.method import cal_eduction_in_game
+#                 eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['schoolType']))
+# #                 logging.error('233esddfsd-----%s %s %s %s'%(int(infoFrom.cleaned_data['education']),int(schoolType),int(country),eductionScore))
+#                 Grade.objects.filter(user_id=request.user.id).update(educationscore=eductionScore)
+#                 transaction.commit()
+#                 args['result']='success'
+#                 args['next_url']='/weixin/my_character/?userKey='+userKey
+#             else:
+#                errors=infoFrom.errors.items()
+#                args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
+#             json=simplejson.dumps(args)
+#             return HttpResponse(json)
+#         elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
+#             return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
+#         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists():
+#            if UserTag.objects.filter(user_id=request.user.id,type=0).exists():
+#              return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
+#            else:
+#             return my_character(request)
         args['infoForm']=InfoForm(instance=userProfile)
         return render(request,'selfInfo.html',args)
  
