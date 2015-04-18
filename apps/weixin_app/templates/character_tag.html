@@ -111,12 +111,12 @@
 			
 			$('#all-label li').click(function(){
 				var type = $(this).attr('class');
-				$('#selected-label').find('.'+type).find('.am-icon-close').click();
+				$('#selected-label').find('.'+type).find('.close').click();
 				if($('#selected-label').find('#'+$(this).attr('id')).length!=0){
 					$('#'+$(this).attr('id')).show('slow');
 				}else{
 					var lb = $(this).clone();
-					lb.find('.label').append($('<i class="am-icon-close"></i>'));
+					lb.find('.label').addClass('close').append($('<i class="am-icon-close"></i>'));
 					lb.append();
 					$('#selected-label').append(lb);
 					lb.hide();
@@ -125,8 +125,8 @@
 				$(this).hide('slow');
 			});
 			
-			$(document).delegate('.am-icon-close', 'click', function() {
-				var slb = $(this).parent().parent();
+			$(document).delegate('.close', 'click', function() {
+				var slb = $(this).parent();
 				var id = slb.attr('id');
 				slb.hide('slow');
 				$('#all-label #'+id).show('slow');
