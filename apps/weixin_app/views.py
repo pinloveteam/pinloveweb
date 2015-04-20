@@ -96,7 +96,7 @@ def my_character(request,template_name='character_tag.html'):
     try:
         userKey=request.REQUEST.get('userKey')
         args=common(request)
-        args.update({"userKey":userKey,"title":"第二步，再测测您的软实力，请选择情商（EQ）标签",'url':'/weixin/my_character/'})
+        args.update({"userKey":userKey,"step":"第四步","title":"再测测您的软实力，请选择情商（EQ）标签",'url':'/weixin/my_character/'})
         if userKey==None:
             return render(request,'error.html',{'result':'error','error_message':'没有用户标识，请联系客服!'})
         try:
@@ -228,7 +228,7 @@ def ta_character(request,template_name="character_tag.html"):
     args={}
     try:
         args=common(request)
-        args.update({"title":"第四步， 请选出你心目中男神、女神的标准 – 软实力EQ篇",'url':'/weixin/ta_character/'})
+        args.update({"step":"第四步","title":"选出你心目中男神、女神的标准–软实力EQ篇",'url':'/weixin/ta_character/'})
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
         if request.method=="POST":
