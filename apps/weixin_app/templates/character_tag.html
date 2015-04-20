@@ -4,31 +4,27 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
-		<title>{{title}}</title>
+		<title>PinLove</title>
 		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
 		<link rel="stylesheet" type="text/css" href="/static/css/weixin/app.css" />
 		<title></title>
 		<style>
-		
-			.am-g {
-				min-height: 100%;
-			}
 			.label{
-				color: #fff;
 				padding: 7px 0;
 				width: 100%;
 				display: inline-block;
 				text-align: center;
 				position: relative;
+				background-color: #F3F3F3;
+				border-left: solid 10px;
 			}
 			.label-red{
-				background-color: #E48684;
+				border-color: #0278FC;
 			}
 			.label-blue{
-				background-color: #7F86D7;
+				border-color: #E91112;
 			}
 			.am-icon-close{
-				color: #fff;
 				position: absolute;
 				right: 4px;
 			}
@@ -38,7 +34,7 @@
 			}
 			.am-thumbnails li{
 				display: inline-block;
-				width: 33.3333%;
+				width: 50%;
 			}
 			.mask{
 				background-color: rgba(0,0,0,0.9);
@@ -58,26 +54,29 @@
 		</header>
 		<div class="am-g">
 			<div class="am-container">
-				<p>TA的标签(至少选5个)</p>
+				<p>TA的标签(至少5个)</p>
 				<ul id="selected-label" class="am-thumbnails">
 				</ul>
 			</div>
 			<hr style="margin: 5px 10px; border-color: #8C8C8C;"/>
-			<div class="am-container">
+			<div class="am-container" id="all-label">
 				<p>全部标签</p>
-				<ul id="all-label" class="am-thumbnails">
-				</ul>
+				{% for tag in tagbeanList %}
+				<div class="am-container" {%ifequal forloop.counter0 8%}style="margin-bottom: 70px;"{%endifequal%}>
+					<ul class="am-thumbnails am-avg-sm-2">
+						<li class="lb-{{forloop.counter0}}" id="label-{{forloop.counter0}}"><input type="hidden" value="{{tag.0.id}}"/><span class="label label-red">{{tag.0.content}}</span></li>
+						<li class="lb-{{forloop.counter0}}" id="label-1{{forloop.counter0}}"><input type="hidden" value="{{tag.1.id}}"/><span class="label label-blue">{{tag.1.content}}</span></li>
+					</ul>
+				</div>
+				{%endfor%}
+				
 			</div>
 			<form action="{{url}}" method="POST">{% csrf_token %}
 			<input type="hidden" name="userKey" value="{{userKey}}">
 			<input type="hidden" name="tagList" id="tagList" value="">
-			<button type="submit" class="am-btn am-btn-success am-btn-block">下一步</button>
+			<button type="submit" class="am-btn am-btn-success am-btn-block">继续</button>
 			</form>
 		</div>
-		
-		
-
-		
 		<div id="share_div" class="am-k mask">
 			<div class="am-container ar">
 				<p></p>
@@ -92,32 +91,39 @@
 		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>
 		{% include "weixin_js_base.html" %}
 		<script>
-		var xg1 = [];
-		var xg2 = [];
-		{% for tag in tagbeanList %}
-		xg1.push([{{tag.0.id}},"{{tag.0.content}}"]);
-		xg2.push([{{tag.2.id}},"{{tag.2.content}}"]);
-		{% endfor %}
-			xg1.forEach(function(v,i){
-				var lb = $('<li id=label-'+i+' class=lb-'+i+'><input type="hidden" value="'+v[0]+'"><span class="label label-red">'+v[1]+'</span></li>');
-				$('#all-label').append(lb);
-			});
-			
-			xg2.forEach(function(v,i){
-				var lb = $('<li id=label-1'+i+' class=lb-'+i+'><input type="hidden" value="'+v[0]+'"><span class="label label-blue">'+v[1]+'</span></li>');
-				$('#all-label').append(lb);
-			});
-			
+//			var xg1 = ['外向','慢性子','消费达人','责任心弱','严肃','悲观主义','不拘小节','冲动','多愁善感','依赖'];
+//			var xg2 = ['内向','急性子','节省','责任心强','幽默','乐观主义','细心','稳重','神经大条','独立'];
+//			xg1.forEach(function(v,i){
+//				var lb = $('<li id=label-'+i+' class=lb-'+i+'><span class="label label-red">'+v+'</span></li>');
+//				$('#all-label').append(lb);
+//			});
+//			
+//			xg2.forEach(function(v,i){
+//				var lb = $('<li id=label-1'+i+' class=lb-'+i+'><span class="label label-blue">'+v+'</span></li>');
+//				$('#all-label').append(lb);
+//			});
+//			var len = 2*xg1.length;
+//			for(var i = 0;i < len;i++){
+//				if((i & 1) == 1){
+//					var j = (i-1)/2;
+//					var lb = $('<li id=label-1'+j+' class=lb-'+j+'><span class="label label-blue">'+xg1[j]+'</span></li>');
+//					$('#all-label').append(lb);
+//				}else{
+//					var j = i/2;
+//					var lb = $('<li id=label-'+j+' class=lb-'+j+'><span class="label label-red">'+xg2[j]+'</span></li>');
+//					$('#all-label').append(lb);
+//				}
+//			}
 			
 			$('#all-label li').click(function(){
 				var type = $(this).attr('class');
-				$('#selected-label').find('.'+type).find('.close').click();
+				$('#selected-label').find('.'+type).find('.am-icon-close').click();
 				if($('#selected-label').find('#'+$(this).attr('id')).length!=0){
 					$('#'+$(this).attr('id')).show('slow');
 				}else{
 					var lb = $(this).clone();
 					lb.find('.label').addClass('close').append($('<i class="am-icon-close"></i>'));
-					lb.append();
+//					lb.append();
 					$('#selected-label').append(lb);
 					lb.hide();
 					lb.show('slow');
@@ -131,6 +137,7 @@
 				slb.hide('slow');
 				$('#all-label #'+id).show('slow');
 			});
+			
 			//提交事件
 			$("form").submit(function(){
 				    var tagMyObj = new Array();
@@ -155,6 +162,7 @@
                             		if (data.next_url==undefined){
                             			$('#share_div').css('height',document.body.scrollHeight).show();
                             			show_menu();
+                            			$('html,body').animate({scrollTop: '0px'}, 400);
                             		}else{
                             			window.location.href=data.next_url;
                             		}

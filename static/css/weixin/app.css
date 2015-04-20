@@ -1,3 +1,8 @@
+html,
+body,
+.am-g {
+	height: 100%;
+}
 body {
 	padding-bottom: 49px;
 }
@@ -8,7 +13,7 @@ body {
 	color: #4daf7b;
 }
 .am-btn {
-	position: absolute;
+	position: fixed;
 	bottom: 0;
 }
 .text-blue,
