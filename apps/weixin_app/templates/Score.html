@@ -11,8 +11,7 @@
 		<title></title>
 		<style>
 			html,body,.am-g{
-				overflow: hidden;
-				height: 100%;
+				min-height: 100%;
 			}
 			center{
 				overflow: hidden;
@@ -106,8 +105,8 @@
 			var ctx = $("canvas").get(0).getContext("2d");
 			var datasets = {
 					fillColor: "rgba(126, 179, 110,0.7)",
-					strokeColor: "rgba(126, 179, 110,0)",
-					pointColor: "rgba(0, 0, 0,0)"
+					strokeColor: "rgba(126, 179, 110,0.7)",
+					pointColor: "rgba(126, 179, 110,0.7)"
 				}
 			datasets.data ={{data}};
 			var data = {
