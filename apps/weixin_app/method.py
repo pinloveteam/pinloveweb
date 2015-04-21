@@ -41,9 +41,15 @@ def cal_weight_in_game(kwargs):
 '''
 计算学历
 '''
-def cal_eduction_in_game(schoolType):
+def cal_eduction_in_game(eduction,schoolType):
         eductionList=[50,60,70,80,90]
-        return eductionList[schoolType]
+        score=eductionList[schoolType]
+        if  schoolType>=2:
+            if eduction==3:
+                score=score+10
+            elif eduction==4:
+                score=score+20
+        return 100 if score>100 else score
 #         if eduction>=2:
 #           if country==0:
 #             if schoolType<0:

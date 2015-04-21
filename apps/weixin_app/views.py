@@ -66,7 +66,7 @@ def self_info(request):
                 userProfile.save(oldUserProfile=oldUserProfile)
                 #计算学历
                 from apps.weixin_app.method import cal_eduction_in_game
-                eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['schoolType']))
+                eductionScore=cal_eduction_in_game(int(infoFrom.cleaned_data['education']),int(infoFrom.cleaned_data['schoolType']))
 #                 logging.error('233esddfsd-----%s %s %s %s'%(int(infoFrom.cleaned_data['education']),int(schoolType),int(country),eductionScore))
                 Grade.objects.filter(user_id=request.user.id).update(educationscore=eductionScore)
                 transaction.commit()
