@@ -268,9 +268,5 @@ def ta_character(request,template_name="character_tag.html"):
         return render(request,template_name,args)
     
 def test(request):
-    eduction=request.GET.get('eduction')
-    schoolType=request.GET.get('schoolType')
-    country=int(request.GET.get('country'))
-    from apps.weixin_app.method import cal_eduction_in_game
-    result=cal_eduction_in_game(int(eduction),int(schoolType),country)
-    return HttpResponse(result)
+    return render(request,'index_1.html',{})
+    
