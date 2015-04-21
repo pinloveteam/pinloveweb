@@ -96,7 +96,7 @@ def my_character(request,template_name='character_tag.html'):
     try:
         userKey=request.REQUEST.get('userKey')
         args=common(request)
-        args.update({"userKey":userKey,"step":"第二步","title":"再测测您的软实力,请选择情商标签",'url':'/weixin/my_character/'})
+        args.update({"userKey":userKey,"tag_name":"选择最符合你的性格描述:","step":"第二步","title":"再测测您的软实力,请选择情商标签",'url':'/weixin/my_character/'})
         if userKey==None:
             return render(request,'error.html',{'result':'error','error_message':'没有用户标识，请联系客服!'})
         try:
@@ -197,7 +197,7 @@ def other_info(request,template_name='otherInfo.html'):
             taInfoForm=TaInfoForm(request.POST,initial={'gender':userProfile.gender})
             if taInfoForm.is_valid():
                 from apps.weixin_app.method import cal_expect_height_in_game
-                expectHeightList=cal_expect_height_in_game(userProfile.gender,int(taInfoForm.cleaned_data['expectHeight']))
+                expectHeightList=cal_expect_height_in_game(userProfile.gender,int(userProfile.height)-5 if userProfile.gender=='M' else int(userProfile.height)+5)
                 UserExpect.objects.create_update_by_uid(user_id=request.user.id,heighty1=expectHeightList[0],heighty2=expectHeightList[1],heighty3=expectHeightList[2],heighty4=expectHeightList[3],\
                                                 heighty5=expectHeightList[4] ,heighty6=expectHeightList[5],heighty7=expectHeightList[6],heighty8=expectHeightList[7])
                 if Grade.objects.filter(user_id=request.user.id,heightweight=None).exists():
@@ -228,7 +228,7 @@ def ta_character(request,template_name="character_tag.html"):
     args={}
     try:
         args=common(request)
-        args.update({"step":"第四步","title":"选出你心目中男神、女神的标准–软实力EQ篇",'url':'/weixin/ta_character/'})
+        args.update({"step":"第四步","tag_name":"TA的性格标签:","title":"选出你心目中男神、女神的标准–软实力EQ篇",'url':'/weixin/ta_character/'})
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
         if request.method=="POST":

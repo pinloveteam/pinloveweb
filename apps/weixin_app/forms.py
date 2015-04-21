@@ -13,15 +13,15 @@ from apps.recommend_app.models import Grade
 from django.core.validators import MaxValueValidator, MinValueValidator
 EDUCATION_CHIOCES=((0,u'莫以读书论英雄(本科以下)'),(1,u'学历有限(大专)'),(2,u'十年寒窗(本科)'),(3,u'学有专攻(硕士)'),(4,u'才高八斗(博士'))
 MAN_HEIGHT_CHIOCES=((185,u'鹤立鸡群(大于1.85)'),(175,u' 玉树凌风(大于1.75)'),
-                (170,u'俊秀挺拔(男大于1.7)'),(160,u'及格线上(男大于1.6)'),(155,u'短小精悍(男小于1.6)'))
-FEMAN_HEIGHT_CHIOCES=((175,u'鹤立鸡群(女大于1.75)'),(165,u' 玉树凌风(女大于1.65)'),
-                (160,u'俊秀挺拔(女大于1.6)'),(150,u'及格线上(女大于1.55)'),(145,u'短小精悍(女小于1.5)'))
+                (170,u'俊秀挺拔(大于1.7)'),(160,u'及格线上(大于1.6)'),(155,u'短小精悍(小于1.6)'))
+FEMAN_HEIGHT_CHIOCES=((175,u'鹤立鸡群(大于1.75)'),(165,u' 玉树凌风(大于1.65)'),
+                (160,u'俊秀挺拔(大于1.6)'),(150,u'及格线上(大于1.55)'),(145,u'短小精悍(小于1.5)'))
+
+EXCEPT_HEIGHT_CHIOCES=((185,u'男大于1.85,女大于1.75'),(175,u'男大于1.75,女大于1.65'),
+                (170,u'男大于1.7,女大于1.6'),(160,u'男大于1.65,女大于1.55'),(155,u'男大于1.6,女大于1.55'))
+
 SCHOOL_CHIOCES=((4,u'如雷贯耳(985学校)'),(3,u'百年学府(重点学校)'),(2,u'中流砥柱(本科学校)'),(1,u'马马虎虎(专科学校)'),(0,u'布鲁弗莱(专科以下)'),)
 
-EEXCEPT_HEIGHT_CHIOCES=((185,u'鹤立鸡群(大于1.85)'),(175,u' 玉树凌风(大于1.75)'),
-                (170,u'俊秀挺拔(男大于1.7)'),(160,u'及格线上(男大于1.6)'),(155,u'短小精悍(男小于1.6)'))
-FEXCEPT_EMAN_HEIGHT_CHIOCES=((175,u'鹤立鸡群(女大于1.75)'),(165,u' 玉树凌风(女大于1.65)'),
-                (160,u'俊秀挺拔(女大于1.6)'),(150,u'及格线上(女大于1.55)'),(145,u'短小精悍(女小于1.5)'))
 SCHOOL_CHIOCES=((4,u'如雷贯耳(985学校)'),(3,u'百年学府(重点学校)'),(2,u'中流砥柱(本科学校)'),(1,u'马马虎虎(专科学校)'),(0,u'布鲁弗莱(专科以下)'),)
 
 INCOME_CHIOCES=((99,u'钻石王老五(年薪>100w)'),(50,u'金领(年薪>50w)'),(30,u'蓝领(年薪>30w)'),(10,u'白领(年薪>10w)'),(5,u'无领白领(年薪>5w)'))
@@ -52,11 +52,8 @@ class InfoForm (ModelForm) :
 class TaInfoForm(ModelForm) :
     def __init__(self, *args, **kwargs):
         super(TaInfoForm, self).__init__(*args, **kwargs)
-        if self.initial.get('gender')=='M':
-            self.fields['expectHeight'].choices=FEMAN_HEIGHT_CHIOCES
         for field in ['heightweight','incomeweight','educationweight','characterweight']:
             self.fields[field].validators=[MinValueValidator(0), MaxValueValidator(100)]
-    expectHeight=forms.ChoiceField(choices=MAN_HEIGHT_CHIOCES) 
         
     def cal_weight(self,userId):
         '''
