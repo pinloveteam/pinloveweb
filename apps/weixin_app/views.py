@@ -178,7 +178,7 @@ def score(request,template_name="Score.html"):
             args['has_share']=True
         else:
             args['is_recommend']=False
-            args['next_url']='/weixin/other_info/'
+            args['next_url']='/weixin/ta_character/'
             
     except Exception as e:
         args={'result':'error','error_message':len(e)}   
@@ -205,7 +205,7 @@ def other_info(request,template_name='otherInfo.html'):
                     get_score_by_weight(request.user.id)
                 grade=taInfoForm.cal_weight(request.user.id)
                 grade.save()
-                args.update({'result':'success','next_url':'/weixin/ta_character/'})
+                args.update({'result':'success'})
             else:
                 errors=taInfoForm.errors.items()
                 args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(TaInfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
@@ -228,7 +228,7 @@ def ta_character(request,template_name="character_tag.html"):
     args={}
     try:
         args=common(request)
-        args.update({"step":"第四步","tag_name":"TA的性格标签:","title":"选出你心目中男神、女神的标准–软实力EQ篇",'url':'/weixin/ta_character/'})
+        args.update({"step":"第四步","tag_name":"TA的性格标签:","title":"选出你心目中男神、女神的标准–软实力EQ篇",'next_url':'/weixin/other_info/'})
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
         if request.method=="POST":
