@@ -130,7 +130,7 @@ def my_character(request,template_name='character_tag.html'):
             args['tagbeanList']=[tagbean for tagbean in tagbeanList if tagbean[0].id not in[14,27,4]]
         args['result']='success'
     except Exception as e:
-        args={'result':'error','error_message':e.message}
+        args={'result':'error','error_message':len(e)}
         template_name='error.html'
     if request.is_ajax():
         json=simplejson.dumps(args)
@@ -181,7 +181,7 @@ def score(request,template_name="Score.html"):
             args['next_url']='/weixin/other_info/'
             
     except Exception as e:
-        args={'result':'error','error_message':e.message}   
+        args={'result':'error','error_message':len(e)}   
         template_name='error.html'
     return  render(request,template_name,args)   
 '''
