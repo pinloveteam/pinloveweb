@@ -11,6 +11,7 @@ from pinloveweb import settings
 from apps.common_app.models import School
 from apps.user_app.models import UserProfile
 from util import detect_device
+from django.db.transaction import commit
 """"
 推荐信息填写情况
 attribute：null
@@ -192,11 +193,11 @@ def cal_user_vote(scoreId,scoredId,score,appearancescore,appearancesvote,type,**
             preScore=(appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)-appearanceVoteRecord.score)/(appearancesvote+DEFAULT_WEB_VOTE_NUM-1)
             appearanceVoteRecord.score=scoreTmp
             score=(preScore*(appearancesvote+DEFAULT_WEB_VOTE_NUM-1)+score)/(appearancesvote+DEFAULT_WEB_VOTE_NUM)
-            appearanceVoteRecord.save()
         else:
             score=(appearancescore*(appearancesvote+DEFAULT_WEB_VOTE_NUM)+score)/(appearancesvote+1+DEFAULT_WEB_VOTE_NUM)
             appearanceVoteRecord.score=scoreTmp
-            appearanceVoteRecord.save()
+        appearanceVoteRecord.save()
+        commit()
     else:
         raise Exception('type 参数错误')    
     return  {'score':score,'flag':flag}
