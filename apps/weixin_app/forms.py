@@ -34,6 +34,9 @@ class InfoForm (ModelForm) :
         else:
             self.fields['height'].choices=MAN_HEIGHT_CHIOCES
         self.fields['income'].choices=INCOME_CHIOCES
+        for key in self.fields:
+            self.fields[key].widget.attrs['data-am-selected']="{btnSize: 'sm'}"
+        
     schoolType=forms.ChoiceField(label=u"学校类型",choices=SCHOOL_CHIOCES,required=True,)   
     class Meta : 
         model = UserProfile  
