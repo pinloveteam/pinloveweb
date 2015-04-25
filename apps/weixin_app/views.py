@@ -18,6 +18,7 @@ from apps.third_party_login_app.models import ThirdPsartyLogin
 from apps.weixin_app.method import get_jsapi_ticket, get_signature
 from django.db import transaction
 import datetime
+from pinloveweb import STAFF_MEMBERS
 logger=logging.getLogger(__name__)
 def common(request):
     '''
@@ -267,6 +268,22 @@ def ta_character(request,template_name="character_tag.html"):
     else:
         return render(request,template_name,args)
     
+def share_userlist(request,template_name="share_user.html"):
+    '''
+    分享用户列表
+    '''
+    args={}
+    try:
+        userProfile=UserProfile.objects.get(user=request.user)
+        userProfileList=UserProfile.objects.select_related('user').filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)[:3]
+        userlist=[{'userId':user.user_id,'username':user.user.username,'avatar':user.avatar_name} for user in userProfileList]
+        args['userlist']=userlist
+    except Exception as e:
+        logger.exception('完善我对别人打分信息：%s'%(e.message))
+        args={'result':'error','error_message':(e.message)}
+        template_name='error.html'
+    return render(request,template_name,args)
+        
 def test(request):
     return render(request,'index_1.html',{})
     

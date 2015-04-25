@@ -29,9 +29,9 @@
 	    		return false;
 	    	}
 	    	if(!$('input[type="checkbox"]').is(':checked')){
-	    		alert('未满18周岁无法注册!');
-        		return false;
-	    	}
+	    			    		alert('未满18周岁无法注册!');
+	    		       		return false;
+	    			    	};
 	    	
 	    });
 		
@@ -122,9 +122,7 @@
 	    			error_message='邮箱格式错误!';
 	        		flag=false;
 	    		}
-	    	}
-	    	
-	    	if(flag){
+	    	}if(flag){
 	    	  $.ajax({
 	    		type:'get',
 	    		data:{email:email,type:'check_email'},

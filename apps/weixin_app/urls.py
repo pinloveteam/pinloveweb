@@ -11,5 +11,6 @@ urlpatterns=patterns('apps.weixin_app.views',
      url(r'^my_character/$', 'my_character'),
      url(r'^ta_character/$', 'ta_character'),
      url(r'^score/$', 'score'),
+     url(r'^share_userlist/$', 'share_userlist'),
      url(r'^test/$', 'test'),
 )

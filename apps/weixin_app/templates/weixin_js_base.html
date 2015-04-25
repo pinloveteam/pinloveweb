@@ -29,6 +29,7 @@ wx.onMenuShareTimeline({
     imgUrl: imgUrl, // 分享图标
     success: function () { 
         // 用户确认分享后执行的回调函数
+    	share_success();
     },
     cancel: function () { 
         // 用户取消分享后执行的回调函数
@@ -45,6 +46,7 @@ wx.onMenuShareAppMessage({
     dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
     success: function () { 
         // 用户确认分享后执行的回调函数
+    	share_success();
     },
     cancel: function () { 
         // 用户取消分享后执行的回调函数
@@ -59,6 +61,7 @@ wx.onMenuShareQQ({
     imgUrl: imgUrl, // 分享图标
     success: function () { 
        // 用户确认分享后执行的回调函数
+    	share_success();
     },
     cancel: function () { 
        // 用户取消分享后执行的回调函数
@@ -71,6 +74,7 @@ wx.onMenuShareWeibo({
     link: lineLink, // 分享链接
     imgUrl: imgUrl, // 分享图标
     success: function () { 
+    	share_success();
        // 用户确认分享后执行的回调函数
     },
     cancel: function () { 
@@ -80,6 +84,9 @@ wx.onMenuShareWeibo({
 
 });
 
+function share_success(){
+	window.location.href='/weixin/share_userlist/';
+}
 </script>
 
 
