@@ -27,8 +27,8 @@ urlpatterns=patterns('apps.mobile_app.views',
      #搜索
      url(r'^search/$','search'),
      #雷达图
-     url(r'^radar/(\d+)/$','radar'),
-     url(r'^radar_compare/$','update_radar_compare'),
+#      url(r'^radar/(\d+)/$','radar'),
+#      url(r'^radar_compare/$','update_radar_compare'),
      #上传头像
       url(r'^update_avtar/$','update_avtar'),
        #身高打分

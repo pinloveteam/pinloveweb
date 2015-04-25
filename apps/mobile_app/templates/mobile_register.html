@@ -28,6 +28,10 @@
 	    		inputJudge('error',message,$('#'+focus_error_id))
 	    		return false;
 	    	}
+	    	if(!$('input[type="checkbox"]').is(':checked')){
+	    		alert('未满18周岁无法注册!');
+        		return false;
+	    	}
 	    	
 	    });
 		
@@ -118,7 +122,9 @@
 	    			error_message='邮箱格式错误!';
 	        		flag=false;
 	    		}
-	    	}if(flag){
+	    	}
+	    	
+	    	if(flag){
 	    	  $.ajax({
 	    		type:'get',
 	    		data:{email:email,type:'check_email'},
@@ -300,6 +306,14 @@
 					</div>
 					<div class="col-xs-10">
 						{{user_form.password2}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-2">
+						<span class="glyphicon glyphicon-warning-sign"></span>
+					</div>
+					<div class="col-xs-10" style="margin-top: 10px;">
+						<input type="checkbox">至少已经年满十八岁（或是在所在地已经达到法定成年）
 					</div>
 				</div>
 				<center class="button">
