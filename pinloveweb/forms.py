@@ -43,6 +43,8 @@ class RegistrationForm (UserCreationForm) :
         help_text=r"必填。6-20位字符，可由英文字母、数字和下划线组成",
         error_messages={
             'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'})
+    
+    age=forms.ChoiceField(label=u'年龄',choices=[(i,'%s岁'%(i)) for i in range(18,90)])
     # my_default_errors = { 'required': u'此项信息必须',
     #'invalid': u'请输入正确的数值'}
     

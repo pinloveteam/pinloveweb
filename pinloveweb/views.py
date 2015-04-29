@@ -118,6 +118,7 @@ def auth_view(request,template_name='login.html') :
         else:
             return HttpResponseRedirect(redirectURL)
     else : 
+        args['user_form']= RegistrationForm()
         # Show an error page 
         args['link'] = request.REQUEST.get('link','')
         args['next'] = request.REQUEST.get('next','')
@@ -255,7 +256,7 @@ def register_user(request,template_name='login.html') :
             user = User.objects.get(username=username)
             sex=userForm.cleaned_data['gender']
             from pinloveweb.method import create_register_extra_user
-            create_register_extra_user(request,user.id,user.username,userForm.cleaned_data['password1'],sex,link)
+            create_register_extra_user(request,user.id,user.username,userForm.cleaned_data['password1'],sex,link,age=userForm.cleaned_data['age'])
             authenticate = auth.authenticate(username=username, password=userForm.cleaned_data['password1'])
             auth.login(request, authenticate)
             #登录奖励
