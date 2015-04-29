@@ -246,7 +246,7 @@
 		<center role="alert" class="alert alert-danger alert-dismissible">
 			<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
 			</button>
-			<span id="errorInfo">{{username_error}} {{username_error}} {{password1_error}} {{gender_error}}</span>
+			<span id="errorInfo">{{username_error}} {{username_error}} {{password1_error}} {{gender_error}}{{year_of_birth_error}}{{month_of_birth_error}}{{day_of_birth_error}}</span>
 		</center>
 		<div class="container">
 			<form action="/mobile/register/" method="post"  class="form-horizontal" role="form">{% csrf_token %}
@@ -307,7 +307,9 @@
 						<span class="glyphicon glyphicon-time"></span>
 					</div>
 					<div class="col-xs-10">
-						{{user_form.age}}
+						<div class="col-xs-4">{{user_form.year_of_birth}}</div>
+						<div class="col-xs-4">{{user_form.month_of_birth}}</div>
+						<div class="col-xs-4">{{user_form.day_of_birth}}</div>
 					</div>
 				</div>
 				<center class="button">

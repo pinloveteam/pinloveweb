@@ -7,6 +7,8 @@ import re
 from django.core import validators
 from django.core.cache import cache
 from django.core.files.uploadhandler import FileUploadHandler
+from apps.user_app.models import UserProfile
+import datetime
 USERNAME_ERROR_MESSAGE=u'必填。英文，1-14位字符，英文字母、数字和下划线组成或中文7个字符'
 class RegistrationForm (UserCreationForm) : 
     
@@ -21,6 +23,7 @@ class RegistrationForm (UserCreationForm) :
         for field in self.fields.values():
             field.error_messages = {'required':'{fieldname}必须要填!'.format(
                 fieldname=unicode(field.label))}
+            
     def validate(self, value):
         "Check if value consists only of valid emails."
 
@@ -44,7 +47,22 @@ class RegistrationForm (UserCreationForm) :
         error_messages={
             'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'})
     
-    age=forms.ChoiceField(label=u'年龄',choices=[(i,'%s岁'%(i)) for i in range(18,90)])
+    year_of_birth=forms.ChoiceField(label="出生年" ,choices=list(UserProfile.YEAR_OF_BIRTH_CHOICES[:1])+[(temp[0],'%s年'%(temp[1])) for temp in UserProfile.YEAR_OF_BIRTH_CHOICES[1:] ])
+    month_of_birth=forms.ChoiceField(label="出生月" ,choices=list(UserProfile.MONTH_OF_BIRTH_CHOICES[:1])+[(temp[0],'%s月'%(temp[1])) for temp in UserProfile.MONTH_OF_BIRTH_CHOICES[1:] ])
+    day_of_birth=forms.ChoiceField(label="出生日" ,choices=list(UserProfile.DAY_OF_BIRTH_CHOICES[:1])+[(temp[0],'%s日'%(temp[1])) for temp in UserProfile.MONTH_OF_BIRTH_CHOICES[1:] ])
+    
+    def clean_day_of_birth(self):
+        day_of_birth=self.cleaned_data['day_of_birth']
+        month_of_birth=self.cleaned_data['month_of_birth']
+        year_of_birth=self.cleaned_data['year_of_birth']
+        if not((day_of_birth==-1 and month_of_birth==-1 and year_of_birth==-1) or (day_of_birth!=-1 and month_of_birth!=-1 and year_of_birth!=-1)):
+            raise  forms.ValidationError(u'请正确填写出生日期!')
+        try:
+            datetime.date(int(year_of_birth),int(month_of_birth),int(day_of_birth))
+        except Exception as e:
+            raise  forms.ValidationError(u'请填写有效的出生日期!')
+        return day_of_birth
+    
     # my_default_errors = { 'required': u'此项信息必须',
     #'invalid': u'请输入正确的数值'}
     
