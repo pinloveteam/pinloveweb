@@ -109,7 +109,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     
     YEAR_OF_BIRTH_CHOICES = ((-1,r'未填'),)
     now=datetime.datetime.now()
-    for year in range(now.year-90,now.year-17):  
+    for year in range(now.year-90,now.year-18):  
         YEAR_OF_BIRTH_CHOICES += ((year, str(year)),)
     year_of_birth = models.SmallIntegerField(verbose_name=r"出生年份", choices=YEAR_OF_BIRTH_CHOICES, default=-1,null=True,blank=True,) 
 
