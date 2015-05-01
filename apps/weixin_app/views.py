@@ -149,6 +149,8 @@ def score(request,template_name="Score.html"):
         args=common(request)
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
+        args['userId']=request.user.id
+        args['userKey']=userKey
         try:
             otherProfile=UserProfile.objects.select_related('user').get(link=userKey)
             otherId=otherProfile.user_id
@@ -290,6 +292,23 @@ def share_userlist(request,template_name="share_user.html"):
         template_name='error.html'
     return render(request,template_name,args)
         
+def compare(request,template_name=None):
+    '''
+    雷达图对比
+    '''
+    args={'result':'success'}
+    try:
+        link=request.GET.get('link')
+        userId=int(request.GET.get('userId'))
+        userProfile=UserProfile.objects.get(link=link)
+        scoreRankList=ScoreRank.objects.filter(my_id=userProfile.user_id,other_id__in=[userId,request.user.id])
+        args['data']=[simplejson.loads(scoreRank.data) for scoreRank in scoreRankList]
+        
+    except Exception as e:
+        logger.exception('雷达图对比：%s'%(e.message))
+        args={'result':'error','error_message':(e.message)}
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
 def test(request):
     return render(request,'index_1.html',{})
     

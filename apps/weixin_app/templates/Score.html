@@ -142,7 +142,9 @@
 			<p class="title">我的排名</p>
 			<hr style="border-color: #64584C; margin: 0 60px;"/>
 			 {%for scoreRank in scoreRankList%}
-			<div class="am-container">
+			<div class="am-container rank-score">
+			    <input type="hidden" id='userId' value='{{scoreRank.other_id}}'>
+			    <input type="hidden" id='link' value='{{userKey}}'>
 				<div class="am-u-sm-4">
 					<span class="text-num">{{ forloop.counter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<img width="48px" src="/static/img/gfs_03.png" />
 				</div>
@@ -182,13 +184,87 @@
 		<script src="http://cdn.bootcss.com/Chart.js/1.0.1-beta.4/Chart.min.js"></script>
 		{% include "weixin_js_base.html" %}
 		<script type="text/javascript">
-			var ctx = $("canvas").get(0).getContext("2d");
+		$(function(){
+			createRadarDialog([{{data}}])
+			$('.rank-score').click(function(){
+				content=$(this);
+				data={'userId':content.find('#userId').val(),'link':content.find('#link').val()}
+				if(data['userId']=={{userId}}){
+					return false;
+				}
+				$.ajax({
+                    type: 'GET',
+                    url: '/weixin/compare/',
+                    data:data,
+                    beforeSend: function(XMLHttpRequest){
+                    	//content.unbind();
+                    },
+                    success: function(data, textStatus){
+                    	if(typeof data!="object"){
+                    		data=$.parseJSON(data);
+                    	}
+                        if(textStatus== 'success'){
+                        	if(data.result=='success'){
+                        		$('center').children(':lt(5)').remove()
+                        		canvas=$('<canvas class="radar" height="290px" width="290px"></canvas><div class="bg" id="bg1"></div><div class="bg" id="bg2"></div><div class="bg" id="bg3"></div><div class="bg" id="bg4"></div>')
+                        		$('center').prepend(canvas)
+                        		createRadarDialog(data.data)
+                        	}else{
+                        		$('.am-modal .am-modal-bd').text(data.error_message)
+                            	$('.am-modal').modal()
+                        	}
+                        	
+                        }
+                    },
+                    complete: function(XMLHttpRequest, textStatus){
+                    	//content.unbind();
+                    },
+                    error: function(response){
+                    	$('.am-modal .am-modal-bd').text("请求失败!")
+                    	$('.am-modal').modal()
+                    }
+                });
+			})
+		})
+		
+		function createRadarDialog(dataList) {
+	    dataArry=new Array()
+		var strokeColorList=["rgb(126, 179, 110,0.7)","rgb(241,23,25,0.7)"];
+		var pointColorList=["rgb(126, 179, 110,0.7)","rgb(241,23,25)"];
+		for(var i=0 ;i<dataList.length;i++){
+		var datasets = {
+				fillColor : "rgba(126, 179, 110,0.7)",
+				strokeColor : strokeColorList[i],
+				pointColor : pointColorList[i],
+				data : dataList[i]
+			};
+		dataArry.push(datasets);
+		};
+	   
+		var ctx = $('canvas').get(0).getContext("2d");
+		var data = {
+			labels : ["教育程度", "性格", "收入情况",  "身高"],
+			datasets : dataArry
+		};
+		var myNewChart = new Chart(ctx).Radar(data, {
+			scaleOverride: true,
+			scaleSteps: 4,
+			scaleStepWidth: 25,
+			scaleStartValue: 0,
+			scaleLineColor: "rgba(255,255,255,0)",
+//			scaleShowLabels : true,
+			pointLabelFontColor: '#64584C',
+			scaleBackdropColor: "rgba(126, 0, 110,0.7)",
+			angleLineColor: "rgba(255,255,255,.5)"
+		});
+	};
+			/* var ctx = $("canvas").get(0).getContext("2d");
 			var datasets = {
 					fillColor: "rgba(126, 179, 110,0.7)",
 					strokeColor: "rgba(126, 179, 110,0.7)",
 					pointColor: "rgba(126, 179, 110,0.7)"
 				}
-			datasets.data ={{data}};
+			datasets.data =[[80,12,23,45],[12,23,23,23]];
 			var data = {
 				labels: ["教育程度", "性格", "收入情况","身高"],
 				datasets: [datasets]
@@ -203,7 +279,7 @@
 				pointLabelFontColor: '#64584C',
 				scaleBackdropColor: "rgba(126, 0, 110,0.7)",
 				angleLineColor: "rgba(255,255,255,.5)"
-			});
+			}); */
 			$('#share').click(function(){
 				{%if is_recommend%}
 				$('.mask').show();
