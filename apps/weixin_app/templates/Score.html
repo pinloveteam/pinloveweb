@@ -5,22 +5,34 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/weixin/dragdealer.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/weixin/app.css" />
 		<link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
 		<title></title>
 		<style>
+			html{
+				background-color: #eee;
+			}
 			center{
 				overflow: hidden;
-				height: 500px;
+				height: 400px;
 			}
 			.am-g{
 				color: #64584C;
+				background-color: #eee;
 			}
 			.bg{
 				position: relative;
 				transform:rotate(45deg);
 				-webkit-transform:rotate(45deg);
-				z-index: -1;
+			}
+			.radar{
+				position: relative;
+				z-index: 10;
+			}
+			#tip{
+				color: #0278FC;
+				font-weight: bold;
 			}
 			#bg1{
 				width: 169px;
@@ -50,10 +62,6 @@
 				position: relative;
 				top: -420px;
 			}
-			#tip{
-				color: #0278FC;
-				font-weight: bold;
-			}
 			.text-num{
 				font-weight: bold;
 			}
@@ -64,6 +72,50 @@
 			}
 			.ar{
 				text-align: right;
+			}
+			.dragdealer {
+				height: 10px;
+			}
+			.name {
+				margin-bottom: 10px;
+				color: #64584C;
+				display: inline-block;
+			}
+			.progress-bar {
+				background-color: #4DACB0;
+				width: 80%;
+			}
+			.tip {
+				top: 30px;
+				color: #FFF;
+				font-size: 14px;
+				line-height: 20px;
+				text-align: center;
+			}
+			.tip-bt {
+				left: -4px;
+				top: -14px;
+			}
+			.am-container{
+				margin-top: 20px;
+			}
+			.text-gray{
+				color: #BDBDBD;
+			}
+			.fgf{
+				color: #aaa;
+			}
+			.rank{
+				padding: 20px 0;
+				margin: 10px;
+				background-color: #fff;
+				box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+			}
+			.am-u-sm-4{
+				padding-right: 0;
+			}
+			.title{
+				text-align: center;
 			}
 		</style>
 	</head>
@@ -84,8 +136,32 @@
 				<hr style="margin: 0 90px;border-color: #64584C;"/>
 				<p>在{{username}}好友的排名为第<span class="text-num">{{rank}}</span>名</p>
 			</div>
-			<p id="tip">你想知道你对你好友的打分吗？点击下面开始吧~</p>
+			
 		</center>
+		<div class="rank">
+			<p class="title">我的排名</p>
+			<hr style="border-color: #64584C; margin: 0 60px;"/>
+			 {%for scoreRank in scoreRankList%}
+			<div class="am-container">
+				<div class="am-u-sm-4">
+					<span class="text-num">{{ forloop.counter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<img width="48px" src="/static/img/gfs_03.png" />
+				</div>
+				<div class="am-u-sm-7">
+					<span class="name">{{scoreRank.nickname }}&nbsp;&nbsp;<span class="text-gray">糕富帅</span></span>
+					<div id="sliderd" class="dragdealer">
+						<div class="progress-bar" style="width: {{scoreRank.score }}%;"></div>
+					</div>
+				</div>
+				<div class="am-u-sm-1">
+					<div class="tip">
+						<div class="tip-bd bg-green">{{scoreRank.score }}</div>
+						<div class="tip-bt bg-green"></div>
+					</div>
+				</div>
+			</div>
+			{%endfor%}
+		
+		</div>
 		<button id="share" class="pin-btn am-btn am-btn-success am-btn-block">定制自己的打分标准</button>
 		</div>
 		<div class="am-g mask">

@@ -180,6 +180,12 @@ def score(request,template_name="Score.html"):
         else:
             args['is_recommend']=False
             args['next_url']='/weixin/ta_character/'
+        scoreRankBeanbList=ScoreRank.objects.filter(my_id=otherId).order_by("-score")
+        scoreRankList=[]
+        for scoreRankBean in scoreRankBeanbList:
+            scoreRankBean.score=int(scoreRankBean.score)
+            scoreRankList.append(scoreRankBean)
+        args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList)})
             
     except Exception as e:
         args={'result':'error','error_message':e.message}   
