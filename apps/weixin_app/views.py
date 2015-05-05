@@ -19,6 +19,7 @@ from apps.weixin_app.method import get_jsapi_ticket, get_signature
 from django.db import transaction
 import datetime
 from pinloveweb import STAFF_MEMBERS
+import urllib2
 logger=logging.getLogger(__name__)
 def common(request):
     '''
@@ -85,7 +86,14 @@ def self_info(request):
              return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
            else:
             return my_character(request)
-        args['infoForm']=InfoForm(instance=userProfile)
+        try:
+            ip=request.META['HTTP_X_FORWARDED_FOR'] if 'HTTP_X_FORWARDED_FOR' in request.META else  request.META['REMOTE_ADDR']
+            f=urllib2.urlopen('%s%s'%('http://freegeoip.net/json/',ip),timeout = 6).read()
+            locationInfo= simplejson.loads(f)
+            country=locationInfo.get('country_code',None)
+        except Exception as e:
+            country=None
+        args['infoForm']=InfoForm(instance=userProfile,initial={'country':country})
         return render(request,'selfInfo.html',args)
  
    

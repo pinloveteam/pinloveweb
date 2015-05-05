@@ -22,12 +22,16 @@ EXCEPT_HEIGHT_CHIOCES=((185,u'男大于1.85,女大于1.75'),(175,u'男大于1.75
 
 SCHOOL_CHIOCES=((4,u'如雷贯耳(985学校)'),(3,u'百年学府(重点学校)'),(2,u'中流砥柱(本科学校)'),(1,u'马马虎虎(专科学校)'),(0,u'布鲁弗莱(专科以下)'),)
 
+FOREIGN_SCHOOL_CHIOCES=((4,u'如雷贯耳(排名前10)'),(3,u'百年学府(排名前20)'),(2,u'中流砥柱(排名前50)'),(1,u'马马虎虎(排名前100)'),(0,u'布鲁弗莱(排名100以下)'),)
+
 
 INCOME_CHIOCES=((99,u'钻石王老五(年薪>100w)'),(50,u'金领(年薪>50w)'),(30,u'蓝领(年薪>30w)'),(10,u'白领(年薪>10w)'),(5,u'无领白领(年薪>5w)'))
 class InfoForm (ModelForm) : 
     def __init__(self, *args, **kwargs):
         super(InfoForm, self).__init__(*args, **kwargs)
         self.fields['education'].choices=EDUCATION_CHIOCES
+        if self.initial.get('country',None)==u'US':
+            self.fields['schoolType'].choices=FOREIGN_SCHOOL_CHIOCES
         if self.instance.gender=='F':
             self.fields['height'].choices=FEMAN_HEIGHT_CHIOCES
         else:
