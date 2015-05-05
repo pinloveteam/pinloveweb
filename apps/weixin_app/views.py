@@ -289,7 +289,7 @@ def share_userlist(request,template_name="share_user.html",remcommend_limit=3):
         userlist=[{'userId':user.user_id,'username':user.user.username,'avatar':user.avatar_name} for user in userProfileList]
         if args['count']-len(userlist)>0:
             scoreRankList=UserProfile.objects.select_related('user').filter(user_id__in=WeiXinGameUserIdList).exclude(user_id__in=STAFF_MEMBERS).exclude(user_id__in=[ user['userId'] for user  in userlist])
-            userlist+=[{'userId':user.user_id,'username':user.my.username,'avatar':user.avatar_name} for user in scoreRankList]
+            userlist+=[{'userId':user.user_id,'username':user.user.username,'avatar':user.avatar_name} for user in scoreRankList]
         args['userlist']=userlist
     except Exception as e:
         logger.exception('完善我对别人打分信息：%s'%(e.message))
