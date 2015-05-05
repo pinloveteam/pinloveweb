@@ -276,15 +276,20 @@ def ta_character(request,template_name="character_tag.html"):
     else:
         return render(request,template_name,args)
     
-def share_userlist(request,template_name="share_user.html"):
+def share_userlist(request,template_name="share_user.html",remcommend_limit=3):
     '''
     分享用户列表
     '''
     args={}
     try:
         userProfile=UserProfile.objects.get(user=request.user)
-        userProfileList=UserProfile.objects.select_related('user').filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)[:3]
+        WeiXinGameUserIdList=[user.user_id for user in ThirdPsartyLogin.objects.raw('''SELECT * from third_party_login u1 where u1.provider='3' and u1.user_id in(select my_id from weixin_score_rank ) ''')]
+        args['count']=len(WeiXinGameUserIdList)
+        userProfileList=UserProfile.objects.select_related('user').filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)[:remcommend_limit if args['count']-remcommend_limit>0 else args['count']]
         userlist=[{'userId':user.user_id,'username':user.user.username,'avatar':user.avatar_name} for user in userProfileList]
+        if args['count']-len(userlist)>0:
+            scoreRankList=UserProfile.objects.select_related('user').filter(user_id__in=WeiXinGameUserIdList).exclude(user_id__in=STAFF_MEMBERS).exclude(user_id__in=[ user['userId'] for user  in userlist])
+            userlist+=[{'userId':user.user_id,'username':user.my.username,'avatar':user.avatar_name} for user in scoreRankList]
         args['userlist']=userlist
     except Exception as e:
         logger.exception('完善我对别人打分信息：%s'%(e.message))
