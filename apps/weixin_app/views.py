@@ -36,7 +36,6 @@ def common(request):
 '''
 def self_info(request):
         userKey=request.REQUEST.get('userKey')
-        again=request.REQUEST.get('again',False)
         args=common(request)
         args['userKey']=userKey
         if userKey==None:
@@ -80,7 +79,9 @@ def self_info(request):
                args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
             json=simplejson.dumps(args)
             return HttpResponse(json)
-        elif ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() and not again:
+        again=request.REQUEST.get('again',False)
+        request.session['again']=again
+        if ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() and not again:
             return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() and not again:
            if UserTag.objects.filter(user_id=request.user.id,type=0).exists():
@@ -155,6 +156,7 @@ def score(request,template_name="Score.html"):
     args={}
     try:
         userKey=request.REQUEST.get('userKey')
+        again= request.session.pop('again',False)
         args=common(request)
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
@@ -168,7 +170,7 @@ def score(request,template_name="Score.html"):
             return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
         except UserProfile.MultipleObjectsReturned as e:
                 return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
-        if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
+        if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() or again:
             from apps.recommend_app.method import match_score
             socreForOther=match_score(otherId,request.user.id).get_dict()
             args.update({'data' : [int(socreForOther['edcationScore']),int(socreForOther['characterScore']),\
@@ -176,7 +178,10 @@ def score(request,template_name="Score.html"):
                    int(socreForOther['heighScore']),],'score' :int(socreForOther['scoreOther'])})
             data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
             nickname=data['nickname']
-            scoreRank=ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname,data=simplejson.dumps(args['data'])).save()
+            if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
+                scoreRank=ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname,data=simplejson.dumps(args['data'])).save()
+            else:
+                ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).update(score=args['score'],nickname=nickname,data=simplejson.dumps(args['data']))
         else:
             scoreRank=ScoreRank.objects.get(my_id=otherId,other_id=request.user.id)
             args['data']=simplejson.loads(scoreRank.data)

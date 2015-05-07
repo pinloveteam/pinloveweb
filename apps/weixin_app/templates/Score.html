@@ -140,9 +140,6 @@
 			</div>
 			
 		</center>
-		{%if has_share%}
-		<center><a id ="again" href="">在玩一次</a></center>
-		{%endif%}
 		<div class="rank">
 			<p class="title">我的排名</p>
 			<hr style="border-color: #64584C; margin: 0 60px;"/>
@@ -167,6 +164,7 @@
 				</div>
 			</div>
 			{%endfor%}
+			{%if has_share%}<button  id ="again" class="am-btn am-btn-success am-btn-block" style="margin-bottom: -20px; margin-top: 20px;">结果不理想，在玩一次！</button>{%endif%}
 		
 		</div>
 		<div style="height:70px">
@@ -298,7 +296,7 @@
 			});
 			
 			$('#again').click(function(){
-				$(this).attr('href','/weixin/self_info/'+window.location.search+"&again=true")
+				window.location.href='/weixin/self_info/'+window.location.search+"&again=true"
 			})
 		</script>
 	</body>
