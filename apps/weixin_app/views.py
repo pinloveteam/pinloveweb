@@ -36,6 +36,7 @@ def common(request):
 '''
 def self_info(request):
         userKey=request.REQUEST.get('userKey')
+        again=request.REQUEST.get('again',False)
         args=common(request)
         args['userKey']=userKey
         if userKey==None:
@@ -54,8 +55,8 @@ def self_info(request):
             scoreRankBeanbList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
             scoreRankList=[]
             for scoreRankBean in scoreRankBeanbList:
-                scoreRankBean.score=int(scoreRankBean.score)
-                scoreRankList.append(scoreRankBean)
+                avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
+                scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),'avatar_name':avatar_name})
             args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
             return render(request,'Rank.html',args)
         if request.method=="POST":
@@ -79,8 +80,6 @@ def self_info(request):
                args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
             json=simplejson.dumps(args)
             return HttpResponse(json)
-        again=request.REQUEST.get('again',False)
-        request.session['again']=again
         if ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() and not again:
             return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() and not again:
@@ -156,7 +155,6 @@ def score(request,template_name="Score.html"):
     args={}
     try:
         userKey=request.REQUEST.get('userKey')
-        again= request.session.pop('again',False)
         args=common(request)
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
@@ -170,22 +168,19 @@ def score(request,template_name="Score.html"):
             return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
         except UserProfile.MultipleObjectsReturned as e:
                 return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
-        if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() or again:
-            from apps.recommend_app.method import match_score
-            socreForOther=match_score(otherId,request.user.id).get_dict()
-            args.update({'data' : [int(socreForOther['edcationScore']),int(socreForOther['characterScore']),\
-                   int(socreForOther['incomeScore']),\
-                   int(socreForOther['heighScore']),],'score' :int(socreForOther['scoreOther'])})
-            data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
-            nickname=data['nickname']
-            if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
-                scoreRank=ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname,data=simplejson.dumps(args['data'])).save()
-            else:
-                ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).update(score=args['score'],nickname=nickname,data=simplejson.dumps(args['data']))
+
+        from apps.recommend_app.method import match_score
+        socreForOther=match_score(otherId,request.user.id).get_dict()
+        args.update({'data' : [int(socreForOther['edcationScore']),int(socreForOther['characterScore']),\
+                int(socreForOther['incomeScore']),\
+                int(socreForOther['heighScore']),],'score' :int(socreForOther['scoreOther'])})
+        data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
+        nickname=data['nickname']
+        if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
+            ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname,data=simplejson.dumps(args['data'])).save()
         else:
-            scoreRank=ScoreRank.objects.get(my_id=otherId,other_id=request.user.id)
-            args['data']=simplejson.loads(scoreRank.data)
-            args['score']=int(scoreRank.score)
+            ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).update(score=args['score'],nickname=nickname,data=simplejson.dumps(args['data']))
+       
         args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gt=args['score']).count()+1)
         filedList={'MM':u'你和%s的基友指数'%(otherProfile.user),'FF':u'你和%s的闺蜜指数'%(otherProfile.user),'MF':u'你在女神%s心中的亲密指数'%(otherProfile.user),'FM':u'你在男神%s心中的亲密指数'%(request.user),}
         args['score_content']=filedList[u'%s%s'%(userProfile.gender,otherProfile.gender)]
@@ -199,8 +194,8 @@ def score(request,template_name="Score.html"):
         scoreRankBeanbList=ScoreRank.objects.filter(my_id=otherId).order_by("-score")
         scoreRankList=[]
         for scoreRankBean in scoreRankBeanbList:
-            scoreRankBean.score=int(scoreRankBean.score)
-            scoreRankList.append(scoreRankBean)
+            avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
+            scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),'avatar_name':avatar_name})
         args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList)})
             
     except Exception as e:
