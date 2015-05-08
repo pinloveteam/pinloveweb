@@ -148,12 +148,12 @@
 			    <input type="hidden" id='userId' value='{{scoreRank.other_id}}'>
 			    <input type="hidden" id='link' value='{{userKey}}'>
 				<div class="am-u-sm-4">
-					<span class="text-num">{{ forloop.counter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<img width="48px" style="height: 48px;" src="/media/{{scoreRank.avatar_name}}-100.jpeg" />
+					<span class="text-num">{{ scoreRank.rank }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<img width="48px" style="height: 48px;" src="/media/{{scoreRank.avatar_name}}-100.jpeg" />
 				</div>
 				<div class="am-u-sm-6">
 					<span class="name">{{scoreRank.nickname }}&nbsp;&nbsp;<span class="text-gray"></span></span>
 					<div id="sliderd" class="dragdealer">
-						<div class="progress-bar" style="width: {{scoreRank.score }}%;"></div>
+						<div class="progress-bar" style="width: {{scoreRank.score }}%;{%if scoreRank.is_self%}background:red;{%endif%}"></div>
 					</div>
 				</div>
 				<div class="am-u-sm-2">

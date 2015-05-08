@@ -52,11 +52,12 @@ def self_info(request):
             except UserProfile.MultipleObjectsReturned as e:
                 return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
         if userKey==u'rank' or otherId==request.user.id  :
-            scoreRankBeanbList=ScoreRank.objects.filter(my_id=request.user.id).order_by("-score")
+            scoreRankBeanbList=ScoreRank.objects.get_rank_list(request.user.id)
             scoreRankList=[]
             for scoreRankBean in scoreRankBeanbList:
                 avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
-                scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),'avatar_name':avatar_name})
+                scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),\
+                                  'avatar_name':avatar_name,'other_id':scoreRankBean.other_id,'rank':scoreRankBean.rank})
             args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
             return render(request,'Rank.html',args)
         if request.method=="POST":
@@ -191,11 +192,15 @@ def score(request,template_name="Score.html"):
         else:
             args['is_recommend']=False
             args['next_url']='/weixin/ta_character/'
-        scoreRankBeanbList=ScoreRank.objects.filter(my_id=otherId).order_by("-score")
+        scoreRankBeanbList=ScoreRank.objects.get_rank_list(otherId)
         scoreRankList=[]
         for scoreRankBean in scoreRankBeanbList:
             avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
-            scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),'avatar_name':avatar_name,'other_id':scoreRankBean.other_id})
+            is_self=False
+            if int(scoreRankBean.other_id)==int(request.user.id):
+                is_self=True
+            scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),\
+                                  'avatar_name':avatar_name,'other_id':scoreRankBean.other_id,'rank':scoreRankBean.rank,'is_self':is_self})
         args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList)})
             
     except Exception as e:
