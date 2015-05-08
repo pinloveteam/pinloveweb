@@ -195,7 +195,7 @@ def score(request,template_name="Score.html"):
         scoreRankList=[]
         for scoreRankBean in scoreRankBeanbList:
             avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
-            scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),'avatar_name':avatar_name})
+            scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),'avatar_name':avatar_name,'other_id':scoreRankBean.other_id})
         args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList)})
             
     except Exception as e:
