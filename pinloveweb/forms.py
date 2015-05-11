@@ -49,7 +49,7 @@ class RegistrationForm (UserCreationForm) :
     
     year_of_birth=forms.ChoiceField(label="出生年" ,choices=list(UserProfile.YEAR_OF_BIRTH_CHOICES[:1])+[(temp[0],'%s年'%(temp[1])) for temp in UserProfile.YEAR_OF_BIRTH_CHOICES[1:] ])
     month_of_birth=forms.ChoiceField(label="出生月" ,choices=list(UserProfile.MONTH_OF_BIRTH_CHOICES[:1])+[(temp[0],'%s月'%(temp[1])) for temp in UserProfile.MONTH_OF_BIRTH_CHOICES[1:] ])
-    day_of_birth=forms.ChoiceField(label="出生日" ,choices=list(UserProfile.DAY_OF_BIRTH_CHOICES[:1])+[(temp[0],'%s日'%(temp[1])) for temp in UserProfile.MONTH_OF_BIRTH_CHOICES[1:] ])
+    day_of_birth=forms.ChoiceField(label="出生日" ,choices=list(UserProfile.DAY_OF_BIRTH_CHOICES[:1])+[(temp[0],'%s日'%(temp[1])) for temp in UserProfile.DAY_OF_BIRTH_CHOICES[1:] ])
     
     def clean_day_of_birth(self):
         day_of_birth=self.cleaned_data['day_of_birth']
