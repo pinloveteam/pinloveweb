@@ -235,7 +235,7 @@ def nearby(request,template_name="mobile_neardy.html"):
             userList.object_list=[]
         #判断推荐完成情况
         recommend_status=recommend_info_status(request.user.id,channel='mobile')
-        if recommend_status['result']:
+        if not recommend_status['result']:
             args['has_recommend']=True
         else:
             args['recommend_finish']=recommend_status['data']
