@@ -21,7 +21,7 @@ urlpatterns=patterns('apps.mobile_app.views',
      #个人信息
      url(r'^info_detail/(\d+)/$','info_detail'),
      #用户外貌打分
-#      url(r'^vote/$','user_vote'),
+    url(r'^vote/$','user_vote'),
      #编辑面板
      url(r'^editer/$','editer'),
      #搜索
