@@ -497,6 +497,7 @@ def grade_height(request,template_name='mobile_height.html'):
     try:
         #获得另一半身高期望   
         userExpect=UserExpect.objects.get_user_expect_by_uid(request.user.id)
+        args['gender']=UserProfile.objects.get(user=request.user).gender
         if userExpect==None:
             args['grade_for_other']=False
         else:
