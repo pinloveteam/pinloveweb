@@ -13,7 +13,7 @@ def select_school(request):
     try:
         country=int(request.GET.get('country'))
         schoolName=request.GET.get('schoolName').rstrip()
-        schoolList=School.objects.filter(country=country).filter(Q(name__startswith=schoolName)|Q(name__endswith=schoolName))
+        schoolList=School.objects.filter(country=country).filter(Q(name__startswith=schoolName)|Q(name__endswith=schoolName))[:30]
         schoolNameList=[school.name for school in schoolList]
         args['result']='success'
         args['schoolList']=schoolNameList
