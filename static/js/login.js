@@ -124,8 +124,6 @@ $('#id_email').blur(function(){
 	     complete: function(XMLHttpRequest, textStatus){
 	     },
 	     error: function(response){
-	    	 var body = $('<p>网络异常!</p>');
-	    	 $.poplayer({body:body});
 	     }
 	});
 	}
