@@ -4,7 +4,7 @@
 <script src="/static/js/jquery.scroll.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 {% block js%}
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 			$(document).click(function(e) {
 				if ($(e.target).hasClass('glyphicon-th-large')) {
 					$('.msg-type').toggle();
@@ -12,14 +12,16 @@
 					$('.msg-type').hide();
 				}
 			});
-</script>
+</script> -->
 
 <script>
 	$(document).ready(function(){
+		$('.glyphicon-th-large').click(function(){
+			$('.msg-type').toggle();
+			}) 
+		
 		       loadData(no_load,success,loading,true);
                 init_menu();
-                
-                $('.reply-btn').click(reply);
                 
                 if(next_page==-1){
                 	no_load();
@@ -31,7 +33,8 @@
                 	title=context.find('li').html().trim();
                 	$('#theme').html(title);
                 	url=context.attr('href')
-                	$.ajax({
+                	window.location.href=url;
+                	/* $.ajax({
         					dataType:"json",
         					type: "GET",
         					url:url,
@@ -59,12 +62,12 @@
         							 $.poplayer({body:body}); 
         	                    },
         						
-        			});
-                	var state = {
+        			}); */
+                	/* var state = {
                 		    title: title,
                 		    url: url,
                 		};
-                	window.history.pushState(state, title, url)
+                	window.history.pushState(state, title, url) */
                 	
                 });
                 
@@ -150,6 +153,7 @@
                         if(message.isRead==0){
                         	message_clone.addClass('unread')
                         }
+                        message_clone.find('.reply-btn').click(reply);
                         $('#message_list').append(message_clone);
                        
                     }else if(message.type==2) {
@@ -204,6 +208,7 @@
                          dynamic_comment_clone.find('#content').html(message.content);
                          dynamic_comment_clone.find('#time').html(message.sendTime);
                          dynamic_comment_clone.find('#dynamicId').val(message.friendDynamic_id);
+                         dynamic_comment_clone.find('.reply-btn').click(reply);
                          /* if(message.isRead==0){
                         	 dynamic_comment_clone.addClass('unread')
                          }
