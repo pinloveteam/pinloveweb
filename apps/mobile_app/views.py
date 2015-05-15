@@ -192,7 +192,7 @@ def follow(request,type,ajax='false',template_name="mobile_follow.html"):
             args['next_page_number']=-1
         #判断推荐完成情况
         recommend_status=recommend_info_status(request.user.id,channel='mobile')
-        if recommend_status['result']:
+        if not recommend_status['result']:
             args['has_recommend']=True
         else:
             args['recommend_finish']=recommend_status['data']
