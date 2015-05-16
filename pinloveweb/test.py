@@ -8,12 +8,20 @@ from django.db import transaction
 from util.email import Email
 from django.core.mail import send_mail
 from django.core.mail.message import EmailMessage
+from django.utils import simplejson
+import time
 
 @transaction.commit_on_success
 def tests(request):
-    from apps.task_app.email import send_notify_email
-    args=send_notify_email(userIdList=[54,3])
-    return  render(request,'Email_Template.html',args)
+    time.sleep(2)
+    return HttpResponse('success')
+#     from apps.weixin_app.forms import InfoForm
+#     userProfile=UserProfile.objects.get(user_id=5)
+#     infoForm=InfoForm(instance=userProfile)
+#     return render(request,'test.html',{'infoForm':infoForm})
+#     from apps.task_app.email import send_notify_email
+#     args=send_notify_email(userIdList=[54,3])
+#     return  render(request,'Email_Template.html',args)
 #     if request.GET.get('type')  is not None:
 #         email=Email('jin521436@163.com','jin')
 #         email.send(from_addr='pinloveteam@pinlove.com')
@@ -52,3 +60,14 @@ def send_eamil_test():
     html_content = htmly.render(d)
     msg.attach_alternative(html_content, "text/html")  
     msg.send()  
+
+
+def jsonp(request):
+    if 'callback' in request.REQUEST:
+        # a jsonp response!
+        data = { 
+'name':'sdsd', 
+'gendar':'F', 
+} 
+        data = '%s(%s);' % (request.REQUEST['callback'], simplejson.dumps(data))
+        return HttpResponse(data, "text/javascript")
