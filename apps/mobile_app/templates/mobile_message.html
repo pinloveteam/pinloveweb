@@ -136,6 +136,16 @@
 					});
                 };
                 
+               //跳转个人中心
+               function forward_info(){
+            	   var userId= $(this).closest('.row').find('#senderId').val();
+            	   window.location.href='/mobile/info_detail/'+userId
+               }
+               function forward_dynamic(){
+            	   var dynamicId= $(this).closest('.row').find('#dynamicId').val();
+            	   window.location.href='/mobile/dynamic/?dynamicId='+dynamicId
+               }
+                
           
             function init_message(messageList){
                 for(var i in messageList){
@@ -185,6 +195,7 @@
                     	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                     	dynamic_agree_clone.find('#username').html(message.sender_name);
                     	dynamic_agree_clone.find('#time').html(message.sendTime);
+                    	dynamic_agree_clone.find('#dynamicId').val(message.friendDynamic_id);
                     	dynamic_agree_clone.find('#dynamic_content').html(message.friendDynamic_content);
                     	if(message.isRead==0){
                     		dynamic_agree_clone.addClass('unread')
@@ -229,6 +240,11 @@
                  };
                  $('.follow').unbind();
                  $('.follow').click(follow);
+                 $('.img-rounded').unbind();
+                 $('.img-rounded').click(forward_info);
+                 $('.dynamic_agree,.dynamic_comment').find('.col-xs-6').unbind();
+                 $('.dynamic_agree,.dynamic_comment').find('.col-xs-6').click(forward_dynamic);
+                 
                  //黑名单
               /*    $('.message-report').unbind();
                  $('.message-report').click(function(){
@@ -383,7 +399,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="dynamic_comment" class="frame">
+		<div id="dynamic_comment" class="frame dynamic_comment">
 			<div  class="row">
 			    <input type="hidden" id="senderId" value="">
 			    <input type="hidden" id="dynamicId" value="">
@@ -431,9 +447,10 @@
 			</div>
 		</div>
 		
-		<div id="dynamic_agree" class="frame">
+		<div id="dynamic_agree" class="frame dynamic_agree">
 			<div class="row">
 			<input type="hidden" id="senderId" value="">
+			<input type="hidden" id="dynamicId" value="">
 				<div class="col-xs-3">
 					<img id="avatar" width="50px" class="img-rounded" src="img/image1.jpeg" />
 				</div>

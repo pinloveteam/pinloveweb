@@ -80,6 +80,7 @@
 					var user_clone=$('.user').clone();
 					user_clone.find('img').attr('src',userList[1].head)
 					user_clone.find('.score').html(userList[1].score);
+					user_clone.find('.score').removeClass('text-danger').addClass('text-success')
 					user_clone.find('.compare').remove();
 					
 					$('body').append(user_clone);
@@ -91,8 +92,8 @@
 			function init_radar(radar_list){
 				var ctx = $("canvas").get(0).getContext("2d");
 				dataArry=new Array()
-				var strokeColorList=["rgb(0,151,36)","rgb(241,23,25)"];
-				var pointColorList=["rgb(0,151,36)","rgb(241,23,25)"];
+				var strokeColorList=["rgb(241,23,25)","rgb(0,151,36)"];
+				var pointColorList=["rgb(241,23,25)","rgb(0,151,36)"];
 				for(var i=0 ;i<radar_list.length;i++){
 				var datasets = {
 						fillColor : "rgba(0,0,0,0)",

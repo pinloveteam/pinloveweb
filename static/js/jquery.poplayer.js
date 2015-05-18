@@ -222,8 +222,8 @@
 	//创建雷达图
 	$.fn.createRadarDialog = function(dataList) {
 	    dataArry=new Array()
-		var strokeColorList=["rgb(0,151,36)","rgb(241,23,25)"];
-		var pointColorList=["rgb(0,151,36)","rgb(241,23,25)"];
+		var strokeColorList=["rgb(241,23,25)","rgb(0,151,36)"];
+		var pointColorList=["rgb(241,23,25)","rgb(0,151,36)"];
 		for(var i=0 ;i<dataList.length;i++){
 		var datasets = {
 				fillColor : "rgba(0,0,0,0)",

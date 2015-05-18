@@ -60,12 +60,11 @@ def person_dynamic(request,template_name="dynamic.html"):
         arg.update(init_person_info_for_card_page(userProfile))
         if int(request.user.id)==userId:
             arg['publish']=True
-            arg["title"]='相册'
+            arg["title"]='我的相册'
         else:
             arg["title"]=User.objects.get(id=userId).username
         if request.is_ajax():
             arg=init_dynamic(request,userId,arg,1)
-            from apps.pojo.dynamic import MyEncoder
             json=simplejson.dumps( {'friendDynamicList':arg['friendDynamicList'],'next_page_number':arg['next_page_number']},cls=MyEncoder)
             return HttpResponse(json, mimetype='application/json')
         arg['result']='success'
@@ -88,6 +87,7 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
     if not kwargs.get('dynamicId') is None:
         friendDynamicList=FriendDynamic.objects.filter(id=kwargs.get('dynamicId'))
         arg['friendDynamicList']=simplejson.dumps(friendDynamicList_to_Dynamic(friendDynamicList, userId),cls=MyEncoder)
+        arg['next_page_number']=-1
         arg['publish']=False
         return arg
     elif type==0:

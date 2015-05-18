@@ -69,7 +69,6 @@ success=function(data){
 		    if(typeof(data.cards)!="object"){
 		    	data.cards=$.parseJSON(data.cards);
 		     }
-		      set_count(data.noReadCount)
 		      init_card(data.cards)
 		      venobox(); 
 	 }else{
