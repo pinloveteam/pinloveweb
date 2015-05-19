@@ -9,9 +9,6 @@
 <script type="text/javascript">
 var userName="{{user.username}}";
 var userId={{user.id}};
-			$(function() {
-				$('.js-pic-box').openPic();
-			});
 </script>
 <script type="text/javascript">
 var page=1;
@@ -105,9 +102,9 @@ function init_dynamic(dynamicList){
 		dynamic.find('.delete').click(function(){
 			del_dynamic(this);
 		}); 
+		dynamic.find('.js-pic-box').openPic();
 		$('#dynamic_list').append(dynamic);
 	});
-	$('.js-pic-box').openPic();
 };
 
 //删除动态
