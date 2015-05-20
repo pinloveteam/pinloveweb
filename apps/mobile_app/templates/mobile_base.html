@@ -52,7 +52,7 @@ var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0
 {%if noReadFollowMessageCount%}
 //拉取信息数量
 var time=1000*5;
-/* interval = self.setInterval("polling()", time); */  
+interval = self.setInterval("polling()", time);  
 var polling=function(){
 	   data={from:'message'};
 	   pathname=window.location.pathname
