@@ -60,9 +60,7 @@ var polling=function(){
 	   if(pathname=='/mobile/message/'||pathname=='/mobile/comment_list/'||pathname=='/mobile/message_list/'||pathname=='/mobile/agree_list/'||pathname=='/mobile/follow_list'){
 		   $.getJSON('/newCount/',data,function(data){
 			   if(data.result=='success'){
-				   if(data.noReadMessageCount>0){
-					   noReadMessageCount=data.messageNoReadCount;
-				   }else if(data.noReadCommentCount!=undefined){
+				   if(data.noReadCommentCount!=undefined){
 					   set_menu_count(data.noReadCount,data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
 				   }
 			   }else{
