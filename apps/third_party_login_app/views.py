@@ -49,6 +49,7 @@ import time
 from django.utils.crypto import get_random_string
 import re
 from apps.third_party_login_app.method import judge_client
+from util import detect_device
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
@@ -65,7 +66,7 @@ def get_qq_login_url(request,CALLBACK_URL=QQ_CALLBACK_URL):
 '''
 获取qq信息并登录个人主页
 '''
-def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL):
+def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL,template_name='login_confirm_register.html'):
     args={}
     from apps.third_party_login_app.openqqpy import OpenQQClient
     client = OpenQQClient(client_id=QQAPPID,client_secret=QQAPPKEY,redirect_uri=QQ_CALLBACK_URL,scope='')
@@ -99,7 +100,10 @@ def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL):
                         key='%s%s'%(item[0],'_error')
                         args[key]=item[1][0]
             args['confirmInfo']=confirmInfo
-            return render(request,'login_confirm_register.html',args)
+            #检测设备
+            if detect_device.detectTiermobileTablet(request):
+                template_name='mobile_login_confirm_register.html'
+            return render(request,template_name,args)
             
     else:
         #根据QQopenId获取用户信息
@@ -254,7 +258,7 @@ def sina_login_url(request,CALLBACK_URL=SINA_CALLBACK_URL):
 '''
 获取sina信息并登录个人主页
 '''
-def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
+def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL,template_name="login_confirm_register"):
     args={}
     try:
         code=request.REQUEST.get('code','')
@@ -293,7 +297,10 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL):
                         key='%s%s'%(item[0],'_error')
                         args[key]=item[1][0]
             args['confirmInfo']=confirmInfo
-            return render(request,'login_confirm_register.html',args)
+            #检测设备
+            if detect_device.detectTiermobileTablet(request):
+                template_name='mobile_login_confirm_register.html'
+            return render(request,template_name,args)
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
@@ -315,7 +322,7 @@ def facebook_login_url(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
 #     log.error('%s%s' %('url====',url))
     return HttpResponseRedirect(url)
 
-def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
+def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL,template_name='login_confirm_register.html'):
     args={}
     from apps.third_party_login_app.facebook import get_access_token_from_code
     access=get_access_token_from_code(request.GET['code'],FACEBOOK_CALLBACK_URL, FaceBookAppID, FaceBookAppSecret)
@@ -342,7 +349,10 @@ def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
                         key='%s%s'%(item[0],'_error')
                         args[key]=item[1][0]
             args['confirmInfo']=confirmInfo
-            return render(request,'login_confirm_register.html',args)
+            #检测设备
+            if detect_device.detectTiermobileTablet(request):
+                template_name='mobile_login_confirm_register.html'
+            return render(request,template_name,args)
         
     else:
         #根据QQopenId获取用户信息
@@ -429,7 +439,7 @@ return
 ''' 
 @transaction.commit_on_success      
 @require_POST
-def register_by_three_party(request):
+def register_by_three_party(request,template_name='login_confirm_register.html'):
     args ,kwarg={},{}
     confirmInfo=ConfirmInfo(request.POST)
     if confirmInfo.is_valid():
@@ -454,7 +464,10 @@ def register_by_three_party(request):
             for item in confirmInfo.errors.items():
                 key='%s%s'%(item[0],'_error')
                 args[key]=item[1][0]
-        return render(request,'login_confirm_register.html',args)
+        #检测设备
+        if detect_device.detectTiermobileTablet(request):
+            template_name='mobile_login_confirm_register.html'
+        return render(request,template_name,args)
     
     
 '''

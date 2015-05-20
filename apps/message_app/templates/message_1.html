@@ -32,7 +32,8 @@
                 	title=context.find('a').html().trim()
                 	$('#nav_title').html(title);
                 	url=context.find('a').attr('href')
-                	$.ajax({
+                	window.location.href=url;
+                	/* $.ajax({
         					dataType:"json",
         					type: "GET",
         					url:url,
@@ -54,12 +55,12 @@
         						set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
         						},
         	                    error: function(response){
-        	                    	/* var body=$('<p>网络异常!</p>')
-        							 $.poplayer({body:body}); */
+        	                    	var body=$('<p>网络异常!</p>')
+        							 $.poplayer({body:body});
         	                    },
         						
         			});
-                	/* var state = {
+                	var state = {
                 		    title: title,
                 		    url: url,
                 		};
@@ -247,7 +248,7 @@
                     	dynamic_agree_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                     	dynamic_agree_clone.find('#username').html(message.sender_name);
                     	dynamic_agree_clone.find('#time').html(message.sendTime);
-                    	dynamic_agree_clone.find('#dynamic_content').html(message.friendDynamic_content);
+                    	dynamic_agree_clone.find('#dynamic_content').html(message.friendDynamic_content).parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
                     	if(message.isRead==0){
                     		dynamic_agree_clone.addClass('unread')
                         }
@@ -282,7 +283,7 @@
                          }else{
                         	 dynamic_comment_clone.find('.message-img').last().children(':lt(2)').remove();
                          }
-                         dynamic_comment_clone.find('#dynamic_content').html(message.friendDynamic_content).parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);;
+                         dynamic_comment_clone.find('#dynamic_content').html(message.friendDynamic_content).parent().attr('href','/dynamic/?dynamicId='+message.friendDynamic_id);
                          $('.col-xs-9').append(dynamic_comment_clone);
                          var message_reply=$('#message_clone').find('#message-reply').clone();
                          $('.col-xs-9').append(message_reply);

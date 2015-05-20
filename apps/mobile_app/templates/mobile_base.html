@@ -47,5 +47,81 @@ $(function(){
 		window.location.href="/mobile/loggedin/?previous_page=register"
 	})
 });
+
+var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
+{%if noReadFollowMessageCount%}
+//拉取信息数量
+var time=1000*5;
+/* interval = self.setInterval("polling()", time); */  
+var polling=function(){
+	   data={from:'message'};
+	   pathname=window.location.pathname
+	   if(pathname=='/mobile/message/'||pathname=='/mobile/comment_list/'||pathname=='/mobile/message_list/'||pathname=='/mobile/agree_list/'||pathname=='/mobile/follow_list'){
+		   $.getJSON('/newCount/',data,function(data){
+			   if(data.result=='success'){
+				   set_count(data.noReadCount)
+				   if(data.noReadMessageCount>0){
+					   noReadMessageCount=data.messageNoReadCount;
+				   }else if(data.noReadCommentCount!=undefined){
+					   set_menu_count(data.noReadCount,data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
+				   }
+			   }else{
+				   clearTimeout(interval)
+			        };
+				   });  
+	   }
+ };
+ 
+//左边菜单的未读信息数
+ var noReadFollowMessageCount={%ifequal noReadFollowMessageCount 0%}0{%else%}{{noReadFollowMessageCount}}{%endifequal%};
+ var	noReadMessageCount={%ifequal noReadMessageCount 0%}0{%else%}{{noReadMessageCount}}{%endifequal%};
+ var	noReadAgreeCount={%ifequal noReadAgreeCount 0%}0{%else%}{{noReadAgreeCount}}{%endifequal%};
+ var noReadCommentCount={%ifequal noReadCommentCount 0%}0{%else%}{{noReadCommentCount}}{%endifequal%};
+ function set_menu_count(noReadCount,noReadFollowMessage,noReadMessage,noReadAgree,noReadComment){
+		if(noReadCount==0){
+			$('#count').hide();
+		}else{
+			$('#count').show();
+		}
+     if(noReadFollowMessage>0){
+     	if(noReadFollowMessageCount!=noReadFollowMessage){
+     		noReadFollowMessageCount=noReadFollowMessage;
+     		$('#noReadFollowMessageCount').html(noReadFollowMessage).show();
+     	}
+     }else if($('#noReadFollowMessageCount').is(':hidden')==false){
+     	$('#noReadFollowMessageCount').hide();
+     	noReadFollowMessageCount=noReadComment
+     };
+     if(noReadMessage>0){
+     	if(noReadMessageCount!=noReadMessage){
+     		noReadMessageCount=noReadMessage;
+     		$('#noReadMessageCount').html(noReadMessage).show();
+     	}
+     }else if($('#noReadMessageCount').is(':hidden')==false){
+     	$('#noReadMessageCount').hide();
+     	noReadFollowMessageCount=noReadComment
+     };
+     if(noReadAgree>0){
+     	if(noReadAgreeCount!=noReadAgree){
+     		noReadAgreeCount=noReadAgree;
+     		$('#noReadAgreeCount').html(noReadAgree).show();
+     	}
+     }else if($('#noReadAgreeCount').is(':hidden')==false){
+     	$('#noReadAgreeCount').hide();
+     	noReadAgreeCount=noReadAgree;
+     };
+     if(noReadComment>0){
+     	if(noReadFollowMessageCount!=noReadComment){
+     		noReadFollowMessageCount=noReadComment
+     		$('#noReadCommentCount').html(noReadComment).show();
+     	}
+     }else if($('#noReadCommentCount').is(':hidden')==false){
+     	$('#noReadCommentCount').hide();
+     	noReadFollowMessageCount=noReadComment
+     };
+  };
+  
+  {%endif%}
+
 </script>
 </html> 
