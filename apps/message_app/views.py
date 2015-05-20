@@ -83,7 +83,7 @@ def message_list(request,template_name):
                 messageLogList=MessageLog.objects.get_no_read_messagelog(request.user.id)
                 data=page(request,messageLogList)
                 MessageIds=[messageLog['id'] for messageLog in data['pages'].object_list]
-                MessageLog.objects.filter(id__in=MessageIds).update(isRead=True)
+                MessageLog.objects.filter(message_id__in=MessageIds).update(isRead=True)
             else:
                 messageLogList=MessageLog.objects.messagelog_list(request.user.id)
                 data=page(request,messageLogList)
