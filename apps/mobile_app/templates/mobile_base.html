@@ -76,6 +76,8 @@ var polling=function(){
  var	noReadAgreeCount={%ifequal noReadAgreeCount 0%}0{%else%}{{noReadAgreeCount}}{%endifequal%};
  var noReadCommentCount={%ifequal noReadCommentCount 0%}0{%else%}{{noReadCommentCount}}{%endifequal%};
  function set_menu_count(noReadCount,noReadFollowMessage,noReadMessage,noReadAgree,noReadComment){
+	    noReadCount=noReadCount;
+		$('#count').html(noReadCount);
 		if(noReadCount==0){
 			$('#count').hide();
 		}else{
