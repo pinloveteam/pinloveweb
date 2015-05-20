@@ -49,7 +49,8 @@ $(function(){
 });
 
 var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
-{%if noReadFollowMessageCount%}
+{%ifequal noReadFollowMessageCount None %}
+{%else%}
 //拉取信息数量
 var time=1000*5;
 interval = self.setInterval("polling()", time);  
@@ -59,7 +60,6 @@ var polling=function(){
 	   if(pathname=='/mobile/message/'||pathname=='/mobile/comment_list/'||pathname=='/mobile/message_list/'||pathname=='/mobile/agree_list/'||pathname=='/mobile/follow_list'){
 		   $.getJSON('/newCount/',data,function(data){
 			   if(data.result=='success'){
-				   set_count(data.noReadCount)
 				   if(data.noReadMessageCount>0){
 					   noReadMessageCount=data.messageNoReadCount;
 				   }else if(data.noReadCommentCount!=undefined){
@@ -121,7 +121,7 @@ var polling=function(){
      };
   };
   
-  {%endif%}
+  {%endifequal%}
 
 </script>
 </html> 
