@@ -52,8 +52,10 @@ else:
     WEB_ROOT='http://pinlove.com'
     DEFAULT_PASSWORD='PIN_LOVE_10086'
    
-    FaceBookAppID='400350543428768'
-    FaceBookAppSecret='fafdcdabccd34c67311c41489de8dcc2'
+#     FaceBookAppID='400350543428768'
+#     FaceBookAppSecret='fafdcdabccd34c67311c41489de8dcc2'
+    FaceBookAppID='1576966795919636'
+    FaceBookAppSecret='844395046c35580e63a06fea0bd0f005'
     FACEBOOK_CALLBACK_URL = WEB_ROOT+'/third_party_login/facebook_login/'
     FACEBOOK_MOBILE_CALLBACK_URL = WEB_ROOT+'/mobile/facebook_login/'
    

@@ -364,8 +364,8 @@
 				</div>
 			</div>
 		</div>
-		<ul class="msg-type nav">
-			<a onclick="return false;" href="/mobile/message/" style="color:white;"><li><span>全部消息</span><span class="badge" id="count" {%ifequal noReadCount 0%}style="display: none;"{%endifequal%}>{%ifequal noReadCount 0%}0{%else%}{{noReadCount}}{%endifequal%} </span></li></a>
+		<ul class="msg-type nav">	
+			<a onclick="return false;" href="/mobile/message/" style="color:white;"><li><span>全部消息</span><span class="badge" ></li></a>
 			<a id="message" onclick="return false;" style="color:white;" href="/mobile/message_list/"><li ><span>站内私信</span><span class="badge" id="noReadMessageCount" {%ifequal noReadMessageCount 0%}style="display: none;"{%endifequal%}>{%ifequal noReadMessageCount 0%}0{%else%}{{noReadMessageCount}}{%endifequal%}</span></li></a>
 			<a id="dynamic" onclick="return false;" style="color:white;" href="/mobile/comment_list/"><li ><span>动态评论</span><span class="badge"  id="noReadCommentCount" {%ifequal noReadFollowMessageCount 0%}style="display: none;"{%endifequal%}>{%ifequal noReadCommentCount 0%}0{%else%}{{noReadCommentCount}}{%endifequal%}</span></li></a>
 			<a id="agree" onclick="return false;" style="color:white;" href="/mobile/agree_list/"><li><span>给我的“赞”</span><span class="badge"  id="noReadAgreeCount" {%ifequal noReadAgreeCount 0%}style="display: none;"{%endifequal%}>{%ifequal noReadAgreeCount 0%}0{%else%}{{noReadAgreeCount}}{%endifequal%}</span></li></a>
