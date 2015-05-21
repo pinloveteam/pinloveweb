@@ -47,13 +47,14 @@
 		 						<span class="glyphicon ">性&nbsp;&nbsp;&nbsp;别</span> 
 							</div>
 							<div class="col-xs-8">
+							   <div class="radio">
 							    {% for choice in confirmInfo.gender.field.choices %}
 							   										       <label >
 							   										        <input type="radio" id="id_{{confirmInfo.gender.html_name }}_{{ forloop.counter0 }}" value="{{ choice.0 }}" name="gender" {%ifequal confirmInfo.gender.value choice.0 %}checked="checked"{%endifequal%}/> 
 							   							                    {{ choice.1 }}
 							   							                   </label>
 							   							                 {% endfor %}
-							
+							  </div>
 							</div>
 						</div>
 						<center role="alert" class="alert alert-danger alert-dismissible">

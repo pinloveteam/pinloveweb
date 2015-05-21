@@ -13,7 +13,7 @@
 
 			var picBox = '<div class="swiper-container pic-box"><div class="swiper-wrapper pic-wrapper">';
 			for (var i = 0; i < imgArr.length; i++) {
-				picBox += '<center class="swiper-slide"><img style="max-width:100%" src="' + imgArr[i] + '" /></center>';
+				picBox += '<center class="swiper-slide"><img style="max-width:100%;height:auto;" src="' + imgArr[i] + '" /></center>';
 			}
 			picBox += '</div><center class="my-pagination pic-pagination"></center></div>';
 			$('body').after(picBox);

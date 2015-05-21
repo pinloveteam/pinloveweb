@@ -6,7 +6,7 @@ color: #333;
 }
 </style>
 <script type="text/javascript">
-
+is_guide=false;
 //下一页
 var next_page=1
 
@@ -19,6 +19,7 @@ var fans={% if fans %}{{fans}}{%else%}0{% endif %}
 
 $(document).ready(function(){
 	loadData(no_load,success,loading,true);
+	
 	
 });
 function init_card(cards){
@@ -85,6 +86,12 @@ success=function(data){
 		     }
 		      //set_count(data.noReadCount)
 		      init_card(data.cards)
+		      {%if first%}
+		      if(!is_guide){
+		    	  guide()
+		    	  is_guide=true;
+		      }
+		      {%endif%}
 	 }else{
 		 var body=$('<p>加载失败!</p>')
 	 }
@@ -102,9 +109,6 @@ $(window).scroll( function() {
 </script>
 <script>
 $(function(){
-	{%if first%}
-	guide()
-	{%endif%}
 	if(get_url_param('compare_guide')){
 		guide_compare_radar();
 	}

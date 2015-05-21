@@ -23,7 +23,7 @@ def user_info_mobile(userId,myId):
             tags.append(tag.tag.content)
     from apps.upload_avatar.app_settings import DEFAULT_IMAGE_NAME
     data={
-                        'head' : '%s%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME,'-100.jpeg'),
+                        'head' : '%s%s'%('/media/', userProfile.avatar_name if userProfile.avatar_name_status=='3' else DEFAULT_IMAGE_NAME),
                         'tag' : tags,
                         'name' : userProfile.user.username,
                         'userId':userProfile.user_id,
