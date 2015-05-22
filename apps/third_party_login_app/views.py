@@ -316,9 +316,8 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL,template_name="login_confi
 '''
 @csrf_exempt
 def facebook_login_url(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL):
-    CALLBACK_URL=judge_client(request,CALLBACK_URL)
     from apps.third_party_login_app.facebook import auth_url
-    url=auth_url(FaceBookAppID,CALLBACK_URL)
+    url=auth_url(FaceBookAppID,FACEBOOK_CALLBACK_URL)
 #     log.error('%s%s' %('url====',url))
     return HttpResponseRedirect(url)
 
