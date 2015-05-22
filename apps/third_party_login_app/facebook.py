@@ -560,6 +560,7 @@ def get_access_token_from_code(code, redirect_uri, app_id, app_secret):
         "code": code,
         "redirect_uri": redirect_uri,
         "client_id": app_id,
+        "client_secret": app_secret,
     }
     # We would use GraphAPI.request() here, except for that the fact
     # that the response is a key-value pair, and not JSON.
