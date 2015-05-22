@@ -453,8 +453,9 @@ def register_by_three_party(request,template_name='login_confirm_register.html')
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
         create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'])
         login(request,user.username,DEFAULT_PASSWORD)
-        if request.GET.get('channel')==u'mobile':
-            return HttpResponseRedirect('/mobile/loggedin/')
+        #检测设备
+        if detect_device.detectTiermobileTablet(request):
+            return HttpResponseRedirect('/mobile/loggedin/?previous_page=register')
         return HttpResponseRedirect('/account/loggedin/?previous_page=register')
     else:
         args['confirmInfo']=confirmInfo
