@@ -80,7 +80,7 @@
 					var user_clone=$('.user').clone();
 					user_clone.find('img').attr('src',userList[1].head)
 					user_clone.find('.score').html(userList[1].score);
-					user_clone.find('.score').removeClass('text-danger').addClass('text-success')
+					user_clone.find('.score').css('color','rgb(0,151,36)')
 					user_clone.find('.compare').remove();
 					
 					$('body').append(user_clone);
@@ -180,7 +180,7 @@ current = $(e);
 				</div>
 				<div class="col-xs-5">
 					<h4>TA的得分</h4>
-					<span style="font-size: 26px;" class="text-danger score">100</span>分
+					<span style="font-size: 26px;color:rgb(241,23,25)" class="score">100</span>分
 				</div>
 				<div class="col-xs-4">
 					<br />

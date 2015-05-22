@@ -258,7 +258,7 @@ def sina_login_url(request,CALLBACK_URL=SINA_CALLBACK_URL):
 '''
 获取sina信息并登录个人主页
 '''
-def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL,template_name="login_confirm_register"):
+def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL,template_name="login_confirm_register.html"):
     args={}
     try:
         code=request.REQUEST.get('code','')

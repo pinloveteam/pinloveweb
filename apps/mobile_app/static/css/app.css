@@ -71,12 +71,13 @@ textarea {
 .frame .col-xs-3,
 .frame .col-xs-4,
 .frame .col-xs-8,
-.frame .col-xs-6 {
+.frame .col-xs-6,
+.frame .col-xs-12 {
 	padding-left: 5px;
 	padding-right: 5px;
 }
 .button {
-	margin-top: 20px;
+	margin-top: 40px;
 }
 .button .btn {
 	width: 80%;
