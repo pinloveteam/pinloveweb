@@ -121,7 +121,7 @@ TEMPLATE_DIRS = (
 )
 templates=['templates','apps/user_app/templates','apps/upload_avatar/templates','apps/recommend_app/templates',
                'apps/game_app/templates','apps/verification_app/templates','apps/message_app/templates','apps/friend_dynamic_app/templates',
-               'apps/pay_app/templates','apps/user_score_app/templates','apps/weixin_app/templates','apps/mobile_app/templates']
+               'apps/pay_app/templates','apps/user_score_app/templates','apps/weixin_app/templates','apps/mobile_app/templates','apps/third_party_login_app/templates']
 for template in templates:
     TEMPLATE_DIRS += (os.path.join(PATH,template).replace('\\','/'),) 
 
