@@ -278,22 +278,31 @@ def change_password(request,tempate_name):
         changePasswordForm=ChangePasswordForm(request.POST)
         if changePasswordForm.is_valid():
             if not request.user.check_password(changePasswordForm.cleaned_data['oldpassword']):
-                args['changePasswordForm']=changePasswordForm
+                if not request.is_ajax():
+                    args['changePasswordForm']=changePasswordForm
                 args['oldpasswordError']='旧密码不正确!'
+                args['result']='error'
             else:
                 user=request.user
                 user.set_password(changePasswordForm.cleaned_data['newpassword'])
                 user.save()
                 args={'change_result':True}
+                args['result']='success'
         else:
-            args['changePasswordForm']=changePasswordForm
+            args['result']='error'
+            if not request.is_ajax():
+                args['changePasswordForm']=changePasswordForm
             errors=changePasswordForm.errors.items()
             for error in errors:
                 args[error[0]+'Error']=error[1][0]
     else:
         changePasswordForm=ChangePasswordForm()
         args['changePasswordForm']=changePasswordForm
-    return render(request,tempate_name,args)
+    if request.is_ajax():
+        json=simplejson.dumps(args)
+        return HttpResponse(json)
+    else:
+        return render(request,tempate_name,args)
 
 
 #reset the password
