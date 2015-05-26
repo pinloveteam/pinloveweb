@@ -201,7 +201,7 @@
 		radarframe.append(r1);
 
 //		var r3 = $('<div class="row"><div class="col-xs-12"><button class="btn btn-xs btn-danger">与其他用户对比</button></div></div>')
-		var r2 = $('<div class="row"><canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas></div>');
+		var r2 = $('<div class="row canvas"><canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas></div>');
 		radarframe.append(r2);
 		dataArry.push(options.user1.data);
 		if (options.compar == true) {

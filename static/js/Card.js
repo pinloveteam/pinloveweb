@@ -474,7 +474,7 @@ window.Card = function(person){
 							diagData=[returnData[parseInt(userId)]];
 						}
 						$('.js-popframe').find('canvas').remove();
-						$('.radius .row:eq(2)').append('<canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas>').createRadarDialog(diagData)
+						$('.canvas').append('<canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas>').createRadarDialog(diagData)
 						$('.js-popframe').find('#score').html(data['score'])
 						var body = $("<p>打分成功!</p>")
 					}else if(data['result']=='error'){
