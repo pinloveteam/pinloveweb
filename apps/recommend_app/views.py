@@ -171,8 +171,6 @@ def get_socre_for_other(userId,otherId):
         return args
     except Exception as e:
         logger.exception('%s%s' %('获得对自己对另一半的打分，出错原因：',e))
-        args={'result':'error','error_messge':'系统出错!'}
-        return args
     
 '''
 性格标签

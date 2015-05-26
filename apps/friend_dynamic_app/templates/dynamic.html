@@ -891,7 +891,6 @@ function sendExpression(e) {
 	   //滚动加载
 	   var next_page=1;
 	   no_load=function(){
-		   $('#dynamic').append('<div class="col-xs-12" style="text-align:center;height:30px;" >没有更多动态<div>')
 			stop_load_next_page();
 			return;
 	   };
@@ -916,6 +915,9 @@ function sendExpression(e) {
 		if(window.location.hash=='#openPic'){
 			$('#publishInputPhoto').click();
 		}
+	    if (next_page==-1){
+	    	$('#dynamic').append('<div class="col-xs-12" style="text-align:center;height:30px;" >没有更多动态<div>')
+	    }
 	   };
 		$(window).scroll( function() { 
 				if(get_load_next_page()){
