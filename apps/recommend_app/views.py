@@ -146,8 +146,7 @@ def socre_my(request):
 获得对自己对另一半的打分
 '''
 def get_socre_for_other(userId,otherId):    
-    args={}
-    try:
+        args={}
         if otherId:
 #              from apps.recommend_app.method import get_match_score_other
 #              matchResult=get_match_score_other(userId,otherId)
@@ -169,8 +168,6 @@ def get_socre_for_other(userId,otherId):
         else:
             args={'result':'error','error_messge':'用户id不存在!'}
         return args
-    except Exception as e:
-        logger.exception('%s%s' %('获得对自己对另一半的打分，出错原因：',e))
     
 '''
 性格标签
