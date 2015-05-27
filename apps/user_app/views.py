@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from PIL import ImageFile
 from apps.upload_avatar import get_uploadavatar_context
 from django.contrib import auth
-from apps.recommend_app.models import Grade, UserExpect
+from apps.recommend_app.models import Grade, UserExpect, WeightStar
 from util.page import page
 import logging
 from util.singal import cal_recommend_user
@@ -215,8 +215,11 @@ def user_profile(request):
         tagbeanForOtherList=tag_to_tagbean(tagsForOther)
         args['tagbeanForOtherList']=tagbeanForOtherList
         #获取权重
-        from apps.recommend_app.method import get_weight_star
-        args.update(get_weight_star(request.user.id))
+        weightForm=WeightStar.objects.filter(user=request.user)
+        if len(weightForm)>0:
+            args['weightForm']=weightForm[0]
+        else:
+            args['weightForm']=WeightStar()
         #获得另一半身高期望   
         userExpect=UserExpect.objects.get_user_expect_by_uid(request.user.id)
         if userExpect==None:

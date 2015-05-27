@@ -28,26 +28,15 @@ logger = logging.getLogger(__name__)
 def update_weight(request):
     args={}
     try:
-        userId=request.user.id
-        weightStar=WeightStar.objects.filter(user_id=userId)
-        if len(weightStar)>0:
-            startFrom=StartForm(request.POST,instance=weightStar[0],)
+        from apps.recommend_app.form import WeightForm
+        weightForm=WeightForm(request.POST)
+        if weightForm.is_valid():
+            grade=weightForm.cal_weight(request.user.id)
+            grade.save()
+            args.update({'result':'success'})
         else:
-            startFrom=StartForm(request.POST)
-        if startFrom.is_valid():
-            weightStar=startFrom.save(commit=False)
-            weightStar.user=request.user
-            weightStar.save()
-            #判断推荐条件是否完善
-            from apps.recommend_app.recommend_util import cal_recommend
-            cal_recommend(request.user.id,['weight'])
-            args['result']='success'
-        else:
-            args['result']='error'
-            args['error_message']=''
-            errors=startFrom.errors.items()
-            for error in errors:
-                args['error_message']+=error[1][0]
+            errors=weightForm.errors.items()
+            args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(weightForm.base_fields[errors[0][0]].label,errors[0][1][0])}
     except Exception as e:
         args['result']='error'
         args['error_message']=e.message

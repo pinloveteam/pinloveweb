@@ -2,7 +2,7 @@
 from apps.user_app.models import UserProfile, UserTag, Follow
 import logging
 from django.shortcuts import render
-from apps.recommend_app.models import Grade, MatchResult, UserExpect
+from apps.recommend_app.models import Grade, MatchResult, UserExpect, WeightStar
 from django.utils import simplejson
 from util.page import page
 from pinloveweb import settings, STAFF_MEMBERS
@@ -43,8 +43,11 @@ def get_weight(request,template_name='mobile_weight.html'):
     '''
     args={}
     try:
-        from apps.recommend_app.method import get_weight_star
-        args=get_weight_star(request.user.id)
+        weightForm=WeightStar.objects.filter(user=request.user)
+        if len(weightForm)>0:
+            args['weightForm']=weightForm[0]
+        else:
+            args['weightForm']=WeightStar()
         if request.GET.get('guide')==u'1':
             args.update({'guide':True,'title':'第四步：完善权重','guide_next_url':'/mobile/grade_height/?guide=1'})
         return render(request,template_name,args)
