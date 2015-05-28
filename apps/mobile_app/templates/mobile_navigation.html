@@ -39,7 +39,9 @@
 			<div id='messages' class="col-xs-3">
 			  <a href="/mobile/message/">
 				<p></p>
-				<i class="glyphicon glyphicon-envelope"></i>
+				<i class="glyphicon glyphicon-envelope">
+				 <span class="badge" id="count" style="position: absolute;top: -8px;{%ifequal noReadCount 0%}display: none;{%endifequal%}">{{noReadCount}}</span>
+				</i>
 				<p>私信</p>
 			  </a>
 			</div>

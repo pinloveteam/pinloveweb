@@ -49,40 +49,46 @@ $(function(){
 });
 
 var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
-{%ifequal noReadFollowMessageCount None %}
-{%else%}
 //拉取信息数量
 var time=1000*5;
 interval = self.setInterval("polling()", time);  
 var polling=function(){
-	   data={from:'message'};
+	   data={};
 	   pathname=window.location.pathname
 	   if(pathname=='/mobile/message/'||pathname=='/mobile/comment_list/'||pathname=='/mobile/message_list/'||pathname=='/mobile/agree_list/'||pathname=='/mobile/follow_list'){
+		   data={from:'message'};
+	   }
 		   $.getJSON('/newCount/',data,function(data){
 			   if(data.result=='success'){
+				   set_count(data.noReadCount);
+				   if(pathname=='/mobile/message/'||pathname=='/mobile/comment_list/'||pathname=='/mobile/message_list/'||pathname=='/mobile/agree_list/'||pathname=='/mobile/follow_list'){
 				   if(data.noReadCommentCount!=undefined){
-					   set_menu_count(data.noReadCount,data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
+					   set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
+				   }
 				   }
 			   }else{
 				   clearTimeout(interval)
 			        };
 				   });  
-	   }
  };
  
+function set_count(noReadCount){
+	noReadCount=noReadCount;
+	$('#count').html(noReadCount);
+	if(noReadCount==0){
+		$('#count').hide();
+	}else{
+		$('#count').show();
+	}
+}
+{%ifequal noReadFollowMessageCount None %}
+{%else%}
 //左边菜单的未读信息数
  var noReadFollowMessageCount={%ifequal noReadFollowMessageCount 0%}0{%else%}{{noReadFollowMessageCount}}{%endifequal%};
  var	noReadMessageCount={%ifequal noReadMessageCount 0%}0{%else%}{{noReadMessageCount}}{%endifequal%};
  var	noReadAgreeCount={%ifequal noReadAgreeCount 0%}0{%else%}{{noReadAgreeCount}}{%endifequal%};
  var noReadCommentCount={%ifequal noReadCommentCount 0%}0{%else%}{{noReadCommentCount}}{%endifequal%};
- function set_menu_count(noReadCount,noReadFollowMessage,noReadMessage,noReadAgree,noReadComment){
-	    noReadCount=noReadCount;
-		$('#count').html(noReadCount);
-		if(noReadCount==0){
-			$('#count').hide();
-		}else{
-			$('#count').show();
-		}
+ function set_menu_count(noReadFollowMessage,noReadMessage,noReadAgree,noReadComment){
      if(noReadFollowMessage>0){
      	if(noReadFollowMessageCount!=noReadFollowMessage){
      		noReadFollowMessageCount=noReadFollowMessage;

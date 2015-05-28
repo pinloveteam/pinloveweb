@@ -30,6 +30,8 @@ def account(request):
         args['avatar_name']=userProfile.avatar_name
         from apps.pay_app.method import get_charge_amount
         args['pinLoveIcon']=get_charge_amount(userId=request.user)
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(userProfile))
         return render(request,'mobile_account.html',args)
     except Exception as e:
         logger.exception('手机获取账户信息出错：'+e.message)
@@ -504,6 +506,8 @@ def radar(request,userId,template_name='mobile_radar.html'):
                      })
             
         args['radarList']=simplejson.dumps(radarList)
+        from pinloveweb.method import init_person_info_for_card_page
+        args.update(init_person_info_for_card_page(userProfile))
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)

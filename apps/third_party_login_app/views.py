@@ -439,7 +439,7 @@ return
 @transaction.commit_on_success      
 @require_POST
 def register_by_three_party(request,template_name='login_confirm_register.html'):
-    args ,kwarg={},{}
+    args ,kwarg={},{} 
     confirmInfo=ConfirmInfo(request.POST)
     if confirmInfo.is_valid():
         if request.session.get('three_registe',False):
