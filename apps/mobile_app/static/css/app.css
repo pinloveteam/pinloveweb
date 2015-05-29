@@ -351,3 +351,10 @@ textarea {
 	color: #c0392b !important;
 }
 /*message*/
+.app {
+    border: 1px solid #d1d3d3;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+}

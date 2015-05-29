@@ -28,7 +28,8 @@
 						data.messageList=$.parseJSON(data.messageList);
           	}
 					init_message_detail(data.messageList);
-					if(data.next_page_number){
+					next_page=data.next_page_number;
+					if(data.next_page_number==-1){
 						$('#message_list').find('#more_content').html('没有更多信息!');
 						context.unbind();
 					}
