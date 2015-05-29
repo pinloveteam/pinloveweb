@@ -72,6 +72,7 @@ urlpatterns+=patterns('',
     
     #消息页面                    
     url(r'^message/$', 'apps.message_app.views.message',{'template_name':'mobile_message.html'}),
+    url(r'^message_detail/$', 'apps.message_app.views.message_detail',{'template_name':'mobile_history.html'}),
     url(r'^message_list/$','apps.message_app.views.message_list',{'template_name': 'mobile_message.html'}),
     url(r'^follow_list/$','apps.message_app.views.get_follow_message',{'template_name': 'mobile_message.html'}),
     url(r'^comment_list/$', 'apps.friend_dynamic_app.views.comment_list',{'template_name':'mobile_message.html'}), 

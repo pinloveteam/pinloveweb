@@ -1,0 +1,125 @@
+{% extends "mobile_base.html" %} 
+{% block title %} 拼爱网 --个人中心{% endblock %}
+{%block js%}
+<style>
+			.other{
+				text-align: right;
+			}
+		</style>	
+<script>
+var userId={{userId}};
+var avatarName="{{avatarName}}"
+next_page=1;
+$(function(){
+	loadData(no_load,success,loading,true);
+})
+function init_message(messageList){
+	for(var i in messageList){
+		var message=messageList[i];
+		if(userId==message.sender_id){
+			var message_clone=$('#message_clone .self').parent().clone();
+		}else{
+			var message_clone=$('#message_clone .other').parent().clone();
+		}
+		
+		message_clone.find('.avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
+		message_clone.find('.content').text(message.content);
+		message_clone.find('.avatar').text(message.sendTime);
+		$('#message_list').append(message_clone)
+	}
+}
+</script>
+<script type="text/javascript">
+	   //滚动加载
+	   var next_page={{next_page_number|safe}}
+	   no_load=function(){
+			$('#message_list').append('<div class="row" style="margin-top: 10px;text-align: center;">没有消息了</div>')
+			stop_load_next_page();
+			return;
+	   };
+	   loading=function(flag){
+		   if(flag){
+			   $('#message_list').popLoading();
+		   }else{
+			   $('#message_list').removeLoading();
+		   }
+		   
+	   };
+	   success=function(data){
+		   if( typeof(data)!="object"){
+   	    	data=$.parseJSON(data);
+   	    }
+   	    next_page=data['next_page_number']
+       	if(typeof(data.messageList)!="object"){
+       		data.messageList=$.parseJSON(data.messageList);
+       	}
+       	init_message(data.messageList);
+	   };
+		$(window).scroll( function() { 
+				if(get_load_next_page()){
+			/* 	console.log("滚动条到顶部的垂直高度: "+$(document).scrollTop()); 
+				console.log("页面的文档高度 ："+$(document).height());
+				console.log('浏览器的高度：'+$(window).height()); */
+				loadData(no_load,success,loading);
+				}
+			}); 
+		
+</script>
+{% endblock %}
+{% block content %}
+<body class="logined">
+   <div class="header">
+			<div class="row">
+				<div class="col-xs-2">
+					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+				</div>
+				<div id="theme" class="col-xs-8">
+					聊天记录
+				</div>
+				<div class="col-xs-2">
+					<!--<i class="glyphicon glyphicon-th-large"></i>-->
+					回复
+				</div>
+			</div>
+		</div>
+		<div id="message_list">
+		
+		</div>
+	<div id="message_clone" style="display: none;">
+	<div class="frame">
+			<div class="row other">
+				<div class="col-xs-9">
+					<div class="row">
+						<p class="content">哎呦，不错哦</p>
+					</div>
+					<div class="row">
+						<small class="text-gray time">2014-12-12  13:00</small>
+					</div>
+				</div>
+				<div class="col-xs-3">
+					<img width="50px" class="img-rounded avatar" src="img/image1.jpeg" />
+				</div>
+			</div>
+		</div>
+		
+	<div class="frame">
+			<div class="row self">
+			   <div class="col-xs-3">
+					<img width="50px" class="img-rounded avatar" src="img/image1.jpeg" />
+				</div>
+				<div class="col-xs-9">
+					<div class="row">
+						<p class="content">哎呦，不错哦</p>
+					</div>
+					<div class="row">
+						<small class="text-gray time">2014-12-12  13:00</small>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	</body>
+	<script src="/static/js/jquery.scroll.js" type="text/javascript" charset="utf-8"></script>
+
+{% endblock %}

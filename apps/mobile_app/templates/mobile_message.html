@@ -155,7 +155,7 @@
                         message_clone.find('#senderId').val(message.sender_id);
                         message_clone.find('#avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
                         message_clone.find('#username').html(message.sender_name);
-                        message_clone.find('#content').html(message.content).parent().attr('href','/message/detail/?senderId='+message.sender_id);
+                        message_clone.find('#content').html(message.content).parent().attr('href','/mobile/message_detail/?senderId='+message.sender_id).click(function(){window.location.href=$(this).attr('href')});
                         message_clone.find('#time').html(message.sendTime);
                         if(message.isBlackList){
                           	 message_clone.find('.message-report').html('取消黑名单');

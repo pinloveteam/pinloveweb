@@ -6,13 +6,43 @@
 <script type="text/javascript" src="{{STATIC_URL}}js/Chart.min.js"></script>
 
  <script>
-  var userId={{userId|safe }};
+  var userId={{userId}};
   var avatarName="{{avatarName}}"
-  next_page={{next_page_number}}
+  next_page=1;
+  function load_message_data(){
+		var context=$(this)
+		$.ajax({
+				dataType:"json",
+				 type: "get",
+				 url:'/message/detail/',
+				data:{senderId:{{senderId}},page:next_page},
+				beforeSend:function(XMLHttpRequest){
+				},
+				complete:function(XMLHttpRequest, textStatus){
+				},
+				success:function(data, textStatus){
+					if(typeof(data)!="object"){
+						data=$.parseJSON(data);
+					}
+					if(typeof(data.messageList)!="object"){
+						data.messageList=$.parseJSON(data.messageList);
+          	}
+					init_message_detail(data.messageList);
+					if(data.next_page_number){
+						$('#message_list').find('#more_content').html('没有更多信息!');
+						context.unbind();
+					}
+				},
+             error: function(response){
+             	var body=$('<p>网络异常!</p>')
+					 $.poplayer({body:body});
+             },
+				
+			});
+	}
 	$(document).ready(function(){
 		      
-                messageList={{messageList|safe }};
-                init_message_detail(messageList);
+		        load_message_data();
                 if(next_page==-1){
                 	var mroe=$('#message_clone').find('.mroe').clone();
                 	$('#message_list').prepend(mroe);
@@ -20,37 +50,7 @@
                 }else{
                 	var mroe=$('#message_clone').find('.mroe').clone();
                 	$('#message_list').prepend(mroe);
-                	$('#more_content').click(function(){
-                		var context=$(this)
-                		$.ajax({
-       						dataType:"json",
-       						 type: "get",
-       						 url:'/message/detail/',
-       						data:{senderId:{{senderId}},page:next_page},
-       						beforeSend:function(XMLHttpRequest){
-       						},
-       						complete:function(XMLHttpRequest, textStatus){
-       						},
-       						success:function(data, textStatus){
-       							if(typeof(data)!="object"){
-       								data=$.parseJSON(data);
-       							}
-       							if(typeof(data.messageList)!="object"){
-       								data.messageList=$.parseJSON(data.messageList);
-    			            	}
-       							init_message_detail(data.messageList);
-       							if(data.next_page_number){
-       								$('#message_list').find('#more_content').html('没有更多信息!');
-       								context.unbind();
-       							}
-       						},
-       	                    error: function(response){
-       	                    	var body=$('<p>网络异常!</p>')
-       							 $.poplayer({body:body});
-       	                    },
-       						
-       					});
-                	});
+                	$('#more_content').click(load_message_data);
                 }
                 
                 $('#form1').submit(function(){
@@ -157,7 +157,7 @@ function getCookie(name) {
                         message_clone.find('#content').html(message.content);
                         message_clone.find('#time').html(message.sendTime);
                         if($('#message_list').find('#more_content').length>0){
-                        	$('#message_list').find('.mroe').next().before(message_clone)
+                        	$('#message_list').find('.mroe').after(message_clone)
                         }else{
                         	$('#message_list').prepend(message_clone);
                         }

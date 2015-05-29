@@ -128,7 +128,7 @@ class UserProfile(models.Model, UploadAvatarMixIn):
     def cal_age(self):
         if self.year_of_birth !=-1:
             current_year = time.strftime('%Y', time.localtime(time.time()))
-            self.age = string.atoi(current_year) - self.year_of_birth
+            self.age = string.atoi(current_year) - int(self.year_of_birth)
     
     SUN_SIGN_CHOOSICE=((-1,r'未填'),(1,r'水瓶座'),(2,r'双鱼座'),(3,r'白羊座'),(4,r'金牛座'),(5,r'双子座'),(6,r'巨蟹座'),(7,r'狮子座'),(8,r'处女座'),(9,r'天秤座'),(10,r'天蝎座'),(11,r'射手座'),(12,r'摩羯座'),)
     sunSign=models.SmallIntegerField(verbose_name=r"星座",choices=SUN_SIGN_CHOOSICE,null=True,blank=True,default=-1)
@@ -368,9 +368,9 @@ class UserProfile(models.Model, UploadAvatarMixIn):
        if oldUserProfile:
            self._cal_income(oldUserProfile)
            self._cal_education(oldUserProfile)
-           if not oldUserProfile.check_birth():
-               self.cal_age()
-               self.cal_sunSign()
+       if self.check_birth():
+            self.cal_age()
+            self.cal_sunSign()
        super(UserProfile, self).save(*args, **kwargs)
        
     class Meta:

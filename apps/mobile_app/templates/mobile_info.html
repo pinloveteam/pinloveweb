@@ -157,6 +157,17 @@
 				</div>
 			</div>
 			<div class="row frame">
+				<div class="col-xs-4 button">
+					<button class="btn btn-success" id="follow">{% ifequal followStatus 0%}关注{%else%} 取消关注{%endifequal%}</button>
+				</div>
+				<div class="col-xs-4 button">
+					<button class="btn btn-success" id="dislike">不喜欢</button>
+				</div>
+				<div class="col-xs-4 button">
+					<button class="btn btn-success" id="message">私信</button>
+				</div>
+			</div>
+			<div class="row frame">
 				<p>性格标签</p>
 				{%for tag in tags%}
 				<span class="label label-default">{{tag}}</span>
@@ -220,17 +231,7 @@
 					<button class="btn btn-xs btn-success" id="appearancevote">确认</button>
 				</div>
 			</div> 
-			<div class="row">
-				<div class="col-xs-4 button">
-					<button class="btn btn-success" id="follow">{% ifequal followStatus 0%}关注{%else%} 取消关注{%endifequal%}</button>
-				</div>
-				<div class="col-xs-4 button">
-					<button class="btn btn-success" id="dislike">不喜欢</button>
-				</div>
-				<div class="col-xs-4 button">
-					<button class="btn btn-success" id="message">私信</button>
-				</div>
-			</div>
+			
 		</div>
 		
 	</body>

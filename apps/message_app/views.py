@@ -169,17 +169,23 @@ def message_detail(request,template_name):
     args={}
     try:
         senderId=int(request.REQUEST.get('senderId',False))
-        if senderId and senderId :
-            messageList=MessageLog.objects.messagelog_list_by_userid(senderId,request.user.id)
-            data=page(request,messageList)
-            from apps.pojo.message import messagedynamics_to_message_page
-            messageList=messagedynamics_to_message_page(data['pages'].object_list)
-            args['messageList']=simplejson.dumps(messageList)
+        if senderId  :
             args['userId']=request.user.id
             args['userusername']=request.user.username
             args['senderId']=senderId
             from apps.user_app.method import get_avatar_name
             args['avatarName']=get_avatar_name(request.user.id,request.user.id)
+            #获取未读信息条数
+            from pinloveweb.method import get_no_read_web_count
+            args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
+        else:
+            args={'result':'error','error_message':'传递参数出错!'}
+        if request.is_ajax():
+            messageList=MessageLog.objects.messagelog_list_by_userid(senderId,request.user.id)
+            data=page(request,messageList)
+            from apps.pojo.message import messagedynamics_to_message_page
+            messageList=messagedynamics_to_message_page(data['pages'].object_list)
+            args['messageList']=simplejson.dumps(messageList)
             if data['pages'].has_next():
                 args['next_page_number']=data['pages'].next_page_number()
             else:
@@ -188,12 +194,6 @@ def message_detail(request,template_name):
             #标记已读
             from apps.message_app.method import clean_message_by_user
             clean_message_by_user(senderId,request.user.id)
-            #获取未读信息条数
-            from pinloveweb.method import get_no_read_web_count
-            args.update(get_no_read_web_count(request.user.id,fromPage=u'message'))
-        else:
-            args={'result':'error','error_message':'传递参数出错!'}
-        if request.is_ajax():
             from apps.pojo.message import MessageBeanEncoder
             json=simplejson.dumps(args,cls=MessageBeanEncoder)
             return HttpResponse(json)

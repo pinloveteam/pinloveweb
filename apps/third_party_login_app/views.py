@@ -63,6 +63,7 @@ def get_qq_login_url(request,CALLBACK_URL=QQ_CALLBACK_URL):
     #获取qq授权登录地址
     return HttpResponseRedirect(client.get_auth_url())  
 
+
 '''
 获取qq信息并登录个人主页
 '''
@@ -409,23 +410,7 @@ def update_gender(request):
     gender=request.POST.get('gender')
     UserProfile.objects.filter(user=request.user).update(gender=gender)
     return HttpResponseRedirect('/account/loggedin/')
-       
-''''
-用户登录并且获得本机ip
-attribute：
-     用户名:username
-  密  码    : password
-'''   
-def login(request,username,password):
-     from django.contrib import auth
-     user = auth.authenticate(username=username, password=password)
-     log.error(username+'   '+password)
-     if user is not None and user.is_active : 
-         auth.login(request, user)
-#          log.error("login success"+request.user.username+'fcsdfsf')
-     from apps.the_people_nearby.views import GetLocation
-     if not GetLocation(request)==None:
-         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
+ 
      
 '''
 为第三方登录注册用户
@@ -468,6 +453,23 @@ def register_by_three_party(request,template_name='login_confirm_register.html')
         if detect_device.detectTiermobileTablet(request):
             template_name='mobile_login_confirm_register.html'
         return render(request,template_name,args)
+          
+''''
+用户登录并且获得本机ip
+attribute：
+     用户名:username
+  密  码    : password
+'''   
+def login(request,username,password):
+     from django.contrib import auth
+     user = auth.authenticate(username=username, password=password)
+     log.error(username+'   '+password)
+     if user is not None and user.is_active : 
+         auth.login(request, user)
+#          log.error("login success"+request.user.username+'fcsdfsf')
+     from apps.the_people_nearby.views import GetLocation
+     if not GetLocation(request)==None:
+         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
     
     
 '''
