@@ -2,6 +2,8 @@
 {% block title %} 拼爱网 --消息{% endblock %}
 {% block staticfiles %}
 <script src="/static/js/jquery.scroll.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/mobile/idangerous.swiper.css" />
+<script src="/static/js/mobile/idangerous.swiper.min.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 {% block js%}
 <!-- <script type="text/javascript">
@@ -74,15 +76,25 @@
 	});
 	
 	//回复
+	var add_comment=function(data){
+		message=''
+		if(data.message!=undefined){
+			message='回复成功!'
+		}else{
+			message='评论成功!'
+		}
+		var body=$('<p>'+message+'</p>')
+    	$.poplayer({body:body});
+	}
 	function reply(){
 		contect=$(this).closest('.frame');
 		type=contect.attr('id');
-		userId=contect.find('#senderId').val();
+		senderId=contect.find('#senderId').val();
 		if(type=='message'){
-			window.location.href='/mobile/editer/?receiver_id='+userId+'&type='+type
+			$.mobile_edit({receiverId : senderId,init_comment : add_comment})
 		}else if(type=='dynamic_comment'){
 			dynamicId=contect.find('#dynamicId').val();
-			window.location.href='/mobile/editer/?receiver_id='+userId+'&type='+type+'&dynamicId='+dynamicId;
+			$.mobile_edit({type : 'comment',receiverId : senderId,dynamicId : dynamicId,init_comment : add_comment})
 		}else{
 			 $.poplayer({body:'回复参数出错!'});
 		}
@@ -308,7 +320,7 @@
         
         <script type="text/javascript">
 	   //滚动加载
-	   var next_page={{next_page_number|safe}}
+	   var next_page=1;
 	   no_load=function(){
 	    	var no_dynamic=$('#no_dynamic')
 			$('.col-xs-9').append('<div class="row" style="margin-top: 20px;text-align: center;">没有消息了</div>')

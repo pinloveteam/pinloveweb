@@ -26,7 +26,8 @@ class MessageBean(object):
         self.isDeleteSender=kwargs.pop('isDeletereceiver',None)
         self.isDeletereceiver=kwargs.pop('isDeletereceiver',None)
         self.isRead=kwargs.pop('isRead',None)
-        self.avatarName=get_avatar_name(kwargs.get('userId'),self.senderId)
+        if self.senderId:
+            self.avatarName=get_avatar_name(kwargs.get('userId'),self.senderId)
         
         
     
@@ -47,7 +48,7 @@ class MessageBean(object):
         self.isRead=getattr(obj,'isRead',None)
         self.senderName=message.sender.username
         self.receiverName=obj.receiver.username
-        self.avatarName=self.get_avatar_name(self,userId)
+        self.avatarName=get_avatar_name(userId,self.senderId)
         
     
         

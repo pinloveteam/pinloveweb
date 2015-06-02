@@ -1,8 +1,8 @@
 {% extends "mobile_base.html" %} 
 {% block title %} 拼爱网 --{{title}}{% endblock %}
 {% block staticfiles %}
-  <link rel="stylesheet" href="/static/css/idangerous.swiper.css" />
-  <script type="text/javascript" src="/static/js/idangerous.swiper.min.js" ></script>
+  <link rel="stylesheet" href="/static/css/mobile/idangerous.swiper.css" />
+  <script type="text/javascript" src="/static/js/mobile/idangerous.swiper.min.js" ></script>
   <script type="text/javascript" src="/static/js/jquery.scroll.js" ></script>
 {% endblock %}
 {% block js %}
@@ -83,11 +83,10 @@ function init_dynamic(dynamicList){
 		//
 		//动态评论
 	   dynamic.find('.comment').click(function(){
-		dynamicId=$(this).closest('.trend').find('#dynamicId').val();
-		window.location.href='/mobile/editer/?receiver_id=&type=dynamic_comment&dynamicId='+dynamicId;
-	   })
+		   reply_comment(this)
+	   });
 		if(this.commentList.length>0){
-			init_comment(dynamic,$.parseJSON(this.commentList),this.publishUserId);
+			init_comment(dynamic,$.parseJSON(this.commentList));
 		}
 		$('#dynamic').append(dynamic);
 		if(this.type==2){
@@ -143,6 +142,23 @@ function del_dynamic(e){
   $.poplayer({body:body,btnFunc:btn});
 	
 }
+//评论
+function add_comment(data){
+	if(typeof(data.dynamicCommentList)!='object'){
+		data.dynamicCommentList=$.parseJSON(data.dynamicCommentList);
+	}
+	init_comment(data.dynamicDiv,data.dynamicCommentList);
+}
+function reply_comment(e){
+	var comment=$(e);
+	if(e.id=='comment'){
+		senderId=comment.find('#reviewerId').val();
+	}else{
+		senderId=null
+	}
+	dynamicId=comment.closest('.trend').find('#dynamicId').val();
+	$.mobile_edit({type : 'comment',receiverId : senderId,dynamicId : dynamicId,init_comment : add_comment,dynamicDiv:comment.closest('.trend')})
+}
 
 function init_agree(dynamic_div,agreeList,type){
 	$(agreeList).each(function(){
@@ -159,27 +175,28 @@ function init_agree(dynamic_div,agreeList,type){
 	});
 }
 //初始化评论
-function init_comment(dynamic_div,commentList,publishUserId){
+function init_comment(dynamic_div,commentList){
 	$(commentList).each(function(){
 		var comment=$('#dynamic_clone').find('#comment').clone();
 		comment.find('.reply-name').html(this.reviewerName)
 		comment.find('.reply-content').html(this.content);
 		comment.find('#commentId').val(this.id);
 		comment.find('#reviewerId').val(this.reviewerId);
-		if(publishUserId==userId||this.reviewerId==userId){
-			
-		}else{
-			comment.find('.del-comment').remove();
-		}
 		if(this.reviewerId==userId){
 			comment.find('.reply-btn').remove();
 		}
-		$(dynamic_div).append(comment);
+		comment.click(function(){
+			var reviewerId=$(this).closest('#comment').find('#reviewerId').val()
+			if(reviewerId==userId){
+				del_comment(this);
+			}else{
+				reply_comment(this)
+			}
+		});
+		
+	    $(dynamic_div).append(comment);
+		
 	})
-	//删除评论
-	dynamic_div.find('.del-comment').click(function(){
-		del_comment(this);
-	});
 };
 
 //删除评论
@@ -363,7 +380,6 @@ function del_dynamic(e){
 				    <input type="hidden" id="commentId" value="">
 					<span class="reply-name">张三</span><span>:</span>
 					<span class="reply-text text-gray reply-content"></span>
-					<a href="javascript:void(0);" class="del-comment">删除</a>
 				</div>
 			</div>
 		</div>

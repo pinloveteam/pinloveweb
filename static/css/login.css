@@ -1,17 +1,22 @@
 ﻿html, body {
 	height: 100%;
 }
+
 body {
-	font: 14px/1.5 "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
-	-webkit-font-smoothing:antialiased; 
-	-moz-osx-font-smoothing: grayscale; 
+	font: 14px/1.5 "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial,
+		"Liberation Sans", "Hiragino Sans GB", "Source Han Sans CN",
+		"Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei",
+		"WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp",
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	font-size: 16px;
 }
 
 label {
-    font-size: 14px;
-    
+	font-size: 14px;
 }
+
 .container, body {
 	width: 100%;
 }
@@ -39,6 +44,7 @@ a:hover {
 #register {
 	background-color: #EE5B2F;
 }
+
 #login {
 	background-color: #50B62F;
 }
@@ -53,21 +59,22 @@ a:hover {
 	top: -28.5px;
 	left: 200px;
 }
+
 .stage {
 	height: 591px;
 }
 
-.background{
+.background {
 	background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url('../img/bg.jpg'); 
-    z-index: 0;
-    position: absolute;
-     bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: url('../img/bg.jpg');
+	z-index: 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	top: 0;
 }
 
 .bgc-blue, .bcg-orange, a, .btn, .btn-xs {
@@ -98,12 +105,13 @@ a:hover {
 	font-size: 35px;
 	text-align: center;
 	font-weight: normal;
-    line-height: 1.2;
+	line-height: 1.2;
 }
 
-.content{
+.content {
 	color: #666;
 }
+
 .layer {
 	padding: 20px 60px;
 	height: 100%;
@@ -160,7 +168,7 @@ a:hover {
 	position: relative;
 	left: 20px;
 	top: 30px;
-	color:#5297DA;
+	color: #5297DA;
 }
 
 #scrollUp {
@@ -171,10 +179,32 @@ a:hover {
 	width: 38px;
 	cursor: pointer;
 }
+
 .app {
-    border: 1px solid #fff;
-    border-radius: 10px;
-    margin-top: 10px;
-    padding: 10px;
-    text-align: center;
+	border-radius: 10px;
+	padding: 10px;
+	text-align: center;
+	width: 300px;
+	background-color: #333;
+}
+
+.stage {
+	min-width: 1000px;
+}
+
+.apple {
+	background: url("../img/apple.png") no-repeat;
+}
+
+.android {
+	background: url("../img/android.png") no-repeat;
+}
+
+.apple, .android {
+	margin-top: 10px;
+	width: 24px;
+	height: 30px;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-right: 10px;
 }

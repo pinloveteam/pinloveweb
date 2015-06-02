@@ -8,14 +8,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="/static/css/mobile_bootstrap.min.css" />
 		<script src="/static/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="/static/js/mobile_bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/js/mobile/mobile_bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
 		{% block staticfiles %}
         {% endblock %}
 		<link href="{{STATIC_URL}}css/poplayer.css" rel="stylesheet">
         <script type="text/javascript" src="{{STATIC_URL}}js/jquery.poplayer.js"></script>
         <script type="text/javascript" src="{{STATIC_URL}}js/jquery.loading.js"></script>
-        <script type="text/javascript" src="{{STATIC_URL}}js/app.js"></script>
-        <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+        <script type="text/javascript" src="{{STATIC_URL}}js/mobile/app.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/css/mobile/app.css" />
         <script src="{{STATIC_URL}}js/common.js" type="text/javascript" charset="utf-8"></script>
         {% block css %}
         {% endblock %}
@@ -51,7 +51,7 @@ $(function(){
 var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
 //拉取信息数量
 var time=1000*5;
-interval = self.setInterval("polling()", time);  
+interval = self.setInterval("polling()", time);   
 var polling=function(){
 	   data={};
 	   pathname=window.location.pathname

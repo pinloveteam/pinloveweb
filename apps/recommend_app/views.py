@@ -33,6 +33,9 @@ def update_weight(request):
         if weightForm.is_valid():
             grade=weightForm.cal_weight(request.user.id)
             grade.save()
+            #判断推荐条件是否完善
+            from apps.recommend_app.recommend_util import cal_recommend
+            cal_recommend(request.user.id,['weight'])     
             args.update({'result':'success'})
         else:
             errors=weightForm.errors.items()

@@ -42,8 +42,9 @@ def clean_message_by_user(senderId,receiverId):
 def add_message_121(senderId,receiverId,content,type):
     message=Message(sender_id=senderId,content=content,type=type)
     message.save()
-    MessageLog(receiver_id=receiverId,message=message).save()
-    return message
+    messageLog=MessageLog(receiver_id=receiverId,message=message)
+    messageLog.save()
+    return messageLog
 
     
 '''

@@ -206,3 +206,116 @@ window.Comfirm = function(title,body){
 	comfirm.find('.modal-body').children().html(body);
 	return comfirm;
 }
+
+//回复
+//调用方式$.poplayer(options);
+//options={
+//	head : '确认',
+//	body : 'message',
+//	btnText : '确定',
+//	btnFunc : this.closeDialog
+//}
+
+//OR
+
+//options={
+//	type : 'frame',
+//	body : 'message',
+//		
+		
+;(function($, window, document) {
+	$.mobile_edit = function(options) {
+		var defaults = {
+				type : 'message',
+				receiverId : null,
+				dynamicId : null,
+				init_comment : null,
+				dynamicDiv:null,
+			};
+			var options = $.extend(defaults, options);
+			edit(options.type,options.receiverId,options.dynamicId,options.init_comment,options.dynamicDiv)
+		}
+		function edit(type,receiverId,dynamicId,init_comment,dynamicDiv){
+			if($('#edit').length>0){
+				content=$('#edit');
+				$('#edit').show();
+			}else{
+				var content=$('<div id="edit" class="edit"><div class="edit_header"><div class="row"><div class="col-xs-2"><i class="glyphicon glyphicon-chevron-left edit_close""></i></div><div class="col-xs-7">回复</div><div class="col-xs-3 edit_send">发送</div></div></div><div class="container"><form action=""  name="relpy_form" method="POST"><input id="reply_type" type="hidden" value="" name="type" id="type"><input type="hidden" name="receiverId" id="receiverId"><input type="hidden" value="" name="friendDynamicId" id="friendDynamicId"><div class="row frame"><textarea rows="6" class="form-control" id="rely_content" name="rely_content"></textarea><div class="editer-btns"><span class="emotion"></span></div></div></div></form></div>');
+				content.find('.edit_send').click(function(){
+					context=$(this);
+					form=context.closest('.edit').find('form');
+					data={csrfmiddlewaretoken:getCookie('csrftoken')}
+					url="";
+					receiverId=form.find('#receiverId').val();
+					content=form.find('textarea').val();
+					if(content.trim().length==0){
+						var body=$('<p>内容不能为空!</p>')
+			        	$.poplayer({body:body});
+						return false;
+					}
+					type=form.find('#reply_type').val();
+					if(type=='message'){
+						url='/message/send/';
+						data.receiver_id=receiverId;
+						data.reply_content=content;
+					}else if(type=='comment'){
+						url='/dynamic/comment/';
+						data.content=content;
+						data.receiverId=receiverId;
+						data.dynamicId=form.find('#friendDynamicId').val();
+					}else{
+						var body=$('<p>type参数出错!</p>')
+			        	$.poplayer({body:body});
+						return false;
+					}
+					$.ajax({
+						type:'POST',
+						url:url,
+						dataType:"json",
+						data:data,
+						success:function(data, textStatus){
+							if(typeof(data)!='object'){
+								data=$.parseJSON(data)
+							}
+							if (data.result=='success'){
+								content=context.closest('#edit').find('textarea').val();
+								if(dynamicDiv!=null){
+									data.dynamicDiv=dynamicDiv
+								}
+								init_comment(data)
+								context.closest('#edit').find('textarea').val('');
+								context.closest('.edit').hide();
+						        }else if(data.result=='error'){
+						        	var body=$('<p>'+data.error_message+'</p>')
+						        	$.poplayer({body:body});
+						        }else{
+						            window.location.href='http://pinlove.com/';
+						        }
+							
+						},
+						error:function(response){
+							var body = $("<p>网络异常!</p>")
+				       	    $.poplayer({body:body});
+						},
+				});
+				})
+				content.find('.edit_close').click(function(){
+				$('#edit').hide();
+				$('#edit').find('textarea').val();
+				})
+				$('body').append(content)
+				content.find('.emotion').qqFace({
+					id: 'facebox',
+					assign: 'rely_content',
+					path: '/static/img/arclist/' //表情存放的路径
+				});
+			}
+			content.find('#receiverId').val(receiverId);
+			content.find('#reply_type').val(type);
+			if(dynamicId!=null){
+				content.find('#friendDynamicId').val(dynamicId);
+			}
+		}
+})(jQuery, window, document, undefined);
+
+

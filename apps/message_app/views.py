@@ -17,6 +17,8 @@ from apps.message_app.method import add_message_121
 from pinloveweb.settings import ADMIN_ID
 from apps.message_app.message_settings import REPLY_CONTENT_LENGTH_LIMIT
 from util.util import verify_content
+from apps.pojo.message import MessageBeanEncoder, MessageLog_to_MessageBean,\
+    MessageLog_to_Message
 logger=logging.getLogger(__name__)
 ###############################
 ##1.0
@@ -284,7 +286,6 @@ def no_read_message(request,template_name):
         messageList=MessageLog.objects.get_no_read_messagelog(request.user.id)
         args=page(request,messageList)
         messageList=args['pages']
-        from apps.pojo.message import MessageLog_to_Message
         messageList.object_list=MessageLog_to_Message(messageList.object_list,request.user.id)
         #用户消息标记为已读
         MessageLog.objects.clean_message(request.user.id)
@@ -294,7 +295,6 @@ def no_read_message(request,template_name):
             data['has_next']=messageList.has_next()
             if messageList.has_next():
                 data['next_page_number']=messageList.next_page_number()
-            from apps.pojo.message import MessageBeanEncoder
             json=simplejson.dumps(data,cls=MessageBeanEncoder)
             return HttpResponse(json)
         args['pages']=messageList
@@ -314,7 +314,8 @@ attribute：
      reply_content(text)： 回复内容
 return ：
      
-'''   
+'''
+@transaction.commit_on_success   
 def message_send(request):  
     args={}
     try:
@@ -328,12 +329,13 @@ def message_send(request):
             reply_content=request.REQUEST.get('reply_content')
             #验证内容是否符合标准
             reply_content=verify_content(reply_content,REPLY_CONTENT_LENGTH_LIMIT)
-            message=add_message_121(user.id,receiver_id,reply_content,1)
-            args={'result':'success','messageTime':message.sendTime.strftime("%m-%d %H:%M")}  
+            messageLog=add_message_121(user.id,receiver_id,reply_content,1)
+            message=MessageLog_to_Message([messageLog,],request.user.id)[0]
+            args={'result':'success','message':message}  
     except Exception ,e:    
         logger.error('私信   发送,出错')
         args={'result':'error','error_message':e.message}   
-    json = simplejson.dumps(args)
+    json=simplejson.dumps(args,cls=MessageBeanEncoder)
     return HttpResponse(json)
 
 
@@ -358,13 +360,11 @@ def get_no_read_messge_by_ids(request):
         else:
             messageList=MessageLog.objects.get_no_read_messagelog(request.user.id)
         MessageLog.objects.filter(message_id__in=[messageTmp['id'] for messageTmp in messageList]).update(isRead=True)
-        from apps.pojo.message import MessageLog_to_MessageBean
         messageBeanList=MessageLog_to_MessageBean(messageList,request.user.id)
         args['messageList']=messageBeanList
 #         #获取消息数
         from pinloveweb.method import get_no_read_web_count
         args.update(get_no_read_web_count(request.user.id))
-        from apps.pojo.message import MessageBeanEncoder
         json=simplejson.dumps(args,cls=MessageBeanEncoder)
         return HttpResponse(json)
     except Exception,e:

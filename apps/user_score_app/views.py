@@ -51,7 +51,7 @@ def get_free_pinloveicon(request,template_name):
         
         args['userProfileFinish']=False
         fields = ( 'income','weight','jobIndustry',
-        'height', 'education', 'day_of_birth','educationSchool','city')
+        'height', 'education','educationSchool','city')
         if userProfile.finish!=None:
             finishList=simplejson.loads(userProfile.finish)
             for field in fields:

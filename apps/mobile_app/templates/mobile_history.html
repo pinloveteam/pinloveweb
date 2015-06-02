@@ -1,6 +1,8 @@
 {% extends "mobile_base.html" %} 
 {% block title %} 拼爱网 --个人中心{% endblock %}
 {%block js%}
+<link rel="stylesheet" type="text/css" href="/static/css/mobile/idangerous.swiper.css" />
+<script src="/static/js/mobile/idangerous.swiper.min.js" type="text/javascript" charset="utf-8"></script>
 <style>
 			.other{
 				text-align: right;
@@ -9,10 +11,26 @@
 <script>
 var userId={{userId}};
 var avatarName="{{avatarName}}"
+var senderId='{{senderId}}';
 next_page=1;
+var add_comment=function(data){
+	if(typeof(data.message)!='object'){
+		data.message=$.parseJSON(data.message);
+	}
+	data.message.sender_id=data.message.senderId;
+	data.message.avatar_name=data.message.avatarName
+	data.message.insert='before'
+	init_message([data.message,])
+}
 $(function(){
 	loadData(no_load,success,loading,true);
+	$('.reply').click(function(){
+		$.mobile_edit({receiverId : senderId,init_comment : add_comment})
+	})
+	
 })
+
+				
 function init_message(messageList){
 	for(var i in messageList){
 		var message=messageList[i];
@@ -23,9 +41,14 @@ function init_message(messageList){
 		}
 		
 		message_clone.find('.avatar').attr('src','/media/'+message.avatar_name+'-100.jpeg');
-		message_clone.find('.content').text(message.content);
-		message_clone.find('.avatar').text(message.sendTime);
-		$('#message_list').append(message_clone)
+		message_clone.find('.content').html(message.content);
+		message_clone.find('.time').text(message.sendTime);
+		if(message.insert=='before'){
+			$('#message_list').before(message_clone)
+		}else{
+			$('#message_list').append(message_clone)
+		}
+		
 	}
 }
 </script>
@@ -76,7 +99,7 @@ function init_message(messageList){
 				<div id="theme" class="col-xs-8">
 					聊天记录
 				</div>
-				<div class="col-xs-2">
+				<div class="col-xs-2 reply">
 					<!--<i class="glyphicon glyphicon-th-large"></i>-->
 					回复
 				</div>

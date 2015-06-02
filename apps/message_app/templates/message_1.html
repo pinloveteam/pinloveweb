@@ -13,15 +13,7 @@
                 	no_load();
                 }
                 init_menu();
-                //回复窗口
-                $('.reply-btn').click(function(){
-                	var senderId=$(this).closest('#message').find('#senderId').val();
-     			   var reply=$(this).parents('.message').next();
-     			   reply.find('#senderId').val(senderId)
-     			   reply.slideDown('slow');
-     			   $(this).hide();
-     			   
-     			});
+                
               
                 
                 //菜单切换
@@ -219,6 +211,16 @@
         					});
                        	 return false;
                         });
+                        
+                      //回复窗口
+                        message_clone.find('.reply-btn').click(function(){
+                        	var senderId=$(this).closest('#message').find('#senderId').val();
+             			   var reply=$(this).parents('.message').next();
+             			   reply.find('#senderId').val(senderId)
+             			   reply.slideDown('slow');
+             			   $(this).hide();
+             			   
+             			});
                     }else if(message.type==2) {
                         var follow_clone=$('#message_clone').find('#follow').clone();
                         follow_clone.find('#senderId').val(message.sender_id);

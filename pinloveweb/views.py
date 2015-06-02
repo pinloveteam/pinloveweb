@@ -26,6 +26,7 @@ from pinloveweb.method import create_invite_code
 from django.views.decorators.http import require_POST
 import urllib
 from util import detect_device
+import os
 logger = logging.getLogger(__name__)
 ####################
 ######1.0
@@ -389,7 +390,24 @@ def newcount(request):
         args['result']='error'
     json=simplejson.dumps(args)
     return HttpResponse(json)
-    
+
+'''
+下载安卓app
+'''   
+def android_download(request):
+    args={}
+    try:
+        from django.core.servers.basehttp import FileWrapper
+        from pinloveweb.settings import STATIC_ROOT
+        file_name='pinlove_android_app'
+        response = HttpResponse(FileWrapper(file(('%s/download/%s.apk'%(STATIC_ROOT,file_name)))), content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename=%s'%(file_name)
+        return response
+    except Exception as e:
+        logger.exception('检查是否有新未读消息,出错')
+        args={'result':'error','error_message':e.message}
+        return render(request,'error.html',args)
+        
 '''
  成功页面
 '''

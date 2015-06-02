@@ -13,7 +13,7 @@ from django.utils import simplejson
 class AuthenticationMiddleware(object):   
     def process_request(self, request):  
         redirectUrl=''
-        passList=['/user/reset_password/','/account/forget_password/','/account/auth/','/account/register/','/','/game/jigsaw/','/game/pintu_for_facebook/','/pay_app/icon/','/pay_app/exchange_game_count/','/game/request_life/',
+        passList=['/android_download/','/user/reset_password/','/account/forget_password/','/account/auth/','/account/register/','/','/game/jigsaw/','/game/pintu_for_facebook/','/pay_app/icon/','/pay_app/exchange_game_count/','/game/request_life/',
                   '/game/confirm_request_life/(.+)/','/account/check_register/','/mobile/register/','/mobile/auth/','/mobile/','/mobile/forget_password/','/mobile/logout/','/test/']
         facebookPattern = re.compile(r'^/game/|/pay/|/alipay/')
         facebookMatch = facebookPattern.match(request.path)
