@@ -11,7 +11,9 @@ var userName="{{user.username}}";
 var userId={{user.id}};
 </script>
 <script type="text/javascript">
-var page=1;
+var next_page=1;
+//第一次加载下一页
+first_load=true
 $(document).ready(function(){
 	loadData(no_load,success,loading,true);
 });
@@ -151,13 +153,15 @@ function add_comment(data){
 }
 function reply_comment(e){
 	var comment=$(e);
+	receiverName=null;
 	if(e.id=='comment'){
 		senderId=comment.find('#reviewerId').val();
+		receiverName=comment.find('.reply-name').html();
 	}else{
 		senderId=null
 	}
 	dynamicId=comment.closest('.trend').find('#dynamicId').val();
-	$.mobile_edit({type : 'comment',receiverId : senderId,dynamicId : dynamicId,init_comment : add_comment,dynamicDiv:comment.closest('.trend')})
+	$.mobile_edit({type : 'comment',receiverId : senderId,dynamicId : dynamicId,init_comment : add_comment,dynamicDiv:comment.closest('.trend'),receiverName:receiverName})
 }
 
 function init_agree(dynamic_div,agreeList,type){
@@ -178,7 +182,10 @@ function init_agree(dynamic_div,agreeList,type){
 function init_comment(dynamic_div,commentList){
 	$(commentList).each(function(){
 		var comment=$('#dynamic_clone').find('#comment').clone();
-		comment.find('.reply-name').html(this.reviewerName)
+		var reply_name_a=comment.find('.reply-name').html(this.reviewerName).parent().attr('href','/mobile/info_detail/'+this.reviewerId+'/')
+		if(this.receiverName!=null){
+			reply_name_a.after('回复<a href="/mobile/info_detail/'+this.receiverId+'/">'+this.receiverName+'</a>');
+		}
 		comment.find('.reply-content').html(this.content);
 		comment.find('#commentId').val(this.id);
 		comment.find('#reviewerId').val(this.reviewerId);
@@ -193,7 +200,9 @@ function init_comment(dynamic_div,commentList){
 				reply_comment(this)
 			}
 		});
-		
+		comment.find('a').click(function(event){
+			event.stopPropagation();
+		});
 	    $(dynamic_div).append(comment);
 		
 	})
@@ -274,7 +283,6 @@ function del_dynamic(e){
 	   //滚动加载
 	   var next_page=1;
 	   no_load=function(){
-		   $('#dynamic_list').append('<div class="trend" style="text-align:center;height:30px;" >没有更多动态<div>')
 			stop_load_next_page();
 			return;
 	   };
@@ -295,6 +303,14 @@ function del_dynamic(e){
        		data.messageList=$.parseJSON(data.friendDynamicList);
        	}
 	    init_dynamic(data.messageList);
+	    if(next_page==-1){
+	    	var no_load_message='没有更多动态';
+	    	if(first_load){
+	    		no_load_message='该用户没有发布过动态!'
+	    	}
+	    	$('#dynamic_list').append('<div class="trend" style="text-align:center;height:30px;" >'+no_load_message+'<div>')
+	    }
+	    first_load=false;
 	   };
 		$(window).scroll( function() { 
 				if(get_load_next_page()){
@@ -350,7 +366,7 @@ function del_dynamic(e){
 					</div>
 					<div class="row">
 					  <div class="col-xs-12">
-					    <p id="content" class="trend-text text-gray">shen me gui</p>
+					    <p id="content" class="trend-text ">shen me gui</p>
 					    <ul class="list-inline pic-list">
 					  </div>
 					</div>
@@ -378,8 +394,8 @@ function del_dynamic(e){
 				<div class="col-xs-12">
 				    <input type="hidden" id="reviewerId" value="">
 				    <input type="hidden" id="commentId" value="">
-					<span class="reply-name">张三</span><span>:</span>
-					<span class="reply-text text-gray reply-content"></span>
+					<a><span class="reply-name">张三</span></a><span>:</span>
+					<span class="reply-text reply-content"></span>
 				</div>
 			</div>
 		</div>

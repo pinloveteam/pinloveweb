@@ -231,6 +231,7 @@ window.Comfirm = function(title,body){
 				dynamicId : null,
 				init_comment : null,
 				dynamicDiv:null,
+				receiverName:null,
 			};
 			var options = $.extend(defaults, options);
 			edit(options.type,options.receiverId,options.dynamicId,options.init_comment,options.dynamicDiv)
@@ -240,7 +241,7 @@ window.Comfirm = function(title,body){
 				content=$('#edit');
 				$('#edit').show();
 			}else{
-				var content=$('<div id="edit" class="edit"><div class="edit_header"><div class="row"><div class="col-xs-2"><i class="glyphicon glyphicon-chevron-left edit_close""></i></div><div class="col-xs-7">回复</div><div class="col-xs-3 edit_send">发送</div></div></div><div class="container"><form action=""  name="relpy_form" method="POST"><input id="reply_type" type="hidden" value="" name="type" id="type"><input type="hidden" name="receiverId" id="receiverId"><input type="hidden" value="" name="friendDynamicId" id="friendDynamicId"><div class="row frame"><textarea rows="6" class="form-control" id="rely_content" name="rely_content"></textarea><div class="editer-btns"><span class="emotion"></span></div></div></div></form></div>');
+				var content=$('<div id="edit" class="edit"><div class="edit_header"><div class="row"><div class="col-xs-2"><i class="glyphicon glyphicon-chevron-left edit_close""></i></div><div class="col-xs-7">回复</div><div class="col-xs-3 edit_send">发送</div></div></div><div class="container"><form action=""  name="relpy_form" method="POST"><input id="reply_type" type="hidden" value="" name="type" id="type"><input type="hidden" name="receiverId" id="receiverId"><input type="hidden" value="" name="friendDynamicId" id="friendDynamicId"><div class="row frame"><textarea rows="6" class="form-control" id="rely_content" name="rely_content" placeholder=""></textarea><div class="editer-btns"><span class="emotion"></span></div></div></div></form></div>');
 				content.find('.edit_send').click(function(){
 					context=$(this);
 					form=context.closest('.edit').find('form');
@@ -283,7 +284,7 @@ window.Comfirm = function(title,body){
 									data.dynamicDiv=dynamicDiv
 								}
 								init_comment(data)
-								context.closest('#edit').find('textarea').val('');
+								context.closest('#edit').find('textarea').val('').attr('placeholder','');
 								context.closest('.edit').hide();
 						        }else if(data.result=='error'){
 						        	var body=$('<p>'+data.error_message+'</p>')
@@ -301,9 +302,10 @@ window.Comfirm = function(title,body){
 				})
 				content.find('.edit_close').click(function(){
 				$('#edit').hide();
-				$('#edit').find('textarea').val();
+				$('#edit').find('textarea').val()
+				$('#edit').find('textarea').attr('placeholder','');;
 				})
-				$('body').append(content)
+				$('body').append(content);
 				content.find('.emotion').qqFace({
 					id: 'facebox',
 					assign: 'rely_content',
@@ -314,6 +316,9 @@ window.Comfirm = function(title,body){
 			content.find('#reply_type').val(type);
 			if(dynamicId!=null){
 				content.find('#friendDynamicId').val(dynamicId);
+			}
+			if(receiverName!=null){
+				content.find('textarea').attr('placeholder','回复'+receiverName);
 			}
 		}
 })(jQuery, window, document, undefined);

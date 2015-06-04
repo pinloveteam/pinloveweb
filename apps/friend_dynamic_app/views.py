@@ -95,6 +95,7 @@ def init_dynamic(request,userId,arg,type=None,**kwargs):
         arg['publish']=True
     else:
         friendDynamicList=FriendDynamic.objects.select_related('publishUser').filter(publishUser_id=userId).order_by('-publishTime')
+        userId=request.user.id
         arg['False']=False
     data=page(request,friendDynamicList)
     friendDynamicList=friendDynamicList_to_Dynamic(data['pages'].object_list, userId)

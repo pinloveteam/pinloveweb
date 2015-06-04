@@ -54,7 +54,11 @@ function init_card(cards){
 			txt='<br /><span ">如需查看对方的雷达图和打分，必须完善你的</span>'
 				var recommendStatus=$.parseJSON({{recommend_finish|safe}});
 				for(var v in recommendStatus){
+					if(recommendStatus[v].info=='头像'){
+						txt= txt+'<span class="text-red"><a href="javascript:void(0);" onclick="click_avatar()">'+recommendStatus[v].info+'</a>  </span>'
+					}else{
 						txt= txt+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
+					}	
 					}
 				var body = $(txt)
        	    $.poplayer({body:body});
@@ -86,6 +90,10 @@ success=function(data){
 		     }
 		      //set_count(data.noReadCount)
 		      init_card(data.cards)
+		      if(next_page=-1){
+		    	  var no_next_page=$('<div id="no_next_page" class="row"><center><span>没有更多信息!</span></center></div>');
+			       $('#cardList').append(no_next_page)
+		      }
 		      {%if first%}
 		      if(!is_guide){
 		    	  guide()
@@ -180,6 +188,32 @@ function guide_compare_radar(){
 	hopscotch.startTour(tour_compare);
 };
 </script>
+<script>
+$(function(){
+	$('#uploadAvatarInputFile').change(function(){
+	try{  
+		$('.logined').addShade('正在上传...');
+		$('#uploadAvatarForm').submit();
+	}catch(e){  
+		alert(e.message)
+	}
+	});
+});
+function click_avatar(){
+	$('#uploadAvatarInputFile').click();
+}
+function upload_avatar_error(error_msg) {
+	$('.container').removeShade();
+	var body = $('<p>'+error_msg+'</p>');
+	$.poplayer({body:body});
+};
+
+var imgSelect;
+function upload_avatar_success(image_url) {
+	$('.container').removeShade();
+	window.location.href='/mobile/update_avtar/?image='+image_url
+}
+</script>
 <div id="card_clone" style="display: none;">
      <div class="frame">
        <div class='row'>
@@ -211,3 +245,9 @@ function guide_compare_radar(){
 			</div>
 		</div>
    </div>
+   
+   <form id="uploadAvatarForm" action="/mobile/uploadavatar_upload/" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
+		{% csrf_token %}
+                <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" style="display: none;">
+        </form>
+        <iframe id="uploadAvatarIframe" name="uploadAvatarIframe" width="0px" height="0px" style="display: none;"></iframe>

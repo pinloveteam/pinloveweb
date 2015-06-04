@@ -341,11 +341,11 @@ textarea {
 }
 
 .emotion {
-	background: url(../img/pop_expression.gif) no-repeat;
+	background: url(../../img/pop_expression.gif) no-repeat;
 }
 
 .photo {
-	background: url(../img/photo_icon.gif) no-repeat;
+	background: url(../../img/photo_icon.gif) no-repeat;
 }
 /*span.emotion:hover {
 	background-position: 2px -28px
@@ -379,11 +379,33 @@ textarea {
 }
 /*message*/
 .app {
-	border: 1px solid #fff;
 	border-radius: 10px;
-	margin-top: 10px;
-	padding: 10px;
 	text-align: center;
+	width: 200px;
+	margin-top: 10px;
+	padding-bottom: 3px;
+	border: solid 1px #fff;
+}
+
+.app a {
+	color: #fff;
+}
+
+.apple {
+	background: url("../../img/apple.png") no-repeat;
+}
+
+.android {
+	background: url("../../img/android.png") no-repeat;
+}
+
+.apple, .android {
+	margin-top: 3px;
+	width: 24px;
+	height: 29px;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-right: 10px;
 }
 
 .edit {
@@ -403,4 +425,8 @@ textarea {
 	text-align: center;
 	width: 100%;
 	top: 0;
+}
+
+.button {
+	margin-top: 10px;
 }

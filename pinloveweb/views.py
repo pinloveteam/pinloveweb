@@ -399,8 +399,8 @@ def android_download(request):
     try:
         from django.core.servers.basehttp import FileWrapper
         from pinloveweb.settings import STATIC_ROOT
-        file_name='pinlove_android_app'
-        response = HttpResponse(FileWrapper(file(('%s/download/%s.apk'%(STATIC_ROOT,file_name)))), content_type='application/zip')
+        file_name='pinlove_android_app.apk'
+        response = HttpResponse(FileWrapper(file(('%s/download/%s'%(STATIC_ROOT,file_name)))), content_type='application/vnd.android.package-archive')
         response['Content-Disposition'] = 'attachment; filename=%s'%(file_name)
         return response
     except Exception as e:

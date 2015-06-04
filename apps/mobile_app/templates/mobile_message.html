@@ -322,8 +322,6 @@
 	   //滚动加载
 	   var next_page=1;
 	   no_load=function(){
-	    	var no_dynamic=$('#no_dynamic')
-			$('.col-xs-9').append('<div class="row" style="margin-top: 20px;text-align: center;">没有消息了</div>')
 			stop_load_next_page();
 			return;
 	   };
@@ -345,6 +343,10 @@
        	}
    	   //set_menu_count(data.noReadFollowMessageCount,data.noReadMessageCount,data.noReadAgreeCount,data.noReadCommentCount )
        	init_message(data.messageList);
+   	   if(next_page==-1){
+   		var no_dynamic=$('<div id="no_dynamic" class="row" style="margin-top: 10px;text-align: center;">没有消息了</div>')
+		$('#message_list').append(no_dynamic)
+   	   }
 	   };
 		$(window).scroll( function() { 
 				if(get_load_next_page()){
