@@ -200,7 +200,7 @@ def follow(request,type,ajax='false',template_name="mobile_follow.html"):
         if not recommend_status['result']:
             args['has_recommend']=True
         else:
-            args['recommend_finish']=recommend_status['data']
+            args['recommend_finish']=simplejson.dumps(simplejson.dumps(recommend_status['data']))
         if request.is_ajax():
             data={}
             if cardList.has_next():
@@ -243,7 +243,7 @@ def nearby(request,template_name="mobile_neardy.html"):
         if not recommend_status['result']:
             args['has_recommend']=True
         else:
-            args['recommend_finish']=simplejson.dumps(recommend_status['data'])
+            args['recommend_finish']=simplejson.dumps(simplejson.dumps(recommend_status['data']))
         if request.is_ajax():
             from pinloveweb.method import load_cards_by_ajax
             return load_cards_by_ajax(request,userList,chanel='mobile')
@@ -363,7 +363,7 @@ def search(request,template_name='mobile_search.html'):
                     if not recommend_status['result']:
                         args['has_recommend']=True
                     else:
-                        args['recommend_finish']=recommend_status['data']
+                        args['recommend_finish']=simplejson.dumps(simplejson.dumps(recommend_status['data']))
                     return render(request, 'mobile_search_result.html',args)
         elif request.is_ajax():
             searchForm=SearchMobileForm(request.GET)
