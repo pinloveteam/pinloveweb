@@ -13,7 +13,7 @@
 
 			var picBox = '<div class="swiper-container pic-box"><div class="swiper-wrapper pic-wrapper">';
 			for (var i = 0; i < imgArr.length; i++) {
-				picBox += '<center class="swiper-slide"><img style="max-width:100%;height:auto;" src="' + imgArr[i] + '" /></center>';
+				picBox += '<center class="swiper-slide"><img style="max-width:100%" src="' + imgArr[i] + '" /></center>';
 			}
 			picBox += '</div><center class="my-pagination pic-pagination"></center></div>';
 			$('body').after(picBox);
@@ -23,21 +23,14 @@
 				calculateHeight: true,
 				initialSlide: picIndex
 			});
-//			if (e.state) {
-//				history.replaceState({"type": "pic"}, "", "");
-//			}
-//			else{
-//				history.pushState({"type": "pic"}, "", "?pic");
-//			console.log(e.state);
-//			}
-//			window.onpopstate = function(e) {
+//			window.onclick = function(e) {
+//				if (!($(e.target).is('img'))) {
 //					$('.pic-box').remove();
+//				}
 //			}
-			window.onclick = function(e) {
-				if (!($(e.target).is('img'))) {
-					$('.pic-box').remove();
-				}
-			}
+			$('.pic-box').click(function(){
+				$('.pic-box').remove();
+			})
 		});
 	}
 })(jQuery, window, document, undefined);
@@ -207,22 +200,8 @@ window.Comfirm = function(title,body){
 	return comfirm;
 }
 
-//回复
-//调用方式$.poplayer(options);
-//options={
-//	head : '确认',
-//	body : 'message',
-//	btnText : '确定',
-//	btnFunc : this.closeDialog
-//}
 
-//OR
-
-//options={
-//	type : 'frame',
-//	body : 'message',
-//		
-		
+//回复	
 ;(function($, window, document) {
 	$.mobile_edit = function(options) {
 		var defaults = {

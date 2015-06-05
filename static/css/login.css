@@ -62,6 +62,7 @@ a:hover {
 
 .stage {
 	height: 591px;
+	min-width: 1080px;
 }
 
 .background {
@@ -132,7 +133,7 @@ a:hover {
 
 .main-left {
 	border-right: solid 1px #fff;
-	text-align: center;
+	text-align: right;
 }
 
 .radio-inline {
@@ -168,7 +169,6 @@ a:hover {
 	position: relative;
 	left: 20px;
 	top: 30px;
-	color: #5297DA;
 }
 
 #scrollUp {
@@ -182,14 +182,15 @@ a:hover {
 
 .app {
 	border-radius: 10px;
-	padding: 10px;
 	text-align: center;
-	width: 300px;
-	background-color: #333;
+	width: 200px;
+	margin-top: 10px;
+	padding-bottom: 3px;
+	border: solid 1px #fff;
 }
 
-.stage {
-	min-width: 1080px;
+.app a {
+	color: #fff;
 }
 
 .apple {
@@ -201,9 +202,9 @@ a:hover {
 }
 
 .apple, .android {
-	margin-top: 10px;
+	margin-top: 3px;
 	width: 24px;
-	height: 30px;
+	height: 29px;
 	display: inline-block;
 	vertical-align: bottom;
 	margin-right: 10px;
