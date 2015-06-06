@@ -14,9 +14,9 @@ body {
 }
 
 label {
-	font-size: 14px;
+    font-size: 14px;
+    
 }
-
 .container, body {
 	width: 100%;
 }
@@ -44,7 +44,6 @@ a:hover {
 #register {
 	background-color: #EE5B2F;
 }
-
 #login {
 	background-color: #50B62F;
 }
@@ -59,23 +58,21 @@ a:hover {
 	top: -28.5px;
 	left: 200px;
 }
-
 .stage {
 	height: 591px;
-	min-width: 1080px;
 }
 
-.background {
+.background{
 	background-position: center center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-image: url('../img/bg.jpg');
-	z-index: 0;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	top: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('../img/bg.jpg'); 
+    z-index: 0;
+    position: absolute;
+     bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
 }
 
 .bgc-blue, .bcg-orange, a, .btn, .btn-xs {
@@ -106,13 +103,12 @@ a:hover {
 	font-size: 35px;
 	text-align: center;
 	font-weight: normal;
-	line-height: 1.2;
+    line-height: 1.2;
 }
 
-.content {
+.content{
 	color: #666;
 }
-
 .layer {
 	padding: 20px 60px;
 	height: 100%;
@@ -129,11 +125,11 @@ a:hover {
 
 .main-left, .main-right {
 	padding: 10px 50px;
+	text-align: center;
 }
 
 .main-left {
 	border-right: solid 1px #fff;
-	text-align: right;
 }
 
 .radio-inline {
@@ -152,7 +148,7 @@ a:hover {
 	font-size: 18px;
 	display: inline-block;
 	cursor: pointer;
-	margin-top: 20px;
+	margin-top: 15px;
 }
 
 .layer-bottom {

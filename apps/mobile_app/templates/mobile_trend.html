@@ -12,12 +12,11 @@ var userId={{user.id}};
 </script>
 <script type="text/javascript">
 var next_page=1;
-//第一次加载下一页
-first_load=true
 $(document).ready(function(){
 	loadData(no_load,success,loading,true);
 });
-
+//第一次加载
+first_load=true
 //初始化动态
 var agree_status=true;
 function init_dynamic(dynamicList){
@@ -305,7 +304,7 @@ function del_dynamic(e){
 	    init_dynamic(data.messageList);
 	    if(next_page==-1){
 	    	var no_load_message='没有更多动态';
-	    	if(first_load){
+	    	if(window.location.pathname=='/mobile/dynamic_person/' && first_load){
 	    		no_load_message='该用户没有发布过动态!'
 	    	}
 	    	$('#dynamic_list').append('<div class="trend" style="text-align:center;height:30px;" >'+no_load_message+'<div>')

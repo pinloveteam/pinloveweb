@@ -295,13 +295,13 @@ hr {
 	display: inline;
 	width: 95%;
 	height: 35px;
-	margin: 0 5px;
+	margin: 0px 5px 1px;
 }
 
 .btn_send_msg {
 	display: inline;
 	float: right;
-	margin-right: 1px;
+	margin-right: 6px;
 }
 
 
