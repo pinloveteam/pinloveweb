@@ -304,7 +304,7 @@ function del_dynamic(e){
 	    init_dynamic(data.messageList);
 	    if(next_page==-1){
 	    	var no_load_message='没有更多动态';
-	    	if(window.location.pathname=='/mobile/dynamic_person/' && first_load){
+	    	if(window.location.pathname=='/mobile/dynamic_person/' && first_load &&data.messageList.length==0){
 	    		no_load_message='该用户没有发布过动态!'
 	    	}
 	    	$('#dynamic_list').append('<div class="trend" style="text-align:center;height:30px;" >'+no_load_message+'<div>')
