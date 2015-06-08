@@ -475,7 +475,12 @@ window.Card = function(person){
 						}
 						$('.js-popframe').find('canvas').remove();
 						$('.canvas').append('<canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas>').createRadarDialog(diagData)
-						$('.js-popframe').find('#score').html(data['score'])
+						if(user_info.find('#appearancevote')[0]==$('#appearancevote')[0]){
+							$('.js-popframe').find('#score').html(data['score'])
+						}else{
+							$('.score-big:eq(1)').html(data['score'])
+						}
+						
 						var body = $("<p>打分成功!</p>")
 					}else if(data['result']=='error'){
 						var body = $("<p>"+data['error_message']+"<p>")

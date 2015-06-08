@@ -26,7 +26,8 @@ from util.singal import cal_recommend_user
 from apps.pojo.card import MyEncoder
 from django.utils import simplejson
 from django.db import transaction
-from pinloveweb.forms import ChangePasswordForm
+from pinloveweb.forms import ChangePasswordForm, ResetPasswordForm
+from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 logger=logging.getLogger(__name__)
 
 '''
@@ -277,10 +278,17 @@ def update_profile(request):
 #change_password
 def change_password(request,tempate_name):
     args={}
+    #确认是否第三方登陆第一次改密码
+    flag=False
+    if request.user.check_password(DEFAULT_PASSWORD):
+        flag=True
     if request.method=="POST":
-        changePasswordForm=ChangePasswordForm(request.POST)
+        if flag:
+            changePasswordForm=ResetPasswordForm(request.POST)
+        else:
+            changePasswordForm=ChangePasswordForm(request.POST)
         if changePasswordForm.is_valid():
-            if not request.user.check_password(changePasswordForm.cleaned_data['oldpassword']):
+            if not flag and not request.user.check_password(changePasswordForm.cleaned_data['oldpassword']):
                 if not request.is_ajax():
                     args['changePasswordForm']=changePasswordForm
                 args['oldpasswordError']='旧密码不正确!'
@@ -299,7 +307,10 @@ def change_password(request,tempate_name):
             for error in errors:
                 args[error[0]+'Error']=error[1][0]
     else:
-        changePasswordForm=ChangePasswordForm()
+        if flag:
+            changePasswordForm=ResetPasswordForm(request.POST)
+        else:
+            changePasswordForm=ChangePasswordForm(request.POST)
         args['changePasswordForm']=changePasswordForm
     if request.is_ajax():
         json=simplejson.dumps(args)

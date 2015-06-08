@@ -103,19 +103,18 @@ class RegistrationForm (UserCreationForm) :
 
     
 '''
-修改密码
+重置密码
+newpassword 新密码
+newpassword1 新密码验证
 '''
-class ChangePasswordForm(forms.Form): 
+class ResetPasswordForm(forms.Form): 
     def __init__(self, *args, **kwargs):
-        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+        super(ResetPasswordForm, self).__init__(*args, **kwargs)
         for key in self.fields:
             self.fields[key].widget.attrs['class'] = 'form-control'     #添加css class 样式
-        self.fields['oldpassword'].widget.attrs['placeholder'] = r'请输入原密码'
         self.fields['newpassword'].widget.attrs['placeholder'] = r'6-20位字符，可由英文字母、数字和下划线组成'
         self.fields['newpassword1'].widget.attrs['placeholder'] = r'再次输入密码'
         
-    oldpassword=forms.RegexField(label=_(u"原密码"),widget=forms.PasswordInput,regex=r'^[0-9a-zA-Z\xff_]{6,20}$', help_text=r"请输入原密码",error_messages={
-            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'},required=True)
     newpassword=forms.RegexField(label=_(u"新密码"),widget=forms.PasswordInput,regex=r'^[0-9a-zA-Z\xff_]{6,20}$', help_text=r"6-20位字符，可由英文字母、数字和下划线组成",error_messages={
             'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'},required=True)
     newpassword1=forms.RegexField(label=_(u"确认密码"),widget=forms.PasswordInput,regex=r'^[0-9a-zA-Z\xff_]{6,20}$', help_text=r"再次输入密码",error_messages={
@@ -132,6 +131,19 @@ class ChangePasswordForm(forms.Form):
         if(newpassword!=newpassword1):
             raise forms.ValidationError(self.error_messages['check_password_error'])
         return newpassword1
+'''
+修改密码
+oldpassword 旧密码
+'''   
+class ChangePasswordForm(ResetPasswordForm): 
+    def __init__(self, *args, **kwargs):
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+        for key in self.fields:
+            self.fields[key].widget.attrs['class'] = 'form-control'     #添加css class 样式
+        self.fields['oldpassword'].widget.attrs['placeholder'] = r'请输入原密码'
+        
+    oldpassword=forms.RegexField(label=_(u"原密码"),widget=forms.PasswordInput,regex=r'^[0-9a-zA-Z\xff_]{6,20}$', help_text=r"请输入原密码",error_messages={
+            'invalid':r'必须由英文字母、数字和下划线组成,6-20个字符'},required=True)
      
    
 '''
