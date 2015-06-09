@@ -506,8 +506,6 @@ def radar(request,userId,template_name='mobile_radar.html'):
                      })
             
         args['radarList']=simplejson.dumps(radarList)
-        from pinloveweb.method import init_person_info_for_card_page
-        args.update(init_person_info_for_card_page(userProfile))
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)

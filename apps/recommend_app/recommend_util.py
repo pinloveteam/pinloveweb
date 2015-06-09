@@ -94,7 +94,7 @@ def cal_education(user_education,school,gender,type):
             school=School.objects.all().order_by('-ranking')[0]
             return cal_ranking_score(school,gender,type)
         else :
-            school=School.objects.get(name__startswith=school,name__endswith=school)
+            school=School.objects.filter(name__startswith=school,name__endswith=school)[0]
             if user_education==-1:
                 return cal_ranking_score(school,gender,type)
             else:
