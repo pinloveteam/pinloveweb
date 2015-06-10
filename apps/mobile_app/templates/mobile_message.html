@@ -252,8 +252,7 @@
                  };
                  $('.follow').unbind();
                  $('.follow').click(follow);
-                 $('.img-rounded').unbind();
-                 $('.img-rounded').click(forward_info);
+                 $('input[id="senderId"]:not(input[value="'+{{user.id}}+'"])').closest('.row').find('.img-rounded').unbind().click(forward_info);
                  $('.dynamic_agree,.dynamic_comment').find('.col-xs-6').unbind();
                  $('.dynamic_agree,.dynamic_comment').find('.col-xs-6').click(forward_dynamic);
                  

@@ -28,6 +28,7 @@ from django.utils import simplejson
 from django.db import transaction
 from pinloveweb.forms import ChangePasswordForm, ResetPasswordForm
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
+import re
 logger=logging.getLogger(__name__)
 
 '''
@@ -320,32 +321,30 @@ def change_password(request,tempate_name):
 
 
 #reset the password
-def reset_password(request):
+def reset_password(request,template_name='reset_password.html'):
     args={}
     if request.REQUEST.get('username',False) and request.REQUEST.get('user_code',False):
       user_code=request.REQUEST.get('user_code')
       username=request.REQUEST.get('username')
       args={'user_code':user_code,'username':username}
+      flag=True
       if Verification.objects.filter(verification_code=user_code).exists():
-       if request.method=="POST":
-        newpassword=request.POST.get('newpassword','')
-        import re
-        match=re.match(r'^[0-9a-zA-Z\xff_]{6,20}$',newpassword)
-        if newpassword!=request.POST.get('repassword',''):
-             args={'error_message':u'输入密码不相等!'}
-             return render(request,'reset_password.html',args)
-        elif  match is None :
-            args={'error_message':u'密码个数错误!'}
-            return render(request,'reset_password.html',args)
-        
-        Verification.objects.filter(verification_code=user_code).delete()
-        user=User.objects.get(username=username)
-        user.set_password(newpassword)
-        args['reset_result']=True
-        user.save()
-        return render(request,'reset_password.html',args)
-       else:
-          return render(request,'reset_password.html',args)
+          if request.method=="POST":
+              newpassword=request.POST.get('newpassword','')
+              match=re.match(r'^[0-9a-zA-Z\xff_]{6,20}$',newpassword)
+              if newpassword!=request.POST.get('repassword',''):
+                  args['error_message']=u'输入密码不相等!'
+                  flag=False
+              elif  match is None :
+                  args['error_message']=u'密码个数错误!'
+                  flag=False
+              if flag:
+                  Verification.objects.filter(verification_code=user_code).delete()
+                  user=User.objects.get(username=username)
+                  user.set_password(newpassword)
+                  args['reset_result']=True
+                  user.save()
+          return render(request,template_name,args)
       else:
             args={'error_message':u'该连接已过期或被使用!'}
     else:
