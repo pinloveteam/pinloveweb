@@ -40,7 +40,8 @@ USE_L10N = True
 USE_TZ = False
 
 
-
+#登录backends
+AUTHENTICATION_BACKENDS=('pinloveweb.backends.ModelBackend',)
 # Additional locations of static files
 STATICFILES_DIRS = (
    ('css',os.path.join(PATH,'static/css').replace('\\','/') ),  

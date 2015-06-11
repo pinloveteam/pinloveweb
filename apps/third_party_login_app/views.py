@@ -48,8 +48,10 @@ import hashlib
 import time
 from django.utils.crypto import get_random_string
 import re
-from apps.third_party_login_app.method import judge_client
+from apps.third_party_login_app.method import judge_client,\
+    authenticate_three_party_login
 from util import detect_device
+from django.contrib import auth
 log=logging.getLogger(__name__)
 
 ##########three paerty login######
@@ -109,7 +111,7 @@ def qq_login(request,CALLBACK_URL=QQ_CALLBACK_URL,template_name='login_confirm_r
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='0',uid=openid).user
-        login(request,user.username,DEFAULT_PASSWORD)
+        login(request,user.username)
     return HttpResponseRedirect(request.GET.get('next_url',WEB_ROOT))
      
 '''
@@ -227,10 +229,10 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
             data=simplejson.dumps({'nickname':user_info['nickname'].strip(),'refresh_token':client.refresh_token,'unionid':user_info.get('unionid',None)})
             ThirdPsartyLogin(user=user,provider='3',uid=client.openid,access_token=client.access_token,data=data).save()
             create_user_profile(request,user,DEFAULT_PASSWORD,gender,**kwargs)
-            login(request,user.username,DEFAULT_PASSWORD)
+            login(request,user.username)
         else:
            user=ThirdPsartyLogin.objects.get(provider='3',uid=client.openid).user
-           login(request,user.username,DEFAULT_PASSWORD)
+           login(request,user.username)
         if redirectTo==u'loggin':
             return HttpResponseRedirect('/account/loggedin/?previous_page=register')
         elif redirectTo==u'weixin_game':
@@ -305,7 +307,7 @@ def sina_login(request,CALLBACK_URL=SINA_CALLBACK_URL,template_name="login_confi
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='1',uid=uid).user
-        login(request,user.username,DEFAULT_PASSWORD)
+        login(request,user.username)
     return HttpResponseRedirect(request.GET.get('next_url',WEB_ROOT))
     user_info=client.users.show.get(uid=uid)
     return HttpResponse(user_info['screen_name'])
@@ -357,7 +359,7 @@ def facebook_login(request,CALLBACK_URL=FACEBOOK_CALLBACK_URL,template_name='log
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='2',uid=user_info['id']).user
-        login(request,user.username,DEFAULT_PASSWORD)
+        login(request,user.username)
         
     return HttpResponseRedirect(request.GET.get('next_url',WEB_ROOT))
 
@@ -397,13 +399,13 @@ def twitter_login(request):
             ThirdPsartyLogin(user=user,provider='4',uid=user_info['id'],access_token='%s%s%s'% (request.session['OAUTH_TOKEN'],'|',request.session['OAUTH_TOKEN_SECRET'])).save()
             #创建用户详细信息
             create_user_profile(user,None)
-            login(request,user.username,DEFAULT_PASSWORD)
+            login(request,user.username)
             #选择性别
             return render(request,'chose_gender.html')
     else:
         #根据QQopenId获取用户信息
         user=ThirdPsartyLogin.objects.get(provider='4',uid=user_info['id']).user
-        login(request,user.username,DEFAULT_PASSWORD)
+        login(request,user.username)
     return HttpResponseRedirect('/account/loggedin/')
  
 def update_gender(request):
@@ -437,7 +439,7 @@ def register_by_three_party(request,template_name='login_confirm_register.html')
         user=create_user(confirmInfo.cleaned_data['username'],DEFAULT_PASSWORD,**kwarg)
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
         create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'])
-        login(request,user.username,DEFAULT_PASSWORD)
+        login(request,user.username)
         #检测设备
         if detect_device.detectTiermobileTablet(request):
             return HttpResponseRedirect('/mobile/loggedin/?previous_page=register')
@@ -460,10 +462,8 @@ attribute：
      用户名:username
   密  码    : password
 '''   
-def login(request,username,password):
-     from django.contrib import auth
-     user = auth.authenticate(username=username, password=password)
-     log.error(username+'   '+password)
+def login(request,username):
+     user = authenticate_three_party_login(username=username)
      if user is not None and user.is_active : 
          auth.login(request, user)
 #          log.error("login success"+request.user.username+'fcsdfsf')
