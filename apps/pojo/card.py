@@ -12,6 +12,7 @@ from apps.recommend_app.models import Grade
 from apps.user_app.models import UserProfile
 from pinloveweb.method import is_focus_each_other
 from apps.user_app.method import is_chat
+from util.util import regex_expression
 empty_result_list=[-1,'N',None]
 
 '''
@@ -73,7 +74,7 @@ class Card(CardBase):
             from apps.friend_dynamic_app.dynamic_settings import IMAGE_SAVE_FORMAT,thumbnails
             smailPic='%s%s%s%s%s'%(picture.picPath,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT)
             pic='%s%s%s'%(picture.picPath,'.',IMAGE_SAVE_FORMAT)
-            self.pictureList.append({'description':picture.description,'pic':pic,'smailPic':smailPic,'createTime':picture.createTime.strftime("%Y-%m-%d-%H")}) 
+            self.pictureList.append({'description':regex_expression(picture.description),'pic':pic,'smailPic':smailPic,'createTime':picture.createTime.strftime("%Y-%m-%d-%H")}) 
             
     
     
