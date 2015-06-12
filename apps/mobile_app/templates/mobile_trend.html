@@ -30,7 +30,9 @@ function init_dynamic(dynamicList){
 		dynamic.find('#agreeNum').html(this.argeeNum);
 		dynamic.find('#dynamicId').val(dynamicObj.id);
 		if(userId!=this.publishUserId){
+			var publishUserId=this.publishUserId;
 			dynamic.find('.delete').remove();
+			dynamic.find('#avatar').click(function(){window.location.href='/mobile/info_detail/'+publishUserId+'/'})
 		}
 		if(this.type==2){
 			dataList=Array();
@@ -181,9 +183,19 @@ function init_agree(dynamic_div,agreeList,type){
 function init_comment(dynamic_div,commentList){
 	$(commentList).each(function(){
 		var comment=$('#dynamic_clone').find('#comment').clone();
-		var reply_name_a=comment.find('.reply-name').html(this.reviewerName).parent().attr('href','/mobile/info_detail/'+this.reviewerId+'/')
+		if(userId==this.reviewerId){
+			reviewerHref='javascript:void(0);'
+		}else{
+			reviewerHref='/mobile/info_detail/'+this.reviewerId+'/';
+		}
+		var reply_name_a=comment.find('.reply-name').html(this.reviewerName).parent().attr('href',reviewerHref)
 		if(this.receiverName!=null){
-			reply_name_a.after('回复<a href="/mobile/info_detail/'+this.receiverId+'/">'+this.receiverName+'</a>');
+			if(userId==this.receiverId){
+				receiverHref='javascript:void(0);'
+			}else{
+				receiverHref='/mobile/info_detail/'+this.receiverId+'/';
+			}
+			reply_name_a.after('回复<a href="'+receiverHref+'">'+this.receiverName+'</a>');
 		}
 		comment.find('.reply-content').html(this.content);
 		comment.find('#commentId').val(this.id);

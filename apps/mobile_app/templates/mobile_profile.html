@@ -95,6 +95,7 @@ $(document).ready(function(){
              beforeSend: function(XMLHttpRequest){
              },
              success: function(data, textStatus){
+            	 changeflag=false;
                  if(textStatus== 'success'){
                 	 data=$.parseJSON(data)
                  	if(data.result=='success'){
@@ -175,12 +176,28 @@ function hide_school_list(){
 			}
 			
 		}
-		
+		var changeflag = false;//信息是否保存
 		$(function(){
 			$('#errorInfo').prev().click(function(){
 				$(this).closest('center').slideUp('slow');
 			})
+			//判断元素是否改变
+			$('input,select').change(function(){
+				changeflag = true;
+			});
 		});
+		
+		function back(){
+			if(changeflag){
+				var body = $("<p>你有未保存信息，确定离开吗？</p>");
+				btnFunc=function(){
+					window.history.go(-1);
+				}
+				$.poplayer({body:body,btnFunc:btnFunc});
+			}else{
+				window.history.go(-1)
+			}
+		}
 
 	</script>
 {% endblock %}
@@ -189,7 +206,7 @@ function hide_school_list(){
 		<div class="header">
 			<div class="row">
 				<div class="col-xs-2">
-					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+					<i class="glyphicon glyphicon-chevron-left" onclick="back();"></i>
 				</div>
 				<div class="col-xs-8">
 					{%if guide %}{{title}}{%else%}填写个人信息{%endif%}

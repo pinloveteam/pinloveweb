@@ -1,10 +1,27 @@
 {% extends "mobile_base.html" %} 
 {% block title %} 拼爱网 --性格标签{% endblock %}
 {% block js%}
-<script type="text/javascript">
+<script type="text/javascript"> 
+            var changeflag = false;//信息是否保存
 			$(function() {
 				$('.js-labels').label();
+				//判断标签是否修改
+				$('.label-default').click(function(){
+					changeflag = true;
+				});
 			});
+            //返回按钮
+			function back(){
+				if(changeflag){
+					var body = $("<p>你有未保存信息，确定离开吗？</p>");
+					btnFunc=function(){
+						window.history.go(-1);
+					}
+					$.poplayer({body:body,btnFunc:btnFunc});
+				}else{
+					window.history.go(-1)
+				}
+			}
 			$(function() {
 				$('.js-labels-2').label({
 					selectedClass: 'label-info'
@@ -42,6 +59,7 @@
 		                        $('#answer-list').append('<p>'+content.val()+'</p>');
 		                        content.val('');
 		                    } */
+		                    changeflag=false;
 		                    if(textStatus== 'success'){
 		                    	data=$.parseJSON(data)
 		                    	if(data.result=='success'){
@@ -116,7 +134,7 @@
 		<div class="header">
 			<div class="row">
 				<div class="col-xs-2">
-					<i class="glyphicon glyphicon-chevron-left" onclick="window.history.go(-1)"></i>
+					<i class="glyphicon glyphicon-chevron-left" onclick="back();"></i>
 				</div>
 				<div class="col-xs-8">
 					{%if guide %}{{title}}{%else%}性格标签{%endif%}
