@@ -170,6 +170,8 @@ def update_follow(request):
     from util.cache import is_black_list
     if is_black_list(offset,int(request.user.id)):
         arg={'type':'error','error_message':'该用户已经将你拉入黑名单，你不能添加关注!'} 
+    elif int(offset)==int(request.user.id):
+        arg={'type':'error','error_message':'你不能关注自己!'} 
     elif Follow.objects.filter(my=request.user,follow_id=offset).exists():
         if type==1:
             return HttpResponse(simplejson.dumps({'result':'follow'}))
