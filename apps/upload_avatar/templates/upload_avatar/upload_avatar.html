@@ -331,7 +331,7 @@
         <form id="uploadAvatarForm" action="{% url 'uploadavatar_upload' %}" method="post" target="uploadAvatarIframe" enctype="multipart/form-data">
             {% csrf_token %}
             <div id="uploadAvatarBtnLayout" >
-                <h5>请上传清晰美观的个人近照，给别人留下美好的第一印象。</h5>
+                <p>请上传清晰美观的个人近照，给别人留下美好的第一印象。</p>
                 <button class="btn btn-danger">{{ CHOOSE_IMAGE }}</button>
                 <input type="file" id="uploadAvatarInputFile" name="uploadavatarfile" />
                 <span class="text-muted">

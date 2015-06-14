@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>拼爱网络</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+
+	<body style="margin: 0; padding: 0;">
+		<div style="background:#fff;font-family:Helvetica,Arial,sans-serif!important;font-size:16px;width:100%">
+			<table width="100%" cellspacing="0" cellpadding="0" border="0" style="border:0;margin:0 auto">
+				<tbody>
+					<tr>
+						<td valign="top" style="vertical-align:top">
+							<table cellspacing="0" cellpadding="0" style="width:100%">
+
+								<tbody>
+									<tr>
+										<td valign="top" style="background:#fafafa;border:0;padding:0;vertical-align:top;width:100%">
+											<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;max-width:560px;padding:0 20px 60px;vertical-align:top;width:100%">
+												<tbody>
+													<tr>
+														<td valign="top" style="padding-top:20px;vertical-align:top">
+															<h2 style="color:#474c4e;font-size:18px;font-weight:normal;margin:0 0 15px">{{username}} 您好：</h2>
+															<div style="color:#474c4e;font-size:14px;line-height:25px;margin:14px 0">{{messageStr|safe}}</div>
+															</p>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<table width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+																<tbody>
+																	<tr>
+																	   {%for userProfile in recommendList%}
+																		<td style="border-bottom:1px solid #d3d3d3;padding:30px 30px 30px 0;text-align:center;vertical-align:top">
+																			<h3 style="font-size:18px;font-weight:normal;margin:0 0 5px;text-align:center"><a target="_blank" style="color:#1379de;text-decoration:underline;color:#204854;text-decoration:none" href="{{userProfile.url}}">{{userProfile.username}}</a></h3>
+																			<p style="color:#878787;font-size:14px;margin:0 0 15px;text-align:center">{{userProfile.age}}</p>
+																			<div style="">
+																				<a target="_blank" href="{{userProfile.url}}">
+																					<img width="100px" border="0" src="{{userProfile.avatar_name}}" style="border:0;padding:9px 0 0 0">
+																				</a>
+																			</div>
+																			<p style="margin:0;text-align:center">
+																				<a target="_blank" style="text-decoration:none" href="{{userProfile.url}}"><span style="background:#428BCA;border:1px solid #428BCA;color:#fff;display:inline-block;font-size:14px;font-weight:bold;margin-top:10px;padding:8px 20px;text-decoration:none;white-space:nowrap;border-radius:3px">查看个人资料</span>
+																				</a>
+																			</p>
+																		</td>
+																		{%ifequal forloop.counter 4%}
+																		<tr>
+																		</tr>
+																		{%endifequal %}
+																		{%endfor%}
+																	</tr>
+																</tbody>
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<td style="padding-top:40px;vertical-align:top">
+															<p style="color:#474c4e;font-size:14px;line-height:25px;margin:14px 0;margin:0 0 20px"><span style="font-weight:bold">Remember:</span> 您随时都能找到更多朋友！ 只需访问 <a target="_blank" style="color:#1379de;text-decoration:underline" href="{{WEBSITE}}/search/">PinLove 搜索</a>页面。</p>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+
+									<!--<tr>
+										<td valign="top">
+
+											<table width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f0f0f0;border-bottom:1px solid #dbdbdb;border-top:1px solid #dbdbdb;padding:10px 50px 0;vertical-align:top;width:100%">
+												<tbody>
+													<tr>
+														<td valign="bottom" style="vertical-align:bottom;width:120px">
+															<a target="_blank" href="https://www.zoosk.com/zoosk-on-the-go?t_ctr=DD_13_00_zh_02_US_01_S_20150131_21_E&amp;from=C13EmailV2">
+																<img width="106" height="106" style="border:0;display:block" src="https://zephyrzoosk-a.akamaihd.net/zephyr-ci-git1351/images/general/email/heart-friend.png">
+															</a>
+														</td>
+														<td valign="bottom" style="padding:0 10px;vertical-align:bottom">
+															<h4 style="color:#505050;font-size:18px;font-weight:normal;margin:0;white-space:nowrap">希望获得更好的体验？ <a target="_blank" style="display:block;font-size:16px;font-weight:bold;padding-top:5px;color:#1379de;text-decoration:underline;text-decoration:none" href="https://www.zoosk.com/zoosk-on-the-go?t_ctr=DD_13_00_zh_02_US_01_S_20150131_21_E&amp;from=C13EmailV2">下载应用程序！ ›</a></h4>
+															<p style="color:#7a7a7a;font-size:12px;margin:10px 0;white-space:nowrap">在 <a target="_blank" style="color:#1379de;text-decoration:underline;text-decoration:none" href="https://www.facebook.com/Zoosk">Facebook</a> 上“赞”我们一下。 在 <a target="_blank" style="color:#1379de;text-decoration:underline;text-decoration:none"
+																href="https://twitter.com/zoosk">Twitter</a> 上关注我们。</p>
+														</td>
+														<td valign="bottom" style="vertical-align:bottom">
+															<a target="_blank" href="https://www.zoosk.com/zoosk-on-the-go?t_ctr=DD_13_00_zh_02_US_01_S_20150131_21_E&amp;from=C13EmailV2">
+																<img width="120" height="130" style="border:0;display:block" src="https://zephyrzoosk-a.akamaihd.net/zephyr-ci-git1351/images/general/email/iphone5-female.png">
+															</a>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>-->
+
+									<tr>
+										<!--  <td valign="top" style="background:#fafafa;padding:10px 20px;vertical-align:top">
+											<p style="color:#9a9a9a;font-family:Arial,sans-serif!important;font-size:11px;margin:14px 0">这封邮件已发送给 <a target="_blank" style="color:#1379de;text-decoration:underline" href="mailto:eqyzou@gmail.com">eqyzou@gmail.com</a>。 如果您将来不想收到这些来自 Zoosk 的电子邮件，请<a target="_blank" style="color:#1379de;text-decoration:underline" href="https://www.zoosk.com/optout.php?guid=d160ed6158f3450abb2a6c0a5c5e32f3&amp;key=5d25ef641bdab8dd0512c9a4f4b8cee7&amp;zoosker=1&amp;t_ctr=DD_13_00_zh_02_US_01_S_20150131_21_E&amp;from=C13EmailV2">退订</a>。</p>
+											<p style="color:#9a9a9a;font-family:Arial,sans-serif!important;font-size:11px;margin:14px 0"><span>版权所有 &copy; <span data="2007-2014" onclick="return false;" t="6" style="border-bottom:1px dashed #ccc;z-index:1">2007-2014</span> Zoosk, 989 Market St, San Francisco, CA <span data="94103" onclick="return false;" t="6" style="border-bottom:1px dashed #ccc;z-index:1">94103</span>												USA.</span> | <a target="_blank" style="color:#1379de;text-decoration:underline" href="https://www.zoosk.com/privacy.php">隐私政策</a>
+											</p>
+											<img src="https://s3.amazonaws.com/t.img.zoosk.com/usr.gif?openratetracking=DD_13_00_zh_02_US_01_S_20150131_21_E" style="display:none!important">
+										</td>-->
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+
+</html>
