@@ -73,11 +73,8 @@ def send_message_email(userIdList=None):
             args['messageStr']='您在不在拼爱网的这段时间，%s%s%s%s快登陆查看吧！'%(messageStr,followStr,dynamicCommentStr,dynamicArgeeStr)
             email=Email(args['email'],'您不在拼爱网的时间收到了%s消息，千万别错过缘分！【拼爱网】'%(count))
             email.html('message_Email_Template.html', args)
-            email.send()
-            #添加发送推荐人记录
-            emailRecommendHistoryList=[EmailRecommendHistory(user_id=userProfile.user_id,recommender_id=recommend['userId']) for recommend in args['recommendList']]
-            EmailRecommendHistory.objects.bulk_create(emailRecommendHistoryList)
-            send_message=send_message+'用户名 '+args['username']+' email '+args['email']+' '
+#             email.send()
+            send_message='%s用户名:%s email:%s ;'%(send_message,args['email'],args['username'])
         return send_message
       except BotoServerError as e:
         logger.error('%s%s%s%s'%('发送推荐邮件出错，出错用户id为',userProfile.user_id,'错误内容：',e.body))
