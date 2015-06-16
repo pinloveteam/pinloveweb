@@ -45,8 +45,8 @@ def send_notify_email(userIdList=None):
 发送消息邮件
 '''
 def send_message_email(userIdList=None):
-    #发送的
-    emailFeild=['']
+    #发送的信息
+    send_message='发送成功的用户信息:'
     #获取用户信息
     if userIdList is None:
         userProfileList=UserProfile.objects.select_related('user').all()
@@ -77,6 +77,8 @@ def send_message_email(userIdList=None):
             #添加发送推荐人记录
             emailRecommendHistoryList=[EmailRecommendHistory(user_id=userProfile.user_id,recommender_id=recommend['userId']) for recommend in args['recommendList']]
             EmailRecommendHistory.objects.bulk_create(emailRecommendHistoryList)
+            send_message=send_message+'用户名 '+args['username']+' email '+args['email']+' '
+        return send_message
       except BotoServerError as e:
         logger.error('%s%s%s%s'%('发送推荐邮件出错，出错用户id为',userProfile.user_id,'错误内容：',e.body))
       except Exception as e:

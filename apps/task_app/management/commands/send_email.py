@@ -38,12 +38,12 @@ class Command(BaseCommand):
             message='发送推荐邮件成功!'
         elif args[0]=='message':
             if len(args)==1:
-                send_message_email()
+                messageStr=send_message_email()
             else:
-                self.stdout.write('111')
                 temp='%s%s'%('用户ids：',args[1])
                 userIdList=[ int(attr) for attr in args[1].split(',')]
-                send_message_email(userIdList=userIdList)
+                messageStr=send_message_email(userIdList=userIdList)
+            self.stdout.write(messageStr)
             message='发送推荐邮件成功!'
         else:
             message='参数错误!'
