@@ -60,7 +60,7 @@ def send_message_email(userIdList=None):
             args={'username':userProfile.user.username,'email':userProfile.user.email,'WEBSITE':WEBSITE}
             count=getattr(models,'get_no_read_message_dynamic_list_count')(userProfile.user_id)
             if count<=0:
-                continue;
+                continue
             messageCount=MessageLog.objects.get_no_read_private_msessge_count(userProfile.user_id)
             
             followCount=MessageLog.objects.get_no_read_follow_message_count(userProfile.user_id)
@@ -73,11 +73,11 @@ def send_message_email(userIdList=None):
             args['messageStr']='您在不在拼爱网的这段时间，%s%s%s%s快登陆查看吧！'%(messageStr,followStr,dynamicCommentStr,dynamicArgeeStr)
             email=Email(args['email'],'您不在拼爱网的时间收到了%s消息，千万别错过缘分！【拼爱网】'%(count))
             email.html('message_Email_Template.html', args)
-            email.send()
+#             email.send()
             send_message='%s用户名:%s email:%s ;'%(send_message,args['email'],args['username'])
-        return send_message
       except BotoServerError as e:
         logger.error('%s%s%s%s'%('发送推荐邮件出错，出错用户id为',userProfile.user_id,'错误内容：',e.body))
       except Exception as e:
         logger.exception('%s%s%s%s'%('发送推荐邮件出错，出错用户id为',userProfile.user_id,'错误内容：',e.message))
+    return send_message
     
