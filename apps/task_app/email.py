@@ -73,7 +73,7 @@ def send_message_email(userIdList=None):
             args['messageStr']='您在不在拼爱网的这段时间，%s%s%s%s快登陆查看吧！'%(messageStr,followStr,dynamicCommentStr,dynamicArgeeStr)
             email=Email(args['email'],'您不在拼爱网的时间收到了%s消息，千万别错过缘分！【拼爱网】'%(count))
             email.html('message_Email_Template.html', args)
-#             email.send()
+            email.send()
             send_message='%s用户名:%s email:%s ;'%(send_message,args['email'],args['username'])
       except BotoServerError as e:
         logger.error('%s%s%s%s'%('发送推荐邮件出错，出错用户id为',userProfile.user_id,'错误内容：',e.body))
