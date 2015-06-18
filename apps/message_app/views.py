@@ -19,6 +19,7 @@ from apps.message_app.message_settings import REPLY_CONTENT_LENGTH_LIMIT
 from util.util import verify_content
 from apps.pojo.message import MessageBeanEncoder, MessageLog_to_MessageBean,\
     MessageLog_to_Message
+from django.contrib.auth.models import User
 logger=logging.getLogger(__name__)
 ###############################
 ##1.0
@@ -173,7 +174,7 @@ def message_detail(request,template_name):
         senderId=int(request.REQUEST.get('senderId',False))
         if senderId  :
             args['userId']=request.user.id
-            args['userusername']=request.user.username
+            args['username']=User.objects.get(id=senderId).username
             args['senderId']=senderId
             from apps.user_app.method import get_avatar_name
             args['avatarName']=get_avatar_name(request.user.id,request.user.id)
