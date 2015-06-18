@@ -339,7 +339,7 @@ for app in logger_app:
 # # Optional SMTP authentication information for EMAIL_HOST.
 # EMAIL_HOST_USER = 'pinloveteam'
 # EMAIL_HOST_PASSWORD = 'redyellowblue123#'
-DEFAULT_FROM_EMAIL = 'pinloveteam@pinlove.com'
+DEFAULT_FROM_EMAIL = '拼爱网 <pinloveteam@pinlove.com>'
 # SERVER_EMAIL = 'pinloveteam@pinpinlove.com'
 # EMAIL_USE_TLS = True
 # 
