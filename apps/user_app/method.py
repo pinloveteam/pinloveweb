@@ -202,9 +202,11 @@ def get_detail_info(myId,userId,socreForOther):
                         'scoreMy':int(socreForOther['matchResult'].get('scoreMyself',-3)),
                         'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
                      })
-    elif socreForOther['result']=='less':
+#     elif socreForOther['result']=='less':
         from apps.recommend_app.recommend_util import recommend_info_status
-        data.update({'error_message':recommend_info_status(myId,channel='web')['data']})
+        recommend_info_finish_status=recommend_info_status(myId,channel='web')
+        if  recommend_info_finish_status['result']:
+            data.update({'error_message': recommend_info_finish_status['data']})
         
     for  key in data.keys():
         if data[key] in missing_value:

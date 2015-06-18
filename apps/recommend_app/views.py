@@ -140,23 +140,16 @@ def socre_my(request):
 def get_socre_for_other(userId,otherId):    
         args={}
         if otherId:
-#              from apps.recommend_app.method import get_match_score_other
-#              matchResult=get_match_score_other(userId,otherId)
-#              if matchResult==None:
                  #判断是否可用匹配
                  from util.cache import get_has_recommend,has_recommend
                  for field in ['userExpect','weight','tag','info',"avatar"]:
                      has_recommend(userId,field)
-                 if get_has_recommend(userId):
-                     from apps.recommend_app.method import match_score
-                     matchResult=match_score(userId,otherId)
-                     args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
-                 else:
-                     args={'result':'less'}
-#              else:
-#                  from apps.pojo.recommend import MarchResult_to_RecommendResult
-#                  matchResult=MarchResult_to_RecommendResult(matchResult)
-#                  args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
+#                  if get_has_recommend(userId):
+                 from apps.recommend_app.method import match_score
+                 matchResult=match_score(userId,otherId)
+                 args={'result':'success','matchResult':matchResult.get_dict(matchResult.is_permission(userId=userId))} 
+#                  else:
+#                      args={'result':'less'}
         else:
             args={'result':'error','error_messge':'用户id不存在!'}
         return args

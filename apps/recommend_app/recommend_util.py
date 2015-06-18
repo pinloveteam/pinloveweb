@@ -47,6 +47,7 @@ def recommend_info_status(userId,channel='web'):
     for key,value in recommendStatus.items():
         if not value: 
             args['data'][key]=dict[key]
+    #没有未填条件
     if len(args['data'])==0:
         args['result']=False
     return  args           

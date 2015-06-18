@@ -178,7 +178,7 @@
 		var r1 = $('<div class="row"><div class="col-xs-6"><img id="head" width="55px" src=""/></div><div class="col-xs-6" style="padding-top: 23px; padding-left: 0px; height: 60px;top: -20px;"><div><span style="color: white;">TA的得分</span></div><div><span id="score" class="score-big" style="color: red;">0</span><span class="text">分</span></div></div></div><div class="row"><div class="col-xs-12"><button id="compare_button" class="btn btn-xs btn-danger compare-btn">与其他用户对比</button></div><div class="col-xs-12 info_warn" ></div></div>');
 		r1.find('#head').attr('src', options.user1.head);
 		r1.find('#score').html(options.user1.score);
-		if(options.user1.data[0]==undefined){
+		if(options.user1.error_message!=undefined){
 			r1.find('#score').next().remove();
 			r1.find('#score').remove();
 			var info = r1.find('#compare_button').parent();
