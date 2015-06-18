@@ -231,7 +231,7 @@ ORDER BY sendTime desc
 SELECT u2.id,u2.sender_id,u3.username as sender_name,u4.avatar_name,u4.avatar_name_status,u1.receiver_id,u2.content,u2.sendTime,u2.type,u1.isRead
 from message_log u1 LEFT JOIN message u2 on u1.message_id=u2.id 
 LEFT JOIN auth_user u3 on u3.id=u2.sender_id LEFT JOIN user_profile u4 on u4.user_id=u2.sender_id
-where  receiver_id in(%s,%s) and sender_id in(%s,%s)
+where  receiver_id in(%s,%s) and sender_id in(%s,%s) and type=1
 ) s
 ORDER BY sendTime desc
         '''
