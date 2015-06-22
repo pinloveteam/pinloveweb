@@ -15,11 +15,12 @@ from django.db.transaction import commit
 """"
 推荐信息填写情况
 attribute：null
-
+channel：访问路径
+fields:判断属性列表
 return: 填写情况(dict)
    
 """
-def recommend_info_status(userId,channel='web'):
+def recommend_info_status(userId,channel='web',fields=[]):
     '''
     channel 来源 web(电脑) mobile(手机)
     '''
@@ -41,9 +42,14 @@ def recommend_info_status(userId,channel='web'):
           'info':{'info':'个人信息','href':'/user/user_profile/#self_info_'},
           'avatar':{'info':'头像','href':'/user/user_profile/#upload_head_'}
           }
-       
     from util.cache import get_recommend_status
     recommendStatus=get_recommend_status(userId)
+    #如果判断推荐元素不为空
+    if len(fields)>0:
+        tempRrecommendStatus={}
+        for field in fields:
+            tempRrecommendStatus[field]=recommendStatus[field]
+        recommendStatus=tempRrecommendStatus
     for key,value in recommendStatus.items():
         if not value: 
             args['data'][key]=dict[key]

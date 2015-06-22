@@ -43,10 +43,20 @@
 				voteScoreList.push(options.user2.voteScore);
 			}
 			is_vote(dialog,isVoteList,voteScoreList);
+			//雷达图显示网站所需显示提示
+			if(options.user1.error_message!=undefined){
+			 recommendStatus=options.user1.error_message;
+			 txt='<span class="tip">如需查看对方的雷达图和打分，必须完善你的</span>'
+			 for(var v in recommendStatus){
+				txt= txt+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
+			 }
+	         recommend_status_tip(txt);
+			}
 		}
 		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn,.js-popframe,.msk-close').click(function() {
 			masklayer.remove();
 			dialog.remove();
+			$('.hopscotch-nav-button').click();
 		});
 		
 	}
@@ -183,17 +193,7 @@
 			r1.find('#score').remove();
 			var info = r1.find('#compare_button').parent();
 			r1.find('#compare_button').remove();
-			recommendStatus=options.user1.error_message;
-			txt='<br /><span class="text-white">如需查看对方的雷达图和打分，必须完善你的</span>'
-			for(var v in recommendStatus){
-				txt= txt+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
-			}
-			var txt = $(txt);
-			info.append(txt);
-			txt.find('a').click(function(){
-				var url = $(this).attr('href');
-				window.open(url);
-			});
+			
 		}else{
 			is_info_finish(r1,options.user1);
 		}
@@ -201,7 +201,7 @@
 		radarframe.append(r1);
 
 //		var r3 = $('<div class="row"><div class="col-xs-12"><button class="btn btn-xs btn-danger">与其他用户对比</button></div></div>')
-		var r2 = $('<div class="row canvas"><canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas></div>');
+		var r2 = $('<div id="radar_canvus" class="row canvas"><canvas class="radar" height="290px" width="290px" style="margin-left: -38px;"></canvas></div>');
 		radarframe.append(r2);
 		dataArry.push(options.user1.data);
 		if (options.compar == true) {
@@ -236,7 +236,7 @@
 	   
 		var ctx = $(this).find('canvas').get(0).getContext("2d");
 		var data = {
-			labels : ["教育程度", "性格", "收入情况", "相貌", "身高"],
+			labels : ["教育程度",  "收入","性格", "身高", "相貌"],
 			datasets : dataArry
 		};
 		var myNewChart = new Chart(ctx).Radar(data, {
@@ -250,6 +250,7 @@
 			angleLineColor : "rgba(255,255,255,.5)"
 		});
 	};
+	
 
 
 	$.poplayer = function(options) {
@@ -275,3 +276,19 @@ function Start() {
 		i = 0;
 	}
 } 
+
+//显示完整雷达图需要填写信息提示
+function recommend_status_tip(data){
+	var recommend_status_tip = {
+			id : "recommend_status_tip",
+			steps : [{
+				title : "显示完整雷达图",
+				content : data,
+				target : "radar_canvus",
+				placement : "bottom",
+				xOffset:100,
+				yOffset:-50,
+			},]
+		};
+		hopscotch.startTour(recommend_status_tip);
+}

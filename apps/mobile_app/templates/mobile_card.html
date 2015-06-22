@@ -43,27 +43,10 @@ function init_card(cards){
 		}
 		template.find('a').attr('href',"/mobile/info_detail/"+cards[x].user_id+'/');
 		template.find('.userId').val(cards[x].user_id);
-		//绑上雷达图
-		{% if has_recommend %}
 		template.find('.radar').click(function(){
 			userId=$(this).closest('.row').find('.userId').val();
 			window.location.href='/mobile/radar/'+userId+'/?prevUrl='+encodeURIComponent(window.location.pathname)
 		});
-		{% else %}
-		template.find('.radar').click(function(){
-			txt='<br /><span ">如需查看对方的雷达图和打分，必须完善你的</span>'
-				var recommendStatus=$.parseJSON({{recommend_finish|safe}});
-				for(var v in recommendStatus){
-					if(recommendStatus[v].info=='头像'){
-						txt= txt+'<span class="text-red"><a href="javascript:void(0);" onclick="click_avatar()">'+recommendStatus[v].info+'</a>  </span>'
-					}else{
-						txt= txt+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
-					}	
-					}
-				var body = $(txt)
-       	    $.poplayer({body:body});
-		});
-		{% endif  %}
 		$('#cardList').append(template.children())
 	}
 };
@@ -187,6 +170,7 @@ function guide_compare_radar(){
 	
 	hopscotch.startTour(tour_compare);
 };
+
 </script>
 <script>
 $(function(){

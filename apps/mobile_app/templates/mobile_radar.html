@@ -2,6 +2,8 @@
 {% block title %} 拼爱网 --雷达图{% endblock %}
 {% block staticfiles %}
 		<script src="/static/js/Chart.min.js" type="text/javascript" charset="utf-8"></script>
+		<link href="{{STATIC_URL}}css/hopscotch-0.1.2.min.css" rel="stylesheet">
+		<script src="{{STATIC_URL}}js/hopscotch-0.1.2.min.js" type="text/javascript"></script>
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
@@ -53,6 +55,17 @@
     			});
     				
     			});
+            	
+            	
+            	//显示完整雷达图需要填写信息提示
+            	{%if recommend_info_finish_status %}
+       			 recommendStatus={{recommend_info_finish_status|safe}};
+       			 txt='<span class="tip">如需查看对方的雷达图和打分，必须完善你的</span>'
+       			 for(var v in recommendStatus){
+       				txt= txt+'<span class="text-red"><a href="'+recommendStatus[v].href+'">'+recommendStatus[v].info+'</a>  </span>'
+       			 }
+       	         recommend_status_tip(txt);
+            	{%endif%}
             });
 			
 			
@@ -110,7 +123,7 @@
 					}
 					//var ctx = $("canvas").get(0).getContext("2d");
 				var data = {
-					labels: ["教育程度", "性格", "收入情况", "相貌", "身高"],
+					labels: ["教育程度",  "收入情况","性格", "身高","相貌",],
 					datasets: dataArry
 				};
 				var myNewChart = new Chart(ctx).Radar(data, {
@@ -157,6 +170,21 @@ current = $(e);
 });
 }
 			
+//显示完整雷达图需要填写信息提示
+function recommend_status_tip(data){
+	var recommend_status_tip = {
+			id : "recommend_status_tip",
+			steps : [{
+				title : "显示完整雷达图",
+				content : data,
+				target : "radar_canvus",
+				placement : "top",
+				xOffset:120,
+				yOffset:40,
+			},]
+		};
+		hopscotch.startTour(recommend_status_tip);
+}
 		</script>
 {% endblock %}
 {% block content %}
@@ -201,7 +229,7 @@ current = $(e);
 		</div>
 		<div id='frame_radar' class="frame">
 			<center class="row ">
-				<canvas class="radar" height="290px" width="290px"></canvas>
+				<canvas id="radar_canvus" class="radar" height="290px" width="290px"></canvas>
 			</center>
 		</div>
 	</body>

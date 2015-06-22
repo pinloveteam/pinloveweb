@@ -200,11 +200,11 @@ def get_detail_info(myId,userId,socreForOther):
                         'isVote':isVote,
                         'voteScore':voteScore,
                         'scoreMy':int(socreForOther['matchResult'].get('scoreMyself',-3)),
-                        'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
+                        'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['heighScore'],socreForOther['matchResult']['appearanceScore']]
                      })
 #     elif socreForOther['result']=='less':
         from apps.recommend_app.recommend_util import recommend_info_status
-        recommend_info_finish_status=recommend_info_status(myId,channel='web')
+        recommend_info_finish_status=recommend_info_status(myId,channel='web',fields=['tag','weight','userExpect'])
         if  recommend_info_finish_status['result']:
             data.update({'error_message': recommend_info_finish_status['data']})
         

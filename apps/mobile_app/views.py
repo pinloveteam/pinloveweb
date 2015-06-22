@@ -97,7 +97,7 @@ def profile(request,template_name='mobile_profile.html'):
         for field in fields:
             args[field]=getattr(userProfile,field)
         if request.GET.get('guide')==u'1':
-            args.update({'guide':True,'title':'第二步：完善个人信息','guide_next_url':'/mobile/character_tag/?guide=1'})
+            args.update({'guide':True,'title':'第二步：完善个人信息','guide_next_url':'/mobile/'})
         return render(request,template_name,args)
     except Exception as e:
         logger.exception(e.message)
@@ -502,8 +502,11 @@ def radar(request,userId,template_name='mobile_radar.html'):
                     'userId':userProfile.user_id,
                      'score' :int(socreForOther['matchResult']['scoreOther']),
                         'scoreMy':int(socreForOther['matchResult'].get('scoreMyself',-3)),
-                        'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['appearanceScore'],socreForOther['matchResult']['heighScore'],]
+                        'data' : [socreForOther['matchResult']['edcationScore'],socreForOther['matchResult']['incomeScore'],socreForOther['matchResult']['characterScore'],socreForOther['matchResult']['heighScore'],socreForOther['matchResult']['appearanceScore'],]
                      })
+        recommend_info_finish_status=recommend_info_status(request.user.id,channel='mobile',fields=['tag','weight','userExpect'])
+        if  recommend_info_finish_status['result']:
+            args.update({'recommend_info_finish_status': simplejson.dumps(recommend_info_finish_status['data'])})
             
         args['radarList']=simplejson.dumps(radarList)
         return render(request, template_name,args )
@@ -529,11 +532,6 @@ def recommend(request,template_name='mobile_recommend.html',**kwargs):
         from pinloveweb.method import get_no_read_web_count
         args.update(get_no_read_web_count(request.user.id,fromPage=u'card'))
         #判断推荐完成情况
-        recommend_status=recommend_info_status(request.user.id,channel='mobile')
-        if not recommend_status['result']:
-            args['has_recommend']=True
-        else:
-            args['recommend_finish']=simplejson.dumps(simplejson.dumps(recommend_status['data']))
         if kwargs.get('card')==True:
             return matchResultList
         if request.is_ajax():
