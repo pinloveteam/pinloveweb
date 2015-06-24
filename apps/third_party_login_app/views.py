@@ -136,7 +136,7 @@ def public_weixin_check_authorization(request):
 #     log.error('access:%s'%str(access))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
-        login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
+        login(request,thirdPsartyLogin.user.username)
         return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
     elif state==u'rank':
         return render(request,'error.html',{'result':'error','error_message':'亲爱的用户，你还没玩过游戏，玩过游戏，然后查看排名!'})
@@ -190,7 +190,7 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
             ThirdPsartyLoginSelect=ThirdPsartyLogin.objects.raw("SELECT * FROM third_party_login WHERE data LIKE BINARY %s",['%"'+user_info['unionid']+'"%'])
             if len(list(ThirdPsartyLoginSelect))>0:
                 thirdPsartyLogin=ThirdPsartyLoginSelect[0]
-                login(request,thirdPsartyLogin.user.username,DEFAULT_PASSWORD)
+                login(request,thirdPsartyLogin.user.username)
                 if redirectTo==u'loggin':
                     return HttpResponseRedirect('/account/loggedin/')
                 elif redirectTo==u'weixin_game':
