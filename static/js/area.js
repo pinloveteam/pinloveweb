@@ -1,4 +1,19 @@
 var dsy = new Dsy();
+//create the onchange        
+function Dsy()
+{
+ this.Items = {};
+}
+Dsy.prototype.add = function(id,iArray)
+{
+ this.Items[id] = iArray;
+}
+Dsy.prototype.Exists = function(id)
+{
+ if(typeof(this.Items[id]) == "undefined") return false;
+ return true;
+}
+
 
 dsy.add("0",["中国","美国","日本","新加坡","马来西亚","菲律宾","沙特阿拉伯","朝鲜","越南","缅甸","德国","英国","法国","爱尔兰","波兰","西班牙","意大利","俄罗斯","荷兰","韩国","加拿大","巴西","阿根廷","新西兰","澳大利亚","印度","埃及"]);
 

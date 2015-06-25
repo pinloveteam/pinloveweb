@@ -97,14 +97,19 @@
     </style>
     
     <script type="text/javascript">
+    //引导页面
+    var gudie_page_flag=false;
+    if(window.location.pathname=="/account/loggedin/"){
+    	gudie_page_flag=true
+    }
         $(function(){
         	//判断是否是电脑
         	if(is_PC()){
-        		$('#uploadAvatar').append("<script type='text/javascript' src='{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.js'/>");
+        		$.getScript("{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.js")
         		$('#uploadAvatar').append("<link rel='stylesheet' href='{{ STATIC_URL }}imgareaselect/css/imgareaselect-default.css' type='text/css' />");
         	}else{
-        	     $('#uploadAvatar').append("<script type='text/javascript' src='{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.mobile.js'>");
-        		$('#uploadAvatar').append("<link rel='stylesheet' href='{{ STATIC_URL }}imgareaselect/css/imgareaselect-default_mobile.css' type='text/css' />");
+        	     $('#uploadAvatar').load("<script type='text/javascript' src='{{ STATIC_URL }}imgareaselect/jquery.imgareaselect.min.mobile.js'>");
+        		$('#uploadAvatar').load("<link rel='stylesheet' href='{{ STATIC_URL }}imgareaselect/css/imgareaselect-default_mobile.css' type='text/css' />");
         	    $('.rotate_revolve').remove();
         	}
             $('#uploadAvatarBtnLayout button').click(function(){
@@ -244,6 +249,10 @@
                 sel['width'] = 140;
                 window.console.log(img_width+" "+img_height);
                 window.console.log(sel);
+                imgSelectParent="#uploadAvatarSelectArea";
+                if(gudie_page_flag){
+                	imgSelectParent='html';
+                }
                 imgSelect=$(this).imgAreaSelect({
                     handles: true,
                     aspectRatio: "4:5",
@@ -256,7 +265,7 @@
                     y2: sel.y2,
                     show:true,
                     instance:true,
-                    parent:'#uploadAvatarSelectArea',
+                    parent:imgSelectParent,
                     onSelectChange: updateCoors
                 });
                 
@@ -307,7 +316,12 @@
         
         function crop_avatar_success(msg,avatar_name) {
         	var body = $('<p>'+msg+'</p>');
-        	$.poplayer({body:body});
+        	var button=null
+        	if(gudie_page_flag){
+        		$('.msk-close').click();
+        		button=guide_page('info');
+        	}
+        	$.poplayer({body:body,btnFunc:button});
         	$('#avatar').attr('src',avatar_name+'-100.jpeg')
         };
         var rotate_value=0;

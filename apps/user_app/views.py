@@ -29,6 +29,8 @@ from django.db import transaction
 from pinloveweb.forms import ChangePasswordForm, ResetPasswordForm
 from apps.third_party_login_app.setting import DEFAULT_PASSWORD
 import re
+from django.template.loader import render_to_string
+from pinloveweb import settings
 logger=logging.getLogger(__name__)
 
 '''
@@ -377,6 +379,33 @@ def black_list(request):
     except Exception ,e:
         logger.exception('更新黑名单出错')
         args={'result':'error','error_message':'黑名单错误:'+e.message}
+    json=simplejson.dumps(args)
+    return HttpResponse(json)
+        
+'''
+引导页面
+'''
+def guide(request,offset,template_name='upload_avatar/upload_avatar.html'):
+    args={'result':'success'}
+    try:
+        if request.is_ajax():
+            content={'STATIC_URL':settings.STATIC_URL,'user':request.user,'csrf_token':csrf(request)['csrf_token']}
+            if offset=='avatar':
+                content.update(get_uploadavatar_context());
+                
+                args['html']=render_to_string(template_name, content)
+            elif offset=='info':
+                useBasicrProfile = UserProfile.objects.get(user_id=request.user.id)
+                content['gender_name']=useBasicrProfile.get_gender_display()
+                content['user_profile_form'] = UserProfileForm(instance=useBasicrProfile) 
+                template_name="member/update_profile.html"
+                args['html']=render_to_string(template_name, content)
+            else:
+                args={'result':'error','error_message':'请求参数出错!'}
+        else:
+            args={'result':'error','error_message':'请求参数出错!'}
+    except Exception as e:
+        args={'result':'error','error_message':e.messagee}
     json=simplejson.dumps(args)
     return HttpResponse(json)
         

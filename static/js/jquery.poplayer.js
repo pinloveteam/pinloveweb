@@ -30,6 +30,10 @@
 			var masklayer = $('<div class="masklayer"></div><div class="msk-close">X</div>');
 			masklayer.remove();
 			var dialog = loadFrame(options);
+		}else if (options.type == 'header') {
+			var masklayer = $('<div class="masklayer"></div><div class="msk-close">X</div>');
+			masklayer.remove();
+			var dialog = loadHeader(options);
 		}
 
 		$(document.body).append(masklayer).append(dialog);
@@ -53,13 +57,20 @@
 	         recommend_status_tip(txt);
 			}
 		}
+		
+		
 		$('.poplayer-close-btn,.masklayer,.btn-close,.compare-btn,.js-popframe,.msk-close').click(function() {
 			masklayer.remove();
 			dialog.remove();
 			$('.hopscotch-nav-button').click();
 		});
 		
+        if(options.type == 'header'){
+        	$('.js-popframe').unbind('click');
+		}
+		
 	}
+	
 	function is_vote(infoframe,isVote,voteScore){
 		var dragdealerList=$('.dragdealer');
 		dragdealerList.each(function(index){
@@ -113,7 +124,18 @@
 		}
 		return frame;
 	}
-
+	
+	function loadHeader(options){
+		var frame = $('<div class="container js-popframe " style="background-color:white;height:550px;"></div>');
+		frame.append(options.page);
+		frame.append('<link href="/static/css/form.css" rel="stylesheet">')
+		frame.children().css('margin','40px').css('height','500px');
+		if(frame.find('#uploadAvatarPreviewArea')!=undefined){
+			frame.find('#uploadAvatarPreviewArea').next().remove();
+		}
+		return frame;
+	}
+	
 	function loadInfoFrame(user) {
 		var infoframe = $('<div id="user_info"  class="col-xs-4"></div>');
 		infoframe.click(function(){

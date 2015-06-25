@@ -14,7 +14,6 @@ $(document).ready(function(){
 //       		 getCounties()
 //       	 	});
 	 
-	 $(window).load(function() {
 	    	 for(i=0;i<area.length-1;i++)
 	 	        document.getElementById(area[i]).onblur=new Function("change("+(i+1)+")");
 	    	 
@@ -24,26 +23,10 @@ $(document).ready(function(){
 	       	 $('#id_stateProvince').bind('change',function(){
 	       		change(2)
 	       	 	});
-     });
 	    	 
 	    
         });
  
-
-//create the onchange        
- function Dsy()
- {
-  this.Items = {};
- }
- Dsy.prototype.add = function(id,iArray)
- {
-  this.Items[id] = iArray;
- }
- Dsy.prototype.Exists = function(id)
- {
-  if(typeof(this.Items[id]) == "undefined") return false;
-  return true;
- }
 
  function change(v){
   var country=$('#'+area[v]).find("option:selected").text();

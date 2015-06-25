@@ -33,7 +33,8 @@ urlpatterns = patterns('apps.user_app.views',
      url(r'^cancel_member/$','cancel_member'),
      #黑名单
      url(r'^black_list/$','black_list'),
-     
+     #引导
+     url(r'^guide/(.+)/$','guide'),
      
     )
 #1.0使用

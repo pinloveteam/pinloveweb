@@ -18,6 +18,7 @@ $(document).ready(function(){
 	change_navi()
 	{%if first%}
 	guide()
+	guide_page('avatar')
 	{%endif%}
 })
 guide_1=false;
@@ -80,5 +81,24 @@ function guide(){
 	});*/
 	
 }
+function guide_page(type){
+	if(type=='avatar'||type=='info'){
+		$.getJSON('/user/guide/'+type+'/',{},function(data){
+			if(data.result="success"){
+				options={type : 'header',
+						page :data.html,
+						}
+						$.poplayer(options);
+			}else{
+				var body=$('<p>'+data.error_message+'</p>')
+				 $.poplayer({body:body});
+			}
+		});
+	}else{
+		var body=$('<p>传入参数出错!</p>')
+		 $.poplayer({body:body});
+	}
+}
 </script>
+
 {% endblock %}
