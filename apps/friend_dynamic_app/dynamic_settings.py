@@ -15,3 +15,5 @@ UPLOAD_PHOTO_TEXT={
                    }
 #动态内容长度
 DYNAMIC_CONTENT_LIMIT=199
+#上传动态图片个数
+DYNAMIC_MAX_NUM=9
