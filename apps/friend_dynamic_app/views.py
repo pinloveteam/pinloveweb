@@ -20,9 +20,11 @@ from apps.pojo.dynamic import MyEncoder
 from django.views.decorators.http import require_POST
 import re
 from django.db import transaction
-from apps.friend_dynamic_app.dynamic_settings import DYNAMIC_CONTENT_LIMIT
+from apps.friend_dynamic_app.dynamic_settings import DYNAMIC_CONTENT_LIMIT,\
+    DYNAMIC_MAX_NUM
 from util.util import verify_content
 from django.contrib.auth.models import User
+from apps.upload_avatar.views import detect_image_rotate
 logger=logging.getLogger(__name__)
 '''
 卡片界面动态
@@ -320,12 +322,15 @@ def update_photo(request):
             if not  type:
                 if 'images_path' in request.session.keys():
                     list=request.session['images_path']
+                    if len(list)>=DYNAMIC_MAX_NUM:
+                        raise Exception('最多只能上传%s张图片!'%(DYNAMIC_MAX_NUM))
                     list.append(pictureName)
                     request.session['images_path']=list
                 else:
                     request.session['images_path']=[pictureName,]
             name = '%s%s' % (util_settings.IMAGE_UPLOAD_PATH_M,pictureName)
             from apps.friend_dynamic_app.dynamic_settings import thumbnails,IMAGE_SAVE_FORMAT
+            img=detect_image_rotate(img)
             img.save('%s%s%s'%(name,'.',IMAGE_SAVE_FORMAT))
             img.thumbnail(thumbnails)
             img.save('%s%s%s%s%s'%(name,'-',thumbnails[0],'.',IMAGE_SAVE_FORMAT))
@@ -334,9 +339,9 @@ def update_photo(request):
                 "<script>window.parent.upload_photo_success('%s')</script>" % simplejson.dumps(imageNameList)
             )
   except Exception as e:
-        logger.exception('上传动态图片出错！')
+        logger.exception(e.message)
         return HttpResponse(
-                "<script>window.parent.upload_photo_error('%s')</script>" % UPLOAD_PHOTO_TEXT['EORROR']
+                "<script>window.parent.upload_photo_error('%s')</script>" % e.message
             )
 
 '''

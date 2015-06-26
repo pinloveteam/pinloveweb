@@ -52,14 +52,14 @@ class UploadAvatarError(Exception):
 
 '''
 检查相机设备导致的旋转
+选择返回image否则返回空
 '''
-def detect_image_rotate(image):
-    filename=image.filename
+def detect_image_rotate(image,is_save=False):
     has_rotate=False
     for orientation in ExifTags.TAGS.keys() : 
         if ExifTags.TAGS[orientation]=='Orientation' : break 
     if (not hasattr(image, '_getexif')) or (image._getexif() is None):
-        return False
+        return image
     exif=dict(image._getexif().items())
     if   exif.get(orientation) == 3 : 
         image=image.rotate(180, expand=True)
@@ -70,8 +70,11 @@ def detect_image_rotate(image):
     elif exif.get(orientation) == 8 : 
         image=image.rotate(90, expand=True)
         has_rotate=True
-    if has_rotate:
-        image.save(filename)
+    if is_save and has_rotate:
+        image.save()
+    return image 
+    
+        
         
 def protected(func):
     @wraps(func)
@@ -125,7 +128,7 @@ def upload_avatar(request):
         raise UploadAvatarError(UPLOAD_AVATAR_TEXT['INVALID_IMAGE'])
         
     #检测手机设备导致的选择
-    detect_image_rotate(image)
+    detect_image_rotate(image,True)
     # uploaed image has been saved on disk, now save it's name in db
     if UploadedImage.objects.filter(uid=get_uid(request)).exists():
         uid=UploadedImage.objects.get(uid=get_uid(request))

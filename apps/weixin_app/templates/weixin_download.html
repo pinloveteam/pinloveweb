@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/weixin/app.css" />
+		<link rel="stylesheet" type="text/css" href="/static/css/weixin/dragdealer.css" />
+		<title></title>
+		<style>
+			.am-container{
+				margin-top: 40px;
+			}
+			.item-name{
+				display: inline-block;
+				margin-bottom: 5px;
+			}
+			.mask{
+				background-color: rgba(0,0,0,1);
+				color: #fff;
+				/*display: none;*/
+			}
+			.quanzhong{
+				background-color: #fff;
+				width: 80%;
+				padding: 0;
+			}
+			.quanzhong-bd{
+				padding: 10px;
+			}
+		   .ar {
+			text-align: right;
+			}
+			.apps{
+			}
+			.app{
+				border: 1px solid #d1d3d3;
+			    border-radius: 10px;
+			    margin-top: 10px;
+			    padding: 10px;
+			    text-align: center;
+			}
+		</style>
+	</head>
+
+	<body style="background-color:black;">
+		<div id="share_div" class="am-k mask">
+			<div class="am-container ar">
+				<p></p>
+				<img width="40px" src="/static/img/weixin/right.png"/>
+			</div>
+			<div class="am-container">
+				<p>1.点击右上角的&nbsp;&nbsp;<img width="30px" src="/static/img/weixin/menu.png"/>&nbsp;&nbsp;按钮</p>
+				<p>2.选择在浏览器中打开，然后下载对应的app！</p>
+			</div>
+			<div class="am-container">
+				<p>想了解更多精彩信息,请访问拼爱网(<a href="http://www.pinlove.com">www.pinlove.com</a>)</p>
+			</div>
+			<div class="am-container">
+			  <div class="apps">
+					<div class="app android am-u-sm-6"><a style=" color: white;" href="/android_download/">Android客户端下载</a></div>
+					<div class="app apple am-u-sm-6"><a style=" color: white;" href="https://itunes.apple.com/cn/app/pin-ai-wang-pinlove/id966088915?mt=8">iphone客户端下载</a></div>
+				</div>
+			</div>
+		</div>
+		<iframe id="dwonload" name="dwonload" style="display: none;"></iframe>
+		<script src="http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+		<script src="http://cdn.amazeui.org/amazeui/2.2.1/js/amazeui.min.js"></script>
+	</body>
+
+</html>
