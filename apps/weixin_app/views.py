@@ -107,7 +107,7 @@ def my_character(request,template_name='character_tag.html'):
     try:
         userKey=request.REQUEST.get('userKey')
         args=common(request)
-        args.update({"userKey":userKey,"tag_name":"选择最符合你的性格描述:","step":"第二步","title":"再测测您的软实力,请选择情商标签",'url':'/weixin/my_character/'})
+        args.update({"userKey":userKey,"tag_name":"选择最符合您的性格描述:","step":"第二步","title":"再测测您的软实力,请选择情商标签",'url':'/weixin/my_character/'})
         if userKey==None:
             return render(request,'error.html',{'result':'error','error_message':'没有用户标识，请联系客服!'})
         try:
@@ -251,7 +251,7 @@ def ta_character(request,template_name="character_tag.html"):
     args={}
     try:
         args=common(request)
-        args.update({"step":"第三步","tag_name":"TA的性格标签:","title":"选出你心目中男神、女神的标准–软实力EQ篇",'next_url':'/weixin/other_info/'})
+        args.update({"step":"第三步","tag_name":"TA的性格标签:","title":"选出你心目中男神、女神的标准",'next_url':'/weixin/other_info/'})
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
         if request.method=="POST":
@@ -299,7 +299,7 @@ def share_userlist(request,template_name="share_user.html",remcommend_limit=3):
         userProfile=UserProfile.objects.get(user=request.user)
         WeiXinGameUserIdList=[user.user_id for user in ThirdPsartyLogin.objects.raw('''SELECT * from third_party_login u1 where u1.provider='3' and u1.user_id in(select my_id from weixin_score_rank ) ''')]
         args['count']=len(WeiXinGameUserIdList)
-        userProfileList=UserProfile.objects.select_related('user').filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)[:(remcommend_limit if args['count']-remcommend_limit>0 else args['count'])]
+        userProfileList=UserProfile.objects.select_related('user').filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)[:(remcommend_limit if args['count']-remcommend_limit<0 else args['count'])]
         userlist=[{'userId':user.user_id,'username':user.user.username,'avatar':user.avatar_name} for user in userProfileList]
         if args['count']-remcommend_limit>0:
             scoreRankList=UserProfile.objects.select_related('user').filter(user_id__in=WeiXinGameUserIdList).exclude(user_id__in=STAFF_MEMBERS).exclude(user_id__in=[ user['userId'] for user  in userlist])[:(args['count']-remcommend_limit)]

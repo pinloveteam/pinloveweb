@@ -81,7 +81,6 @@ returns:
       收入得分
 """
 def cal_income(user_income,gender):
-    from apps.user_app.models import UserProfile
     overIncomeCount=UserProfile.objects.filter(income__lte=user_income).filter(gender=gender).exclude(income=-1).count()+0.00
     overIncomeCount=overIncomeCount-int((UserProfile.objects.filter(income=user_income).filter(gender=gender).exclude(income=-1).count()+0.00)/2)
     IncomeCount=UserProfile.objects.filter(gender=gender).exclude(income=-1).count()

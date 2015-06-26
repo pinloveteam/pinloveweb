@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
-		<title>PinLove</title>
+		<title>拼爱</title>
 		<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.2.1/css/amazeui.min.css">
 		<link rel="stylesheet" type="text/css" href="/static/css/weixin/app.css" />
 		<link rel="stylesheet" type="text/css" href="/static/css/weixin/dragdealer.css" />
@@ -62,10 +62,10 @@
 	       {%for scoreRank in scoreRankList%}
 			<div class="am-container">
 				<div class="am-u-sm-4">
-					<span class="text-num">{{ forloop.counter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<img width="48px" src="/static/img/gfs_03.png" />
+					<span class="text-num">{{ forloop.counter }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<img width="48px" src="{{MEDIA_URL}}{{scoreRank.avatar_name}}-100.jpeg" />
 				</div>
 				<div class="am-u-sm-6">
-					<span class="name">{{scoreRank.nickname }}&nbsp;&nbsp;<span class="text-gray">糕富帅</span></span>
+					<span class="name">{{scoreRank.nickname }}&nbsp;&nbsp;<!-- <span class="text-gray">糕富帅</span>--></span>
 					<div id="sliderd" class="dragdealer">
 						<div class="progress-bar" style="width: {{scoreRank.score }}%;"></div>
 					</div>
