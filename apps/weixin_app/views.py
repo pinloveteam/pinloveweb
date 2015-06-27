@@ -20,6 +20,7 @@ from django.db import transaction
 import datetime
 from pinloveweb import STAFF_MEMBERS
 import urllib2
+from util.connection_db import connection_to_db
 logger=logging.getLogger(__name__)
 def common(request):
     '''
@@ -291,21 +292,31 @@ def ta_character(request,template_name="character_tag.html"):
     else:
         return render(request,template_name,args)
     
-def share_userlist(request,template_name="share_user.html",remcommend_limit=3):
+def share_userlist(request,template_name="share_user.html",remcommend_limit=5,limit=18):
     '''
     分享用户列表
     '''
     args={}
     try:
         userProfile=UserProfile.objects.get(user=request.user)
-        WeiXinGameUserIdList=[user.user_id for user in ThirdPsartyLogin.objects.raw('''SELECT * from third_party_login u1 where u1.provider='3' and u1.user_id in(select my_id from weixin_score_rank ) ''')]
-        args['count']=len(WeiXinGameUserIdList)
-        userProfileList=UserProfile.objects.select_related('user').filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)[:(remcommend_limit if args['count']-remcommend_limit<0 else args['count'])]
+        #推荐用户
+        userProfileList=UserProfile.objects.select_related('user').filter(avatar_name_status='3').exclude(gender=userProfile.gender).exclude(user_id__in=STAFF_MEMBERS)[:remcommend_limit]
         userlist=[{'userId':user.user_id,'username':user.user.username,'avatar':user.avatar_name} for user in userProfileList]
-        if args['count']-remcommend_limit>0:
-            scoreRankList=UserProfile.objects.select_related('user').filter(user_id__in=WeiXinGameUserIdList).exclude(user_id__in=STAFF_MEMBERS).exclude(user_id__in=[ user['userId'] for user  in userlist])[:(args['count']-remcommend_limit)]
-            userlist+=[{'userId':user.user_id,'username':user.user.username,'avatar':user.avatar_name} for user in scoreRankList]
+        userIdList=[str(user['userId']) for user in userlist]
+        count=len(userProfileList)
+        sql='''
+        SELECT %s from third_party_login u1 left join user_profile u4 on u1.user_id =u4.user_id 
+left join auth_user u2 on u1.user_id=u2.id
+ where u1.provider='3' and exists (select my_id from weixin_score_rank u3 where u1.user_id=u3.my_id) 
+and u4.gender !='%s'  and u1.user_id not in (1%s)
+order by  u2.last_login desc %s
+        '''
+        #分享人数
+        count+=connection_to_db(sql%('count(*)',userProfile.gender,','+','.join(userIdList),''))[0][0]
+        scoreRankList=connection_to_db(sql%('u1.user_id,u2.username,u4.avatar_name',userProfile.gender,','+','.join(userIdList),'limit %s'%(limit)),type=True)
+        userlist+=[{'userId':user['user_id'],'username':user['username'],'avatar':user['avatar_name']} for user in scoreRankList]
         args['userlist']=userlist
+        args['count']=count
     except Exception as e:
         logger.exception('完善我对别人打分信息：%s'%(e.message))
         args={'result':'error','error_message':(e.message)}
