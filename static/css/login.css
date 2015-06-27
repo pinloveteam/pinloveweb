@@ -206,6 +206,10 @@ a:hover {
 	vertical-align: bottom;
 	margin-right: 10px;
 }
-.about a:hover{
-	color:blue !important;
-	}
+.cRed{
+	font-size: 12px;
+}
+.about a {
+    color: #333 !important;
+    font-size: 15px;
+}
