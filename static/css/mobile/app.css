@@ -140,6 +140,7 @@ textarea {
 	background-color: #68CC97;
 	position: relative;
 	padding: 60px 0 10px 0;
+	color:white;
 }
 
 .form-horizontal {
@@ -378,18 +379,6 @@ textarea {
 	color: #c0392b !important;
 }
 /*message*/
-.app {
-	border-radius: 10px;
-	text-align: center;
-	width: 200px;
-	margin-top: 10px;
-	padding-bottom: 3px;
-	border: solid 1px #fff;
-}
-
-.app a {
-	color: #fff;
-}
 
 .apple {
 	background: url("../../img/apple.png") no-repeat;
