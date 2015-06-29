@@ -221,8 +221,7 @@
 		{% include "weixin_js_base.html" %}
 		<script type="text/javascript">
 		$(function(){
-			//createRadarDialog([{{data}}])
-			createRadarDialog([[40,40,40,90],[80,80,80,40]])
+			createRadarDialog([{{data}}])
 			$('.rank-score').click(function(){
 				content=$(this);
 				data={'userId':content.find('#userId').val(),'link':content.find('#link').val()}
@@ -266,9 +265,9 @@
 		
 		function createRadarDialog(dataList) {
 	    dataArry=new Array()
-		var strokeColorList=["rgba(126, 179, 110,0.7)","rgba(18,148,237,0.7)"];
-		var pointColorList=["rgba(126, 179, 110,0.7)","rgba(18,148,237,0.7)"];
-		var fillColorList=["rgba(126, 179, 110,0.7)","rgba(18,148,237,0.7)"];
+		var strokeColorList=["rgba(70, 195, 171,0.85)","rgba(86,168,223,0.55)"];
+		var pointColorList=["rgba(70, 195, 171,1.0)","rgba(86,168,223,1.0)"];
+		var fillColorList=["rgba(70, 195, 171,0.85)","rgba(86,168,223,0.55)"];
 		for(var i=0 ;i<dataList.length;i++){
 		var datasets = {
 				fillColor : fillColorList[i],
