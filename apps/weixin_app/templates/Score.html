@@ -128,6 +128,12 @@
 			    padding: 10px;
 			    text-align: center;
 			}
+			.weinxin_tip{
+			text-align: center;
+			line-height: 0;
+            font-size: 10px;
+            color: red;
+            }
 		</style>
 	</head>
 
@@ -144,8 +150,9 @@
 			<div class="bg" id="bg4"></div>
 			<div id="score">
 				<p>{{score_content}}：<span class="text-num">{{score}}</span></p>
+				<p class="weinxin_tip">(点击上图中对应的点可以查看分数!)</p>
 				<hr style="margin: 0 90px;border-color: #64584C;"/>
-				<p>在{{username}}好友的排名为第<span class="text-num">{{rank}}</span>名</p>
+				<p style="line-height:0.5px">在{{username}}好友的排名为第<span class="text-num">{{rank}}</span>名</p>
 			</div>
 			
 		</center>
@@ -161,6 +168,7 @@
 		</div>
 		<div class="rank">
 			<p class="title">我的排名</p>
+			<p class="weinxin_tip">(猛戳下面的头像可以对比分数哦!)</p>
 			<hr style="border-color: #64584C; margin: 0 60px;"/>
 			 {%for scoreRank in scoreRankList%}
 			<div class="am-container rank-score">
@@ -197,12 +205,12 @@
 				<p>2.选择&nbsp;&nbsp;<img width="50px" src="/static/img/weixin/friends.png"/>&nbsp;&nbsp;发送给朋友或&nbsp;&nbsp;<img width="50px" src="/static/img/weixin/circle.png"/>&nbsp;&nbsp;分享到朋友圈</p>
 			</div>
 			<div class="am-container">
-				<p>想了解更多精彩信息,请访问拼爱网(<a href="http://www.pinlove.com">www.pinlove.com</a>)</p>
+				<p>想了解更多精彩信息,请访问拼爱网(<a href="/mobile/">www.pinlove.com</a>)</p>
 			</div>
 			<div class="am-container">
 			  <div class="apps">
-					<div class="app android am-u-sm-6"><a style=" color: white;" href="/weixin/download/">Android客户端下载</a></div>
-					<div class="app apple am-u-sm-6"><a style=" color: white;" href="/weixin/download/">iphone客户端下载</a></div>
+					<div class="app android am-u-sm-6"><a style=" color: white;" href="http://www.pinlove.com">Android客户端下载</a></div>
+					<div class="app apple am-u-sm-6"><a style=" color: white;" href="http://www.pinlove.com">iphone客户端下载</a></div>
 				</div>
 			</div>
 		</div>

@@ -31,7 +31,32 @@ $(function(){
 		    $(this).closest('form').submit();
 		  }
 	});
+	//app下载
+	$('.android,.apple').click(function(){
+		if(is_weixn()){
+			var body = $("<p>微信内无法下载，请点击<span style='color:red;'>右上角</span>按钮选择<span style='color:red;'>「在浏览器中打开」</span>即可正常下载</p>")
+       	    $.poplayer({body:body});
+			return false
+		}
+		if($(this).attr('class')=='android'){
+			window.open("/android_download/");
+		}else if($(this).attr('class')=='apple'){
+			window.open("https://itunes.apple.com/cn/app/pin-ai-wang-pinlove/id966088915?mt=8");
+		}else{
+			return false
+		}
+	})
 });
+//判断微信
+function is_weixn(){  
+    var ua = navigator.userAgent.toLowerCase();  
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {  
+        return true;  
+    } else {  
+        return false;  
+    }  
+}  
+
 function check_username(content){
 	flag=true;
 	error_message=''
@@ -124,9 +149,9 @@ function check_password(content){
 		 <img width="120px" src="/static/img/拼爱文字.png" />
 		 <div class="container" style="margin-top: 10px;">
 				点击下载用户端：
-				<a href="/android_download/" target="_blank" ><i class="android"></i></a>
+				<i class="android"></i>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="https://itunes.apple.com/cn/app/pin-ai-wang-pinlove/id966088915?mt=8" target="_blank"><i class="apple"></i></a>
+				<i class="apple"></i>
 			</div>
 		</center>
 		<center role="alert" class="alert alert-danger alert-dismissible" {% if error_message %}style="display: block;"{%endif%}>
