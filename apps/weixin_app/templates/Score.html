@@ -131,7 +131,7 @@
 			.weinxin_tip{
 			text-align: center;
 			line-height: 0;
-            font-size: 10px;
+            font-size: 13px;
             color: red;
             }
 		</style>
@@ -150,7 +150,7 @@
 			<div class="bg" id="bg4"></div>
 			<div id="score">
 				<p>{{score_content}}：<span class="text-num">{{score}}</span></p>
-				<p class="weinxin_tip">(点击上图中对应的点可以查看分数!)</p>
+				<p class="weinxin_tip">(点击上图中四边形的顶点可以查看每一项打分!)</p>
 				<hr style="margin: 0 90px;border-color: #64584C;"/>
 				<p style="line-height:0.5px">在{{username}}好友的排名为第<span class="text-num">{{rank}}</span>名</p>
 			</div>
@@ -168,7 +168,7 @@
 		</div>
 		<div class="rank">
 			<p class="title">我的排名</p>
-			<p class="weinxin_tip">(猛戳下面的头像可以对比分数哦!)</p>
+			<p class="weinxin_tip">(猛戳别人头像，可以显示对比雷达图)</p>
 			<hr style="border-color: #64584C; margin: 0 60px;"/>
 			 {%for scoreRank in scoreRankList%}
 			<div class="am-container rank-score">
@@ -221,7 +221,8 @@
 		{% include "weixin_js_base.html" %}
 		<script type="text/javascript">
 		$(function(){
-			createRadarDialog([{{data}}])
+			//createRadarDialog([{{data}}])
+			createRadarDialog([[40,40,40,90],[80,80,80,40]])
 			$('.rank-score').click(function(){
 				content=$(this);
 				data={'userId':content.find('#userId').val(),'link':content.find('#link').val()}
@@ -265,9 +266,9 @@
 		
 		function createRadarDialog(dataList) {
 	    dataArry=new Array()
-		var strokeColorList=["rgb(126, 179, 110,0.7)","rgba(151,187,205,0.7)"];
-		var pointColorList=["rgb(126, 179, 110,0.7)","rgba(151,187,205,0.7)"];
-		var fillColorList=["rgba(126, 179, 110,0.7)","rgba(151,187,205,0.7)"];
+		var strokeColorList=["rgba(126, 179, 110,0.7)","rgba(18,148,237,0.7)"];
+		var pointColorList=["rgba(126, 179, 110,0.7)","rgba(18,148,237,0.7)"];
+		var fillColorList=["rgba(126, 179, 110,0.7)","rgba(18,148,237,0.7)"];
 		for(var i=0 ;i<dataList.length;i++){
 		var datasets = {
 				fillColor : fillColorList[i],
@@ -291,7 +292,7 @@
 			scaleLineColor: "rgba(255,255,255,0)",
 //			scaleShowLabels : true,
 			pointLabelFontColor: '#64584C',
-			scaleBackdropColor: "rgba(126, 0, 110,0.7)",
+			//scaleBackdropColor: "rgba(126, 0, 110,0.7)",
 			angleLineColor: "rgba(255,255,255,.5)"
 		});
 	};
