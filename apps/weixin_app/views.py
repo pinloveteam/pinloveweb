@@ -87,6 +87,8 @@ def self_info(request):
                args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
             json=simplejson.dumps(args)
             return HttpResponse(json)
+        if not UserTag.objects.filter(user_id=request.user.id,type=0).exists():
+            return HttpResponseRedirect("/weixin/my_character/?userKey=%s"%(userKey))
         if ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() and not again:
             return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() and not again:

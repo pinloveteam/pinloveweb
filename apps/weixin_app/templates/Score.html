@@ -139,7 +139,7 @@
 
 	<body>
 		<header data-am-widget="header" class="am-header">
-			<h3 class="am-header-title" style="margin: 0 4%;font-size:1.7rem">你在{{username}}心中的印象</h3>
+			<h3 class="am-header-title" style="margin: 0 4%;font-size:1.7rem">您在{{username}}心中的印象</h3>
 		</header>
 		<div class="am-g">
 		<center>
@@ -167,7 +167,7 @@
 			</div>
 		</div>
 		<div class="rank">
-			<p class="title">我的排名</p>
+			<p class="title">在{{username}}好友中的排名</p>
 			<p class="weinxin_tip">(猛戳别人头像，可以显示对比雷达图)</p>
 			<hr style="border-color: #64584C; margin: 0 60px;"/>
 			 {%for scoreRank in scoreRankList%}
@@ -222,6 +222,7 @@
 		<script type="text/javascript">
 		$(function(){
 			createRadarDialog([{{data}}])
+			//createRadarDialog([[40,80,40,40],[80,40,80,80]])
 			$('.rank-score').click(function(){
 				content=$(this);
 				data={'userId':content.find('#userId').val(),'link':content.find('#link').val()}
@@ -265,9 +266,9 @@
 		
 		function createRadarDialog(dataList) {
 	    dataArry=new Array()
-		var strokeColorList=["rgba(70, 195, 171,0.85)","rgba(86,168,223,0.55)"];
-		var pointColorList=["rgba(70, 195, 171,1.0)","rgba(86,168,223,1.0)"];
-		var fillColorList=["rgba(70, 195, 171,0.85)","rgba(86,168,223,0.55)"];
+		var strokeColorList=["rgba(221, 75, 1129,0.85)","rgba(97,111,184,0.65)"];
+		var pointColorList=["rgba(221, 75, 1129,1.0)","rgba(97,111,184,1.0)"];
+		var fillColorList=["rgba(221, 75, 1129,0.85)","rgba(97,111,184,0.65)"];
 		for(var i=0 ;i<dataList.length;i++){
 		var datasets = {
 				fillColor : fillColorList[i],

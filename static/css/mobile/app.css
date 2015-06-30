@@ -419,3 +419,9 @@ textarea {
 .button {
 	margin-top: 10px;
 }
+.about a {
+    color: #333 !important;
+}
+.cRed {
+    font-size: 12px;
+}
