@@ -232,6 +232,7 @@
             		$('center').prepend(canvas)
             		createRadarDialog(radarDataList)
             		content.removeAttr('compare')
+            		return false;
 				}
 				data={'userId':content.find('#userId').val(),'link':content.find('#link').val()}
 				if(data['userId']=={{userId}}){
