@@ -3,6 +3,7 @@ from django.conf.urls import patterns, url
 from apps.third_party_login_app.setting import QQ_MOBILE_CALLBACK_URL,\
     SINA_MOBILE_CALLBACK_URL, FACEBOOK_MOBILE_CALLBACK_URL,\
     WEIXIN_MOBILE_CALLBACK_URL
+from django.views.generic.base import TemplateView
 urlpatterns=patterns('apps.mobile_app.views',
      #账户
      url(r'^account/', 'account'),
@@ -38,6 +39,8 @@ urlpatterns=patterns('apps.mobile_app.views',
       
         #认证
     url(r'^verification/$','verification'),
+    #关于我们
+    url(r'^web/$',TemplateView.as_view(template_name='mobile_about.html')),
      
 )
 

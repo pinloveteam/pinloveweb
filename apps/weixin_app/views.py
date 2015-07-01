@@ -334,7 +334,7 @@ def compare(request,template_name=None):
         link=request.GET.get('link')
         userId=int(request.GET.get('userId'))
         userProfile=UserProfile.objects.get(link=link)
-        scoreRankList=ScoreRank.objects.filter(my_id=userProfile.user_id,other_id__in=[userId,request.user.id])
+        scoreRankList=ScoreRank.objects.filter(my_id=userProfile.user_id,other_id__in=[request.user.id,userId])
         args['data']=[simplejson.loads(scoreRank.data) for scoreRank in scoreRankList]
         
     except Exception as e:
