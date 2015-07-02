@@ -195,6 +195,7 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
                     return HttpResponseRedirect('/account/loggedin/')
                 elif redirectTo==u'weixin_game':
                     #修改openid为工众号的
+                    return HttpResponse('success')
                     thirdPsartyLogin.uid=client.openid
                     thirdPsartyLogin.save()
                     return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
