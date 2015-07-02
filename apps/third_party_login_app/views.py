@@ -133,6 +133,7 @@ def public_weixin_check_authorization(request):
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
     access=client.request_access_token(request.GET.get('code'))
+    return HttpResponse('success')
 #     log.error('access:%s'%str(access))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
@@ -183,7 +184,6 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
         access=client.request_access_token(request.GET.get('code'))
         request.session['access_token']=access.get('access_token')
         request.session['expires_in']=access.get('expires_in')
-        return HttpResponse('success')
         if not ThirdPsartyLogin.objects.filter(provider='3',uid=client.openid).exists():
             user_info=client.request_get_info()
             log.error(str(user_info))
