@@ -88,9 +88,9 @@ def self_info(request):
             json=simplejson.dumps(args)
             return HttpResponse(json)
         if userProfile.height !=-1 and not UserTag.objects.filter(user_id=request.user.id,type=0).exists():
-            return HttpResponseRedirect("/weixin/my_character/?userKey=%s"%(userKey))
+            return my_character(request)
         if ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() and not again:
-            return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
+            return score(request)
         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() and not again:
            if UserTag.objects.filter(user_id=request.user.id,type=0).exists():
              return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
