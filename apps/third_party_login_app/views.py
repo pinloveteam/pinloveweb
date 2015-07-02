@@ -137,7 +137,6 @@ def public_weixin_check_authorization(request):
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
         login(request,thirdPsartyLogin.user.username)
-        return HttpResponse('success')
         return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
     elif state==u'rank':
         return render(request,'error.html',{'result':'error','error_message':'亲爱的用户，你还没玩过游戏，玩过游戏，然后查看排名!'})
@@ -467,10 +466,9 @@ def login(request,username):
      user = authenticate_three_party_login(username=username)
      if user is not None and user.is_active : 
          auth.login(request, user)
-#          log.error("login success"+request.user.username+'fcsdfsf')
-     from apps.the_people_nearby.views import GetLocation
-     if not GetLocation(request)==None:
-         UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
+#      from apps.the_people_nearby.views import GetLocation
+#      if not GetLocation(request)==None:
+#          UserProfile.objects.filter(user=request.user).update(lastLoginAddress=GetLocation(request))
     
     
 '''
