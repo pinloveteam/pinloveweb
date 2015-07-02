@@ -183,6 +183,7 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
         access=client.request_access_token(request.GET.get('code'))
         request.session['access_token']=access.get('access_token')
         request.session['expires_in']=access.get('expires_in')
+        return HttpResponse('success')
         if not ThirdPsartyLogin.objects.filter(provider='3',uid=client.openid).exists():
             user_info=client.request_get_info()
             log.error(str(user_info))
@@ -195,7 +196,6 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
                     return HttpResponseRedirect('/account/loggedin/')
                 elif redirectTo==u'weixin_game':
                     #修改openid为工众号的
-                    return HttpResponse('success')
                     thirdPsartyLogin.uid=client.openid
                     thirdPsartyLogin.save()
                     return HttpResponseRedirect('/weixin/self_info/?userKey='+state)
