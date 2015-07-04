@@ -199,7 +199,7 @@ a:hover {
 	background: url("../img/android.png") no-repeat;
 }
 
-.apps>.apple, .apps>.android {
+.apps .apple, .apps .android {
 	margin-top: 3px;
 	width: 24px;
 	height: 29px;
