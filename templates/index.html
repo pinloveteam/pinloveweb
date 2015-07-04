@@ -83,16 +83,32 @@ function guide(){
 }
 function guide_page(type){
 	if(type=='avatar'||type=='info'){
-		$.getJSON('/user/guide/'+type+'/',{},function(data){
-			if(data.result="success"){
-				options={type : 'header',
-						page :data.html,
-						}
-						$.poplayer(options);
-			}else{
-				var body=$('<p>'+data.error_message+'</p>')
+		$.ajax({
+            type: 'GET',
+            url: '/user/guide/'+type+'/',
+            data:data,
+            beforeSend: function(XMLHttpRequest){
+            },
+            success: function(data, textStatus){
+            	if(typeof(data)!='object'){
+            		data=$.parseJSON(data);
+            	}
+            	if(data.result=="success"){
+    				options={type : 'header',
+    						page :data.html,
+    						}
+    						$.poplayer(options);
+    			}else{
+    				var body=$('<p>'+data.error_message+'</p>')
+    				 $.poplayer({body:body});
+    			}
+            },
+            complete: function(XMLHttpRequest, textStatus){
+            },
+            error: function(response){
+            	var body=$('<p>无法访问到服务器，请刷新重试!</p>')
 				 $.poplayer({body:body});
-			}
+            }
 		});
 	}else{
 		var body=$('<p>传入参数出错!</p>')

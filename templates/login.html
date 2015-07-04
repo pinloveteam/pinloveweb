@@ -1,26 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta property="qc:admins" content="14302567776016016476563757" />
-        <meta property="qc:admins" content="1430256777601647656375" />
-        <meta property="qc:admins" content="143025601647656375" />
-        <meta property="wb:webmaster" content="e67843f5f9933b87" />
-        <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
-		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
-		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.scrollUp.min.js"></script>
-		<link href="{{STATIC_URL}}css/login.css" rel="stylesheet">
-		<script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
-		<script src="{{STATIC_URL}}js/common.js" type="text/javascript" charset="utf-8"></script>
-		<title>拼爱网 </title>
-		<script type="text/javascript">
+{% extends "base_later.html" %}
+	<title> {% block title %} 拼爱网 - 推荐页面 {% endblock %} </title>
+	<meta property="qc:admins" content="14302567776016016476563757" />
+    <meta property="qc:admins" content="1430256777601647656375" />
+    <meta property="qc:admins" content="143025601647656375" />
+    <meta property="wb:webmaster" content="e67843f5f9933b87" />
+{% load staticfiles %}
+{% block staticfiles %}
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.scrollUp.min.js"></script>
+<link href="{{STATIC_URL}}css/login.css" rel="stylesheet">
+<script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
+<script type="text/javascript">
 			if(!is_PC()){
 				window.location.href='/mobile/'
 			}
-		</script>
-	</head>
-	<body>
-		<div class="stage" style="background-color: #5DA6CF;;">
+			$(function(){
+				show_footer();
+			})
+			 function show_footer(){
+				$('.indexFooter .footer-bd').show();
+				$('.indexFooter').css('margin-top',0);
+				$('.indexFooter .bd-btn').remove();
+			};
+</script>
+{% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block content %}
+<div class="stage" style="background-color: #5DA6CF;;">
 	    	<div class="background"></div>
 			<div class="layer" style="color: #fff;z-index: 2;">
 				<div class="layer-top" style="margin-bottom: 100px;">
@@ -156,7 +162,7 @@
 									<input type="hidden" name="next" value="{{request.GET.next}}{{next}}"/>
 									<input type="hidden" name="link" value="{{request.GET.link}}{{link}}"/>
 									<div class="form-group">
-										 <label>
+										 <label style="float:left;">
 										    <input type="checkbox" name="remember_status">
 										   		 记住登录状态
 										  </label>
@@ -319,18 +325,6 @@
 				</center>
 			</div>
 		</div>
-		<center>
-			<br>
-			<ul class="about list-inline">
-						<li><a href="/web/#contactus">联系我们</a></li>
-						|
-						<li><a href="/web/">关于我们</a></li>
-					</ul>
-					<p> 地址:（中国）杭州市文一西路1218号恒生科技园 </p>
-					<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; （美国）PO Box 2902, Santa Clara, CA 95055 </p>
-					<p> 电话：(中国) +86 0571-85855475；(美国) +1 408-406-3350 </p>
-					<p> 邮箱：pinloveteam@gmail.com </p>
-					<span class="cRed"> Copyright ©2013-2018 版权所有&nbsp;&nbsp;&nbsp;&nbsp;浙ICP备14016914号</span>
-		</span></center>
-	</body>
-</html>
+{% endblock %}
+		
+	

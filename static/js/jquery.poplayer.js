@@ -128,6 +128,7 @@
 	function loadHeader(options){
 		var frame = $('<div class="container js-popframe " style="background-color:white;height:550px;"></div>');
 		frame.append(options.page);
+		frame.find('#info').prepend('<div><span style="color: red;">请完善您的个人信息，以便我们能更好的向您推荐其他用户！</span></div>')
 		frame.append('<link href="/static/css/form.css" rel="stylesheet">')
 		frame.children().css('margin','40px').css('height','500px');
 		if(frame.find('#uploadAvatarPreviewArea')!=undefined){

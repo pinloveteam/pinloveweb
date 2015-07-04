@@ -27,7 +27,7 @@ def common(request):
     微信公共函数
     '''
     args={'PublicWeiXinAppID':PublicWeiXinAppID,'WEIXIN_CALLBACK_URL':'%s%s'%(WEIXIN_CHECK_AUTHORIZATION_URL[:-1],'_url/'),'has_share':False}
-    if ("jsapi_ticket_expires" not in request.session) or (request.session['jsapi_ticket_expires']>datetime.datetime.now()):
+    if ("jsapi_ticket_expires" not in request.session) or (request.session['jsapi_ticket_expires']<datetime.datetime.now()):
         get_jsapi_ticket(request) 
     args.update(get_signature(request.session['jsapi_ticket'],request.build_absolute_uri()))  
     return args    
@@ -52,14 +52,9 @@ def self_info(request):
                 return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
             except UserProfile.MultipleObjectsReturned as e:
                 return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
-        if userKey==u'rank' or otherId==request.user.id  :
-            scoreRankBeanbList=ScoreRank.objects.get_rank_list(request.user.id)
-            scoreRankList=[]
-            for scoreRankBean in scoreRankBeanbList:
-                avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
-                scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),\
-                                  'avatar_name':avatar_name,'other_id':scoreRankBean.other_id,'rank':scoreRankBean.rank})
-            args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True})
+        if userKey==u'rank' or otherId==request.user.id:
+            #获取排名
+            args.update(rank_list(request.user.id))
             return render(request,'Rank.html',args)
         if request.method=="POST":
             import copy
@@ -80,11 +75,10 @@ def self_info(request):
 #                 logging.error('233esddfsd-----%s %s %s %s'%(int(infoFrom.cleaned_data['education']),int(schoolType),int(country),eductionScore))
                 Grade.objects.filter(user_id=request.user.id).update(educationscore=eductionScore)
                 transaction.commit()
-                args['result']='success'
-                args['next_url']='/weixin/my_character/?userKey='+userKey
+                args['result'],args['next_url']='success','/weixin/my_character/?userKey='+userKey
             else:
-               errors=infoFrom.errors.items()
-               args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
+                errors=infoFrom.errors.items()
+                args={'result':'error','error_message':errors[0][1][0]if errors[0][0]==u'__all__' else '%s %s'%(InfoForm.base_fields[errors[0][0]].label,errors[0][1][0])}
             json=simplejson.dumps(args)
             return HttpResponse(json)
         if userProfile.height !=-1 and not UserTag.objects.filter(user_id=request.user.id,type=0).exists():
@@ -92,10 +86,10 @@ def self_info(request):
         if ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists() and not again:
             return score(request)
         elif UserProfile.objects.filter(user_id=request.user.id).exclude(income=-1,education=-1).exists() and not again:
-           if UserTag.objects.filter(user_id=request.user.id,type=0).exists():
-             return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
-           else:
-            return my_character(request)
+            if UserTag.objects.filter(user_id=request.user.id,type=0).exists():
+                return HttpResponseRedirect("/weixin/score/?userKey=%s"%(userKey))
+            else:
+                return my_character(request)
         try:
             ip=request.META['HTTP_X_FORWARDED_FOR'] if 'HTTP_X_FORWARDED_FOR' in request.META else  request.META['REMOTE_ADDR']
             f=urllib2.urlopen('%s%s'%('http://freegeoip.net/json/',ip),timeout = 6).read()
@@ -166,9 +160,7 @@ def score(request,template_name="Score.html"):
         userKey=request.REQUEST.get('userKey')
         args=common(request)
         userProfile=UserProfile.objects.get(user=request.user)
-        args['link']=userProfile.link
-        args['userId']=request.user.id
-        args['userKey']=userKey
+        args['link'], args['userId'],args['userKey']=userProfile.link,request.user.id,userKey
         try:
             otherProfile=UserProfile.objects.select_related('user').get(link=userKey)
             otherId=otherProfile.user_id
@@ -177,39 +169,26 @@ def score(request,template_name="Score.html"):
             return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
         except UserProfile.MultipleObjectsReturned as e:
                 return render(request,'error.html',{'result':'error','error_message':'有多个用户，请联系客服!'})
-
+        #获取打分
         from apps.recommend_app.method import match_score
         socreForOther=match_score(otherId,request.user.id).get_dict()
         args.update({'data' : [int(socreForOther['edcationScore']),int(socreForOther['characterScore']),\
-                int(socreForOther['incomeScore']),\
-                int(socreForOther['heighScore']),],'score' :int(socreForOther['scoreOther'])})
+                int(socreForOther['incomeScore']),int(socreForOther['heighScore']),],'score' :int(socreForOther['scoreOther'])})
         data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
-        nickname=data['nickname']
         if not ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).exists():
-            ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=nickname,data=simplejson.dumps(args['data'])).save()
+            ScoreRank(my_id=otherId,other_id=request.user.id,score=args['score'],nickname=data['nickname'],data=simplejson.dumps(args['data'])).save()
         else:
-            ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).update(score=args['score'],nickname=nickname,data=simplejson.dumps(args['data']))
+            ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).update(score=args['score'],nickname=data['nickname'],data=simplejson.dumps(args['data']))
        
         args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gt=args['score']).count()+1)
         filedList={'MM':u'你和%s的基友指数'%(otherProfile.user),'FF':u'你和%s的闺蜜指数'%(otherProfile.user),'MF':u'你在女神%s心中的亲密指数'%(otherProfile.user),'FM':u'你在男神%s心中的亲密指数'%(request.user),}
         args['score_content']=filedList[u'%s%s'%(userProfile.gender,otherProfile.gender)]
         #判断他的条件是否成立
         if (not Grade.objects.filter(user_id=request.user.id,heightweight=None,incomeweight=None,educationweight=None,characterweight=None)) and UserTag.objects.filter(user_id=request.user.id).exists():
-            args['is_recommend']=True
-            args['has_share']=True
+            args['is_recommend'],args['has_share']=True,True
         else:
-            args['is_recommend']=False
-            args['next_url']='/weixin/ta_character/'
-        scoreRankBeanbList=ScoreRank.objects.get_rank_list(otherId)
-        scoreRankList=[]
-        for scoreRankBean in scoreRankBeanbList:
-            avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
-            is_self=False
-            if int(scoreRankBean.other_id)==int(request.user.id):
-                is_self=True
-            scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),\
-                                  'avatar_name':avatar_name,'other_id':scoreRankBean.other_id,'rank':scoreRankBean.rank,'is_self':is_self})
-        args.update({'scoreRankList':scoreRankList,'count':len(scoreRankList)})
+            args['is_recommend'],args['next_url']=False,'/weixin/ta_character/'
+        args.update(rank_list(otherId))
             
     except Exception as e:
         args={'result':'error','error_message':e.message}   
@@ -264,7 +243,6 @@ def ta_character(request,template_name="character_tag.html"):
             if not UserTag.objects.filter(user_id=request.user.id).exists():
                 from apps.user_score_app.method import get_score_by_character_tag
                 get_score_by_character_tag(request.user.id)
-                
             gltNum=5
             try:
                 UserTag.objects.bulk_insert_user_tag(request.user.id,1,tagOtherList,gltNum=gltNum)
@@ -275,7 +253,6 @@ def ta_character(request,template_name="character_tag.html"):
                 elif e.message=='more':
                     error_messsage='亲！你选择的个数超标了！'
                 raise Exception(error_messsage)
-            
             args["result"]='success'
         else:
             #获取对另一半期望标签
@@ -343,6 +320,19 @@ def compare(request,template_name=None):
         args={'result':'error','error_message':(e.message)}
     json=simplejson.dumps(args)
     return HttpResponse(json)
+
+def rank_list(userId):
+    '''
+    获取排名列表
+    '''
+    scoreRankBeanbList=ScoreRank.objects.get_rank_list(userId)
+    scoreRankList=[]
+    for scoreRankBean in scoreRankBeanbList:
+        avatar_name=UserProfile.objects.get(user_id=scoreRankBean.other_id).avatar_name
+        scoreRankList.append({'nickname':scoreRankBean.nickname,'score':int(scoreRankBean.score),\
+                            'avatar_name':avatar_name,'other_id':scoreRankBean.other_id,'rank':scoreRankBean.rank})
+    return {'scoreRankList':scoreRankList,'count':len(scoreRankList),'has_share':True}
+    
 def test(request):
     return render(request,'index_1.html',{})
     

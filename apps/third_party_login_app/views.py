@@ -129,13 +129,12 @@ def public_weixin_check_authorization_url(request):
 def public_weixin_check_authorization(request):
    try:
     state=request.GET.get(u'state','')
-#     log.error('state:%s'%str(state))
     from apps.third_party_login_app.weinxin_api import WeiXinClient
     client = WeiXinClient(client_id=PublicWeiXinAppID,client_secret=PublicWeiXinAppSecret,redirect_uri=WEIXIN_CALLBACK_URL)
     access=client.request_access_token(request.GET.get('code'))
-#     log.error('access:%s'%str(access))
     if ThirdPsartyLogin.objects.filter(uid=client.openid,provider='3').exists():
         thirdPsartyLogin=ThirdPsartyLogin.objects.get(uid=client.openid,provider='3')
+        #登录
         login(request,thirdPsartyLogin.user.username)
         return HttpResponseRedirect('/weixin/self_info/?userKey='+request.GET.get(u'state'))
     elif state==u'rank':
@@ -185,7 +184,6 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
         request.session['expires_in']=access.get('expires_in')
         if not ThirdPsartyLogin.objects.filter(provider='3',uid=client.openid).exists():
             user_info=client.request_get_info()
-            log.error(str(user_info))
 #             #判断unionid是否存在
             ThirdPsartyLoginSelect=ThirdPsartyLogin.objects.raw("SELECT * FROM third_party_login WHERE data LIKE BINARY %s",['%"'+user_info['unionid']+'"%'])
             if len(list(ThirdPsartyLoginSelect))>0:
