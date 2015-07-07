@@ -16,8 +16,8 @@ class RegistrationForm (UserCreationForm) :
         super(RegistrationForm, self).__init__(*args, **kwargs)
         for key in self.fields:
             self.fields[key].widget.attrs['class'] = 'form-control'     #添加css class 样式
-        self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名,9位字符，中英字母、数字和下划线组成'
-        self.fields['password1'].widget.attrs['placeholder'] = r'请输入密码，6-20位字符，可由英文字母、数字和下划线组成'
+        self.fields['username'].widget.attrs['placeholder'] = r'请输入用户名,9位字符'
+        self.fields['password1'].widget.attrs['placeholder'] = r'请输入密码，6-20位字符'
         self.fields['password2'].widget.attrs['placeholder'] = r'再次输入密码'
         #字段必须的错误提示改为中文
         for field in self.fields.values():
