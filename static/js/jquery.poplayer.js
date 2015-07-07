@@ -134,6 +134,7 @@
 			frame.css('height',450);
 			frame.find('#info').prepend('<div style="margin-bottom: 10px;"><span style="color: red;">请完善您的个人信息，以便我们能更好的向您推荐其他用户！</span></div>');
 			frame.children().css('margin','40px').css('height','400px');
+			frame.css('width',880);
 		}else{
 			frame.children().css('margin','40px').css('height','500px');
 			frame.css('width',800);
