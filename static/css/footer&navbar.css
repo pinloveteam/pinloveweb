@@ -165,7 +165,6 @@ li {
 	margin-top: 20px; /* footer高度的负值 */
 	clear: both;
 	font-size: 14px;
-	width: 100%;
 }
 .indexFooter .bd-btn {
 	width: 100%;
@@ -200,7 +199,6 @@ li {
 
 .indexFooter .db-item {
 	vertical-align: top;
-	margin-left: 120px;
 }
 
 .indexFooter dd {

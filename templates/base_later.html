@@ -149,7 +149,7 @@ var isChard=false;
 var noReadMessageCount={%if noReadMessageCount %}{{noReadMessageCount}}{%else%}0{%endif%};
 //拉取信息数量
 var time=1000*5;
- interval = self.setInterval("polling()", time);  
+  interval = self.setInterval("polling()", time);   
  var polling=function(){
 	 var data={};
 	  if(isChard){
@@ -193,9 +193,9 @@ function set_count(noReadCount){
 	<div class="bd-btn">
 		<div class="btn-icon" style="border-color: transparent transparent rgb(54, 54, 54); top: -10px;"></div>
 	</div>
-	<div class="footer-bd" style="display: none;">
-		<dl class="db-item">
-			<!-- <dt class="item-title">
+	<div class="footer-bd  container" style="display: none;">
+		<!--<dl class="db-item>
+			 <dt class="item-title">
 				<span style="background-color: #55AADE"></span> 友情链接
 			</dt>
 			<dd>
@@ -208,7 +208,7 @@ function set_count(noReadCount){
 			</dd>
 		</dl> -->
 
-		<dl class="db-item">
+		<dl class="db-item col-lg-4">
 			<dt class="item-title">
 				<span></span> 手机客户端下载
 			</dt>
@@ -218,20 +218,20 @@ function set_count(noReadCount){
 			</dd>
 		</dl>
 
-		<dl class="db-item">
+		<dl class="db-item col-lg-4">
 			<dt class="item-title">
 				<span style="background-color: #56CC99;"></span> 关注我们
 			</dt>
 			<dd style="float: left;">
 				<div class="follow"><a><img src="{{STATIC_URL}}img/weixin.jpg"/></a></div>
 			</dd>
-			<dd style="float: right;">
+			<dd style="float: left;">
 				<div class="follow"><a><img src="{{STATIC_URL}}img/weixin_dy.jpg"/></a></div>
 			</dd>
 		</dl>
 		
 		
-		<dl class="db-item">
+		<dl class="db-item col-lg-4">
 			<dt class="item-title">
 				<span style="background-color: #FF9700"></span>
 				拼爱特色服务
