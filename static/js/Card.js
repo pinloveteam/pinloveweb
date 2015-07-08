@@ -18,10 +18,14 @@ var Time, i = 0, num, progress, score;
 
 var sendMsg = function(){
 	var api = pane.data('jsp');
-	var content = $(this).prev();
-	var chat = $(this).prevAll('.chat').find('.jspPane');
+	var chat_tab=$(this).closest('#chat_tab')
+	var content = chat_tab.find('textarea')
+	var chat = chat_tab.find('.jspPane');
 	var send_content = content.val().trim();
-	var receiver_id=$(this).parents('.card_panel').attr('id');
+	if(send_content.length==0){
+		return false;
+	}
+	var receiver_id=chat_tab.parents('.card_panel').attr('id');
 	if(send_content!=''){
 	   $.getJSON('/message/send/',{receiver_id:receiver_id,reply_content:send_content},function(data){
 		   if(data.result=='success'){
@@ -134,6 +138,10 @@ window.Card = function(person){
 						var card=$('#'+userId)
 						var chat_tab=$('#card').find('#chat_tab')
 						card.find('#chat_tab').html(chat_tab.children());
+						this.template.find('.chat_textarea').keydown(function(event){
+					         if (event.which == 13)       
+					         sendMsg.call(this);
+						       });
 						card.find('.btn_send_msg').on('click',sendMsg);
 //						card.find(".glyphicon-comment").on('click',init_msg);
 					}
@@ -682,7 +690,12 @@ window.Card = function(person){
 	//发送私信
 	if(person.isChat){
 		this.template.find('.btn_send_msg').on('click',sendMsg);
+		this.template.find('.chat_textarea').keydown(function(event){
+	         if (event.which == 13)       
+	         sendMsg.call(this);
+		       });
 //		this.template.find(".glyphicon-comment").on('click',init_msg);
+		
 	}else{
 		this.template.find('#chat_tab').html('<img id="notChat" src="/static/img/no_chat.gif"/>')
 	}
@@ -727,6 +740,10 @@ function buy_score_for_other(context,userId){
 							var card=$('#'+userId)
 							var chat_tab=$('#card').find('#chat_tab')
 							card.find('#chat_tab').html(chat_tab.children());
+							this.template.find('.chat_textarea').keydown(function(event){
+						         if (event.which == 13)       
+						         sendMsg.call(this);
+							       });
 							card.find('.btn_send_msg').on('click',sendMsg);
 //							card.find(".glyphicon-comment").on('click',init_msg);
 						}
