@@ -105,30 +105,7 @@
                 	title=context.find('a').html().trim()
                 	$('#nav_title').html(title);
                 	url=context.find('a').attr('href')
-                	$.ajax({
-        					dataType:"json",
-        					type: "GET",
-        					url:url,
-        					data:{},
-        					beforeSend:function(XMLHttpRequest){
-        					},
-        					complete:function(XMLHttpRequest, textStatus){
-        					},
-        					success:function(data, textStatus){
-        						$('.col-xs-9').children(':gt(0)').remove();
-        						init_message(data.messageList);
-        						},
-        	                    error: function(response){
-        	                    	/* var body=$('<p>网络异常!</p>')
-        							 $.poplayer({body:body}); */
-        	                    },
-        						
-        			});
-                	var state = {
-                		    title: title,
-                		    url: url,
-                		};
-                	window.history.pushState(state, title, url)
+                	window.location.href=url;
                 	
                 });
             })
