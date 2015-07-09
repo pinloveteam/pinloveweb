@@ -319,6 +319,8 @@
         	var button=null
         	if(gudie_page_flag){
         		$('.msk-close').click();
+        		$('.imgareaselect-outer').remove();
+        		$('.imgareaselect-selection').parent().remove();
         		button=guide_page('info');
         	}
         	$.poplayer({body:body,btnFunc:button});
