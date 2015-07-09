@@ -87,7 +87,7 @@ u1.gender!='%s' and u1.age is not null
 ORDER BY u2.date_joined DESC
 LIMIT %s
         '''
-        userProfileSql=UserProfile.objects.raw(sql1%(userId,userId,userId,userId,limit))
+        userProfileSql=UserProfile.objects.raw(sql1%(userId,userId,userId,userId,gender,limit))
         userProfileList=list(userProfileSql)
         num=limit-len(userProfileList)
         if num!=0:
