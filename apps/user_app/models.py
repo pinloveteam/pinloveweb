@@ -59,8 +59,6 @@ class UserProfileManager(models.Manager):
             return DEFAULT_IMAGE_NAME
         
     def get_email_recommed_list(self,userId,gender,limit=8):
-        keys=dict(self.model.GENDER_CHOICES).keys()
-        gender=keys[0] if keys[0]!=gender else keys[1]
         '''
         获取邮件推荐的用户列表
         paramters:
