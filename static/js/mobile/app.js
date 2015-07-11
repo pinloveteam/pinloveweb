@@ -216,10 +216,6 @@ window.Comfirm = function(title,body){
 			edit(options.type,options.receiverId,options.dynamicId,options.init_comment,options.dynamicDiv)
 		}
 		function edit(type,receiverId,dynamicId,init_comment,dynamicDiv){
-			if($('#edit').length>0){
-				content=$('#edit');
-				$('#edit').show();
-			}else{
 				var content=$('<div id="edit" class="edit"><div class="edit_header"><div class="row"><div class="col-xs-2"><i class="glyphicon glyphicon-chevron-left edit_close""></i></div><div class="col-xs-7">回复</div><div class="col-xs-3 edit_send">发送</div></div></div><div class="container"><form action=""  name="relpy_form" method="POST"><input id="reply_type" type="hidden" value="" name="type" id="type"><input type="hidden" name="receiverId" id="receiverId"><input type="hidden" value="" name="friendDynamicId" id="friendDynamicId"><div class="row frame"><textarea rows="6" class="form-control" id="rely_content" name="rely_content" placeholder=""></textarea><div class="editer-btns"><span class="emotion"></span></div></div></div></form></div>');
 				content.find('.edit_send').click(function(){
 					context=$(this);
@@ -280,9 +276,7 @@ window.Comfirm = function(title,body){
 				});
 				})
 				content.find('.edit_close').click(function(){
-				$('#edit').hide();
-				$('#edit').find('textarea').val()
-				$('#edit').find('textarea').attr('placeholder','');;
+				$('#edit').remove();
 				})
 				$('body').append(content);
 				content.find('.emotion').qqFace({
@@ -290,7 +284,7 @@ window.Comfirm = function(title,body){
 					assign: 'rely_content',
 					path: '/static/img/arclist/' //表情存放的路径
 				});
-			}
+			
 			content.find('#receiverId').val(receiverId);
 			content.find('#reply_type').val(type);
 			if(dynamicId!=null){
