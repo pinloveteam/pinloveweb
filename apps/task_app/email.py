@@ -28,10 +28,10 @@ def send_notify_email(userIdList=None):
                 raise Exception('推荐人数不足!')
             args={'username':userProfile.user.username,'email':userProfile.user.email,'WEBSITE':WEBSITE}
             args['recommendList']=[{'username':recommend.user.username,'age':recommend.age,'avatar_name':('%s/media/%s-100.jpeg'%(WEBSITE,recommend.avatar_name)),
-                                    'url':('%s/mobile/info_detail/%s/'%(WEBSITE,recommend.user.id)),'userId':recommend.user.id}for recommend in recommendList]
+                                    'url':('%s/mobile/info_detail/%s/'%(WEBSITE,recommend.user.id)),'userId':recommend.user.id,'country':recommend.country}for recommend in recommendList]
             email=Email(args['email'],'帮你找到8名符合你择偶要求的人，千万别错过缘分！【拼爱网】')
             email.html('Email_Template.html', args)
-            email.send()
+#             email.send()
             #添加发送推荐人记录
             emailRecommendHistoryList=[EmailRecommendHistory(user_id=userProfile.user_id,recommender_id=recommend['userId']) for recommend in args['recommendList']]
             EmailRecommendHistory.objects.bulk_create(emailRecommendHistoryList)

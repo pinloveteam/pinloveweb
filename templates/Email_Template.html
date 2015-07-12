@@ -26,7 +26,7 @@
 													<tr>
 														<td valign="top" style="padding-top:20px;vertical-align:top">
 															<h2 style="color:#474c4e;font-size:18px;font-weight:normal;margin:0 0 15px">{{username}} 您好：</h2>
-															<p style="color:#474c4e;font-size:14px;line-height:25px;margin:14px 0">这段时间又有一些新会员加入了我们。 <a target="_blank" style="color:#1379de;text-decoration:underline" href="{{WEBSITE}}">马上查看她们！</a>
+															<p style="color:#474c4e;font-size:14px;line-height:25px;margin:14px 0">这段时间又有一些新会员加入了我们。 <a target="_blank" style="color:#1379de;text-decoration:underline" href="{{WEBSITE}}">马上查看！</a>
 															</p>
 														</td>
 													</tr>
@@ -38,10 +38,10 @@
 																	   {%for userProfile in recommendList%}
 																		<td style="border-bottom:1px solid #d3d3d3;padding:30px 30px 30px 0;text-align:center;vertical-align:top">
 																			<h3 style="font-size:18px;font-weight:normal;margin:0 0 5px;text-align:center"><a target="_blank" style="color:#1379de;text-decoration:underline;color:#204854;text-decoration:none" href="{{userProfile.url}}">{{userProfile.username}}</a></h3>
-																			<p style="color:#878787;font-size:14px;margin:0 0 15px;text-align:center">{{userProfile.age}}</p>
+																			<p style="color:#878787;font-size:14px;margin:0 0 15px;text-align:center">{%if country %}{{country}}&nbsp;{%endif%}{{userProfile.age}}岁</p>
 																			<div style="">
 																				<a target="_blank" href="{{userProfile.url}}">
-																					<img width="100px" border="0" src="{{userProfile.avatar_name}}" style="border:0;padding:9px 0 0 0">
+																					<img width="100px" height="125px" border="0" src="{{userProfile.avatar_name}}" style="border:0;padding:9px 0 0 0">
 																				</a>
 																			</div>
 																			<p style="margin:0;text-align:center">
@@ -61,7 +61,7 @@
 													</tr>
 													<tr>
 														<td style="padding-top:40px;vertical-align:top">
-															<p style="color:#474c4e;font-size:14px;line-height:25px;margin:14px 0;margin:0 0 20px"><span style="font-weight:bold">Remember:</span> 您随时都能找到更多朋友！ 只需访问 <a target="_blank" style="color:#1379de;text-decoration:underline" href="{{WEBSITE}}/search/">PinLove 搜索</a>页面。</p>
+															<p style="color:#474c4e;font-size:14px;line-height:25px;margin:14px 0;margin:0 0 20px"><span style="font-weight:bold">Remember:</span> 您随时都能找到更多朋友！ 只需访问 <a target="_blank" style="color:#1379de;text-decoration:underline" href="{{WEBSITE}}/search/">拼爱网搜索</a>页面。</p>
 														</td>
 													</tr>
 												</tbody>
