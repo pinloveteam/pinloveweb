@@ -181,7 +181,7 @@ def score(request,template_name="Score.html"):
             ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).update(score=args['score'],nickname=data['nickname'],data=simplejson.dumps(args['data']))
        
         args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gt=args['score']).count()+1)
-        filedList={'MM':u'你和%s的基友指数'%(otherProfile.user),'FF':u'你和%s的闺蜜指数'%(otherProfile.user),'MF':u'你在女神%s心中的亲密指数'%(otherProfile.user),'FM':u'你在男神%s心中的亲密指数'%(request.user),}
+        filedList={'MM':u'你和%s的基友指数'%(otherProfile.user),'FF':u'你和%s的闺蜜指数'%(otherProfile.user),'MF':u'你在女神%s心中的亲密指数'%(otherProfile.user),'FM':u'你在男神%s心中的亲密指数'%(otherProfile.user),}
         args['score_content']=filedList[u'%s%s'%(userProfile.gender,otherProfile.gender)]
         #判断他的条件是否成立
         if (not Grade.objects.filter(user_id=request.user.id,heightweight=None,incomeweight=None,educationweight=None,characterweight=None)) and UserTag.objects.filter(user_id=request.user.id).exists():
