@@ -13,8 +13,12 @@ import time
 
 @transaction.commit_on_success
 def tests(request):
-    time.sleep(2)
-    return HttpResponse('success')
+    if request.method=="POST":
+        if request.REQUEST.get('file',None) is not  None:
+            return HttpResponse('success')
+        else:
+            return HttpResponse('error')
+    return render(request,'test.html',{})
 #     from apps.weixin_app.forms import InfoForm
 #     userProfile=UserProfile.objects.get(user_id=5)
 #     infoForm=InfoForm(instance=userProfile)
