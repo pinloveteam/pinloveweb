@@ -348,6 +348,10 @@ def reset_password(request,template_name='reset_password.html'):
                   user.set_password(newpassword)
                   args['reset_result']=True
                   user.save()
+          #检测设备
+          from util import detect_device
+          if detect_device.detectTiermobileTablet(request):
+               template_name='mobile_reset_password.html'
           return render(request,template_name,args)
       else:
             args={'error_message':u'该连接已过期或被使用!'}

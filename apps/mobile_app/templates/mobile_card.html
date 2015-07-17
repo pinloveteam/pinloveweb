@@ -74,7 +74,14 @@ success=function(data){
 		      //set_count(data.noReadCount)
 		      init_card(data.cards)
 		      if(next_page==-1){
-		    	  var no_next_page=$('<div id="no_next_page" class="row"><center><span>没有更多信息!</span></center></div>');
+		    	  var no_load_message="没有更多信息!"
+		    	  var pathname=window.location.pathname
+		    	  if(pathname=="/mobile/loggedin/"){
+		    		  no_load_message="暂没有更多推荐结果";
+		    	  }else if(pathname=="/mobile/search/"){
+		    		  no_load_message="暂没有更多搜索结果";
+		    	  }
+		    	  var no_next_page=$('<div id="no_next_page" class="row"><center><span>'+no_load_message+'</span></center></div>');
 			       $('#cardList').append(no_next_page)
 		      }
 		      {%if first%}
