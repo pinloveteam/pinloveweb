@@ -422,7 +422,7 @@ return
    user
 ''' 
 @transaction.commit_on_success      
-# @require_POST
+@require_POST
 def register_by_three_party(request,template_name='login_confirm_register.html'):
     args ,kwarg={},{} 
     confirmInfo=ConfirmInfo(request.POST)
@@ -434,9 +434,9 @@ def register_by_three_party(request,template_name='login_confirm_register.html')
             args={'error_message':u'该链接失效，请重试!'}
             return render(request,'error.html',args)
         #创建第三方登录表信息
-        user=create_user(confirmInfo.cleaned_data['username'],DEFAULT_PASSWORD,**kwarg)
+        user=create_user(confirmInfo.cleaned_data['username'],DEFAULT_PASSWORD,confirmInfo.cleaned_data['email'],**kwarg)
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
-        create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'],confirmInfo.cleaned_data['email'])
+        create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'],)
         login(request,user.username)
         #检测设备
         if detect_device.detectTiermobileTablet(request):
@@ -478,7 +478,7 @@ attribute:
 return
    user
 '''
-def create_user(username,password,**kwarg):
+def create_user(username,password,email,**kwarg):
     while True:
         if User.objects.filter(username=username).exists():
             username='%s%s%s'%(username,'_',random_str(randomlength=3))
@@ -487,6 +487,7 @@ def create_user(username,password,**kwarg):
     from django.contrib.auth.hashers import make_password
     user=User()
     user.username=username
+    user.email=email
     if kwarg.get('firstName')!=None:
         user.first_name=kwarg.get('firstName')
     if  kwarg.get('lastName')!=None:
