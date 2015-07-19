@@ -422,7 +422,7 @@ return
    user
 ''' 
 @transaction.commit_on_success      
-@require_POST
+# @require_POST
 def register_by_three_party(request,template_name='login_confirm_register.html'):
     args ,kwarg={},{} 
     confirmInfo=ConfirmInfo(request.POST)
@@ -436,7 +436,7 @@ def register_by_three_party(request,template_name='login_confirm_register.html')
         #创建第三方登录表信息
         user=create_user(confirmInfo.cleaned_data['username'],DEFAULT_PASSWORD,**kwarg)
         ThirdPsartyLogin(user=user,provider=kwarg['provider'],uid=kwarg['uid'],access_token=kwarg['access_token']).save()
-        create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'])
+        create_user_profile(request,user,DEFAULT_PASSWORD,confirmInfo.cleaned_data['gender'],confirmInfo.cleaned_data['email'])
         login(request,user.username)
         #检测设备
         if detect_device.detectTiermobileTablet(request):

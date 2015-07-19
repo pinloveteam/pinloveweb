@@ -32,6 +32,10 @@ class ConfirmInfo(forms.Form):
         validators=[
             validators.RegexValidator(re.compile(ur'^[\u4e00-\u9fa5a-zA-Z\xa0-\xff_][\u4e00-\u9fa50-9a-zA-Z\xa0-\xff_\s]{1,19}$'), USERNAME_ERROR_MESSAGE, 'invalid')]
                               )
+    email=forms.EmailField(label="email",help_text=u'请输出邮箱',
+                           error_messages={
+                                           'invalid':u'请输入一个有效的邮箱',
+                                           })
     error_messages = {
         'duplicate_email':r'邮件已被注册!',
         'duplicate_username': u'该用户已经存在',
