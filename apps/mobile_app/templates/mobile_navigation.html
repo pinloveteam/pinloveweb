@@ -29,28 +29,28 @@
       
       <nav>
 			<div id='recommend' class="col-xs-3">
-			<a href="/mobile/loggedin/">
+			<a href="{%if pc %}/account/loggedin/{%else%}/mobile/loggedin/{%endif%}">
 				<p></p>
 				 <i class="glyphicon glyphicon-star-empty"></i>
 				<p>推荐</p>
 			</a>
 			</div>
 			<div id='dynamic' class="col-xs-3">
-			<a href="/mobile/dynamic/">
+			<a href="{%if pc %}/dynamic/{%else%}/mobile/dynamic/{%endif%}">
 				<p></p>
 				<i class="glyphicon glyphicon-refresh"></i>
 				<p>动态</p>
 			</a>
 			</div>
 			<div id='nearby' class="col-xs-3">
-			 <a href="/mobile/nearby/">
+			 <a href="{%if pc %}/the_people_nearby/the_people_nearby/{%else%}/mobile/nearby/{%endif%}">
 				<p></p>
 				<i class="glyphicon glyphicon-map-marker"></i>
 				<p>附近</p>
 			 </a>
 			</div>
 			<div id='messages' class="col-xs-3">
-			  <a href="/mobile/message/">
+			  <a href="{%if pc %}/message/{%else%}/mobile/message/{%endif%}">
 				<p></p>
 				<i class="glyphicon glyphicon-envelope">
 				 <span class="badge" id="count" style="position: absolute;top: -8px;{%ifequal noReadCount 0%}display: none;{%endifequal%}">{{noReadCount}}</span>

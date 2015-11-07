@@ -32,6 +32,10 @@ class AuthenticationMiddleware(object):
                     redirectUrl='/'
                 else:
                     redirectUrl='/mobile/'
+                    #对应邮箱过来的个人信息url客户端判断的特殊处理
+                    from util import detect_device
+                    if re.compile(r'^/mobile/info_detail/\d*/').match(request.path) is not None and not detect_device.detectTiermobileTablet(request):
+                        redirectUrl='/'
                 if request.path in ['/account/loggedout/','/account/invalid/','/mobile/logout']:
                     return HttpResponseRedirect(redirectUrl)
                 else:

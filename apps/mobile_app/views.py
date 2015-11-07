@@ -18,6 +18,7 @@ from apps.mobile_app.__init__ import ERROR_TEMLATE_NAMR
 from apps.recommend_app.recommend_util import recommend_info_status
 from apps.search_app.forms import SearchMobileForm
 import urllib
+from util import detect_device
 logger=logging.getLogger(__name__)
 
 def account(request):
@@ -271,6 +272,9 @@ def info_detail(request,userId,template_name='mobile_info.html'):
            if tag.tag.id<24:
                tags.append(tag.tag.content)
         args['tags']=tags
+        #检测设备
+        if not detect_device.detectTiermobileTablet(request):
+            args['pc']=True
         return render(request, template_name,args )
     except Exception as e:
         logger.exception(e.message)
