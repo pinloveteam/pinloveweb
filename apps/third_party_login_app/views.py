@@ -487,7 +487,8 @@ def create_user(username,password,email,**kwarg):
     from django.contrib.auth.hashers import make_password
     user=User()
     user.username=username
-    user.email=email
+    if not email is None:
+        user.email=email
     if kwarg.get('firstName')!=None:
         user.first_name=kwarg.get('firstName')
     if  kwarg.get('lastName')!=None:
