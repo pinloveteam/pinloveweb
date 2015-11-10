@@ -31,11 +31,11 @@ def common(request):
         get_jsapi_ticket(request) 
     args.update(get_signature(request.session['jsapi_ticket'],request.build_absolute_uri()))  
     if  ('nickname' not in request.session  ) or (request.session['nickname'] is None):
-        request.session['nickname']=get_weixin_nickname(request)
+        request.session['nickname']=get_weixin_nickname(request.user.id)
     return args    
     
-def get_weixin_nickname(request):
-    data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
+def get_weixin_nickname(userId):
+    data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=userId).data)
     return data['nickname']
 '''
 完善个人信息
@@ -170,6 +170,8 @@ def score(request,template_name="Score.html"):
             otherProfile=UserProfile.objects.select_related('user').get(link=userKey)
             otherId=otherProfile.user_id
             args['username']=otherProfile.user
+            otherNickname=get_weixin_nickname(otherProfile.user.id)
+            args['otherNickname']=otherNickname
         except UserProfile.DoesNotExist as e:
             return render(request,'error.html',{'result':'error','error_message':'没有这个用户，请联系客服!'})
         except UserProfile.MultipleObjectsReturned as e:
@@ -186,7 +188,7 @@ def score(request,template_name="Score.html"):
             ScoreRank.objects.filter(my_id=otherId,other_id=request.user.id).update(score=args['score'],nickname=data['nickname'],data=simplejson.dumps(args['data']))
        
         args['rank']=(ScoreRank.objects.filter(my_id=otherId,score__gt=args['score']).count()+1)
-        filedList={'MM':u'你和%s的基友指数'%(otherProfile.user),'FF':u'你和%s的闺蜜指数'%(otherProfile.user),'MF':u'你在女神%s心中的亲密指数'%(otherProfile.user),'FM':u'你在男神%s心中的亲密指数'%(otherProfile.user),}
+        filedList={'MM':u'你和%s的基友指数'%(otherNickname),'FF':u'你和%s的闺蜜指数'%(otherNickname),'MF':u'你在女神%s心中的亲密指数'%(otherNickname),'FM':u'你在男神%s心中的亲密指数'%(otherNickname),}
         args['score_content']=filedList[u'%s%s'%(userProfile.gender,otherProfile.gender)]
         #判断他的条件是否成立
         if (not Grade.objects.filter(user_id=request.user.id,heightweight=None,incomeweight=None,educationweight=None,characterweight=None)) and UserTag.objects.filter(user_id=request.user.id).exists():

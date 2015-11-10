@@ -139,7 +139,7 @@
 
 	<body>
 		<header data-am-widget="header" class="am-header">
-			<h3 class="am-header-title" style="margin: 0 4%;font-size:1.7rem">您在{{username}}心中的印象</h3>
+			<h3 class="am-header-title" style="margin: 0 4%;font-size:1.7rem">您在{{otherNickname}}心中的印象</h3>
 		</header>
 		<div class="am-g">
 		<center>
@@ -152,7 +152,7 @@
 				<p>{{score_content}}：<span class="text-num">{{score}}</span></p>
 				<p class="weinxin_tip">(点击上图中四边形的顶点可以查看每一项打分!)</p>
 				<hr style="margin: 0 90px;border-color: #64584C;"/>
-				<p style="line-height:0.5px">在{{username}}好友的排名为第<span class="text-num">{{rank}}</span>名</p>
+				<p style="line-height:0.5px">在{{otherNickname}}好友的排名为第<span class="text-num">{{rank}}</span>名</p>
 			</div>
 			
 		</center>
@@ -167,7 +167,7 @@
 			</div>
 		</div>
 		<div class="rank">
-			<p class="title">在{{username}}好友中的排名</p>
+			<p class="title">在{{otherNickname}}好友中的排名</p>
 			<p class="weinxin_tip">(猛戳别人头像，可以显示对比雷达图)</p>
 			<hr style="border-color: #64584C; margin: 0 60px;"/>
 			 {%for scoreRank in scoreRankList%}
