@@ -30,8 +30,13 @@ def common(request):
     if ("jsapi_ticket_expires" not in request.session) or (request.session['jsapi_ticket_expires']<datetime.datetime.now()):
         get_jsapi_ticket(request) 
     args.update(get_signature(request.session['jsapi_ticket'],request.build_absolute_uri()))  
+    if  ('nickname' not in request.session  ) or (request.session['nickname'] is None):
+        request.session['nickname']=get_weixin_nickname(request)
     return args    
     
+def get_weixin_nickname(request):
+    data=simplejson.loads(ThirdPsartyLogin.objects.get(user_id=request.user.id).data)
+    return data['nickname']
 '''
 完善个人信息
 '''
