@@ -223,7 +223,7 @@ def weixin_login(request,CALLBACK_URL=WEIXIN_CALLBACK_URL):
                     res_path = os.path.join(UPLOAD_AVATAR_AVATAR_ROOT, res_name)
                     img.save(res_path, UPLOAD_AVATAR_SAVE_FORMAT, quality=UPLOAD_AVATAR_SAVE_QUALITY)
             #创建第三方登录表信息
-            user=create_user(user_info['nickname'].strip(),DEFAULT_PASSWORD)
+            user=create_user(user_info['nickname'].strip(),DEFAULT_PASSWORD,None)
             data=simplejson.dumps({'nickname':user_info['nickname'].strip(),'refresh_token':client.refresh_token,'unionid':user_info.get('unionid',None)})
             ThirdPsartyLogin(user=user,provider='3',uid=client.openid,access_token=client.access_token,data=data).save()
             create_user_profile(request,user,DEFAULT_PASSWORD,gender,**kwargs)
