@@ -241,7 +241,7 @@ def ta_character(request,template_name="character_tag.html"):
     args={}
     try:
         args=common(request)
-        args.update({"step":"第三步","tag_name":"希望Ta具备的性格:","title":"选出你心目中男神、女神的标准",'next_url':'/weixin/other_info/'})
+        args.update({"step":"第三步","tag_name":"希望Ta具备的性格:","title":"分享前，请制定打分标准",'next_url':'/weixin/other_info/'})
         userProfile=UserProfile.objects.get(user=request.user)
         args['link']=userProfile.link
         if request.method=="POST":
